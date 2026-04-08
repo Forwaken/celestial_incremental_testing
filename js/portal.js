@@ -273,9 +273,9 @@
             },
         },
         13: {
-            title() { return "<h1>Hex" },
+            title() { return "<h1>" + HEX_STAGES[player.h.stage][0] },
             display() {
-                return player.po.hex ? "<h1>The number 6.<br>On<br><h2>(Progress is kept between infinities)</h2>" : "<h1>The number 6.<br>Off<br><h2>(Progress is kept between infinities)</h2>";
+                return player.po.hex ? "<h1>The number " + formatWhole(player.h.stage) + ".<br>On<br><h2>(Progress is kept between infinities)</h2>" : "<h1>The number " + formatWhole(player.h.stage) + ".<br>Off<br><h2>(Progress is kept between infinities)</h2>";
             },
             canClick() { return player.po.featureSlots.gte(1) && (!inChallenge("ip", 14) || inChallenge("ip", 14) && player.r.pent.gte(15))},
             unlocked() { return hasChallenge("ip", 13) && !inChallenge("ip", 11) && !inChallenge("ip", 13) && !inChallenge("ip", 15) && !inChallenge("ip", 16) && !hasUpgrade("s", 18)},

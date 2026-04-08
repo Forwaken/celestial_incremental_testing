@@ -1,5 +1,5 @@
 addLayer("hpr", {
-    name: "Hex of Provenance",
+    name() {return HEX_STAGES[player.h.stage][0] + " of Provenance"},
     symbol: "Pr", // Decides what text appears on the node.
     universe: "UA",
     tooltip: "Provenance", // Decides the nodes tooltip
@@ -101,7 +101,7 @@ addLayer("hpr", {
     },
     clickables: {
         1: {
-            title() { return "<h2>Reset hex points,<br>but gain α-Provenance.</h2><br><h3>Req: " + format(player.hpr.rankReq[0]) + " Hex Points</h3>"},
+            title() { return "<h2>Reset " + HEX_STAGES[player.h.stage][1] + " points,<br>but gain α-Provenance.</h2><br><h3>Req: " + format(player.hpr.rankReq[0]) + " " + HEX_STAGES[player.h.stage][0] + " Points</h3>"},
             canClick() { return player.hpr.rankGain[0].gt(0) && (!hasMilestone("hre", 3) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
@@ -231,14 +231,14 @@ addLayer("hpr", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> hex points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
-            ["raw-html", "Hex of Provenance", {color: "white", fontSize: "30px", fontFamily: "monospace"}],
+            ["raw-html", () => {return HEX_STAGES[player.h.stage][0] + " of Provenance"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", backgroundColor: "#001d4c", border: "3px solid white", borderRadius: "20px"}],
         ["blank", "10px"],
             ["row", [
@@ -257,7 +257,7 @@ addLayer("hpr", {
                     ]],
                 ], {width: "250px", height: "50px", borderBottom: "2px solid white"}],
                 ["style-column", [
-                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[0][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[0][1]) + " hex points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[0][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[0][1]) + " " + HEX_STAGES[player.h.stage][1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
                 ], {width: "250px", height: "76px", borderBottom: "2px solid white"}],
                 ["clickable", 1],
             ], {width: "250px", height: "205px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
@@ -271,7 +271,7 @@ addLayer("hpr", {
                     }],
                 ], {width: "250px", height: "50px", borderBottom: "2px solid white"}],
                 ["style-column", [
-                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[1][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[1][1]) + " hex points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[1][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[1][1]) + " " + HEX_STAGES[player.h.stage][1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
                 ], {width: "250px", height: "76px", borderBottom: "2px solid white"}],
                 ["clickable", 2],
             ], {width: "250px", height: "205px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
@@ -285,7 +285,7 @@ addLayer("hpr", {
                     }],
                 ], {width: "250px", height: "50px", borderBottom: "2px solid white"}],
                 ["style-column", [
-                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[2][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[2][1]) + " hex points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[2][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[2][1]) + " " + HEX_STAGES[player.h.stage][1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
                 ], {width: "250px", height: "76px", borderBottom: "2px solid white"}],
                 ["clickable", 3],
             ], {width: "250px", height: "205px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
@@ -301,7 +301,7 @@ addLayer("hpr", {
                     }],
                 ], {width: "250px", height: "50px", borderBottom: "2px solid white"}],
                 ["style-column", [
-                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[3][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[3][1]) + " hex points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[3][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[3][1]) + " " + HEX_STAGES[player.h.stage][1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
                 ], {width: "250px", height: "76px", borderBottom: "2px solid white"}],
                 ["clickable", 4],
             ], {width: "250px", height: "205px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
@@ -315,7 +315,7 @@ addLayer("hpr", {
                     }],
                 ], {width: "250px", height: "50px", borderBottom: "2px solid white"}],
                 ["style-column", [
-                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[4][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[4][1]) + " hex points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "x" + format(player.hpr.rankEffect[4][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[4][1]) + " " + HEX_STAGES[player.h.stage][1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
                 ], {width: "250px", height: "76px", borderBottom: "2px solid white"}],
                 ["clickable", 5],
             ], {width: "250px", height: "205px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
@@ -329,7 +329,7 @@ addLayer("hpr", {
                     }],
                 ], {width: "250px", height: "50px", borderBottom: "2px solid white"}],
                 ["style-column", [
-                   ["raw-html", () => {return "x" + format(player.hpr.rankEffect[5][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[5][1]) + " hex points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                   ["raw-html", () => {return "x" + format(player.hpr.rankEffect[5][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[5][1]) + " " + HEX_STAGES[player.h.stage][1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
                 ], {width: "250px", height: "76px", borderBottom: "2px solid white"}],
                 ["clickable", 6],
             ], {width: "250px", height: "205px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
@@ -345,7 +345,7 @@ addLayer("hpr", {
             ], {width: "385px", height: "40px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
             ["style-row", [
                 ["style-row", [
-                    ["raw-html", "Total Hex Point Multiplier", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "Total " + HEX_STAGES[player.h.stage][0] + " Point Multiplier"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                 ], {width: "200px", height: "40px", borderRight: "2px solid white"}],
                 ["style-row", [
                     ["raw-html", () => {return "x" + format(player.hpr.rankEffect[0][1].mul(player.hpr.rankEffect[1][1]).mul(player.hpr.rankEffect[2][1]).mul(player.hpr.rankEffect[3][1]).mul(player.hpr.rankEffect[4][1]).mul(player.hpr.rankEffect[5][1]))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],

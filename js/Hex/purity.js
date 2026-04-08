@@ -1,5 +1,5 @@
 addLayer("hpu", {
-    name: "Hex of Purity",
+    name() {return HEX_STAGES[player.h.stage][0] + " of Purity"},
     symbol: "Pu", // Decides what text appears on the node.
     universe: "UA",
     tooltip: "Purity", // Decides the nodes tooltip
@@ -105,8 +105,8 @@ addLayer("hpu", {
     clickables: {
         1: {
             title() {
-                if (inChallenge("hrm", 16)) return "<h2>Purify, but reset hex points and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
-                return "<h2>Purify, but reset hex points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
+                if (inChallenge("hrm", 16)) return "<h2>Purify, but reset " + HEX_STAGES[player.h.stage][1] + " points and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
+                return "<h2>Purify, but reset " + HEX_STAGES[player.h.stage][1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
             },
             canClick() { return player.hpu.purityGain.gte(1) && (!hasMilestone("hre", 17) || inChallenge("hrm", 15))},
             unlocked: true,
@@ -199,7 +199,7 @@ addLayer("hpu", {
         },
         5: {
             title() {
-                let str = "<h3>Elevated Exponent</h3><br>Lv." + formatWhole(player.hpu.purifiers[2].amount) + "<br>^" + format(player.hpu.purifiers[2].effect) + " Non-Hex Refiner Effects"
+                let str = "<h3>Elevated Exponent</h3><br>Lv." + formatWhole(player.hpu.purifiers[2].amount) + "<br>^" + format(player.hpu.purifiers[2].effect) + " Non-" + HEX_STAGES[player.h.stage][0] + " Refiner Effects"
                 if (player.hpu.purifiers[2].effect.gt(1.5)) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -221,7 +221,7 @@ addLayer("hpu", {
         },
         6: {
             title() {
-                let str = "<h3>Healed Hexes</h3><br>Lv." + formatWhole(player.hpu.purifiers[3].amount) + "<br>^" + format(player.hpu.purifiers[3].effect) + " Hex Point Booster"
+                let str = "<h3>Healed Hexes</h3><br>Lv." + formatWhole(player.hpu.purifiers[3].amount) + "<br>^" + format(player.hpu.purifiers[3].effect) + " " + HEX_STAGES[player.h.stage][0] + " Point Booster"
                 if (inChallenge("hrm", 12)) str = "<h3>Healed Hexes</h3><br>Lv." + formatWhole(player.hpu.purifiers[3].amount) + "<br>^" + format(player.hpu.purifiers[3].effect) + " 1st Refiners Effects"
                 if (player.hpu.purifiers[3].effect.gt(1.5)) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
@@ -320,14 +320,14 @@ addLayer("hpu", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> hex points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
-            ["raw-html", "Hex of Purity", {color: "white", fontSize: "30px", fontFamily: "monospace"}],
+            ["raw-html", () => {return HEX_STAGES[player.h.stage][0] + " of Purity"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", backgroundColor: "#433f33", border: "3px solid white", borderRadius: "20px"}],
         ["blank", "10px"],
         ["row", [

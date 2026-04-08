@@ -1,5 +1,5 @@
 addLayer("hsa", {
-    name: "Hex of Sacrifice",
+    name() {return HEX_STAGES[player.h.stage][0] + " of Sacrifice"},
     symbol: "Sa", // Decides what text appears on the node.
     universe: "UA",
     tooltip: "Sacrifice", // Decides the nodes tooltip
@@ -56,7 +56,7 @@ addLayer("hsa", {
         11: {
             title: "Simplicity",
             unlocked: true,
-            description: "Double hex point gain after softcap.",
+            description() {return "Double " + HEX_STAGES[player.h.stage][1] + " point gain after softcap."},
             cost: new Decimal(1),
             currencyLocation() { return player.hsa },
             currencyDisplayName: "Sacred Energy",
@@ -76,7 +76,7 @@ addLayer("hsa", {
         13: {
             title: "Coherence",
             unlocked: true,
-            description: "Sacred energy boosts hex point gain after softcap.",
+            description() {return "Sacred energy boosts " + HEX_STAGES[player.h.stage][1] + " point gain after softcap."},
             cost: new Decimal(8),
             currencyLocation() { return player.hsa },
             currencyDisplayName: "Sacred Energy",
@@ -125,7 +125,7 @@ addLayer("hsa", {
         21: {
             title: "Aware",
             unlocked() {return challengeCompletions("hrm", 14) >= 1},
-            description: "Total power above 360,000 boosts hex point gain after softcap.",
+            description() {return "Total power above 360,000 boosts " + HEX_STAGES[player.h.stage][1] + " point gain after softcap."},
             cost: new Decimal(9000),
             currencyLocation() { return player.hsa },
             currencyDisplayName: "Sacred Energy",
@@ -244,7 +244,7 @@ addLayer("hsa", {
             display() {
                 return "<h3>Intelligence</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
-                    Double hex points after softcap.\n\
+                    Double " + HEX_STAGES[player.h.stage][1] + " points after softcap.\n\
                     Currently: " + formatWhole(tmp[this.layer].buyables[this.id].effect) + "x\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Sacred Energy"
             },
@@ -268,14 +268,14 @@ addLayer("hsa", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> hex points."}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "rgba(255,0,0,0.6)", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
-            ["raw-html", "Hex of Sacrifice", {color: "rgba(0,0,0,0.6)", fontSize: "30px", fontFamily: "monospace"}],
+            ["raw-html", () => {return HEX_STAGES[player.h.stage][0] + " of Sacrifice"}, {color: "rgba(0,0,0,0.6)", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", background: "linear-gradient(90deg, #fffdd0, #fdfff6)", border: "3px solid #ccc", borderRadius: "20px"}],
         ["blank", "10px"],
         ["row", [
@@ -287,7 +287,7 @@ addLayer("hsa", {
             }],
         ]],
         ["row", [
-            ["raw-html", () => {return "Adds +" + format(player.hsa.sacredEffect, 3) + " to the hex point softcap exponent." }, {color: "rgba(0,0,0,0.6)", fontSize: "16px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "Adds +" + format(player.hsa.sacredEffect, 3) + " to the " + HEX_STAGES[player.h.stage][1] + " point softcap exponent." }, {color: "rgba(0,0,0,0.6)", fontSize: "16px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.hsa.sacredEffect.gte(0.6) ? "[HARDCAPPED]" : player.hsa.sacredEffect.gte(0.5) ? "[SOFTCAPPED<sup>2</sup>]" : player.hsa.sacredEffect.gte(0.3) ? "[SOFTCAPPED]" : "" }, {color: "rgba(255,0,0,0.6)", fontSize: "16px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["blank", "10px"],

@@ -215,7 +215,7 @@
             "Currently boosting infinity points.",
             "Currently boosting check back xp.",
             "Currently boosting rocket fuel.",
-            "Currently boosting hex points.",
+            "Currently boosting " + HEX_STAGES[player.h.stage][1] + " points.",
             "Currently boosting pre-OTF currencies.",
             "Currently boosting pollinators.",
             "Currently boosting time cubes.",
@@ -654,7 +654,7 @@
             },
         },
         115: {
-            title() { return "Hex Points<br>x" + format(player.d.boosterEffects[14]) },
+            title() { return HEX_STAGES[player.h.stage][0] + " Points<br>x" + format(player.d.boosterEffects[14]) },
             canClick() { return true },
             unlocked() { return true },
             onClick() {

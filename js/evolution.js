@@ -331,7 +331,7 @@
                 "<div class='evoContainer'><h3>Requires:</h3>" +
                 "<br>"  + formatWhole(player.ip.diceRuns) + "/2,000 Dice Runs" +
                 "<br>"  + formatWhole(player.ip.rocketFuelRuns) + "/2,000 Rocket Fuel Runs" +
-                "<br>"  + formatWhole(player.ip.hexRuns) + "/2,000 Hex Runs" +
+                "<br>"  + formatWhole(player.ip.hexRuns) + "/2,000 " + HEX_STAGES[player.h.stage][0] + " Runs" +
                 "<br>"  + formatWhole(player.points) + "/1e500 Celestial Points" +
                 "<br>"  + formatWhole(player.tad.infinitum) + "/800 Infinitum" +
                 "<br>"  + formatWhole(getLevelableAmount("pet", 101)) + "/10 Gwa Level" +

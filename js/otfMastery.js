@@ -176,7 +176,7 @@
             },
             display() {
                 return "which are multiplying T1 alternate infinities by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Hex Mastery Points"
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + HEX_STAGES[player.h.stage][0] + " Mastery Points"
             },
             buy(mult) {
                 if (mult != true && !hasUpgrade("bi", 109) ) {
@@ -278,7 +278,7 @@
             },
             display() {
                 return "which are multiplying mastery points by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Hex Mastery Points"
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + HEX_STAGES[player.h.stage][0] + " Mastery Points"
             },
             buy(mult) {
                 if (mult != true && !hasUpgrade("bi", 109) ) {
@@ -330,7 +330,7 @@
                         ["raw-html", () => {return "which boost negative infinity points by <h3>" + format(player.om.rocketFuelMasteryPointsEffect) + "</h3>x." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
                         ["blank", "10px"],
                         ["row", [
-                            ["raw-html", () => {return "You have <h3>" + format(player.om.hexMasteryPoints) + "</h3> hex mastery points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "You have <h3>" + format(player.om.hexMasteryPoints) + "</h3> " + HEX_STAGES[player.h.stage][1] + " mastery points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
                             ["raw-html", () => {return "(+" + format(player.om.hexMasteryPointsToGet) + ")"}, () => {
                                 let look = {fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
                                 if (player.po.hex || hasUpgrade("s", 18)) {look.color = "white"} else {look.color = "gray"}

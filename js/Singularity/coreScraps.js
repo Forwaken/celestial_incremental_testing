@@ -473,7 +473,7 @@
         202: {
             title: "Powered Power",
             unlocked: true,
-            description: "Double hex power gain.",
+            description() {return "Double " + HEX_STAGES[player.h.stage][1] + " power gain."},
             cost: new Decimal(1e6),
             currencyLocation() { return player.cs.scraps.factor },
             currencyDisplayName: "Factor Core Scraps",

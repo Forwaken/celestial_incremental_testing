@@ -845,7 +845,7 @@ addLayer("n", {
                     ["raw-html", () => {return "Boosts UB tickspeed by x" + format(player.n.pylonEnergyEffect) + "."}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                     ["raw-html", () => {return "Boosts glossary effect base by x" + format(player.n.pylonEnergyEffect2) + "."}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                     ["raw-html", () => {return "Boosts temporal pylon energy by x" + format(player.n.pylonEnergyEffect3) + "."}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
-                    ["raw-html", () => {return "Passive effect: Boosts hex power gain by ^" + format(player.n.pylonPassiveEffect) + " (Based on bees)"}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "Passive effect: Boosts " + HEX_STAGES[player.h.stage][1] + " power gain by ^" + format(player.n.pylonPassiveEffect) + " (Based on bees)"}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                     ["blank", "25px"],
                     ["row", [["ex-buyable", 1], ["ex-buyable", 2], ["ex-buyable", 3],]], 
                     ["blank", "25px"],

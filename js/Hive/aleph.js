@@ -1213,7 +1213,7 @@ addLayer("al", {
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>HC-6</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/10)\n\
-                    Double pre-power hex resource gain\n\
+                    Double pre-power " + HEX_STAGES[player.h.stage][1] + " resource gain\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Honeycombs"
             },
@@ -1368,7 +1368,7 @@ addLayer("al", {
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>RJ-6</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/10)\n\
-                    x1.5 hex power gain\n\
+                    x1.5 " + HEX_STAGES[player.h.stage][1] + " power gain\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Royal Jelly"
             },

@@ -729,7 +729,7 @@
                 return new Decimal(1)
             },
             marked: false,
-            challengeDescription() { return "<h4>Hex... A feature seemingly coming from thin air. No check back effects either..." },
+            challengeDescription() { return "<h4>" + HEX_STAGES[player.h.stage][0] + "... A feature seemingly coming from thin air. No check back effects either..." },
             goalDescription() {
                 if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return "1e2400 celestial points"
                 return "2 Refinements"
@@ -742,7 +742,7 @@
                 if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return player.points.gte("1e2000")
                 return player.hre.refinement.gte(2)
             },
-            rewardDescription: "Permanently unlock hex as an otherworldly feature, and change base hex point formula to:<br><small>(log<sub>60</sub>(Celestial Points+1))<sup>0.6</sup></small>",
+            rewardDescription() {return "Permanently unlock " + HEX_STAGES[player.h.stage][1] + " as an otherworldly feature, and change base " + HEX_STAGES[player.h.stage][1] + " point formula to:<br><small>(log<sub>60</sub>(Celestial Points+1))<sup>0.6</sup></small>"},
             unlocked() { return hasChallenge("ip", 12) },
             onEnter() {
                 //OTF is reset here and not in crunch to prevent a bug

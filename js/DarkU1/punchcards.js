@@ -607,7 +607,7 @@ addLayer("pu", {
                     "Unlock a new generator buyable<br>",
                     !getLevelableTier(this.layer, this.id, true) ? "</span>" : "",
                     "<u>Passive</u><br>",
-                    "x" + format(this.effect()[1]) + " to pre-hex power resources",
+                    "x" + format(this.effect()[1]) + " to pre-" + HEX_STAGES[player.h.stage][1] + " power resources",
                     getLevelableAmount(this.layer, this.id).gte(10) ? "<br><div style='font-size:10px;color:red'>[EFFECTS SOFTCAPPED]</div>" : "",
                 ]
                 return str.join("")
@@ -1089,7 +1089,7 @@ addLayer("pu", {
                     "^" + format(this.effect()[1]) + " to first generator buyable<br>",
                     !getLevelableTier(this.layer, this.id, true) ? "</span>" : "",
                     "<u>Passive</u><br>",
-                    "x" + format(this.effect()[2]) + " to hex power",
+                    "x" + format(this.effect()[2]) + " to " + HEX_STAGES[player.h.stage][1] + " power",
                     getLevelableAmount(this.layer, this.id).gte(10) ? "<br><div style='font-size:10px;color:red'>[EFFECTS SOFTCAPPED]</div>" : "",
                 ]
                 return str.join("")
@@ -1415,7 +1415,7 @@ addLayer("pu", {
                     "Unlock a new normality buyable<br>",
                     !getLevelableTier(this.layer, this.id, true) ? "</span>" : "",
                     "<u>Passive</u><br>",
-                    "x" + format(this.effect()[1]) + " to hex points",
+                    "x" + format(this.effect()[1]) + " to " + HEX_STAGES[player.h.stage][1] + " points",
                     getLevelableAmount(this.layer, this.id).gte(10) ? "<br><div style='font-size:10px;color:red'>[EFFECTS SOFTCAPPED]</div>" : "",
                 ]
                 return str.join("")
@@ -1469,7 +1469,7 @@ addLayer("pu", {
                     "Unlock a new normality buyable<br>",
                     !getLevelableTier(this.layer, this.id, true) ? "</span>" : "",
                     "<u>Passive</u><br>",
-                    "^" + format(this.effect()[1]) + " to hex power",
+                    "^" + format(this.effect()[1]) + " to " + HEX_STAGES[player.h.stage][1] + " power",
                     getLevelableAmount(this.layer, this.id).gte(10) ? "<br><div style='font-size:10px;color:red'>[EFFECTS SOFTCAPPED]</div>" : "",
                 ]
                 return str.join("")

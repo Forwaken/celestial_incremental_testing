@@ -1,5 +1,5 @@
 addLayer("hbl", {
-    name: "Hex of Blessings",
+    name() {return HEX_STAGES[player.h.stage][0] + " of Blessings"},
     symbol: "Bl", // Decides what text appears on the node.
     universe: "UA",
     tooltip: "Blessings", // Decides the nodes tooltip
@@ -165,8 +165,8 @@ addLayer("hbl", {
     clickables: {
         1: {
             title() {
-                if (inChallenge("hrm", 16)) return "<h2>Bless, but reset hex points and refinement.</h2><br><h3>Req: 18 Refinements.</h3>"
-                return "<h2>Bless, but reset hex points, provenance, and refinement.</h2><br><h3>Req: 18 Refinements.</h3>"
+                if (inChallenge("hrm", 16)) return "<h2>Bless, but reset " + HEX_STAGES[player.h.stage][1] + " points and refinement.</h2><br><h3>Req: 18 Refinements.</h3>"
+                return "<h2>Bless, but reset " + HEX_STAGES[player.h.stage][1] + " points, provenance, and refinement.</h2><br><h3>Req: 18 Refinements.</h3>"
             },
             canClick() {
                 if (!inChallenge("hrm", 11)) return player.hre.refinement.gte(18)
@@ -194,7 +194,7 @@ addLayer("hbl", {
         },
         2: {
             title() {
-                let str = "<h3>Hex Point Booster <small>Lv." + formatWhole(player.hbl.boosters[0].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[0].xp) + "/" + formatWhole(player.hbl.boosters[0].req) + ")<br>x" + format(player.hbl.boosters[0].effect) + " Hex Points<br><small>(Hold to deposit boons)</small>"
+                let str = "<h3>" + HEX_STAGES[player.h.stage][0] + " Point Booster <small>Lv." + formatWhole(player.hbl.boosters[0].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[0].xp) + "/" + formatWhole(player.hbl.boosters[0].req) + ")<br>x" + format(player.hbl.boosters[0].effect) + " " + HEX_STAGES[player.h.stage][0] + " Points<br><small>(Hold to deposit boons)</small>"
                 if (player.hbl.boosters[0].effect.pow(Decimal.div(1, player.hpu.purifiers[3].effect)).gte(1e9)) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -246,7 +246,7 @@ addLayer("hbl", {
             },
             canClick: true,
             unlocked: true,
-            tooltip: "Works outside of hex.",
+            tooltip() {return "Works outside of ." + HEX_STAGES[player.h.stage][1]},
             onClick() {this.onHold()},
             onHold() {
                 let amt = player.hbl.boosters[2].req.mul(player.hbl.boosterDeposit).min(player.hbl.boosters[2].req.sub(player.hbl.boosters[2].xp))
@@ -409,7 +409,7 @@ addLayer("hbl", {
         2: {
             title: "Grace II",
             unlocked() {return tmp.hbl.microtabs.blessing.Graces.unlocked},
-            description: "IP boosts hex point gain.",
+            description() {return "IP boosts " + HEX_STAGES[player.h.stage][1] + " point gain."},
             cost: new Decimal(180),
             currencyLocation() { return player.hbl },
             currencyDisplayName: "Blessings",
@@ -459,7 +459,7 @@ addLayer("hbl", {
         5: {
             title: "Grace V",
             unlocked() { return hasUpgrade("bi", 12) },
-            description: "Highest Rocket fuel boosts hex point gain.",
+            description() {return "Highest Rocket fuel boosts " + HEX_STAGES[player.h.stage][1] + " point gain."},
             cost: new Decimal(1440),
             currencyLocation() { return player.hbl },
             currencyDisplayName: "Blessings",
@@ -618,14 +618,14 @@ addLayer("hbl", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> hex points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
-            ["raw-html", "Hex of Blessings", {color: "white", fontSize: "30px", fontFamily: "monospace"}],
+            ["raw-html", () => {return HEX_STAGES[player.h.stage][0] + " of Blessings"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", backgroundColor: "#4c3900", border: "3px solid white", borderRadius: "20px"}],
         ["blank", "10px"],
         ["tooltip-row", [
