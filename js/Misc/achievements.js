@@ -277,7 +277,7 @@ addLayer("achievements", {
         110: {
             name: "Rough Resets",
             image: "resources/achievements/2_00.png",
-            tooltip: "<h3>Rough Resets</h3><hr style='margin-bottom:4px'>Reset for over<br>6 β-Provenance.<br><br>Reward: β-Provenances<br>are 10% cheaper.",
+            tooltip: "<h3>Rough Resets</h3><hr style='margin-bottom:4px'>Reset for over<br>6 β-Provenance.<br><br>Reward: β-Provenances<br>are 20% cheaper.",
             color: "#ffbf00",
             complete() {return hasMilestone("hre", 6)},
             unlocked: true,
@@ -367,9 +367,10 @@ addLayer("achievements", {
         121: {
             name: "Bless Up",
             image: "resources/achievements/2_00.png",
-            tooltip: "<h3>Bless Up</h3><hr style='margin-bottom:4px'>Do your first<br>blessing reset.",
+            tooltip: "<h3>Bless Up</h3><hr style='margin-bottom:4px'>Do your first<br>blessing reset.<br><br>Reward: Halve<br>α-Provenance price",
             color: "#ffbf00",
             unlocked: true,
+            marked: true,
         },
         122: {
             name: "ShardNG",

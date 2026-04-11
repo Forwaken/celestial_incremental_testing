@@ -43,12 +43,12 @@ addLayer("h", {
 
         // START OF HEX POINT GAIN
         player.h.hexPointGain = new Decimal(0)
-        if (!hasChallenge("ip", 13) && layerShown("h")) player.h.hexPointGain = new Decimal(12)
+        if (!hasChallenge("ip", 13) && layerShown("h")) player.h.hexPointGain = Decimal.mul(2, player.h.stage)
         if (hasChallenge("ip", 13)) {
             if (!hasMilestone("hre", 0)) {
-                player.h.hexPointGain = player.points.add(1).log(60).pow(0.6)
+                player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(1)))
             } else {
-                player.h.hexPointGain = player.i.bestPoints.add(1).log(60).pow(0.6)
+                player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(1)))
             }
         }
         player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[0][1])

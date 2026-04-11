@@ -8,7 +8,7 @@ addLayer("hpr", {
     startData() { return {
         rank: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
         rankReq: {
-            0: new Decimal(60),
+            0: new Decimal(36),
             1: new Decimal(6),
             2: new Decimal(36),
             3: new Decimal(216),
@@ -25,34 +25,31 @@ addLayer("hpr", {
         if (hasUpgrade("hsa", 15)) player.hpr.divider = player.hpr.divider.mul(1.3)
         if (hasUpgrade("hpw", 132)) player.hpr.divider = player.hpr.divider.mul(1.5)
 
-        player.hpr.rankReq = {0: new Decimal(60), 1: new Decimal(6), 2: new Decimal(36), 3: new Decimal(216), 4: new Decimal(1296), 5: new Decimal(7776)}
+        player.hpr.rankReq = {0: new Decimal(36), 1: new Decimal(6), 2: new Decimal(36), 3: new Decimal(216), 4: new Decimal(1296), 5: new Decimal(7776)}
 
-        if (player.hpr.rank[0].lt(1200)) player.hpr.rankReq[0] = layers.h.hexReq(player.hpr.rank[0], 60, 1.6, player.hpr.divider)
-        if (player.hpr.rank[0].gte(1200) && player.hpr.rank[0].lt(6000000)) player.hpr.rankReq[0] = layers.h.hexReq(player.hpr.rank[0], 60, 2.4, player.hpr.divider, -1087)
-        if (player.hpr.rank[0].gte(6000000) && player.hpr.rank[0].lt(2.4e8)) player.hpr.rankReq[0] = layers.h.hexReq(player.hpr.rank[0], 60, 6, player.hpr.divider, new Decimal(-5999485))
-        if (player.hpr.rank[0].gte(2.4e8)) player.hpr.rankReq[0] = layers.h.hexReq(player.hpr.rank[0], 60, 30, player.hpr.divider, new Decimal(-239999952))
-        if (player.h.hexPoint.lt(Decimal.div(5074814, player.hpr.divider))) player.hpr.rankGain[0] = layers.h.hexGain(player.h.hexPoint, 60, 1.6, player.hpr.divider).sub(player.hpr.rank[0])
-        if (player.h.hexPoint.gte(Decimal.div(5074814, player.hpr.divider)) && player.h.hexPoint.lt(Decimal.div(1.11e18, player.hpr.divider))) player.hpr.rankGain[0] = layers.h.hexGain(player.h.hexPoint, 60, 2.4, player.hpr.divider).sub(player.hpr.rank[0]).add(1088)
-        if (player.h.hexPoint.gte(Decimal.div(1.11e18, player.hpr.divider)) && player.h.hexPoint.lt(Decimal.div(9.85e51, player.hpr.divider))) player.hpr.rankGain[0] = layers.h.hexGain(player.h.hexPoint, 60, 6, player.hpr.divider).sub(player.hpr.rank[0]).add(5999486)
-        if (player.h.hexPoint.gte(Decimal.div(9.85e51, player.hpr.divider))) player.hpr.rankGain[0] = layers.h.hexGain(player.h.hexPoint, 60, 30, player.hpr.divider).sub(player.hpr.rank[0]).add(239999953)
+        let alphaDiv = new Decimal(1)
+        //if (hasAchievement("achievements", 121)) alphaDiv = alphaDiv.mul(2)
+
+        player.hpr.rankReq[0] = player.hpr.rank[0].add(1).pow(player.hpr.rank[0].add(1).log(Decimal.div(30, player.h.stage).add(1))).mul(player.h.stage.pow(2)).div(player.hpr.divider.mul(alphaDiv))
+        player.hpr.rankGain[0] = Decimal.pow(Decimal.div(30, player.h.stage).add(1), player.h.hexPoint.div(player.h.stage.pow(2)).mul(player.hpr.divider.mul(alphaDiv)).log(Decimal.div(30, player.h.stage).add(1)).pow(0.5)).floor().sub(player.hpr.rank[0])
 
         let betaDiv = new Decimal(1)
-        if (hasAchievement("achievements", 110)) betaDiv = betaDiv.mul(1.1)
+        if (hasAchievement("achievements", 110)) betaDiv = betaDiv.mul(1.2)
 
-        player.hpr.rankReq[1] = layers.h.hexReq(player.hpr.rank[1], 6, 1.5, player.hpr.divider.mul(betaDiv))
-        player.hpr.rankGain[1] = layers.h.hexGain(player.hpr.rank[0], 6, 1.5, player.hpr.divider.mul(betaDiv)).sub(player.hpr.rank[1])
+        player.hpr.rankReq[1] = layers.h.hexReq(player.hpr.rank[1], player.h.stage, Decimal.div(player.h.stage, 4.3), player.hpr.divider.mul(betaDiv))
+        player.hpr.rankGain[1] = layers.h.hexGain(player.hpr.rank[0], player.h.stage, Decimal.div(player.h.stage, 4.3), player.hpr.divider.mul(betaDiv)).sub(player.hpr.rank[1])
 
-        player.hpr.rankReq[2] = layers.h.hexReq(player.hpr.rank[2], 36, 1.4, player.hpr.divider)
-        player.hpr.rankGain[2] = layers.h.hexGain(player.hpr.rank[1], 36, 1.4, player.hpr.divider).sub(player.hpr.rank[2])
+        player.hpr.rankReq[2] = layers.h.hexReq(player.hpr.rank[2], player.h.stage.pow(2), Decimal.div(player.h.stage, 4.6), player.hpr.divider)
+        player.hpr.rankGain[2] = layers.h.hexGain(player.hpr.rank[1], player.h.stage.pow(2), Decimal.div(player.h.stage, 4.6), player.hpr.divider).sub(player.hpr.rank[2])
 
-        player.hpr.rankReq[3] = layers.h.hexReq(player.hpr.rank[3], 216, 1.3, player.hpr.divider)
-        player.hpr.rankGain[3] = layers.h.hexGain(player.hpr.rank[2], 216, 1.3, player.hpr.divider).sub(player.hpr.rank[3])
+        player.hpr.rankReq[3] = layers.h.hexReq(player.hpr.rank[3], player.h.stage.pow(3), Decimal.div(player.h.stage, 4.9), player.hpr.divider)
+        player.hpr.rankGain[3] = layers.h.hexGain(player.hpr.rank[2], player.h.stage.pow(3), Decimal.div(player.h.stage, 4.9), player.hpr.divider).sub(player.hpr.rank[3])
 
-        player.hpr.rankReq[4] = layers.h.hexReq(player.hpr.rank[4], 1296, 1.2, player.hpr.divider)
-        player.hpr.rankGain[4] = layers.h.hexGain(player.hpr.rank[3], 1296, 1.2, player.hpr.divider).sub(player.hpr.rank[4])
+        player.hpr.rankReq[4] = layers.h.hexReq(player.hpr.rank[4], player.h.stage.pow(4), Decimal.div(player.h.stage, 5.2), player.hpr.divider)
+        player.hpr.rankGain[4] = layers.h.hexGain(player.hpr.rank[3], player.h.stage.pow(4), Decimal.div(player.h.stage, 5.2), player.hpr.divider).sub(player.hpr.rank[4])
 
-        player.hpr.rankReq[5] = layers.h.hexReq(player.hpr.rank[5], 7776, 1.1, player.hpr.divider)
-        player.hpr.rankGain[5] = layers.h.hexGain(player.hpr.rank[4], 7776, 1.1, player.hpr.divider).sub(player.hpr.rank[5])
+        player.hpr.rankReq[5] = layers.h.hexReq(player.hpr.rank[5], player.h.stage.pow(5), Decimal.div(player.h.stage, 5.5), player.hpr.divider)
+        player.hpr.rankGain[5] = layers.h.hexGain(player.hpr.rank[4], player.h.stage.pow(5), Decimal.div(player.h.stage, 5.5), player.hpr.divider).sub(player.hpr.rank[5])
 
         for (let i = 0; i < 6; i++) {
             if (player.hpr.rankGain[i].lt(0)) player.hpr.rankGain[i] = new Decimal(0)
@@ -75,23 +72,23 @@ addLayer("hpr", {
         // Disable effects
         if (inChallenge("hrm", 16)) player.hpr.effectMult = new Decimal(0)
 
-        player.hpr.rankEffect[0][0] = player.hpr.rank[0].pow(2.5).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[0][1] = player.hpr.rank[0].pow(1.1).mul(0.5).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[0][0] = player.hpr.rank[0].pow(player.h.stage.div(2.5)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[0][1] = player.hpr.rank[0].pow(Decimal.add(1, Decimal.div(1, player.h.stage))).mul(Decimal.div(3, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[1][0] = player.hpr.rank[1].pow(2.8).mul(2).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[1][1] = player.hpr.rank[1].pow(1.2).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[1][0] = player.hpr.rank[1].pow(player.h.stage.div(2)).mul(player.h.stage.div(2)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[1][1] = player.hpr.rank[1].pow(Decimal.add(1, Decimal.div(2, player.h.stage))).mul(Decimal.div(12, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[2][0] = player.hpr.rank[2].pow(3.1).mul(4).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[2][1] = player.hpr.rank[2].pow(1.4).mul(2).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[2][0] = player.hpr.rank[2].pow(player.h.stage.div(1.75)).mul(player.h.stage).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[2][1] = player.hpr.rank[2].pow(Decimal.add(1, Decimal.div(4, player.h.stage))).mul(Decimal.div(27, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[3][0] = player.hpr.rank[3].pow(3.4).mul(8).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[3][1] = player.hpr.rank[3].pow(1.8).mul(4).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[3][0] = player.hpr.rank[3].pow(player.h.stage.div(1.5)).mul(player.h.stage.mul(2)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[3][1] = player.hpr.rank[3].pow(Decimal.add(1, Decimal.div(6, player.h.stage))).mul(Decimal.div(48, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[4][0] = player.hpr.rank[4].pow(3.7).mul(16).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[4][1] = player.hpr.rank[4].pow(2.2).mul(8).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[4][0] = player.hpr.rank[4].pow(player.h.stage.div(1.25)).mul(player.h.stage.mul(4)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[4][1] = player.hpr.rank[4].pow(Decimal.add(1, Decimal.div(9, player.h.stage))).mul(Decimal.div(75, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[5][0] = player.hpr.rank[5].pow(4).mul(32).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[5][1] = player.hpr.rank[5].pow(2.6).mul(16).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[5][0] = player.hpr.rank[5].pow(player.h.stage).mul(player.h.stage.mul(8)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[5][1] = player.hpr.rank[5].pow(Decimal.add(1, Decimal.div(12, player.h.stage))).mul(Decimal.div(108, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
         if (hasUpgrade("tad", 1001)) {
             for (let i = 0; i < 6; i++) {
@@ -245,16 +242,11 @@ addLayer("hpr", {
             ["style-column", [
                 ["style-column", [
                     ["raw-html", () => {return formatWhole(player.hpr.rank[0]) + " α-Provenance"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
-                    ["row", [
-                        ["raw-html", () => {return "(+" + formatWhole(player.hpr.rankGain[0]) + ")"}, () => {
-                            let look = {color: "white", fontSize: "16px", fontFamily: "monospace"}
-                            player.hpr.rankGain[0].gt(0) ? look.color = "white" : look.color = "gray"
-                            return look
-                        }],
-                        ["raw-html", () => {return player.hpr.rank[0].gte(1200) && player.hpr.rank[0].lt(6000000) ? "[SOFTCAPPED]" : ""}, {color: "red", fontSize: "14px", fontFamily: "monospace", marginLeft: "5px"}],
-                        ["raw-html", () => {return player.hpr.rank[0].gte(6000000) && player.hpr.rank[0].lt(2.4e8) ? "[SOFTCAPPED<sup>2</sup>]" : ""}, {color: "red", fontSize: "14px", fontFamily: "monospace", marginLeft: "5px"}],
-                        ["raw-html", () => {return player.hpr.rank[0].gte(2.4e8) ? "[SOFTCAPPED<sup>3</sup>]" : ""}, {color: "red", fontSize: "14px", fontFamily: "monospace", marginLeft: "5px"}],
-                    ]],
+                    ["raw-html", () => {return "(+" + formatWhole(player.hpr.rankGain[0]) + ")"}, () => {
+                        let look = {color: "white", fontSize: "16px", fontFamily: "monospace"}
+                        player.hpr.rankGain[0].gt(0) ? look.color = "white" : look.color = "gray"
+                        return look
+                    }],
                 ], {width: "250px", height: "50px", borderBottom: "2px solid white"}],
                 ["style-column", [
                     ["raw-html", () => {return "x" + format(player.hpr.rankEffect[0][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[0][1]) + " " + HEX_STAGES[player.h.stage][1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],

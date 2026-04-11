@@ -228,7 +228,7 @@ addLayer("hpw", {
         12: {
             title: "Might 2:2",
             unlocked: true,
-            description: "Increase the base of Refiner Req Booster by 1.",
+            description: "Increase the base of Refiner Req Booster by 50%.",
             branches: [1, 2],
             cost() {return new Decimal(3).pow(player.hpw.upgScale[1])},
             canAfford() { return hasUpgrade("hpw", 1) || hasUpgrade("hpw", 2)},
@@ -448,7 +448,7 @@ addLayer("hpw", {
         81: {
             title: "Might 9:1",
             unlocked: true,
-            description: "Increase Refiner 1's 1st effect base by +0.1.",
+            description: "Increase Refiner 1's 1st effect base by 50%.",
             branches: [71],
             cost() {return new Decimal(600000).pow(player.hpw.upgScale[8])},
             canAfford() { return hasUpgrade("hpw", 71)},

@@ -63,7 +63,7 @@ addLayer("hbl", {
     },
     update(delta) {
         player.hbl.blessingsGain = new Decimal(0)
-        if (player.hre.refinement.gte(18)) player.hbl.blessingsGain = player.hre.refinement.sub(17).pow(1.6)
+        if (player.hre.refinement.gte(player.h.stage.mul(2))) player.hbl.blessingsGain = player.hre.refinement.sub(player.h.stage.mul(2).sub(1)).pow(Decimal.div(9.6, player.h.stage))
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.hbl.boosters[4].effect)
         if (hasMilestone("hbl", 1)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(2)
         if (hasMilestone("hbl", 1) || inChallenge("hrm", 12)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.hpu.purifiers[1].effect)
@@ -87,7 +87,7 @@ addLayer("hbl", {
         if (player.hbl.blessings.add(player.hbl.blessingPerSec.mul(delta)).gt(0)) player.hbl.blessings = player.hbl.blessings.add(player.hbl.blessingPerSec.mul(delta))
         
         // BOON START
-        player.hbl.boonsGain = player.hbl.blessings.pow(1.6).div(6)
+        player.hbl.boonsGain = player.hbl.blessings.pow(Decimal.div(9.6, player.h.stage)).div(player.h.stage)
         player.hbl.boonsGain = player.hbl.boonsGain.mul(player.hbl.boosters[1].effect)
         player.hbl.boonsGain = player.hbl.boonsGain.mul(player.hre.refinementEffect[3][0])
         player.hbl.boonsGain = player.hbl.boonsGain.mul(buyableEffect("hcu", 108))
@@ -109,12 +109,12 @@ addLayer("hbl", {
             }
         }
 
-        player.hbl.boosters[0].req = Decimal.pow(6, player.hbl.boosters[0].level)
-        player.hbl.boosters[1].req = Decimal.pow(12, player.hbl.boosters[1].level.add(1))
-        player.hbl.boosters[2].req = Decimal.pow(30, player.hbl.boosters[2].level.add(1))
-        player.hbl.boosters[3].req = Decimal.pow(60, player.hbl.boosters[3].level.add(2))
-        player.hbl.boosters[4].req = Decimal.pow(120, player.hbl.boosters[4].level.add(2))
-        player.hbl.boosters[5].req = Decimal.pow(180, player.hbl.boosters[5].level.add(2))
+        player.hbl.boosters[0].req = Decimal.pow(player.h.stage, player.hbl.boosters[0].level)
+        player.hbl.boosters[1].req = Decimal.pow(player.h.stage.mul(2), player.hbl.boosters[1].level.add(1))
+        player.hbl.boosters[2].req = Decimal.pow(player.h.stage.mul(5), player.hbl.boosters[2].level.add(1))
+        player.hbl.boosters[3].req = Decimal.pow(player.h.stage.mul(10), player.hbl.boosters[3].level.add(2))
+        player.hbl.boosters[4].req = Decimal.pow(player.h.stage.mul(20), player.hbl.boosters[4].level.add(2))
+        player.hbl.boosters[5].req = Decimal.pow(player.h.stage.mul(30), player.hbl.boosters[5].level.add(2))
 
         for (let i in player.hbl.boosters) {
             if (player.hbl.boosters[i].xp.gte(player.hbl.boosters[i].req.mul(0.99))) {
@@ -123,38 +123,38 @@ addLayer("hbl", {
             }
         }
 
-        player.hbl.boosters[0].effect = Decimal.pow(1.3, player.hbl.boosters[0].level)
-        if (hasMilestone("hre", 2)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.mul(player.hbl.boosters[0].xp.div(player.hbl.boosters[0].req).mul(0.15).add(1))
+        player.hbl.boosters[0].effect = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1), player.hbl.boosters[0].level)
+        if (hasMilestone("hre", 2)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.mul(player.hbl.boosters[0].xp.div(player.hbl.boosters[0].req).mul(Decimal.div(0.9, player.h.stage)).add(1))
         if (player.hbl.boosters[0].effect.gte(1e9)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.div(1e9).pow(0.3).mul(1e9)
         if (!inChallenge("hrm", 12)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.pow(player.hpu.purifiers[3].effect)
         
-        player.hbl.boosters[1].effect = Decimal.pow(1.6, player.hbl.boosters[1].level)
-        if (hasMilestone("hre", 2)) player.hbl.boosters[1].effect = player.hbl.boosters[1].effect.mul(player.hbl.boosters[1].xp.div(player.hbl.boosters[1].req).mul(0.3).add(1))
+        player.hbl.boosters[1].effect = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hbl.boosters[1].level)
+        if (hasMilestone("hre", 2)) player.hbl.boosters[1].effect = player.hbl.boosters[1].effect.mul(player.hbl.boosters[1].xp.div(player.hbl.boosters[1].req).mul(Decimal.div(1.8, player.h.stage)).add(1))
 
-        player.hbl.boosters[2].effect = Decimal.pow(Decimal.mul(0.06, player.hbl.boosters[5].effect).add(1), player.hbl.boosters[2].level)
-        if (hasMilestone("hre", 2)) player.hbl.boosters[2].effect = player.hbl.boosters[2].effect.mul(player.hbl.boosters[2].xp.div(player.hbl.boosters[2].req).mul(Decimal.mul(0.03, player.hbl.boosters[5].effect)).add(1))
+        player.hbl.boosters[2].effect = Decimal.pow(Decimal.mul(Decimal.div(player.h.stage, 100), player.hbl.boosters[5].effect).add(1), player.hbl.boosters[2].level)
+        if (hasMilestone("hre", 2)) player.hbl.boosters[2].effect = player.hbl.boosters[2].effect.mul(player.hbl.boosters[2].xp.div(player.hbl.boosters[2].req).mul(Decimal.mul(Decimal.div(player.h.stage, 100), player.hbl.boosters[5].effect)).add(1))
         if (player.hbl.boosters[2].effect.gte(1e9)) player.hbl.boosters[2].effect = player.hbl.boosters[2].effect.div(1e9).pow(Decimal.add(0.3, buyableEffect("hrm", 3))).mul(1e9)
 
-        if (!hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = Decimal.pow(2, player.hbl.boosters[3].level)
-        if (hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = Decimal.pow(3, player.hbl.boosters[3].level)
+        if (!hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = Decimal.pow(Decimal.div(6, player.h.stage).add(1), player.hbl.boosters[3].level)
+        if (hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = Decimal.pow(Decimal.div(12, player.h.stage).add(1), player.hbl.boosters[3].level)
         if (hasMilestone("hre", 2)) {
-            if (!hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = player.hbl.boosters[3].effect.mul(player.hbl.boosters[3].xp.div(player.hbl.boosters[3].req).mul(0.5).add(1))
-            if (hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = player.hbl.boosters[3].effect.mul(player.hbl.boosters[3].xp.div(player.hbl.boosters[3].req).add(1))
+            if (!hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = player.hbl.boosters[3].effect.mul(player.hbl.boosters[3].xp.div(player.hbl.boosters[3].req).mul(Decimal.div(3, player.h.stage)).add(1))
+            if (hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = player.hbl.boosters[3].effect.mul(player.hbl.boosters[3].xp.div(player.hbl.boosters[3].req).add(Decimal.div(4.5, player.h.stage)))
         }
         if (player.hbl.boosters[3].effect.gte(1e12)) player.hbl.boosters[3].effect = player.hbl.boosters[3].effect.div(1e12).pow(0.3).mul(1e12)
 
-        if (!hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = Decimal.pow(1.5, player.hbl.boosters[4].level)
-        if (hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = Decimal.pow(1.6, player.hbl.boosters[4].level)
+        if (!hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = Decimal.pow(Decimal.div(3, player.h.stage).add(1), player.hbl.boosters[4].level)
+        if (hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = Decimal.pow(Decimal.div(3, player.h.stage).add(1.1), player.hbl.boosters[4].level)
         if (hasMilestone("hre", 2)) {
-            if (!hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = player.hbl.boosters[4].effect.mul(player.hbl.boosters[4].xp.div(player.hbl.boosters[4].req).mul(0.25).add(1))
-            if (hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = player.hbl.boosters[4].effect.mul(player.hbl.boosters[4].xp.div(player.hbl.boosters[4].req).mul(0.3).add(1))
+            if (!hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = player.hbl.boosters[4].effect.mul(player.hbl.boosters[4].xp.div(player.hbl.boosters[4].req).mul(Decimal.div(1.5, player.h.stage)).add(1))
+            if (hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = player.hbl.boosters[4].effect.mul(player.hbl.boosters[4].xp.div(player.hbl.boosters[4].req).mul(Decimal.div(1.5, player.h.stage).add(0.05)).add(1))
         }
 
-        if (!hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = Decimal.pow(2, player.hbl.boosters[5].level)
-        if (hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = Decimal.pow(2.3, player.hbl.boosters[5].level)
+        if (!hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = Decimal.pow(Decimal.div(player.h.stage, 3), player.hbl.boosters[5].level)
+        if (hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = Decimal.pow(Decimal.div(player.h.stage, 3).add(0.3), player.hbl.boosters[5].level)
         if (hasMilestone("hre", 2)) {
-            if (!hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = player.hbl.boosters[5].effect.mul(player.hbl.boosters[5].xp.div(player.hbl.boosters[5].req).mul(0.5).add(1))
-            if (hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = player.hbl.boosters[5].effect.mul(player.hbl.boosters[5].xp.div(player.hbl.boosters[5].req).mul(0.65).add(1))
+            if (!hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = player.hbl.boosters[5].effect.mul(player.hbl.boosters[5].xp.div(player.hbl.boosters[5].req).mul(Decimal.div(3, player.h.stage)).add(1))
+            if (hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = player.hbl.boosters[5].effect.mul(player.hbl.boosters[5].xp.div(player.hbl.boosters[5].req).mul(Decimal.div(3, player.h.stage).add(0.15)).add(1))
         }
         if (player.hbl.boosters[5].effect.gte(16)) player.hbl.boosters[5].effect = player.hbl.boosters[5].effect.log(2.4).mul(5)
 
@@ -165,12 +165,12 @@ addLayer("hbl", {
     clickables: {
         1: {
             title() {
-                if (inChallenge("hrm", 16)) return "<h2>Bless, but reset " + HEX_STAGES[player.h.stage][1] + " points and refinement.</h2><br><h3>Req: 18 Refinements.</h3>"
-                return "<h2>Bless, but reset " + HEX_STAGES[player.h.stage][1] + " points, provenance, and refinement.</h2><br><h3>Req: 18 Refinements.</h3>"
+                if (inChallenge("hrm", 16)) return "<h2>Bless, but reset " + HEX_STAGES[player.h.stage][1] + " points and refinement.</h2><br><h3>Req: " + formatWhole(player.h.stage.mul(2)) + " Refinements.</h3>"
+                return "<h2>Bless, but reset " + HEX_STAGES[player.h.stage][1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.h.stage.mul(2)) + " Refinements.</h3>"
             },
             canClick() {
-                if (!inChallenge("hrm", 11)) return player.hre.refinement.gte(18)
-                if (inChallenge("hrm", 11)) return player.hre.refinement.gte(18) && player.hrm.blessLimit.lt(6)
+                if (!inChallenge("hrm", 11)) return player.hre.refinement.gte(player.h.stage.mul(2))
+                if (inChallenge("hrm", 11)) return player.hre.refinement.gte(player.h.stage.mul(2)) && player.hrm.blessLimit.lt(6)
             },
             unlocked: true,
             onClick() {
@@ -209,7 +209,7 @@ addLayer("hbl", {
                     if (player.hbl.boosters[0].xp.gte(player.hbl.boosters[0].req.mul(0.99))) {
                         player.hbl.boosters[0].xp = new Decimal(0)
                         player.hbl.boosters[0].level = player.hbl.boosters[0].level.add(1)
-                        player.hbl.boosters[0].req = Decimal.pow(6, player.hbl.boosters[0].level)
+                        player.hbl.boosters[0].req = Decimal.pow(player.h.stage, player.hbl.boosters[0].level)
                     }
                 }
             },
@@ -230,7 +230,7 @@ addLayer("hbl", {
                     if (player.hbl.boosters[1].xp.gte(player.hbl.boosters[1].req.mul(0.99))) {
                         player.hbl.boosters[1].xp = new Decimal(0)
                         player.hbl.boosters[1].level = player.hbl.boosters[1].level.add(1)
-                        player.hbl.boosters[1].req = Decimal.pow(12, player.hbl.boosters[1].level.add(1))
+                        player.hbl.boosters[1].req = Decimal.pow(player.h.stage.mul(2), player.hbl.boosters[1].level.add(1))
                     }
                 }
             },
@@ -246,7 +246,7 @@ addLayer("hbl", {
             },
             canClick: true,
             unlocked: true,
-            tooltip() {return "Works outside of ." + HEX_STAGES[player.h.stage][1]},
+            tooltip() {return "Works outside of " + HEX_STAGES[player.h.stage][1] + "."},
             onClick() {this.onHold()},
             onHold() {
                 let amt = player.hbl.boosters[2].req.mul(player.hbl.boosterDeposit).min(player.hbl.boosters[2].req.sub(player.hbl.boosters[2].xp))
@@ -256,7 +256,7 @@ addLayer("hbl", {
                     if (player.hbl.boosters[2].xp.gte(player.hbl.boosters[2].req.mul(0.99))) {
                         player.hbl.boosters[2].xp = new Decimal(0)
                         player.hbl.boosters[2].level = player.hbl.boosters[2].level.add(1)
-                        player.hbl.boosters[2].req = Decimal.pow(30, player.hbl.boosters[2].level.add(1))
+                        player.hbl.boosters[2].req = Decimal.pow(player.h.stage.mul(5), player.hbl.boosters[2].level.add(1))
                     }
                 }
             },
@@ -281,7 +281,7 @@ addLayer("hbl", {
                     if (player.hbl.boosters[3].xp.gte(player.hbl.boosters[3].req.mul(0.99))) {
                         player.hbl.boosters[3].xp = new Decimal(0)
                         player.hbl.boosters[3].level = player.hbl.boosters[3].level.add(1)
-                        player.hbl.boosters[3].req = Decimal.pow(60, player.hbl.boosters[3].level.add(2))
+                        player.hbl.boosters[3].req = Decimal.pow(player.h.stage.mul(10), player.hbl.boosters[3].level.add(2))
                     }
                 }
             },
@@ -302,7 +302,7 @@ addLayer("hbl", {
                     if (player.hbl.boosters[4].xp.gte(player.hbl.boosters[4].req.mul(0.99))) {
                         player.hbl.boosters[4].xp = new Decimal(0)
                         player.hbl.boosters[4].level = player.hbl.boosters[4].level.add(1)
-                        player.hbl.boosters[4].req = Decimal.pow(120, player.hbl.boosters[4].level.add(2))
+                        player.hbl.boosters[4].req = Decimal.pow(player.h.stage.mul(20), player.hbl.boosters[4].level.add(2))
                     }
                 }
             },
@@ -327,7 +327,7 @@ addLayer("hbl", {
                     if (player.hbl.boosters[5].xp.gte(player.hbl.boosters[5].req.mul(0.99))) {
                         player.hbl.boosters[5].xp = new Decimal(0)
                         player.hbl.boosters[5].level = player.hbl.boosters[5].level.add(1)
-                        player.hbl.boosters[5].req = Decimal.pow(180, player.hbl.boosters[5].level.add(2))
+                        player.hbl.boosters[5].req = Decimal.pow(player.h.stage.mul(30), player.hbl.boosters[5].level.add(2))
                     }
                 }
             },
@@ -389,19 +389,19 @@ addLayer("hbl", {
             title: "Grace I",
             unlocked() {return tmp.hbl.microtabs.blessing.Graces.unlocked},
             description: "Increase jinx cap based on NIP.",
-            cost: new Decimal(60),
+            cost() {return player.h.stage.mul(10)},
             currencyLocation() { return player.hbl },
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
-                let eff = player.ta.negativeInfinityPoints.add(1).log(6).pow(0.6).ceil()
-                if (inChallenge("hrm", 12)) eff = eff.pow(0.3).ceil()
-                if (eff.gte(9)) eff = eff.div(9).pow(0.3).mul(9).ceil().min(18)
+                let eff = player.ta.negativeInfinityPoints.add(1).log(player.h.stage).pow(Decimal.div(3.6, player.h.stage)).ceil()
+                if (inChallenge("hrm", 12)) eff = eff.pow(Decimal.div(1.8, player.h.stage)).ceil()
+                if (eff.gte(player.h.stage.mul(1.5))) eff = eff.div(player.h.stage.mul(1.5)).pow(Decimal.div(1.8, player.h.stage)).mul(player.h.stage.mul(1.5)).ceil().min(player.h.stage.mul(3))
                 return eff
             },
             effectDisplay() {
-                if (upgradeEffect(this.layer, this.id).lt(9)) return "+" + formatWhole(upgradeEffect(this.layer, this.id))
-                if (upgradeEffect(this.layer, this.id).lt(18)) return "+" + formatWhole(upgradeEffect(this.layer, this.id)) + "<br><small style='color:red'>[SOFTCAPPED]</small>"
+                if (upgradeEffect(this.layer, this.id).lt(player.h.stage.mul(1.5))) return "+" + formatWhole(upgradeEffect(this.layer, this.id))
+                if (upgradeEffect(this.layer, this.id).lt(player.h.stage.mul(3))) return "+" + formatWhole(upgradeEffect(this.layer, this.id)) + "<br><small style='color:red'>[SOFTCAPPED]</small>"
                 return "+" + formatWhole(upgradeEffect(this.layer, this.id)) + "<br><small style='color:red'>[HARDCAPPED]</small>"
             }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
@@ -410,13 +410,13 @@ addLayer("hbl", {
             title: "Grace II",
             unlocked() {return tmp.hbl.microtabs.blessing.Graces.unlocked},
             description() {return "IP boosts " + HEX_STAGES[player.h.stage][1] + " point gain."},
-            cost: new Decimal(180),
+            cost() {return player.h.stage.mul(player.h.stage.div(2)).mul(10)},
             currencyLocation() { return player.hbl },
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
                 let eff = player.in.infinityPoints.add(1).log(6).pow(0.6).add(1)
-                if (inChallenge("hrm", 12)) eff = eff.pow(0.3)
+                if (inChallenge("hrm", 12)) eff = eff.pow(Decimal.div(1.8, player.h.stage))
                 return eff
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" }, // Add formatting to the effect
@@ -426,13 +426,13 @@ addLayer("hbl", {
             title: "Grace III",
             unlocked() {return tmp.hbl.microtabs.blessing.Graces.unlocked},
             description: "Infinities reduce refinement req.",
-            cost: new Decimal(360),
+            cost() {return player.h.stage.pow(2).mul(10)},
             currencyLocation() { return player.hbl },
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
                 let eff = player.in.infinities.add(1).log(3).pow(0.6).add(1)
-                if (inChallenge("hrm", 12)) eff = eff.pow(0.3)
+                if (inChallenge("hrm", 12)) eff = eff.pow(Decimal.div(1.8, player.h.stage))
                 return eff
             },
             effectDisplay() { return "/" + format(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
@@ -442,13 +442,13 @@ addLayer("hbl", {
             title: "Grace IV",
             unlocked() { return hasUpgrade("bi", 12) },
             description: "Infinitums boost curse gain.",
-            cost: new Decimal(720),
+            cost() {return player.h.stage.mul(player.h.stage.mul(2)).mul(10)},
             currencyLocation() { return player.hbl },
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
                 let eff = player.tad.infinitum.add(1).log(6).pow(4).add(1).pow(player.hpu.purifiers[5].effect)
-                if (inChallenge("hrm", 12)) eff = eff.pow(0.3)
+                if (inChallenge("hrm", 12)) eff = eff.pow(Decimal.div(1.8, player.h.stage))
                 return eff
             },
             effectDisplay() {
@@ -460,13 +460,13 @@ addLayer("hbl", {
             title: "Grace V",
             unlocked() { return hasUpgrade("bi", 12) },
             description() {return "Highest Rocket fuel boosts " + HEX_STAGES[player.h.stage][1] + " point gain."},
-            cost: new Decimal(1440),
+            cost() {return player.h.stage.mul(player.h.stage.mul(4)).mul(10)},
             currencyLocation() { return player.hbl },
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
                 let eff = player.ta.highestRocketFuel.add(1).log(6).pow(0.6).add(1)
-                if (inChallenge("hrm", 12)) eff = eff.pow(0.3)
+                if (inChallenge("hrm", 12)) eff = eff.pow(Decimal.div(1.8, player.h.stage))
                 return eff
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" }, // Add formatting to the effect
@@ -479,13 +479,13 @@ addLayer("hbl", {
                 if (inChallenge("hrm", 16)) return "Highest Dice Points boosts refiner 1 effects."
                 return "Highest Dice Points boosts provenance effects."
             },
-            cost: new Decimal(2880),
+            cost() {return player.h.stage.mul(player.h.stage.mul(8)).mul(10)},
             currencyLocation() { return player.hbl },
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
                 let eff = player.ta.highestDicePoints.add(1).log(60).pow(0.1).mul(0.6).add(1)
-                if (inChallenge("hrm", 12)) eff = eff.pow(0.3)
+                if (inChallenge("hrm", 12)) eff = eff.pow(Decimal.div(1.8, player.h.stage))
                 if (inChallenge("hrm", 16)) eff = eff.pow(0.5).sub(1).min(0.5)
                 return eff
             },
@@ -632,11 +632,11 @@ addLayer("hbl", {
             ["raw-html", () => {return "You have <h3>" + format(player.hbl.blessings) + "</h3> blessings." }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return "(+" + format(player.hbl.blessingsGain) + ")" }, () => {
                 let look = {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
-                player.hre.refinement.gte(18) ? look.color = "white" : look.color = "gray"
+                player.hre.refinement.gte(player.h.stage.mul(2)) ? look.color = "white" : look.color = "gray"
                 return look
             }],
             ["raw-html", () => {return player.hbl.blessingPerSec.eq(0) ? "" : player.hbl.blessingPerSec.gt(0) ? "(+" + format(player.hbl.blessingPerSec) + "/s)" : "<span style='color:red'>(" + format(player.hbl.blessingPerSec) + "/s)</span>" }, {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
-            ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>(Refinements-17)^1.6</small></div>"],
+            ["raw-html", () => {return "<div class='bottomTooltip'>Base Formula<hr><small>(Refinements-" + formatWhole(player.h.stage.mul(2).sub(1)) + ")^" + formatSimple(Decimal.div(9.6, player.h.stage), 2) + "</small></div>"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 11) ? "Bless resets used: " + formatWhole(player.hrm.blessLimit) + "/6" : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
