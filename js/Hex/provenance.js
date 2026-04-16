@@ -28,7 +28,7 @@ addLayer("hpr", {
         player.hpr.rankReq = {0: new Decimal(36), 1: new Decimal(6), 2: new Decimal(36), 3: new Decimal(216), 4: new Decimal(1296), 5: new Decimal(7776)}
 
         let alphaDiv = new Decimal(1)
-        //if (hasAchievement("achievements", 121)) alphaDiv = alphaDiv.mul(2)
+        if (hasAchievement("achievements", 121)) alphaDiv = alphaDiv.mul(2)
 
         player.hpr.rankReq[0] = player.hpr.rank[0].add(1).pow(player.hpr.rank[0].add(1).log(Decimal.div(30, player.h.stage).add(1))).mul(player.h.stage.pow(2)).div(player.hpr.divider.mul(alphaDiv))
         player.hpr.rankGain[0] = Decimal.pow(Decimal.div(30, player.h.stage).add(1), player.h.hexPoint.div(player.h.stage.pow(2)).mul(player.hpr.divider.mul(alphaDiv)).log(Decimal.div(30, player.h.stage).add(1)).pow(0.5)).floor().sub(player.hpr.rank[0])
@@ -66,7 +66,7 @@ addLayer("hpr", {
 
         player.hpr.effectMult = player.hre.refinementEffect[2][0]
         if (hasUpgrade("hbl", 6)) player.hpr.effectMult = player.hpr.effectMult.mul(upgradeEffect("hbl", 6))
-        if (hasMilestone("hbl", 5)) player.hpr.effectMult = player.hpr.effectMult.mul(1.3)
+        if (hasMilestone("hbl", 5)) player.hpr.effectMult = player.hpr.effectMult.mul(player.h.stage.div(20).add(1))
         if (hasUpgrade("hpw", 101)) player.hpr.effectMult = player.hpr.effectMult.mul(upgradeEffect("hpw", 101))
 
         // Disable effects

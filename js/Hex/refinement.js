@@ -23,11 +23,14 @@ addLayer("hre", {
         player.hre.refinementDiv = player.hre.refinementDiv.mul(levelableEffect("pet", 210)[1])
         player.hre.refinementDiv = player.hre.refinementDiv.mul(player.h.prePowerMult)
 
-        if (player.hre.refinement.lt(90)) player.hre.refinementReq = Decimal.pow(player.h.stage, player.hre.refinement).mul(Decimal.pow(10, player.h.stage)).div(player.hre.refinementDiv)
-        if (player.hre.refinement.gte(90)) player.hre.refinementReq = Decimal.pow(1000, player.hre.refinement).div(1e188).div(player.hre.refinementDiv)
+        let reqSoftcapConnector = Decimal.sub(Decimal.pow(player.h.stage.pow(3), player.h.stage.mul(10)), Decimal.pow(player.h.stage, player.h.stage.mul(10)).mul(Decimal.pow(10, player.h.stage)))
+        let reqSoftcapPoints = Decimal.pow(player.h.stage, player.h.stage.mul(10)).mul(Decimal.pow(10, player.h.stage)).div(player.hre.refinementDiv)
+
+        if (player.hre.refinement.lt(player.h.stage.mul(10))) player.hre.refinementReq = Decimal.pow(player.h.stage, player.hre.refinement).mul(Decimal.pow(10, player.h.stage)).div(player.hre.refinementDiv)
+        if (player.hre.refinement.gte(player.h.stage.mul(10))) player.hre.refinementReq = Decimal.pow(player.h.stage.pow(3), player.hre.refinement).div(reqSoftcapConnector).div(player.hre.refinementDiv)
         
-        if (player.h.hexPoint.lt(Decimal.div(1.08e76, player.hre.refinementDiv))) player.hre.refinementGain = player.h.hexPoint.add(1).div(Decimal.pow(10, player.h.stage)).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage).ln()).add(1).sub(player.hre.refinement).floor()
-        if (player.h.hexPoint.gte(Decimal.div(1.08e76, player.hre.refinementDiv))) player.hre.refinementGain = player.h.hexPoint.add(1).mul(1e188).mul(player.hre.refinementDiv).ln().div(new Decimal(1000).ln()).add(1).sub(player.hre.refinement).floor()
+        if (player.h.hexPoint.lt(reqSoftcapPoints)) player.hre.refinementGain = player.h.hexPoint.add(1).div(Decimal.pow(10, player.h.stage)).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage).ln()).add(1).sub(player.hre.refinement).floor()
+        if (player.h.hexPoint.gte(reqSoftcapPoints)) player.hre.refinementGain = player.h.hexPoint.add(1).mul(reqSoftcapConnector).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage.pow(3)).ln()).add(1).sub(player.hre.refinement).floor()
         
         if (player.hre.refinementGain.lt(1)) player.hre.refinementGain = new Decimal(0)
 
@@ -35,8 +38,9 @@ addLayer("hre", {
 
         player.hre.refinementEffect = [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]]
         if (player.hre.refinement.gte(1) || hasMilestone("hre", 1)) {
-            if (!hasUpgrade("hpw", 81)) player.hre.refinementEffect[0][0] = Decimal.pow(Decimal.div(6, player.h.stage).add(1), player.hre.refinement.pow(Decimal.div(4.8, player.h.stage))).mul(2)
-            if (hasUpgrade("hpw", 81)) player.hre.refinementEffect[0][0] = Decimal.pow(Decimal.div(9, player.h.stage).add(1), player.hre.refinement.pow(Decimal.div(4.8, player.h.stage))).mul(3)
+            if (!hasUpgrade("hpw", 81)) player.hre.refinementEffect[0][0] = Decimal.pow(Decimal.div(2, player.h.stage).add(1), player.hre.refinement.pow(Decimal.div(4.8, player.h.stage))).mul(2)
+            if (hasUpgrade("hpw", 81)) player.hre.refinementEffect[0][0] = Decimal.pow(Decimal.div(3, player.h.stage).add(1), player.hre.refinement.pow(Decimal.div(4.8, player.h.stage))).mul(3)
+            player.hre.refinementEffect[0][0] = player.hre.refinementEffect[0][0].mul(Decimal.pow(Decimal.div(1.5, player.h.stage).add(1), player.hre.refinement.min(player.h.stage.mul(2))))
             player.hre.refinementEffect[0][1] = Decimal.pow(player.h.stage.div(2), player.hre.refinement).mul(player.h.stage.div(2))
         }
         if (inChallenge("hrm", 12)) {
@@ -46,19 +50,24 @@ addLayer("hre", {
         if (inChallenge("hrm", 16)) {
             let effPow = player.hre.refinementEffect[2][0]
             if (hasUpgrade("hbl", 6)) effPow = effPow.add(upgradeEffect("hbl", 6))
-            if (hasMilestone("hbl", 5)) effPow = effPow.add(0.3)
+            if (hasMilestone("hbl", 5)) effPow = effPow.add(player.h.stage.div(20))
             if (hasUpgrade("hpw", 101)) effPow = effPow.add(upgradeEffect("hpw", 101))
             if (hasUpgrade("hpw", 132)) effPow = effPow.add(0.5)
             player.hre.refinementEffect[0][0] = player.hre.refinementEffect[0][0].pow(effPow)
             player.hre.refinementEffect[0][1] = player.hre.refinementEffect[0][1].pow(effPow)
         }
 
-        if (player.hre.refinement.gte(3)) player.hre.refinementEffect[1][0] = Decimal.pow(Decimal.div(0.9, player.h.stage).add(1), player.hre.refinement.sub(2).pow(Decimal.div(3.6, player.h.stage))).pow(player.hpu.purifiers[0].effect)
-        if (player.hre.refinementEffect[1][0].gte(Decimal.div(36, player.h.stage))) player.hre.refinementEffect[1][0] = player.hre.refinementEffect[1][0].div(Decimal.div(36, player.h.stage)).pow(Decimal.div(3.6, player.h.stage)).mul(Decimal.div(36, player.h.stage))
+        if (player.hre.refinement.gte(3)) player.hre.refinementEffect[1][0] = Decimal.pow(Decimal.div(0.9, player.h.stage).add(1), player.hre.refinement.sub(2).pow(Decimal.div(3.6, player.h.stage)))
+        if (player.hre.refinementEffect[1][0].gte(Decimal.div(30, player.h.stage))) player.hre.refinementEffect[1][0] = player.hre.refinementEffect[1][0].div(Decimal.div(30, player.h.stage)).pow(Decimal.div(1.8, player.h.stage)).mul(Decimal.div(30, player.h.stage))
+        player.hre.refinementEffect[1][0] = player.hre.refinementEffect[1][0].pow(player.hpu.purifiers[0].effect)
         if (inChallenge("hrm", 16)) player.hre.refinementEffect[1][0] = Decimal.pow(Decimal.div(2.16, player.h.stage).add(1), player.hre.refinement.sub(2).pow(Decimal.div(4.8, player.h.stage))).pow(player.hpu.purifiers[0].effect)
         if (player.hre.refinement.gte(3)) player.hre.refinementEffect[1][1] = Decimal.pow(player.h.stage.div(2.15), player.hre.refinement.sub(2)).pow(player.hpu.purifiers[0].effect)
 
-        if (player.hre.refinement.gte(9)) player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.36, player.h.stage).add(1), player.hre.refinement.sub(4).pow(Decimal.div(3.6, player.h.stage)))
+        if (player.hre.refinement.gte(9)) {
+            player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.5, player.h.stage).add(1), player.hre.refinement.sub(5).pow(Decimal.div(3.6, player.h.stage)))
+            player.hre.refinementEffect[2][0] = player.hre.refinementEffect[2][0].mul(Decimal.pow(Decimal.div(1, player.h.stage).add(1), player.hre.refinement.min(24).sub(5).pow(Decimal.div(3.6, player.h.stage))))
+            if (inChallenge("hrm", 16)) player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.36, player.h.stage).add(1), player.hre.refinement.sub(4).pow(Decimal.div(3.6, player.h.stage)))
+        }
         if (player.hre.refinement.gte(9)) player.hre.refinementEffect[2][1] = Decimal.pow(player.h.stage.div(2.4), player.hre.refinement.sub(4))
 
         if (player.hre.refinement.gte(24)) player.hre.refinementEffect[3][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hre.refinement.sub(23).pow(Decimal.div(3.6, player.h.stage)))
@@ -106,159 +115,159 @@ addLayer("hre", {
     },
     milestones: {
         100: {
-            requirementDescription: "<h3>6 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage) + " Refinements"},
             effectDescription: "Unlocks buy max refinements.",
-            done() { return player.hre.refinement.gte(6)},
+            done() { return player.hre.refinement.gte(player.h.stage)},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         0: {
-            requirementDescription: "<h3>12 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(2)) + " Refinements"},
             effectDescription() {return HEX_STAGES[player.h.stage][0] + " point formula now uses best celestial points."},
-            done() { return player.hre.refinement.gte(12)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(2))},
             unlocked() { return hasMilestone("hre", 100) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         1: {
-            requirementDescription: "<h3>18 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(3)) + " Refinements"},
             effectDescription: "1st refiner no longer requires a refinement.",
-            done() { return player.hre.refinement.gte(18)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(3))},
             unlocked() { return hasMilestone("hre", 0) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         2: {
-            requirementDescription: "<h3>24 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(4)) + " Refinements"},
             effectDescription: "Booster progress slightly boosts Booster effect.",
-            done() { return player.hre.refinement.gte(24)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(4))},
             unlocked() { return hasMilestone("hre", 1) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         3: {
-            requirementDescription: "<h3>30 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(5)) + " Refinements"},
             effectDescription() {
                 if (inChallenge("hrm", 16)) return "Automate █-██████████ gain."
                 return "Automate α-Provenance gain."
             },
-            done() { return player.hre.refinement.gte(30)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(5))},
             unlocked() { return hasMilestone("hre", 2) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         4: {
-            requirementDescription: "<h3>36 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(6)) + " Refinements"},
             effectDescription: "Automate refinement gain.",
-            done() { return player.hre.refinement.gte(36)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(6))},
             unlocked() { return hasMilestone("hre", 3) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         5: {
-            requirementDescription: "<h3>42 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(7)) + " Refinements"},
             effectDescription: "Unlock blessing autoclicker.",
-            done() { return player.hre.refinement.gte(42)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(7))},
             unlocked() { return hasMilestone("hre", 4) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         6: {
-            requirementDescription: "<h3>48 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(8)) + " Refinements"},
             effectDescription() {
                 if (inChallenge("hrm", 16)) return "Automate █-██████████ gain."
                 return "Automate β-Provenance gain."
             },
-            done() { return player.hre.refinement.gte(48)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(8))},
             unlocked() { return hasMilestone("hre", 5) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         7: {
-            requirementDescription: "<h3>54 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(9)) + " Refinements"},
             effectDescription: "Unlock deposit rate controls.",
-            done() { return player.hre.refinement.gte(54)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(9))},
             unlocked() { return hasMilestone("hre", 6) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         8: {
-            requirementDescription: "<h3>60 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(10)) + " Refinements"},
             effectDescription() {
                 if (inChallenge("hrm", 16)) return "Automate █-██████████ gain."
                 return "Automate γ-Provenance gain."
             },
-            done() { return player.hre.refinement.gte(60)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(10))},
             unlocked() { return hasMilestone("hre", 7) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         9: {
-            requirementDescription: "<h3>66 Refinements",
-            effectDescription: "+0.6 base curse gain.",
-            done() { return player.hre.refinement.gte(66)},
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(11)) + " Refinements"},
+            effectDescription() {return "+" + formatSimple(player.h.stage.div(10)) + " base curse gain."},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(11))},
             unlocked() { return hasMilestone("hre", 8) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         10: {
-            requirementDescription: "<h3>72 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(12)) + " Refinements"},
             effectDescription: "Unlock purifier level amount controls.",
-            done() { return player.hre.refinement.gte(72)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(12))},
             unlocked() { return hasMilestone("hre", 9) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         11: {
-            requirementDescription: "<h3>78 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(13)) + " Refinements"},
             effectDescription() {
                 if (inChallenge("hrm", 16)) return "Automate █-██████████ gain."
                 return "Automate δ-Provenance gain."
             },
-            done() { return player.hre.refinement.gte(78)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(13))},
             unlocked() { return hasMilestone("hre", 10) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         12: {
-            requirementDescription: "<h3>84 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(14)) + " Refinements"},
             effectDescription: "Produce 1% of blessings per second (excluding RC1).",
-            done() { return player.hre.refinement.gte(84)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(14))},
             unlocked() { return hasMilestone("hre", 11) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         13: {
-            requirementDescription: "<h3>90 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(15)) + " Refinements"},
             effectDescription: "Automate jinxes.",
-            done() { return player.hre.refinement.gte(90)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(15))},
             unlocked() { return hasMilestone("hre", 12) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         14: {
-            requirementDescription: "<h3>96 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(16)) + " Refinements"},
             effectDescription() {
                 if (inChallenge("hrm", 16)) return "Automate █-██████████ gain."
                 return "Automate ε-Provenance gain."
             },
-            done() { return player.hre.refinement.gte(96)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(16))},
             unlocked() { return hasMilestone("hre", 13) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         15: {
-            requirementDescription: "<h3>102 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(17)) + " Refinements"},
             effectDescription: "Unlock buy max purity.",
-            done() { return player.hre.refinement.gte(102)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(17))},
             unlocked() { return hasMilestone("hre", 14) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         16: {
-            requirementDescription: "<h3>108 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(18)) + " Refinements"},
             effectDescription: "Unlock buy max vex.",
-            done() { return player.hre.refinement.gte(108)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(18))},
             unlocked() { return hasMilestone("hre", 15) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         17: {
-            requirementDescription: "<h3>114 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(19)) + " Refinements"},
             effectDescription: "Automate purity gain.",
-            done() { return player.hre.refinement.gte(114)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(19))},
             unlocked() { return hasMilestone("hre", 16) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         18: {
-            requirementDescription: "<h3>120 Refinements",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(20)) + " Refinements"},
             effectDescription() {
                 if (inChallenge("hrm", 16)) return "Automate █-██████████ gain."
                 return "Automate ζ-Provenance gain."
             },
-            done() { return player.hre.refinement.gte(120)},
+            done() { return player.hre.refinement.gte(player.h.stage.mul(20))},
             unlocked() { return hasMilestone("hre", 17) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
@@ -399,7 +408,7 @@ addLayer("hre", {
                 player.hre.refinementGain.gt(0) ? look.color = "white" : look.color = "gray"
                 return look
             }],
-            ["raw-html", () => {return player.hre.refinement.gte(90) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
+            ["raw-html", () => {return player.hre.refinement.gte(player.h.stage.mul(10)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["blank", "10px"],
         ["clickable", 1],

@@ -22,9 +22,9 @@ addLayer("hcu", {
     },
     update(delta) {
         player.hcu.cursesGain = new Decimal(0)
-        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(6)
-        if (hasUpgrade("ta", 16) && inChallenge("hrm", 13)) player.hcu.cursesGain = Decimal.pow(player.hve.vexTotal.mul(0.2).add(1.8), player.hbl.blessings.add(1).log(6)).sub(1).min(1e30)
-        if (hasUpgrade("ta", 16) && hasMilestone("hre", 9)) player.hcu.cursesGain = player.hcu.cursesGain.add(0.6)
+        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(player.h.stage)
+        if (hasUpgrade("ta", 16) && inChallenge("hrm", 13)) player.hcu.cursesGain = Decimal.pow(player.hve.vexTotal.mul(0.2).add(player.h.stage.mul(3)), player.hbl.blessings.add(1).log(player.h.stage)).sub(1).min(Decimal.pow(10, player.h.stage.mul(5)))
+        if (hasUpgrade("ta", 16) && hasMilestone("hre", 9)) player.hcu.cursesGain = player.hcu.cursesGain.add(player.h.stage.div(10))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 101))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 103))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 105))
@@ -41,9 +41,9 @@ addLayer("hcu", {
         if (hasUpgrade("hpw", 102)) player.hcu.cursesGain = player.hcu.cursesGain.pow(upgradeEffect("hpw", 102))
 
         // SOFTCAPS AND PER SECOND
-        if (inChallenge("hrm", 12)) player.hcu.cursesGain = player.hcu.cursesGain.pow(0.6)
-        if (player.hcu.cursesGain.gte(1e12)) player.hcu.cursesGain = player.hcu.cursesGain.div(1e12).pow(0.6).mul(1e12)
-        if (player.hcu.cursesGain.gte("1e1200")) player.hcu.cursesGain = player.hcu.cursesGain.div("1e1200").pow(0.1).mul("1e1200")
+        if (inChallenge("hrm", 12)) player.hcu.cursesGain = player.hcu.cursesGain.pow(Decimal.div(3.6, player.h.stage))
+        if (player.hcu.cursesGain.gte(Decimal.pow(10, player.h.stage.mul(2)))) player.hcu.cursesGain = player.hcu.cursesGain.div(Decimal.pow(10, player.h.stage.mul(2))).pow(Decimal.div(3.6, player.h.stage)).mul(Decimal.pow(10, player.h.stage.mul(2)))
+        if (player.hcu.cursesGain.gte(Decimal.pow(1e100, player.h.stage.mul(2)))) player.hcu.cursesGain = player.hcu.cursesGain.div(Decimal.pow(1e100, player.h.stage.mul(2))).pow(0.1).mul(Decimal.pow(1e100, player.h.stage.mul(2)))
         player.hcu.curses = player.hcu.curses.add(player.hcu.cursesGain.mul(delta))
 
         // JINX TOTAL
@@ -59,7 +59,7 @@ addLayer("hcu", {
         // JINX ADD CAP
         player.hcu.jinxAddCap = new Decimal(0)
         if (hasUpgrade("hbl", 1)) player.hcu.jinxAddCap = player.hcu.jinxAddCap.add(upgradeEffect("hbl", 1))
-        if (hasMilestone("hbl", 3)) player.hcu.jinxAddCap = player.hcu.jinxAddCap.add(6)
+        if (hasMilestone("hbl", 3)) player.hcu.jinxAddCap = player.hcu.jinxAddCap.add(player.h.stage)
         if (hasUpgrade("hpw", 33)) player.hcu.jinxAddCap = player.hcu.jinxAddCap.add(upgradeEffect("hpw", 33))
         player.hcu.jinxAddCap = player.hcu.jinxAddCap.add(player.hve.vexEffects[0])
         if (inChallenge("hrm", 15)) player.hcu.jinxAddCap = player.hcu.jinxAddCap.div(2)
@@ -89,9 +89,7 @@ addLayer("hcu", {
     },
     buyables: {
         101: {
-            costBase() { return new Decimal(6).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(6) },
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap) },
+            purchaseLimit() { return new Decimal(player.h.stage.mul(5)).add(player.hcu.jinxAddCap) },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -107,10 +105,13 @@ addLayer("hcu", {
             effect(x) { return Decimal.pow(this.effectBase(), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(30) && x.lt(60)) cst = cst.pow(1.6).div(1e12)
-                if (x.gte(60)) cst = cst.pow(3).div(1e6)
-                return cst
+                if (x.lt(player.h.stage.mul(5))) {
+                    return Decimal.pow(player.h.stage, x).mul(player.h.stage).div(player.hcu.jinxDiv)
+                } else if (x.lt(player.h.stage.mul(10))) {
+                    return Decimal.pow(player.h.stage.pow(2), x).mul(Decimal.pow(player.h.stage, player.h.stage.mul(5).sub(1)).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(player.h.stage.pow(3), x).mul(Decimal.pow(player.h.stage.pow(2), player.h.stage.mul(7.5).sub(0.5)).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Α-Jinx" },
@@ -121,11 +122,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(30)) max = Decimal.affordGeometricSeries(this.currency().mul(1e12).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(60)) max = Decimal.affordGeometricSeries(this.currency().mul(1e6).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(60).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(player.h.stage, player.hcu.jinxDiv), player.h.stage, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(player.h.stage, player.hcu.jinxDiv), player.h.stage, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage.mul(5))) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(player.h.stage, player.h.stage.mul(5).sub(1)).recip().div(player.hcu.jinxDiv), player.h.stage.pow(2), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(player.h.stage, player.h.stage.mul(5).sub(1)).recip().div(player.hcu.jinxDiv), player.h.stage.pow(2), getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage.mul(10))) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(player.h.stage.pow(2), player.h.stage.mul(7.5).sub(0.5)).recip().div(player.hcu.jinxDiv), player.h.stage.pow(3), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(player.h.stage.pow(2), player.h.stage.mul(7.5).sub(0.5)).recip().div(player.hcu.jinxDiv), player.h.stage.pow(3), getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -134,9 +141,7 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         102: {
-            costBase() { return new Decimal(12).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(12) },
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap) },
+            purchaseLimit() { return new Decimal(player.h.stage.mul(5)).add(player.hcu.jinxAddCap) },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -151,10 +156,13 @@ addLayer("hcu", {
             },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(30) && x.lt(60)) cst = cst.pow(1.6).div(1e18)
-                if (x.gte(60)) cst = cst.pow(3).div(1e50)
-                return cst
+                if (x.lt(player.h.stage.mul(5))) {
+                    return Decimal.pow(player.h.stage.mul(2), x).mul(player.h.stage.mul(2)).div(player.hcu.jinxDiv)
+                } else if (x.lt(player.h.stage.mul(10))) {
+                    return Decimal.pow(player.h.stage.mul(2).pow(2), x).mul(Decimal.pow(player.h.stage.mul(2), player.h.stage.mul(5).sub(1)).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(player.h.stage.mul(2).pow(3), x).mul(Decimal.pow(player.h.stage.mul(2).pow(2), player.h.stage.mul(7.5).sub(0.5)).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Β-Jinx" },
@@ -169,11 +177,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(30)) max = Decimal.affordGeometricSeries(this.currency().mul(1e18).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(60)) max = Decimal.affordGeometricSeries(this.currency().mul(1e50).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(60).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(player.h.stage.mul(2), player.hcu.jinxDiv), player.h.stage.mul(2), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(player.h.stage.mul(2), player.hcu.jinxDiv), player.h.stage.mul(2), getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage.mul(5))) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(player.h.stage.mul(2), player.h.stage.mul(5).sub(1)).recip().div(player.hcu.jinxDiv), player.h.stage.mul(2).pow(2), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(player.h.stage.mul(2), player.h.stage.mul(5).sub(1)).recip().div(player.hcu.jinxDiv), player.h.stage.mul(2).pow(2), getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage.mul(10))) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(player.h.stage.mul(2).pow(2), player.h.stage.mul(7.5).sub(0.5)).recip().div(player.hcu.jinxDiv), player.h.stage.mul(2).pow(3), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(player.h.stage.mul(2).pow(2), player.h.stage.mul(7.5).sub(0.5)).recip().div(player.hcu.jinxDiv), player.h.stage.mul(2).pow(3), getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -182,9 +196,7 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         103: {
-            costBase() { return new Decimal(1679616).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(36) },
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap) },
+            purchaseLimit() { return new Decimal(player.h.stage.mul(4)).add(player.hcu.jinxAddCap.div(1.25)).floor() },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -192,28 +204,37 @@ addLayer("hcu", {
                 if (hasUpgrade("hve", 23)) amt = amt.add(4)
                 return amt
             },
-            effect(x) { return Decimal.pow(player.hcu.curses.div(6).add(1).log(6).add(1).pow(0.3), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
+            effect(x) { return Decimal.pow(player.hcu.curses.div(player.h.stage).add(1).log(player.h.stage).add(1).pow(Decimal.div(1.8, player.h.stage)), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(30) && x.lt(60)) cst = cst.pow(1.6).div(1e29)
-                if (x.gte(60)) cst = cst.pow(3).div(1e135)
-                return cst
+                if (x.lt(player.h.stage.mul(4))) {
+                    return Decimal.pow(player.h.stage.pow(2), x).mul(player.h.stage.pow(8)).div(player.hcu.jinxDiv)
+                } else if (x.lt(player.h.stage.mul(8))) {
+                    return Decimal.pow(player.h.stage.pow(4), x).mul(Decimal.pow(player.h.stage.pow(2), player.h.stage.mul(4).sub(4)).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(player.h.stage.pow(6), x).mul(Decimal.pow(player.h.stage.pow(4), player.h.stage.mul(6).sub(2)).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Γ-Jinx" },
-            display() { return "Curses are multiplied by " + format(player.hcu.curses.div(6).add(1).log(6).add(1).pow(0.3)) + " (based on curses)" },
+            display() { return "Curses are multiplied by " + format(player.hcu.curses.div(player.h.stage).add(1).log(player.h.stage).add(1).pow(Decimal.div(1.8, player.h.stage))) + " (based on curses)" },
             total() { return "(Total: " + format(tmp[this.layer].buyables[this.id].effect) + "x)"},
             buy(mult) {
                 if (mult != true) {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(30)) max = Decimal.affordGeometricSeries(this.currency().mul(1e29).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(60)) max = Decimal.affordGeometricSeries(this.currency().mul(1e135).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(60).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(player.h.stage.pow(8), player.hcu.jinxDiv), player.h.stage.pow(2), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(player.h.stage.pow(8), player.hcu.jinxDiv), player.h.stage.pow(2), getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage.mul(4))) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(player.h.stage.pow(2), player.h.stage.mul(4).sub(4)).recip().div(player.hcu.jinxDiv), player.h.stage.pow(4), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(player.h.stage.pow(2), player.h.stage.mul(4).sub(4)).recip().div(player.hcu.jinxDiv), player.h.stage.pow(4), getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage.mul(8))) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(player.h.stage.pow(4), player.h.stage.mul(6).sub(2)).recip().div(player.hcu.jinxDiv), player.h.stage.pow(6), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(player.h.stage.pow(4), player.h.stage.mul(6).sub(2)).recip().div(player.hcu.jinxDiv), player.h.stage.pow(6), getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -222,9 +243,7 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         104: {
-            costBase() { return new Decimal(1e8).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(100) },
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap).div(1.5).floor() },
+            purchaseLimit() { return new Decimal(18).add(player.hcu.jinxAddCap.mul(2).div(3)).floor() },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -235,10 +254,13 @@ addLayer("hcu", {
             effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))},
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(20) && x.lt(40)) cst = cst.pow(1.6).div(1e26)
-                if (x.gte(40)) cst = cst.pow(3).div(1e95)
-                return cst
+                if (x.lt(18)) {
+                    return Decimal.pow(1e2, x).mul(1e8).div(player.hcu.jinxDiv)
+                } else if (x.lt(36)) {
+                    return Decimal.pow(1e4, x).mul(Decimal.pow(1e2, 14).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(1e6, x).mul(Decimal.pow(1e4, 25).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Δ-Jinx" },
@@ -249,11 +271,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(20)) max = Decimal.affordGeometricSeries(this.currency().mul(1e26).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(40)) max = Decimal.affordGeometricSeries(this.currency().mul(1e95).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(40).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1e8, player.hcu.jinxDiv), 1e2, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(1e8, player.hcu.jinxDiv), 1e2, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(18)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e2, 14).recip().div(player.hcu.jinxDiv), 1e4, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e2, 14).recip().div(player.hcu.jinxDiv), 1e4, getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(36)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e4, 25).recip().div(player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e4, 25).recip().div(player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -262,9 +290,7 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         105: {
-            costBase() { return new Decimal(1e12).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(1000) },
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap).div(2).floor() },
+            purchaseLimit() { return new Decimal(12).add(player.hcu.jinxAddCap.div(2.5)).floor() },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             effectBase() {
@@ -275,10 +301,13 @@ addLayer("hcu", {
             effect(x) { return Decimal.pow(this.effectBase(), getBuyableAmount(this.layer, this.id)) },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(15) && x.lt(30)) cst = cst.pow(1.6).div(1e32)
-                if (x.gte(30)) cst = cst.pow(3).div(1e125)
-                return cst
+                if (x.lt(12)) {
+                    return Decimal.pow(1e3, x).mul(1e12).div(player.hcu.jinxDiv)
+                } else if (x.lt(24)) {
+                    return Decimal.pow(1e6, x).mul(Decimal.pow(1e3, 8).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(1e9, x).mul(Decimal.pow(1e6, 16).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Ε-Jinx" },
@@ -293,11 +322,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(15)) max = Decimal.affordGeometricSeries(this.currency().mul(1e32).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(30)) max = Decimal.affordGeometricSeries(this.currency().mul(1e125).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(30).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1e12, player.hcu.jinxDiv), 1e3, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(1e12, player.hcu.jinxDiv), 1e3, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(12)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e3, 8).recip().div(player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e3, 8).recip().div(player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(24)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e6, 16).recip().div(player.hcu.jinxDiv), 1e9, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e6, 16).recip().div(player.hcu.jinxDiv), 1e9, getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -306,11 +341,8 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         106: {
-            costBase() { return new Decimal(1e18).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(1e6)},
             purchaseLimit() {
-                if (new Decimal(30).add(player.hcu.jinxAddCap).div(3).gte(100)) return new Decimal(30).add(player.hcu.jinxAddCap).pow(0.5).add(83).floor()
-                return new Decimal(30).add(player.hcu.jinxAddCap).div(3).floor()
+                return new Decimal(6).add(player.hcu.jinxAddCap.div(5)).floor()
             },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
@@ -319,10 +351,13 @@ addLayer("hcu", {
                 return Decimal.pow(1.01, getBuyableAmount(this.layer, this.id)) },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(10) && x.lt(20)) cst = cst.pow(1.6).div(1e44)
-                if (x.gte(20)) cst = cst.pow(3).div(1e215)
-                return cst
+                if (x.lt(6)) {
+                    return Decimal.pow(1e6, x).mul(1e18).div(player.hcu.jinxDiv)
+                } else if (x.lt(12)) {
+                    return Decimal.pow(1e12, x).mul(Decimal.pow(1e6, 3).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(1e18, x).mul(Decimal.pow(1e12, 7.5).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Ζ-Jinx" },
@@ -337,11 +372,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(10)) max = Decimal.affordGeometricSeries(this.currency().mul(1e44).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(20)) max = Decimal.affordGeometricSeries(this.currency().mul(1e215).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(20).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1e18, player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(1e18, player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(6)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e6, 3).recip().div(player.hcu.jinxDiv), 1e12, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e6, 3).recip().div(player.hcu.jinxDiv), 1e12, getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(12)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e12, 7.5).recip().div(player.hcu.jinxDiv), 1e18, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e12, 7.5).recip().div(player.hcu.jinxDiv), 1e18, getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -350,8 +391,6 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         107: {
-            costBase() { return new Decimal(1e4).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(10)},
             purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap) },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
@@ -367,10 +406,13 @@ addLayer("hcu", {
             },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(30) && x.lt(60)) cst = cst.pow(1.6).div(1e18)
-                if (x.gte(60)) cst = cst.pow(3).div(1e50)
-                return cst
+                if (x.lt(30)) {
+                    return Decimal.pow(10, x).mul(1e4).div(player.hcu.jinxDiv)
+                } else if (x.lt(60)) {
+                    return Decimal.pow(100, x).mul(Decimal.pow(10, 26).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(1000, x).mul(Decimal.pow(100, 44).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Η-Jinx" },
@@ -385,11 +427,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(30)) max = Decimal.affordGeometricSeries(this.currency().mul(1e18).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(60)) max = Decimal.affordGeometricSeries(this.currency().mul(1e50).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(60).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1e4, player.hcu.jinxDiv), 10, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(1e4, player.hcu.jinxDiv), 10, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(30)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(10, 26).recip().div(player.hcu.jinxDiv), 100, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(10, 26).recip().div(player.hcu.jinxDiv), 100, getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(60)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(100, 44).recip().div(player.hcu.jinxDiv), 1000, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(100, 44).recip().div(player.hcu.jinxDiv), 1000, getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -398,9 +446,7 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         108: {
-            costBase() { return new Decimal(1e6).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(100)},
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap).div(1.5).floor() },
+            purchaseLimit() { return new Decimal(18).add(player.hcu.jinxAddCap.mul(2).div(3)).floor() },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -415,10 +461,13 @@ addLayer("hcu", {
             },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(20) && x.lt(40)) cst = cst.pow(1.6).div(1e25)
-                if (x.gte(40)) cst = cst.pow(3).div(1e105)
-                return cst
+                if (x.lt(18)) {
+                    return Decimal.pow(1e2, x).mul(1e6).div(player.hcu.jinxDiv)
+                } else if (x.lt(36)) {
+                    return Decimal.pow(1e4, x).mul(Decimal.pow(1e2, 15).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(1e6, x).mul(Decimal.pow(1e4, 25.5).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Θ-Jinx" },
@@ -433,11 +482,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(20)) max = Decimal.affordGeometricSeries(this.currency().mul(1e25).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(40)) max = Decimal.affordGeometricSeries(this.currency().mul(1e105).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(40).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1e6, player.hcu.jinxDiv), 1e2, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(1e6, player.hcu.jinxDiv), 1e2, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(18)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e2, 15).recip().div(player.hcu.jinxDiv), 1e4, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e2, 15).recip().div(player.hcu.jinxDiv), 1e4, getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(36)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e4, 25.5).recip().div(player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e4, 25.5).recip().div(player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -446,9 +501,7 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         109: {
-            costBase() { return new Decimal(1e9).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(1000)},
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap).div(2).floor() },
+            purchaseLimit() { return new Decimal(12).add(player.hcu.jinxAddCap.div(2.5)).floor() },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             tooltip() {return "Works outside of " + HEX_STAGES[player.h.stage][1] + "."},
@@ -464,10 +517,13 @@ addLayer("hcu", {
             },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(15) && x.lt(30)) cst = cst.pow(1.6).div(1e30)
-                if (x.gte(30)) cst = cst.pow(3).div(1e125)
-                return cst
+                if (x.lt(12)) {
+                    return Decimal.pow(1e3, x).mul(1e9).div(player.hcu.jinxDiv)
+                } else if (x.lt(24)) {
+                    return Decimal.pow(1e6, x).mul(Decimal.pow(1e3, 9).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(1e9, x).mul(Decimal.pow(1e6, 16.5).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) && !player.hrm.activeChallenge},
             title() { return "Ι-Jinx" },
@@ -485,11 +541,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(15)) max = Decimal.affordGeometricSeries(this.currency().mul(1e30).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(30)) max = Decimal.affordGeometricSeries(this.currency().mul(1e125).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(30).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1e9, player.hcu.jinxDiv), 1e3, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(1e9, player.hcu.jinxDiv), 1e3, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(12)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e3, 9).recip().div(player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e3, 9).recip().div(player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(24)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e6, 16.5).recip().div(player.hcu.jinxDiv), 1e9, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e6, 16.5).recip().div(player.hcu.jinxDiv), 1e9, getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -503,8 +565,8 @@ addLayer("hcu", {
         },
         110: {
             costBase() { return new Decimal(1e48).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(1e10)},
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap).div(6).floor() },
+            costGrowth() { return new Decimal(1e8)},
+            purchaseLimit() { return new Decimal(6).add(player.hcu.jinxAddCap.div(5)).floor() },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -515,10 +577,13 @@ addLayer("hcu", {
             effect(x) { return Decimal.mul(0.03, getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
             unlocked() { return hasUpgrade("bi", 13) },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(5) && x.lt(10)) cst = cst.pow(1.6).div(1e56)
-                if (x.gte(10)) cst = cst.pow(3).div(1e260)
-                return cst
+                if (x.lt(6)) {
+                    return Decimal.pow(1e8, x).mul(1e48).div(player.hcu.jinxDiv)
+                } else if (x.lt(12)) {
+                    return Decimal.pow(1e16, x).div(player.hcu.jinxDiv)
+                } else {
+                    return Decimal.pow(1e24, x).mul(Decimal.pow(1e16, 6).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Κ-Jinx" },
@@ -529,11 +594,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(5)) max = Decimal.affordGeometricSeries(this.currency().mul(1e56).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(10)) max = Decimal.affordGeometricSeries(this.currency().mul(1e260).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(10).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1e48, player.hcu.jinxDiv), 1e8, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(1e48, player.hcu.jinxDiv), 1e8, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(6)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1, player.hcu.jinxDiv), 1e16, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.div(1, player.hcu.jinxDiv), 1e16, getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(12)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e16, 6).recip().div(player.hcu.jinxDiv), 1e24, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e16, 6).recip().div(player.hcu.jinxDiv), 1e24, getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -542,9 +613,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         111: {
-            costBase() { return new Decimal(1e40).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(5e7)},
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap).div(5).floor() },
+            costBase() { return new Decimal(1e42).div(player.hcu.jinxDiv) },
+            costGrowth() { return new Decimal(1e6)},
+            purchaseLimit() { return new Decimal(9).add(player.hcu.jinxAddCap.div(10).mul(3)).floor() },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -558,10 +629,13 @@ addLayer("hcu", {
                 return Decimal.mul(0.03, amt) },
             unlocked() { return hasUpgrade("bi", 13) },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(6) && x.lt(12)) cst = cst.pow(1.6).div(1e48)
-                if (x.gte(12)) cst = cst.pow(3).div(1e200)
-                return cst
+                if (x.lt(9)) {
+                    return Decimal.pow(1e6, x).mul(1e42).div(player.hcu.jinxDiv)
+                } else if (x.lt(18)) {
+                    return Decimal.pow(1e12, x).mul(Decimal.pow(1e6, 2).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(1e18, x).mul(Decimal.pow(1e12, 10).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Λ-Jinx" },
@@ -572,11 +646,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(6)) max = Decimal.affordGeometricSeries(this.currency().mul(1e48).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(12)) max = Decimal.affordGeometricSeries(this.currency().mul(1e200).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(12).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1e42, player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(1e42, player.hcu.jinxDiv), 1e6, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(9)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e6, 2).recip().div(player.hcu.jinxDiv), 1e12, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e6, 2).recip().div(player.hcu.jinxDiv), 1e12, getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(18)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e12, 10).recip().div(player.hcu.jinxDiv), 1e18, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e12, 10).recip().div(player.hcu.jinxDiv), 1e18, getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -585,9 +665,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         112: {
-            costBase() { return new Decimal(1e35).div(player.hcu.jinxDiv) },
-            costGrowth() { return new Decimal(1e5)},
-            purchaseLimit() { return new Decimal(30).add(player.hcu.jinxAddCap).div(3.75).floor() },
+            costBase() { return new Decimal(1e36).div(player.hcu.jinxDiv) },
+            costGrowth() { return new Decimal(1e4)},
+            purchaseLimit() { return new Decimal(12).add(player.hcu.jinxAddCap.div(2.5)).floor() },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -598,10 +678,13 @@ addLayer("hcu", {
             effect(x) { return Decimal.mul(0.1, getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
             unlocked() { return hasUpgrade("bi", 13) },
             cost(x = getBuyableAmount(this.layer, this.id)) {
-                let cst = this.costGrowth().pow(x).mul(this.costBase())
-                if (x.gte(8) && x.lt(16)) cst = cst.pow(1.6).div(1e42)
-                if (x.gte(16)) cst = cst.pow(3).div(1e140)
-                return cst
+                if (x.lt(12)) {
+                    return Decimal.pow(1e4, x).mul(1e36).div(player.hcu.jinxDiv)
+                } else if (x.lt(24)) {
+                    return Decimal.pow(1e8, x).mul(Decimal.pow(1e4, 3).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(1e12, x).mul(Decimal.pow(1e8, 13.5).recip().div(player.hcu.jinxDiv))
+                }
             },
             canAfford() { return this.currency().gte(this.cost()) && !player.hrm.activeChallenge},
             title() { return "Μ-Jinx" },
@@ -616,11 +699,17 @@ addLayer("hcu", {
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(this.cost())
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
-                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(8)) max = Decimal.affordGeometricSeries(this.currency().mul(1e42).pow(Decimal.div(1, 1.6)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(16)) max = Decimal.affordGeometricSeries(this.currency().mul(1e140).pow(Decimal.div(1, 3)), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).max(new Decimal(16).sub(getBuyableAmount(this.layer, this.id)))
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1e36, player.hcu.jinxDiv), 1e4, getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(1e36, player.hcu.jinxDiv), 1e4, getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(12)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e4, 3).recip().div(player.hcu.jinxDiv), 1e8, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e4, 3).recip().div(player.hcu.jinxDiv), 1e8, getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(24)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(1e8, 13.5).recip().div(player.hcu.jinxDiv), 1e12, getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(1e8, 13.5).recip().div(player.hcu.jinxDiv), 1e12, getBuyableAmount(this.layer, this.id))
+                    }
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 13)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -692,9 +781,9 @@ addLayer("hcu", {
                 player.hcu.cursesGain.gt(0) ? look.color = "white" : look.color = "gray"
                 return look
             }],
-            ["raw-html", () => {return (player.hcu.cursesGain.gte(1e12) && inChallenge("hrm", 12)) || player.hcu.cursesGain.gte("1e1200") ? "<small>[SOFTCAPPED<sup>2</sup>]</small>" :
-                player.hcu.cursesGain.gte(1e12) || inChallenge("hrm", 12) ? "<small>[SOFTCAPPED]</small>" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
-            ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>log6(Blessings)</small></div>"],
+            ["raw-html", () => {return (player.hcu.cursesGain.gte(Decimal.pow(10, player.h.stage.mul(2))) && inChallenge("hrm", 12)) || player.hcu.cursesGain.gte(Decimal.pow(1e100, player.h.stage.mul(2))) ? "<small>[SOFTCAPPED<sup>2</sup>]</small>" :
+                player.hcu.cursesGain.gte(Decimal.pow(10, player.h.stage.mul(2))) || inChallenge("hrm", 12) ? "<small>[SOFTCAPPED]</small>" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
+            ["raw-html", () => {return "<div class='bottomTooltip'>Base Formula<hr><small>log" + formatWhole(player.h.stage) + "(Blessings)</small></div>"}],
         ]],
         ["blank", "10px"],
         ["clickable", 1],
