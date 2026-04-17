@@ -483,7 +483,7 @@
         15: {
             title: "Negative Upgrade V",
             unlocked() { return hasUpgrade("ta", 14) },
-            description() {return "Unlock new " + HEX_STAGES[player.h.stage][1] + " of blessing content."},
+            description() {return "Unlock new " + player.h.stageName[1] + " of blessing content."},
             cost: new Decimal(77),
             currencyLocation() { return player.ta },
             currencyDisplayName: "Negative Infinity Points",
@@ -493,7 +493,7 @@
         16: {
             title: "Negative Upgrade VI",
             unlocked() { return hasUpgrade("ta", 15) },
-            description() {return "Unlock the " + HEX_STAGES[player.h.stage][1] + " of curses."},
+            description() {return "Unlock the " + player.h.stageName[1] + " of curses."},
             cost: new Decimal(666),
             currencyLocation() { return player.ta },
             currencyDisplayName: "Negative Infinity Points",
@@ -514,7 +514,7 @@
         {
             title: "Negative Upgrade VIII",
             unlocked() { return hasUpgrade("ta", 17) },
-            description() {return "Unlock graces in " + HEX_STAGES[player.h.stage][1] + " of blessing."},
+            description() {return "Unlock graces in " + player.h.stageName[1] + " of blessing."},
             cost: new Decimal(15000),
             currencyLocation() { return player.ta },
             currencyDisplayName: "Negative Infinity Points",
@@ -1223,11 +1223,11 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return HEX_STAGES[player.h.stage][0] + "-Dice Synergy"
+                return player.h.stageName[0] + "-Dice Synergy"
             },
             display() {
                 return "which are multiplying dice point gain by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + HEX_STAGES[player.h.stage][0] + " Points"
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + player.h.stageName[0] + " Points"
             },
             buy(mult) {
                 if (mult != true && !hasUpgrade("bi", 104) ) {
@@ -1325,11 +1325,11 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return HEX_STAGES[player.h.stage][0] + "-Rocket Fuel Synergy"
+                return player.h.stageName[0] + "-Rocket Fuel Synergy"
             },
             display() {
                 return "which are multiplying rocket fuel gain by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + HEX_STAGES[player.h.stage][0] + " Points"
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + player.h.stageName[0] + " Points"
             },
             buy(mult) {
                 if (mult != true && !hasUpgrade("bi", 104) ) {
@@ -1359,7 +1359,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Dice-" + HEX_STAGES[player.h.stage][0] + " Synergy"
+                return "Dice-" + player.h.stageName[0] + " Synergy"
             },
             display() {
                 return "which are dividing refinement req. by /" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
@@ -1393,10 +1393,10 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Rocket Fuel-" + HEX_STAGES[player.h.stage][0] + " Synergy"
+                return "Rocket Fuel-" + player.h.stageName[0] + " Synergy"
             },
             display() {
-                return "which are multiplying " + HEX_STAGES[player.h.stage][1] + " point gain by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                return "which are multiplying " + player.h.stageName[1] + " point gain by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Rocket Fuel"
             },
             buy(mult) {
@@ -1427,11 +1427,11 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return HEX_STAGES[player.h.stage][0] + "-" + HEX_STAGES[player.h.stage][0] + " Synergy"
+                return player.h.stageName[0] + "-" + player.h.stageName[0] + " Synergy"
             },
             display() {
                 return "which are multiplying curse gain by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + HEX_STAGES[player.h.stage][0] + " Points"
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + player.h.stageName[0] + " Points"
             },
             buy(mult) {
                 if (mult != true && !hasUpgrade("bi", 104) ) {
@@ -1529,11 +1529,11 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return HEX_STAGES[player.h.stage][0] + "-NIP Synergy"
+                return player.h.stageName[0] + "-NIP Synergy"
             },
             display() {
                 return "which are multiplying NIP gain by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + HEX_STAGES[player.h.stage][0] + " Points"
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " " + player.h.stageName[0] + " Points"
             },
             buy(mult) {
                 if (mult != true && !hasUpgrade("bi", 104) ) {
@@ -1786,8 +1786,8 @@
                     ["blank", "25px"],
                     ["raw-html", function () { return "You have <h3>" + format(player.d.dicePoints) + "</h3> dice points. (highest: "  + format(player.ta.highestDicePoints) + ")" }, { color: "white", fontSize: "20px", fontFamily: "monospace" }],
                     ["raw-html", function () { return "You have <h3>" + format(player.rf.rocketFuel) + "</h3> rocket fuel. (highest: "  + format(player.ta.highestRocketFuel) + ")"}, { color: "white", fontSize: "20px", fontFamily: "monospace" }],
-                    ["raw-html", function () { return (player.po.hex || hasUpgrade("s", 18)) ? "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points. (highest: " + format(player.ta.highestHexPoints) + ")" :""}, { color: "white", fontSize: "20px", fontFamily: "monospace" }],
-                    ["raw-html", function () { return (!player.po.hex && !hasUpgrade("s", 18)) ? "You have <h3><s>" + format(player.h.hexPoint) + "</s></h3> " + HEX_STAGES[player.h.stage][1] + " points. (highest: " + format(player.ta.highestHexPoints) + ")" : ""}, { color: "white", fontSize: "20px", fontFamily: "monospace" }],
+                    ["raw-html", function () { return (player.po.hex || hasUpgrade("s", 18)) ? "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points. (highest: " + format(player.ta.highestHexPoints) + ")" :""}, { color: "white", fontSize: "20px", fontFamily: "monospace" }],
+                    ["raw-html", function () { return (!player.po.hex && !hasUpgrade("s", 18)) ? "You have <h3><s>" + format(player.h.hexPoint) + "</s></h3> " + player.h.stageName[1] + " points. (highest: " + format(player.ta.highestHexPoints) + ")" : ""}, { color: "white", fontSize: "20px", fontFamily: "monospace" }],
                     ["blank", "25px"],
                     ["raw-html", function () { return "Highest values get updated on infinity resets." }, { color: "white", fontSize: "16px", fontFamily: "monospace" }],
                     ["raw-html", function () { return "Tip: Use the halter for OTF progression." }, { color: "white", fontSize: "16px", fontFamily: "monospace" }],

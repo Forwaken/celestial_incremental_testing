@@ -1,5 +1,5 @@
 addLayer("hcu", {
-    name() {return HEX_STAGES[player.h.stage][0] + " of Curses"},
+    name() {return player.h.stageName[0] + " of Curses"},
     symbol: "Cu", // Decides what text appears on the node.
     universe: "UA",
     tooltip: "Curses", // Decides the nodes tooltip
@@ -416,7 +416,7 @@ addLayer("hcu", {
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Η-Jinx" },
-            display() { return HEX_STAGES[player.h.stage][0] + " Points are multiplied by " + format(buyableEffect("hcu", 110).add(1.1)) },
+            display() { return player.h.stageName[0] + " Points are multiplied by " + format(buyableEffect("hcu", 110).add(1.1)) },
             total() {
                 let str = "(Total: " + format(tmp[this.layer].buyables[this.id].effect) + "x)"
                 if (tmp[this.layer].buyables[this.id].effect.gte(1e6)) str = str.concat(" <small style='color:red'>[SOFTCAPPED]</small>")
@@ -504,7 +504,7 @@ addLayer("hcu", {
             purchaseLimit() { return new Decimal(12).add(player.hcu.jinxAddCap.div(2.5)).floor() },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
-            tooltip() {return "Works outside of " + HEX_STAGES[player.h.stage][1] + "."},
+            tooltip() {return "Works outside of " + player.h.stageName[1] + "."},
             extraAmount() {
                 let amt = new Decimal(0)
                 if (hasUpgrade("hve", 51)) amt = amt.add(1)
@@ -764,14 +764,14 @@ addLayer("hcu", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
-            ["raw-html", () => {return HEX_STAGES[player.h.stage][0] + " of Curses"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
+            ["raw-html", () => {return player.h.stageName[0] + " of Curses"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", backgroundColor: "#354040", border: "3px solid white", borderRadius: "20px"}],
         ["blank", "10px"],
         ["tooltip-row", [

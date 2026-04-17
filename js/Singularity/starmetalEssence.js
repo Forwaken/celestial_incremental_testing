@@ -1509,7 +1509,7 @@
             },
             display() {
                 return "<h3>SME-E4</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/5)\n\
-                    Increase " + HEX_STAGES[player.h.stage][1] + " power gain by x1.5\n\
+                    Increase " + player.h.stageName[1] + " power gain by x1.5\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost:<br>" + formatShortWhole(player.za.chancePoints) + "/" + formatShortWhole(tmp[this.layer].buyables[this.id].cost[0]) + " Chance Points\n\
                     " + formatShortWhole(player.sme.starmetalEssence) + "/" + formatShortWhole(tmp[this.layer].buyables[this.id].cost[1]) + " SME"

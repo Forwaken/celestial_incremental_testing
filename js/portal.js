@@ -273,7 +273,7 @@
             },
         },
         13: {
-            title() { return "<h1>" + HEX_STAGES[player.h.stage][0] },
+            title() { return "<h1>" + player.h.stageName[0] },
             display() {
                 return player.po.hex ? "<h1>The number " + formatWhole(player.h.stage) + ".<br>On<br><h2>(Progress is kept between infinities)</h2>" : "<h1>The number " + formatWhole(player.h.stage) + ".<br>Off<br><h2>(Progress is kept between infinities)</h2>";
             },

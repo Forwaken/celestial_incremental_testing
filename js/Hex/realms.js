@@ -1,5 +1,5 @@
 addLayer("hrm", {
-    name() {return HEX_STAGES[player.h.stage][0] + " of Realms"},
+    name() {return player.h.stageName[0] + " of Realms"},
     symbol: "Re", // Decides what text appears on the node.
     universe: "UA",
     tooltip: "Realms", // Decides the nodes tooltip
@@ -177,7 +177,7 @@ addLayer("hrm", {
             display() {
                 return "<h3>RE-4</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/60)\n\
-                    Multiply " + HEX_STAGES[player.h.stage][1] + " points by x2<br><small>(ignoring softcaps)</small>\n\
+                    Multiply " + player.h.stageName[1] + " points by x2<br><small>(ignoring softcaps)</small>\n\
                     Currently: x" + format(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Realm Essence"
             },
@@ -317,7 +317,7 @@ addLayer("hrm", {
             marked: false,
             goal() {return Decimal.mul(3, challengeCompletions(this.layer, this.id)).add(3)},
             fullDisplay() {
-                let str = "<h4>" + HEX_STAGES[player.h.stage][0] + " points, blessings, and boons now decay. Base curse formula is buffed.</h4>"
+                let str = "<h4>" + player.h.stageName[0] + " points, blessings, and boons now decay. Base curse formula is buffed.</h4>"
                 if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Vexes")
                 if (Decimal.gte(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>COMPLETED")
                 return str
@@ -347,7 +347,7 @@ addLayer("hrm", {
             marked: false,
             goal() {return Decimal.pow(100, challengeCompletions(this.layer, this.id)).mul(10000)},
             fullDisplay() {
-                let str = "<h4>" + HEX_STAGES[player.h.stage][0] + " points are heavily softcapped, but unlock " + HEX_STAGES[player.h.stage][0] + " of sacrifice.</h4>"
+                let str = "<h4>" + player.h.stageName[0] + " points are heavily softcapped, but unlock " + player.h.stageName[0] + " of sacrifice.</h4>"
                 if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Sacred Energy")
                 if (Decimal.gte(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>COMPLETED")
                 return str
@@ -506,14 +506,14 @@ addLayer("hrm", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
-            ["raw-html", () => {return HEX_STAGES[player.h.stage][0] + " of Realms"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
+            ["raw-html", () => {return player.h.stageName[0] + " of Realms"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", background: "linear-gradient(90deg, #770000, #775400, #747700, #147700, #00772A, #007769, #004677, #000877, #330077, #710077)", border: "3px solid white", borderRadius: "20px"}],
         ["blank", "5px"],
         ["microtabs", "realm", {borderWidth: "0px"}],

@@ -101,7 +101,7 @@
             style: { width: '100px', "min-height": '100px', borderRadius: "100px", backgroundColor: "#202020ff", borderColor: "#000000ff", color: "#ffffff" },
         },
         13: {
-            title() { return !player.za.zarReqs[2] ? "1e130 " + HEX_STAGES[player.h.stage][0] + " Points" : "REQ CLEARED"},
+            title() { return !player.za.zarReqs[2] ? "1e130 " + player.h.stageName[0] + " Points" : "REQ CLEARED"},
             canClick() { return !player.za.zarReqs[2] && player.h.hexPoint.gte(1e130)},
             unlocked() { return true },
             onClick() {

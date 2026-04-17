@@ -255,7 +255,7 @@
         12: {
             title: "BI IP Upgrade II",
             unlocked() { return true },
-            description() {return "Unlock more graces in " + HEX_STAGES[player.h.stage][1] + " of blessings."},
+            description() {return "Unlock more graces in " + player.h.stageName[1] + " of blessings."},
             cost: new Decimal(2e9),
             currencyLocation() { return player.in },
             currencyDisplayName: "IP",
@@ -265,7 +265,7 @@
         13: {
             title: "BI IP Upgrade III",
             unlocked() { return true },
-            description() {return "Unlock new hexed jinx's in " + HEX_STAGES[player.h.stage][1] + " of curses."},
+            description() {return "Unlock new hexed jinx's in " + player.h.stageName[1] + " of curses."},
             cost: new Decimal(6e9),
             currencyLocation() { return player.in },
             currencyDisplayName: "IP",
@@ -296,7 +296,7 @@
         17: {
             title: "BI IP Upgrade VI",
             unlocked() { return true },
-            description() {return "Total " + HEX_STAGES[player.h.stage][1] + " runs boost pollinator gain."},
+            description() {return "Total " + player.h.stageName[1] + " runs boost pollinator gain."},
             cost: new Decimal(1e12),
             currencyLocation() { return player.in },
             currencyDisplayName: "IP",
@@ -399,7 +399,7 @@
         27: {
             title: "BI IP Upgrade XV",
             unlocked() { return true },
-            description() {return "Unlock " + HEX_STAGES[player.h.stage][1] + " of realms, and new " + HEX_STAGES[player.h.stage][1] + " of power mights."},
+            description() {return "Unlock " + player.h.stageName[1] + " of realms, and new " + player.h.stageName[1] + " of power mights."},
             cost: new Decimal(1e32),
             currencyLocation() { return player.in },
             currencyDisplayName: "IP",
@@ -448,7 +448,7 @@
         103: {
             title: "BI NIP Upgrade III",
             unlocked() { return true },
-            description() {return "Unlock miracles in " + HEX_STAGES[player.h.stage][1] + " of blessings."},
+            description() {return "Unlock miracles in " + player.h.stageName[1] + " of blessings."},
             cost: new Decimal(1e8),
             currencyLocation() { return player.ta },
             currencyDisplayName: "NIP",

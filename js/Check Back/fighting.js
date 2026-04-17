@@ -617,7 +617,7 @@ addLayer("fi", {
         24: {
             title: "Union of Red",
             unlocked() { return hasMilestone("fi", 102)},
-            description: "Boost " + HEX_STAGES[player.h.stage][1] + " of power based on singularity points.",
+            description: "Boost " + player.h.stageName[1] + " of power based on singularity points.",
             cost: new Decimal("12"),
             currencyLocation() { return player.fi },
             currencyDisplayName: "Temporal Shards",

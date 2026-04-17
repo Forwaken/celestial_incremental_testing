@@ -1267,7 +1267,7 @@ addLayer("ir", {
                     ["raw-html", "<u>Effects</u>", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                         ["raw-html", "^2 to 2nd antimatter softcap start.", {color: "white", fontSize: "18px", fontFamily: "monospace"}],
                         ["raw-html", "Weakened 3rd replicanti point softcap.", {color: "white", fontSize: "18px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "Keep " + HEX_STAGES[player.h.stage][1] + " progress on singularity reset."}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "Keep " + player.h.stageName[1] + " progress on singularity reset."}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
                         ["raw-html", "x50 dice sides.", {color: "white", fontSize: "18px", fontFamily: "monospace"}],
                         ["raw-html", "x1e12 post-OTF currencies.", {color: "white", fontSize: "18px", fontFamily: "monospace"}],
                         ["raw-html", "/1.5 starmetal essence generator cooldowns", {color: "white", fontSize: "18px", fontFamily: "monospace"}],

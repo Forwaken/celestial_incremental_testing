@@ -3211,8 +3211,8 @@ addLayer("pet", {
             title() { return "Hex Shadow" },
             lore() { return "Found halfway to the top of the hex staircase. Unwilling to talk or give any information. Has a strange odor." }, 
             description() {
-                return "x" + format(this.effect()[0]) + " to dice points <small>(based on total " + HEX_STAGES[player.h.stage][1] + " power)</small>.<br>" +
-                    "x" + format(this.effect()[1]) + " to rocket fuel <small>(based on total " + HEX_STAGES[player.h.stage][1] + " power)</small>."
+                return "x" + format(this.effect()[0]) + " to dice points <small>(based on total " + player.h.stageName[1] + " power)</small>.<br>" +
+                    "x" + format(this.effect()[1]) + " to rocket fuel <small>(based on total " + player.h.stageName[1] + " power)</small>."
             },
             levelLimit() { return getLevelableTier(this.layer, this.id).mul(5).add(10).min(50) },
             effect() {
@@ -4100,7 +4100,7 @@ addLayer("pet", {
             lore() { return "The poor spider ate too many paragon shards and this is what it looks like now." }, 
             description() {
                 return "x" + format(this.effect()[0]) + " to pre-power resources.<br>" +
-                    "x" + format(this.effect()[1]) + " to " + HEX_STAGES[player.h.stage][1] + " power.<br>" +
+                    "x" + format(this.effect()[1]) + " to " + player.h.stageName[1] + " power.<br>" +
                     "x" + format(this.effect()[2]) + " to realm essence."
             },
             levelLimit() { return getBuyableAmount("sme", 115).gt(0) ? new Decimal(10).add(buyableEffect("sme", 115)) : new Decimal(10) },

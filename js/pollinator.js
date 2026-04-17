@@ -849,7 +849,7 @@ addLayer("pol", {
                                     ["raw-html", function () {
                                         if (typeof POLLINATOR_INFO[player.pol.pollinatorsIndex] !== 'undefined') {
                                             if (typeof POLLINATOR_INFO[player.pol.pollinatorsIndex].effect3 !== 'undefined') {
-                                                if (player.pol.pollinatorsIndex == "ant") return HEX_STAGES[player.h.stage][0] + " Points: x" + format(player.pol.pollinatorEffects[player.pol.pollinatorsIndex].effects[2])
+                                                if (player.pol.pollinatorsIndex == "ant") return player.h.stageName[0] + " Points: x" + format(player.pol.pollinatorEffects[player.pol.pollinatorsIndex].effects[2])
                                                 return POLLINATOR_INFO[player.pol.pollinatorsIndex].effect3 + format(player.pol.pollinatorEffects[player.pol.pollinatorsIndex].effects[2])
                                             }
                                         }

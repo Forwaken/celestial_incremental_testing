@@ -1,6 +1,6 @@
 const VEXROW = [1, 2, 1, 3, 2, 1, 4, 3, 2, 4, 5, 3, 6, 4, 5, 6, 5, 6]
 addLayer("hve", {
-    name: () => {return HEX_STAGES[player.h.stage][0] + " of Vexes"},
+    name: () => {return player.h.stageName[0] + " of Vexes"},
     symbol: "Ve", // Decides what text appears on the node.
     universe: "UA",
     tooltip: "Vexes", // Decides the nodes tooltip
@@ -104,7 +104,7 @@ addLayer("hve", {
     },
     upgrades: {
         11: {
-            fullDisplay() { return HEX_STAGES[player.h.stage][0] + " Points are multiplied by<br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with " + HEX_STAGES[player.h.stage][0] + " Points)"},
+            fullDisplay() { return player.h.stageName[0] + " Points are multiplied by<br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with " + player.h.stageName[0] + " Points)"},
             unlocked: true,
             cost() {return new Decimal(1)},
             canAfford() { return player.hve.rowCurrent[0] > 0},
@@ -123,7 +123,7 @@ addLayer("hve", {
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },
         12: {
-            fullDisplay() { return HEX_STAGES[player.h.stage][0] + " Points are multiplied by<br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with Blessings)"},
+            fullDisplay() { return player.h.stageName[0] + " Points are multiplied by<br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with Blessings)"},
             unlocked: true,
             cost() {return new Decimal(1)},
             canAfford() { return player.hve.rowCurrent[0] > 0},
@@ -142,7 +142,7 @@ addLayer("hve", {
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },
         13: {
-            fullDisplay() { return HEX_STAGES[player.h.stage][0] + " Points are multiplied by<br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with Curses)"},
+            fullDisplay() { return player.h.stageName[0] + " Points are multiplied by<br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with Curses)"},
             unlocked: true,
             cost() {return new Decimal(1)},
             canAfford() { return player.hve.rowCurrent[0] > 0},
@@ -342,7 +342,7 @@ addLayer("hve", {
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },
         61: {
-            fullDisplay() { return HEX_STAGES[player.h.stage][0] + " Points are raised to the power of 1.03"},
+            fullDisplay() { return player.h.stageName[0] + " Points are raised to the power of 1.03"},
             unlocked: true,
             cost() {return new Decimal(1)},
             canAfford() { return player.hve.rowCurrent[5] > 0},
@@ -386,14 +386,14 @@ addLayer("hve", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
-            ["raw-html", () => {return HEX_STAGES[player.h.stage][0] + " of Vexes"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
+            ["raw-html", () => {return player.h.stageName[0] + " of Vexes"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", backgroundColor: "#404", border: "3px solid white", borderRadius: "20px"}],
         ["blank", "20px"],
         ["style-row", [

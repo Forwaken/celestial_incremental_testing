@@ -76,7 +76,7 @@ addLayer("alephsChamber", {
                     ["raw-html", () => { return "Improved SP's effect on singularity gain." }, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "Tav's Domain Expander cap now increments by x1e5"}, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "Keep Tav's Domain content on singularity."}, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
-                    ["raw-html", () => { return "x36 " + HEX_STAGES[player.h.stage][0] + " Power." }, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return "x36 " + player.h.stageName[0] + " Power." }, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "x100 Infinitum." }, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "x10 Emotions." }, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "+10 Mending." }, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],

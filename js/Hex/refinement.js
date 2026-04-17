@@ -1,5 +1,5 @@
 addLayer("hre", {
-    name() {return HEX_STAGES[player.h.stage][0] + " of Refinement"},
+    name() {return player.h.stageName[0] + " of Refinement"},
     symbol: "Rf", // Decides what text appears on the node.
     universe: "UA",
     tooltip: "Refinement", // Decides the nodes tooltip
@@ -23,14 +23,14 @@ addLayer("hre", {
         player.hre.refinementDiv = player.hre.refinementDiv.mul(levelableEffect("pet", 210)[1])
         player.hre.refinementDiv = player.hre.refinementDiv.mul(player.h.prePowerMult)
 
-        let reqSoftcapConnector = Decimal.sub(Decimal.pow(player.h.stage.pow(3), player.h.stage.mul(10)), Decimal.pow(player.h.stage, player.h.stage.mul(10)).mul(Decimal.pow(10, player.h.stage)))
-        let reqSoftcapPoints = Decimal.pow(player.h.stage, player.h.stage.mul(10)).mul(Decimal.pow(10, player.h.stage)).div(player.hre.refinementDiv)
+        let reqSoftcapConnector1 = Decimal.sub(Decimal.pow(player.h.stage.pow(3), player.h.stage.mul(10)), Decimal.pow(player.h.stage, player.h.stage.mul(10)).mul(Decimal.pow(10, player.h.stage)))
+        let reqSoftcapPoints1 = Decimal.pow(player.h.stage, player.h.stage.mul(10)).mul(Decimal.pow(10, player.h.stage)).div(player.hre.refinementDiv)
 
         if (player.hre.refinement.lt(player.h.stage.mul(10))) player.hre.refinementReq = Decimal.pow(player.h.stage, player.hre.refinement).mul(Decimal.pow(10, player.h.stage)).div(player.hre.refinementDiv)
-        if (player.hre.refinement.gte(player.h.stage.mul(10))) player.hre.refinementReq = Decimal.pow(player.h.stage.pow(3), player.hre.refinement).div(reqSoftcapConnector).div(player.hre.refinementDiv)
+        if (player.hre.refinement.gte(player.h.stage.mul(10))) player.hre.refinementReq = Decimal.pow(player.h.stage.pow(3), player.hre.refinement).div(reqSoftcapConnector1).div(player.hre.refinementDiv)
         
-        if (player.h.hexPoint.lt(reqSoftcapPoints)) player.hre.refinementGain = player.h.hexPoint.add(1).div(Decimal.pow(10, player.h.stage)).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage).ln()).add(1).sub(player.hre.refinement).floor()
-        if (player.h.hexPoint.gte(reqSoftcapPoints)) player.hre.refinementGain = player.h.hexPoint.add(1).mul(reqSoftcapConnector).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage.pow(3)).ln()).add(1).sub(player.hre.refinement).floor()
+        if (player.h.hexPoint.lt(reqSoftcapPoints1)) player.hre.refinementGain = player.h.hexPoint.add(1).div(Decimal.pow(10, player.h.stage)).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage).ln()).add(1).sub(player.hre.refinement).floor()
+        if (player.h.hexPoint.gte(reqSoftcapPoints1)) player.hre.refinementGain = player.h.hexPoint.add(1).mul(reqSoftcapConnector1).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage.pow(3)).ln()).add(1).sub(player.hre.refinement).floor()
         
         if (player.hre.refinementGain.lt(1)) player.hre.refinementGain = new Decimal(0)
 
@@ -65,7 +65,6 @@ addLayer("hre", {
 
         if (player.hre.refinement.gte(9)) {
             player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.5, player.h.stage).add(1), player.hre.refinement.sub(5).pow(Decimal.div(3.6, player.h.stage)))
-            player.hre.refinementEffect[2][0] = player.hre.refinementEffect[2][0].mul(Decimal.pow(Decimal.div(1, player.h.stage).add(1), player.hre.refinement.min(24).sub(5).pow(Decimal.div(3.6, player.h.stage))))
             if (inChallenge("hrm", 16)) player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.36, player.h.stage).add(1), player.hre.refinement.sub(4).pow(Decimal.div(3.6, player.h.stage)))
         }
         if (player.hre.refinement.gte(9)) player.hre.refinementEffect[2][1] = Decimal.pow(player.h.stage.div(2.4), player.hre.refinement.sub(4))
@@ -87,8 +86,8 @@ addLayer("hre", {
     clickables: {
         1: {
             title() {
-                if (inChallenge("hrm", 16)) return "<h2>Refine, but reset " + HEX_STAGES[player.h.stage][1] + " points.</h2><br><h3>Req: " + format(player.hre.refinementReq) + " " + HEX_STAGES[player.h.stage][0] + " Points</h3>"
-                return "<h2>Refine, but reset " + HEX_STAGES[player.h.stage][1] + " points and provenance.</h2><br><h3>Req: " + format(player.hre.refinementReq) + " " + HEX_STAGES[player.h.stage][0] + " Points</h3>"
+                if (inChallenge("hrm", 16)) return "<h2>Refine, but reset " + player.h.stageName[1] + " points.</h2><br><h3>Req: " + format(player.hre.refinementReq) + " " + player.h.stageName[0] + " Points</h3>"
+                return "<h2>Refine, but reset " + player.h.stageName[1] + " points and provenance.</h2><br><h3>Req: " + format(player.hre.refinementReq) + " " + player.h.stageName[0] + " Points</h3>"
             },
             canClick() { return player.hre.refinementGain.gte(1) && (!hasMilestone("hre", 4) || inChallenge("hrm", 15))},
             unlocked: true,
@@ -122,7 +121,7 @@ addLayer("hre", {
         },
         0: {
             requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(2)) + " Refinements"},
-            effectDescription() {return HEX_STAGES[player.h.stage][0] + " point formula now uses best celestial points."},
+            effectDescription() {return player.h.stageName[0] + " point formula now uses best celestial points."},
             done() { return player.hre.refinement.gte(player.h.stage.mul(2))},
             unlocked() { return hasMilestone("hre", 100) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
@@ -293,7 +292,7 @@ addLayer("hre", {
                                 ["raw-html", "Refiner 1", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "150px", height: "36px", backgroundColor: "#333", borderBottom: "2px solid white", borderRadius: "10px 10px 0px 0px"}],
                             ["style-column", [
-                                ["raw-html", () => {return "x" + format(player.hre.refinementEffect[0][0]) + "<br>" + HEX_STAGES[player.h.stage][0] + " Points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return "x" + format(player.hre.refinementEffect[0][0]) + "<br>" + player.h.stageName[0] + " Points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
                             ], {width: "150px", height: "40px", borderBottom: "2px solid white"}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[0][1]) + "<br>Factor Power"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
@@ -391,14 +390,14 @@ addLayer("hre", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
-            ["raw-html", () => {return HEX_STAGES[player.h.stage][0] + " of Refinement"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
+            ["raw-html", () => {return player.h.stageName[0] + " of Refinement"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", backgroundColor: "#333", border: "3px solid white", borderRadius: "20px"}],
         ["blank", "10px"],
         ["row", [

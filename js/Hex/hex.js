@@ -15,7 +15,7 @@
 ]
 
 addLayer("h", {
-    name() {return HEX_STAGES[player.h.stage][0]}, // This is optional, only used in a few places, If absent it just uses the layer id.
+    name() {return player.h.stageName[0]}, // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "H", // This appears on the layer's node. Default is the id with the first letter capitalized
     universe: "UA",
     row: 1,
@@ -30,16 +30,26 @@ addLayer("h", {
         // Pre-Power Resources
         prePowerMult: new Decimal(1),
 
+        stageName:["Hex", "hex"],
         stage: new Decimal(6),
 
         ragePower: new Decimal(1),
     }},
     nodeStyle() { return {color: "white", backgroundColor: "black", borderColor: "#0061ff"}},
     glowColor: "rgba(0, 0, 0, 0)",
-    tooltip() {return HEX_STAGES[player.h.stage][0]},
+    tooltip() {return player.h.stageName[0]},
     color: "#d4d4d4",
     update(delta) {
         let onepersec = new Decimal(1)
+
+        // UNIVERSE ALPHA STAGE STUFF
+        if (Decimal.lte(player.h.stage, 0)) {
+            player.h.stageName = ["Null", "null"]
+        } else if (Decimal.lt(player.h.stage, HEX_STAGES.length)) {
+            player.h.stageName = HEX_STAGES[player.h.stage]
+        } else {
+            player.h.stageName = ["???", "???"]
+        }
 
         // START OF HEX POINT GAIN
         player.h.hexPointGain = new Decimal(0)
@@ -109,7 +119,7 @@ addLayer("h", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],

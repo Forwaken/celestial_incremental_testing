@@ -1,5 +1,5 @@
 addLayer("hpw", {
-    name() {return HEX_STAGES[player.h.stage][0] + " of Power"},
+    name() {return player.h.stageName[0] + " of Power"},
     symbol: "Pw", // Decides what text appears on the node.
     universe: "UA",
     tooltip: "Power", // Decides the nodes tooltip
@@ -145,7 +145,7 @@ addLayer("hpw", {
     },
     clickables: {
         1: {
-            title() { return "<h2>Amplify Power, but reset previous " + HEX_STAGES[player.h.stage][1] + " content.</h2><br><h3>Req: 600,000 Blessings</h3>"},
+            title() { return "<h2>Amplify Power, but reset previous " + player.h.stageName[1] + " content.</h2><br><h3>Req: 600,000 Blessings</h3>"},
             canClick() { return player.hbl.blessings.gte(6e5)},
             unlocked: true,
             onClick() {
@@ -195,7 +195,7 @@ addLayer("hpw", {
         2: {
             title: "Might 1:2",
             unlocked: true,
-            description() {return "Boost " + HEX_STAGES[player.h.stage][1] + " points based on power."},
+            description() {return "Boost " + player.h.stageName[1] + " points based on power."},
             tooltip() {
                 if (hasUpgrade("hpw", 32)) return "(log1.6((Power+1)^3)+1)*6"
                 return "(log2(Power+1)+1)*3"
@@ -336,7 +336,7 @@ addLayer("hpw", {
         42: {
             title: "Might 5:2",
             unlocked: true,
-            description() {return "Unlock " + HEX_STAGES[player.h.stage][0] + " of Vexes."},
+            description() {return "Unlock " + player.h.stageName[0] + " of Vexes."},
             branches: [33],
             cost() {return new Decimal(240).pow(player.hpw.upgScale[4])},
             canAfford() { return hasUpgrade("hpw", 33)},
@@ -405,7 +405,7 @@ addLayer("hpw", {
         62: {
             title: "Might 7:2",
             unlocked: true,
-            description() {return "Add a new effect that buffs jinx total to " + HEX_STAGES[player.h.stage][0] + " of Vexes."},
+            description() {return "Add a new effect that buffs jinx total to " + player.h.stageName[0] + " of Vexes."},
             branches: [52],
             cost() {return new Decimal(12000).pow(player.hpw.upgScale[6])},
             canAfford() { return hasUpgrade("hpw", 52)},
@@ -474,7 +474,7 @@ addLayer("hpw", {
         92: {
             title: "Might 10:2",
             unlocked: true,
-            description() {return "Add a new effect that buffs blessings to " + HEX_STAGES[player.h.stage][0] + " of Vexes."},
+            description() {return "Add a new effect that buffs blessings to " + player.h.stageName[0] + " of Vexes."},
             branches: [81],
             cost() {return new Decimal(1.8e6).pow(player.hpw.upgScale[9])},
             canAfford() { return hasUpgrade("hpw", 81)},
@@ -698,7 +698,7 @@ addLayer("hpw", {
             title: "Might A:1",
             unlocked() {return challengeCompletions("hrm", 11) >= 1 && hasUpgrade("bi", 27)},
             description: "Raise rank, tier, tetr, and pent effects by ^1.18.",
-            tooltip() {return "Realm mights work outside of " + HEX_STAGES[player.h.stage][1] + "."},
+            tooltip() {return "Realm mights work outside of " + player.h.stageName[1] + "."},
             branches: [1001],
             cost() {return new Decimal(6)},
             canAfford() { return hasUpgrade("hpw", 1001)},
@@ -1385,14 +1385,14 @@ addLayer("hpw", {
     },
     tabFormat: [
         ["row", [
-            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + HEX_STAGES[player.h.stage][1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+            ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
-            ["raw-html", () => {return HEX_STAGES[player.h.stage][0] + " of Power"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
+            ["raw-html", () => {return player.h.stageName[0] + " of Power"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", backgroundColor: "#4c1919", border: "3px solid white", borderRadius: "20px"}],
         ["blank", "10px"],
         ["tooltip-row", [

@@ -165,7 +165,7 @@
         18: {
             title: "Singularity Upgrade VIII",
             unlocked() { return true},
-            description() {return "Keep " + HEX_STAGES[player.h.stage][1] + " unlocked permanently."},
+            description() {return "Keep " + player.h.stageName[1] + " unlocked permanently."},
             cost: new Decimal("5e12"),
             currencyLocation() { return player.s },
             currencyDisplayName: "Singularity Points",
@@ -420,7 +420,7 @@
         },
         16: {
             requirementDescription: "<h3>6 Singularities",
-            effectDescription() {return "Autobuy challenge dice points, crystal, steel, pollinator, time cube, replicanti, galaxy dust, repli-grass, grass-skippers, linkers, and proto memory buyables.<br>Keep " + HEX_STAGES[player.h.stage][1] + " of power's vigor milestones on singularity reset."},
+            effectDescription() {return "Autobuy challenge dice points, crystal, steel, pollinator, time cube, replicanti, galaxy dust, repli-grass, grass-skippers, linkers, and proto memory buyables.<br>Keep " + player.h.stageName[1] + " of power's vigor milestones on singularity reset."},
             done() { return player.s.singularities.gte(6) },
             style: {width: "800px", height: "85px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
@@ -444,7 +444,7 @@
         },
         20: {
             requirementDescription: "<h3>60 Singularities",
-            effectDescription() {return "Keep IP related blessing boosters, NIP related jinxes, and graces on all resets.<br>Also keep any " + HEX_STAGES[player.h.stage][1] + " Qol control values."},
+            effectDescription() {return "Keep IP related blessing boosters, NIP related jinxes, and graces on all resets.<br>Also keep any " + player.h.stageName[1] + " Qol control values."},
             done() { return player.s.singularities.gte(60) },
             style: {width: "800px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },

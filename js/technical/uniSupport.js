@@ -119,7 +119,7 @@ addUniverse("U1", {
 })
 
 addUniverse("UA", {
-    name() {return "Universe α<br>" + HEX_STAGES[player.h.stage][0]},
+    name() {return "Universe α<br>" + player.h.stageName[0]},
     symbol: "α",
     tree: [["hpr", "hsa"], ["hre", "hpu"], ["hbl", "hcu", "hve"], ["hpw", "hrm"]],
     nodeStyle() {

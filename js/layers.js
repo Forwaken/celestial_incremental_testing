@@ -445,7 +445,7 @@
         29: {
             title: "True Refinement",
             unlocked() { return hasUpgrade("i", 32) && hasUpgrade("bi", 106) && player.ca.unlockedCante},
-            description() {return "Unlock " + HEX_STAGES[player.h.stage][0] + " of Purity."},
+            description() {return "Unlock " + player.h.stageName[0] + " of Purity."},
             cost: new Decimal("1e3000"),
             currencyLocation() { return player },
             currencyDisplayName: "Celestial Points",
@@ -455,7 +455,7 @@
         30: {
             title: "Hexing Power",
             unlocked() { return hasUpgrade("i", 29) && hasUpgrade("bi", 106) && player.ca.unlockedCante},
-            description() {return "Unlock " + HEX_STAGES[player.h.stage][0] + " of Power."},
+            description() {return "Unlock " + player.h.stageName[0] + " of Power."},
             cost: new Decimal("1e3600"),
             currencyLocation() { return player },
             currencyDisplayName: "Celestial Points",
