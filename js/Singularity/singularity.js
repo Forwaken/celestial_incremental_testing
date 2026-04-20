@@ -402,7 +402,7 @@
         },
         13: {
             requirementDescription: "<h3>3 Singularities",
-            effectDescription: "Produce 5% of blessings per second (excluding RC1), produce 1% of galaxy dust per second, autobuy infinity power, and unlock radiation.",
+            effectDescription: "Produce 5% of blessings per second, produce 1% of galaxy dust per second, autobuy infinity power, and unlock radiation.",
             done() { return player.s.singularities.gte(3) },
             style: {width: "800px", height: "85px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },

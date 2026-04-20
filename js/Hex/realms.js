@@ -35,11 +35,11 @@ addLayer("hrm", {
         if (hasUpgrade("depth3", 6)) player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(upgradeEffect("depth3", 6))
 
         player.hrm.realmEssenceEffects = [new Decimal(1), new Decimal(1)]
-        player.hrm.realmEssenceEffects[0] = Decimal.pow(2.5, player.hrm.realmEssence.add(1).log(6)).min(1e10)
-        player.hrm.realmEssenceEffects[1] = player.hrm.realmEssence.add(1).log(6).mul(0.05).add(1).min(3)
+        player.hrm.realmEssenceEffects[0] = Decimal.pow(2.5, player.hrm.realmEssence.add(1).log(player.h.stage)).min(1e10)
+        player.hrm.realmEssenceEffects[1] = player.hrm.realmEssence.add(1).log(player.h.stage).mul(0.05).add(1).min(3)
 
-        if (player.hrm.realmEssence.gte(7776)) player.hrm.realmEssenceEffects[0] = Decimal.pow(1.5, player.hrm.realmEssence.div(7776).log(6)).mul(98).min(1e10)
-        if (player.hrm.realmEssence.gte(60466176)) player.hrm.realmEssenceEffects[1] = player.hrm.realmEssence.div(60466176).log(6).mul(0.01).add(1.5).min(3)
+        if (player.hrm.realmEssence.gte(player.h.stage.pow(5))) player.hrm.realmEssenceEffects[0] = Decimal.pow(1.5, player.hrm.realmEssence.div(player.h.stage.pow(5)).log(player.h.stage)).mul(98).min(1e10)
+        if (player.hrm.realmEssence.gte(player.h.stage.pow(10))) player.hrm.realmEssenceEffects[1] = player.hrm.realmEssence.div(player.h.stage.pow(10)).log(player.h.stage).mul(0.01).add(1.5).min(3)
 
         if (inChallenge("hrm", 15)) {
             player.hrm.dreamTimer = player.hrm.dreamTimer.sub(delta)
@@ -51,7 +51,7 @@ addLayer("hrm", {
         player.hrm.challengeSoftcap = new Decimal(1)
         if (player.hrm.activeChallenge) {
             if (player.hrm.challenges[player.hrm.activeChallenge] > 5) {
-                player.hrm.challengeSoftcap = Decimal.pow(3, player.hrm.challenges[player.hrm.activeChallenge] - 5)
+                player.hrm.challengeSoftcap = Decimal.pow(3, player.hrm.challenges[player.hrm.activeChallenge] - player.h.stage.sub(1).toNumber())
             }
         }
     },
@@ -79,20 +79,20 @@ addLayer("hrm", {
     buyables: {
         1: {
             costBase() { return new Decimal(1) },
-            costGrowth() { return new Decimal(6) },
-            purchaseLimit() { return new Decimal(12) },
+            costGrowth() { return new Decimal(player.h.stage) },
+            purchaseLimit() { return new Decimal(player.h.stage.mul(2).floor()) },
             currency() { return player.hrm.realmEssence},
             pay(amt) { player.hrm.realmEssence = this.currency().sub(amt) },
             effect(x) {
                 if (getBuyableAmount(this.layer, this.id).lt(1)) return new Decimal(0)
-                return Decimal.pow(6, getBuyableAmount(this.layer, this.id))
+                return Decimal.pow(player.h.stage, getBuyableAmount(this.layer, this.id))
             },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>RE-1</h3>\n\
-                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/12)\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(player.h.stage.mul(2).floor()) + ")\n\
                     Keep some power on singularity resets\n\
                     Currently: " + formatWhole(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Realm Essence"
@@ -109,8 +109,8 @@ addLayer("hrm", {
         },
         2: {
             costBase() { return new Decimal(10) },
-            costGrowth() { return new Decimal(3) },
-            purchaseLimit() { return new Decimal(6) },
+            costGrowth() { return new Decimal(player.h.stage.div(2)) },
+            purchaseLimit() { return new Decimal(player.h.stage.min(12)) },
             currency() { return player.hrm.realmEssence},
             pay(amt) { player.hrm.realmEssence = this.currency().sub(amt) },
             unlocked: true,
@@ -118,7 +118,7 @@ addLayer("hrm", {
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>RE-2</h3>\n\
-                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/6)\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(player.h.stage.min(12)) + ")\n\
                     Keep some miracles on resets.\n\
                     Currently: " + formatWhole(getBuyableAmount(this.layer, this.id)) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Realm Essence"
@@ -135,8 +135,8 @@ addLayer("hrm", {
         },
         3: {
             costBase() { return new Decimal(100) },
-            costGrowth() { return new Decimal(6) },
-            purchaseLimit() { return new Decimal(35) },
+            costGrowth() { return new Decimal(player.h.stage) },
+            purchaseLimit() { return new Decimal(player.h.stage.pow(2).sub(1).floor()) },
             currency() { return player.hrm.realmEssence},
             pay(amt) { player.hrm.realmEssence = this.currency().sub(amt) },
             effect(x) {
@@ -147,7 +147,7 @@ addLayer("hrm", {
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>RE-3</h3>\n\
-                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/35)\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(player.h.stage.pow(2).sub(1).floor()) + ")\n\
                     Increase IP Booster softcap exponent.\n\
                     Currently: +" + format(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Realm Essence"
@@ -164,8 +164,8 @@ addLayer("hrm", {
         },
         4: {
             costBase() { return new Decimal(1000) },
-            costGrowth() { return new Decimal(12) },
-            purchaseLimit() { return new Decimal(60) },
+            costGrowth() { return new Decimal(player.h.stage.mul(2)) },
+            purchaseLimit() { return new Decimal(player.h.stage.mul(10).floor()) },
             currency() { return player.hrm.realmEssence},
             pay(amt) { player.hrm.realmEssence = this.currency().sub(amt) },
             effect(x) {
@@ -176,7 +176,7 @@ addLayer("hrm", {
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>RE-4</h3>\n\
-                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/60)\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(player.h.stage.mul(10).floor()) + ")\n\
                     Multiply " + player.h.stageName[1] + " points by x2<br><small>(ignoring softcaps)</small>\n\
                     Currently: x" + format(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Realm Essence"
@@ -193,8 +193,8 @@ addLayer("hrm", {
         },
         5: {
             costBase() { return new Decimal(10000) },
-            costGrowth() { return new Decimal(24) },
-            purchaseLimit() { return new Decimal(20) },
+            costGrowth() { return new Decimal(player.h.stage.mul(4)) },
+            purchaseLimit() { return new Decimal(player.h.stage.div(3).mul(10).floor()) },
             currency() { return player.hrm.realmEssence},
             pay(amt) { player.hrm.realmEssence = this.currency().sub(amt) },
             effect(x) {
@@ -205,7 +205,7 @@ addLayer("hrm", {
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>RE-5</h3>\n\
-                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/20)\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(player.h.stage.div(3).mul(10).floor()) + ")\n\
                     Raise all third realm might effects.\n\
                     Currently: ^" + format(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Realm Essence"
@@ -222,8 +222,8 @@ addLayer("hrm", {
         },
         6: {
             costBase() { return new Decimal(100000) },
-            costGrowth() { return new Decimal(60) },
-            purchaseLimit() { return new Decimal(30) },
+            costGrowth() { return new Decimal(player.h.stage.mul(10)) },
+            purchaseLimit() { return new Decimal(player.h.stage.mul(5).floor()) },
             currency() { return player.hrm.realmEssence},
             pay(amt) { player.hrm.realmEssence = this.currency().sub(amt) },
             effect(x) {
@@ -234,7 +234,7 @@ addLayer("hrm", {
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>RE-6</h3>\n\
-                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/30)\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(player.h.stage.mul(5).floor()) + ")\n\
                     Double realm essence.\n\
                     Currently: x" + format(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Realm Essence"
@@ -253,11 +253,11 @@ addLayer("hrm", {
     challenges: {
         11: {
             name() { return "Creator Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 1).add(3)},
+            completionLimit() {return buyableEffect("hpw", 1).add(player.h.stage.div(2).floor())},
             marked: false,
-            goal() {return Decimal.pow(10, challengeCompletions(this.layer, this.id)).mul(1e4)},
+            goal() {return Decimal.pow(Decimal.pow10(player.h.stage.div(6)), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage.div(1.5)))},
             fullDisplay() {
-                let str = "<h4>You can only reset blessing 6 times. Amended Automation is also locked.</h4>"
+                let str = "<h4>You can only reset blessing " + formatWhole(player.h.stage) + " times. Passive blessing gain is also disabled.</h4>"
                 if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Blessings")
                 if (Decimal.gte(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>COMPLETED")
                 return str
@@ -283,9 +283,9 @@ addLayer("hrm", {
         },
         12: {
             name() { return "Higher Plane (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 2).add(3)},
+            completionLimit() {return buyableEffect("hpw", 2).add(player.h.stage.div(2).floor())},
             marked: false,
-            goal() {return Decimal.pow(30, challengeCompletions(this.layer, this.id)).mul(1e6)},
+            goal() {return Decimal.pow(player.h.stage.mul(5), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage))},
             fullDisplay() {
                 let str = "<h4>Blessing and curse features are nerfed. Purity features are heavily buffed.</h4>"
                 if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Blessings")
@@ -313,9 +313,9 @@ addLayer("hrm", {
         },
         13: {
             name() { return "Death Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 3).add(3)},
+            completionLimit() {return buyableEffect("hpw", 3).add(player.h.stage.div(2).floor())},
             marked: false,
-            goal() {return Decimal.mul(3, challengeCompletions(this.layer, this.id)).add(3)},
+            goal() {return Decimal.mul(player.h.stage.div(2), challengeCompletions(this.layer, this.id)).add(player.h.stage.div(2)).floor()},
             fullDisplay() {
                 let str = "<h4>" + player.h.stageName[0] + " points, blessings, and boons now decay. Base curse formula is buffed.</h4>"
                 if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Vexes")
@@ -343,9 +343,9 @@ addLayer("hrm", {
         },
         14: {
             name() { return "Dimensional Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 4).add(3)},
+            completionLimit() {return buyableEffect("hpw", 4).add(player.h.stage.div(2).floor())},
             marked: false,
-            goal() {return Decimal.pow(100, challengeCompletions(this.layer, this.id)).mul(10000)},
+            goal() {return Decimal.pow(Decimal.pow10(player.h.stage.div(3)), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage.div(1.5)))},
             fullDisplay() {
                 let str = "<h4>" + player.h.stageName[0] + " points are heavily softcapped, but unlock " + player.h.stageName[0] + " of sacrifice.</h4>"
                 if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Sacred Energy")
@@ -373,9 +373,9 @@ addLayer("hrm", {
         },
         15: {
             name() { return "Dream Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 5).add(3)},
+            completionLimit() {return buyableEffect("hpw", 5).add(player.h.stage.div(2).floor())},
             marked: false,
-            goal() {return Decimal.pow(10, challengeCompletions(this.layer, this.id)).mul(6e6)},
+            goal() {return Decimal.pow(Decimal.pow10(player.h.stage.div(6)), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage).mul(player.h.stage))},
             fullDisplay() {
                 let str = "<h4>Challenge ends after 60 seconds. Most automation is turned off.</h4>"
                 if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Blessings")
@@ -404,9 +404,9 @@ addLayer("hrm", {
         },
         16: {
             name() { return "Void Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 6).add(3)},
+            completionLimit() {return buyableEffect("hpw", 6).add(player.h.stage.div(2).floor())},
             marked: false,
-            goal() {return Decimal.mul(6, challengeCompletions(this.layer, this.id)).add(90)},
+            goal() {return Decimal.mul(player.h.stage, challengeCompletions(this.layer, this.id)).add(player.h.stage.mul(15))},
             fullDisplay() {
                 let str = "<h4>The void has made you forget the concept of provenances.</h4>"
                 if (inChallenge("hrm", 16)) str = "<h4>The void has made you forget the concept of ███████████.</h4>"
@@ -485,11 +485,11 @@ addLayer("hrm", {
                         ]],
                         ["row", [
                             ["raw-html", () => {return "Boosts Pre-Power resources by x" + format(player.hrm.realmEssenceEffects[0])}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return player.hrm.realmEssenceEffects[0].gte(1e10) ? "[HARDCAPPED]" : player.hrm.realmEssence.gte(7776) ? "[SOFTCAPPED]" : ""}, {color: "red", fontSize: "14px", fontFamily: "monospace", marginLeft: "8px"}],
+                            ["raw-html", () => {return player.hrm.realmEssenceEffects[0].gte(1e10) ? "[HARDCAPPED]" : player.hrm.realmEssence.gte(player.h.stage.pow(5)) ? "[SOFTCAPPED]" : ""}, {color: "red", fontSize: "14px", fontFamily: "monospace", marginLeft: "8px"}],
                         ]],
                         ["row", [
                             ["raw-html", () => {return "Boosts Checkback Tickspeed by x" + format(player.hrm.realmEssenceEffects[1])}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return player.hrm.realmEssenceEffects[1].gte(3) ? "[HARDCAPPED]" : player.hrm.realmEssence.gte(60466176) ? "[SOFTCAPPED]" : ""}, {color: "red", fontSize: "14px", fontFamily: "monospace", marginLeft: "8px"}],
+                            ["raw-html", () => {return player.hrm.realmEssenceEffects[1].gte(3) ? "[HARDCAPPED]" : player.hrm.realmEssence.gte(player.h.stage.pow(10)) ? "[SOFTCAPPED]" : ""}, {color: "red", fontSize: "14px", fontFamily: "monospace", marginLeft: "8px"}],
                         ]],
                     ], {width: "600px", height: "75px", background: "linear-gradient(90deg, #530000, #533a00, #515300, #0e5300, #00531d, #005349, #004677, #003153, #230053, #4f0053)", borderTop: "3px solid white", borderLeft: "3px solid white", borderRight: "3px solid white", borderRadius: "20px 20px 0px 0px"}],
                     ["style-column", [

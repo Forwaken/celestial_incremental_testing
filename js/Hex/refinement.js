@@ -23,14 +23,18 @@ addLayer("hre", {
         player.hre.refinementDiv = player.hre.refinementDiv.mul(levelableEffect("pet", 210)[1])
         player.hre.refinementDiv = player.hre.refinementDiv.mul(player.h.prePowerMult)
 
-        let reqSoftcapConnector1 = Decimal.sub(Decimal.pow(player.h.stage.pow(3), player.h.stage.mul(10)), Decimal.pow(player.h.stage, player.h.stage.mul(10)).mul(Decimal.pow(10, player.h.stage)))
-        let reqSoftcapPoints1 = Decimal.pow(player.h.stage, player.h.stage.mul(10)).mul(Decimal.pow(10, player.h.stage)).div(player.hre.refinementDiv)
+        let reqSoftcapPoints1 = Decimal.pow(player.h.stage.max(2), player.h.stage.mul(10)).mul(Decimal.pow10(player.h.stage)).div(player.hre.refinementDiv)
+        let reqSoftcapConnector1 = Decimal.sub(player.h.stage.mul(10), reqSoftcapPoints1.add(1).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage.max(2).pow(3)).ln()).add(1))
+        let reqSoftcapPoints2 = Decimal.pow(player.h.stage.max(2).pow(3), player.h.stage.mul(15).sub(reqSoftcapConnector1)).div(player.hre.refinementDiv)
+        let reqSoftcapConnector2 = Decimal.sub(player.h.stage.mul(15), reqSoftcapPoints2.add(1).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage.max(2).pow(6)).ln()).add(1))
 
-        if (player.hre.refinement.lt(player.h.stage.mul(10))) player.hre.refinementReq = Decimal.pow(player.h.stage, player.hre.refinement).mul(Decimal.pow(10, player.h.stage)).div(player.hre.refinementDiv)
-        if (player.hre.refinement.gte(player.h.stage.mul(10))) player.hre.refinementReq = Decimal.pow(player.h.stage.pow(3), player.hre.refinement).div(reqSoftcapConnector1).div(player.hre.refinementDiv)
+        if (player.hre.refinement.lt(player.h.stage.mul(10))) player.hre.refinementReq = Decimal.pow(player.h.stage.max(2), player.hre.refinement).mul(Decimal.pow10(player.h.stage)).div(player.hre.refinementDiv)
+        if (player.hre.refinement.lt(player.h.stage.mul(15)) && player.hre.refinement.gte(player.h.stage.mul(10))) player.hre.refinementReq = Decimal.pow(player.h.stage.max(2).pow(3), player.hre.refinement.sub(reqSoftcapConnector1)).div(player.hre.refinementDiv)
+        if (player.hre.refinement.gte(player.h.stage.mul(15))) player.hre.refinementReq = Decimal.pow(player.h.stage.max(2).pow(6), player.hre.refinement.sub(reqSoftcapConnector2)).div(player.hre.refinementDiv)
         
-        if (player.h.hexPoint.lt(reqSoftcapPoints1)) player.hre.refinementGain = player.h.hexPoint.add(1).div(Decimal.pow(10, player.h.stage)).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage).ln()).add(1).sub(player.hre.refinement).floor()
-        if (player.h.hexPoint.gte(reqSoftcapPoints1)) player.hre.refinementGain = player.h.hexPoint.add(1).mul(reqSoftcapConnector1).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage.pow(3)).ln()).add(1).sub(player.hre.refinement).floor()
+        if (player.h.hexPoint.lt(reqSoftcapPoints1)) player.hre.refinementGain = player.h.hexPoint.add(1).div(Decimal.pow10(player.h.stage)).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage.max(2)).ln()).add(1).sub(player.hre.refinement).floor()
+        if (player.h.hexPoint.lt(reqSoftcapPoints2) && player.h.hexPoint.gte(reqSoftcapPoints1)) player.hre.refinementGain = player.h.hexPoint.add(1).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage.max(2).pow(3)).ln()).add(1).add(reqSoftcapConnector1).sub(player.hre.refinement).floor()
+        if (player.h.hexPoint.gte(reqSoftcapPoints2)) player.hre.refinementGain = player.h.hexPoint.add(1).mul(player.hre.refinementDiv).ln().div(new Decimal(player.h.stage.max(2).pow(6)).ln()).add(1).add(reqSoftcapConnector2).sub(player.hre.refinement).floor()
         
         if (player.hre.refinementGain.lt(1)) player.hre.refinementGain = new Decimal(0)
 
@@ -38,8 +42,8 @@ addLayer("hre", {
 
         player.hre.refinementEffect = [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]]
         if (player.hre.refinement.gte(1) || hasMilestone("hre", 1)) {
-            if (!hasUpgrade("hpw", 81)) player.hre.refinementEffect[0][0] = Decimal.pow(Decimal.div(2, player.h.stage).add(1), player.hre.refinement.pow(Decimal.div(4.8, player.h.stage))).mul(2)
-            if (hasUpgrade("hpw", 81)) player.hre.refinementEffect[0][0] = Decimal.pow(Decimal.div(3, player.h.stage).add(1), player.hre.refinement.pow(Decimal.div(4.8, player.h.stage))).mul(3)
+            if (!hasUpgrade("hpw", 81)) player.hre.refinementEffect[0][0] = Decimal.pow(Decimal.div(2, player.h.stage).add(1), player.hre.refinement.pow(Decimal.div(4.8, player.h.stage.max(5)))).mul(2)
+            if (hasUpgrade("hpw", 81)) player.hre.refinementEffect[0][0] = Decimal.pow(Decimal.div(3, player.h.stage).add(1), player.hre.refinement.pow(Decimal.div(4.8, player.h.stage.max(5)))).mul(3)
             player.hre.refinementEffect[0][0] = player.hre.refinementEffect[0][0].mul(Decimal.pow(Decimal.div(1.5, player.h.stage).add(1), player.hre.refinement.min(player.h.stage.mul(2))))
             player.hre.refinementEffect[0][1] = Decimal.pow(player.h.stage.div(2), player.hre.refinement).mul(player.h.stage.div(2))
         }
@@ -57,23 +61,23 @@ addLayer("hre", {
             player.hre.refinementEffect[0][1] = player.hre.refinementEffect[0][1].pow(effPow)
         }
 
-        if (player.hre.refinement.gte(3)) player.hre.refinementEffect[1][0] = Decimal.pow(Decimal.div(0.9, player.h.stage).add(1), player.hre.refinement.sub(2).pow(Decimal.div(3.6, player.h.stage)))
-        if (player.hre.refinementEffect[1][0].gte(Decimal.div(30, player.h.stage))) player.hre.refinementEffect[1][0] = player.hre.refinementEffect[1][0].div(Decimal.div(30, player.h.stage)).pow(Decimal.div(1.8, player.h.stage)).mul(Decimal.div(30, player.h.stage))
+        if (player.hre.refinement.gte(3)) player.hre.refinementEffect[1][0] = Decimal.pow(Decimal.div(0.9, player.h.stage).add(1), player.hre.refinement.sub(2).pow(Decimal.div(3.6, player.h.stage.max(4))))
+        if (player.hre.refinementEffect[1][0].gte(Decimal.div(30, player.h.stage.min(15)))) player.hre.refinementEffect[1][0] = player.hre.refinementEffect[1][0].div(Decimal.div(30, player.h.stage.min(15))).pow(Decimal.div(1.8, player.h.stage.max(2))).mul(Decimal.div(30, player.h.stage.min(15)))
         player.hre.refinementEffect[1][0] = player.hre.refinementEffect[1][0].pow(player.hpu.purifiers[0].effect)
-        if (inChallenge("hrm", 16)) player.hre.refinementEffect[1][0] = Decimal.pow(Decimal.div(2.16, player.h.stage).add(1), player.hre.refinement.sub(2).pow(Decimal.div(4.8, player.h.stage))).pow(player.hpu.purifiers[0].effect)
+        if (inChallenge("hrm", 16)) player.hre.refinementEffect[1][0] = Decimal.pow(Decimal.div(2.16, player.h.stage).add(1), player.hre.refinement.sub(2).pow(Decimal.div(4.8, player.h.stage.max(5)))).pow(player.hpu.purifiers[0].effect)
         if (player.hre.refinement.gte(3)) player.hre.refinementEffect[1][1] = Decimal.pow(player.h.stage.div(2.15), player.hre.refinement.sub(2)).pow(player.hpu.purifiers[0].effect)
 
         if (player.hre.refinement.gte(9)) {
-            player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.5, player.h.stage).add(1), player.hre.refinement.sub(5).pow(Decimal.div(3.6, player.h.stage)))
-            if (inChallenge("hrm", 16)) player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.36, player.h.stage).add(1), player.hre.refinement.sub(4).pow(Decimal.div(3.6, player.h.stage)))
+            player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.5, player.h.stage).add(1), player.hre.refinement.sub(5).pow(Decimal.div(3.6, player.h.stage.max(4))))
+            if (inChallenge("hrm", 16)) player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.36, player.h.stage).add(1), player.hre.refinement.sub(4).pow(Decimal.div(3.6, player.h.stage.max(4))))
         }
         if (player.hre.refinement.gte(9)) player.hre.refinementEffect[2][1] = Decimal.pow(player.h.stage.div(2.4), player.hre.refinement.sub(4))
 
-        if (player.hre.refinement.gte(24)) player.hre.refinementEffect[3][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hre.refinement.sub(23).pow(Decimal.div(3.6, player.h.stage)))
+        if (player.hre.refinement.gte(24)) player.hre.refinementEffect[3][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hre.refinement.sub(23).pow(Decimal.div(3.6, player.h.stage.max(4))))
         if (player.hre.refinement.gte(24)) player.hre.refinementEffect[3][1] = Decimal.pow(player.h.stage.div(2.65), player.hre.refinement.sub(12))
 
-        if (player.hre.refinement.gte(54) && !hasUpgrade("hpw", 91)) player.hre.refinementEffect[4][0] = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1), player.hre.refinement.sub(53).pow(Decimal.div(3.6, player.h.stage)))
-        if (player.hre.refinement.gte(54) && hasUpgrade("hpw", 91)) player.hre.refinementEffect[4][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hre.refinement.sub(53).pow(Decimal.div(3.6, player.h.stage)))
+        if (player.hre.refinement.gte(54) && !hasUpgrade("hpw", 91)) player.hre.refinementEffect[4][0] = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1), player.hre.refinement.sub(53).pow(Decimal.div(3.6, player.h.stage.max(4))))
+        if (player.hre.refinement.gte(54) && hasUpgrade("hpw", 91)) player.hre.refinementEffect[4][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hre.refinement.sub(53).pow(Decimal.div(3.6, player.h.stage.max(4))))
         if (player.hre.refinement.gte(54)) player.hre.refinementEffect[4][1] = Decimal.pow(player.h.stage.div(3), player.hre.refinement.sub(27))
 
         if (player.hre.refinement.gte(90)) player.hre.refinementEffect[5][0] = player.hre.refinement.sub(89).div(player.h.stage).add(1)
@@ -217,7 +221,7 @@ addLayer("hre", {
         },
         12: {
             requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(14)) + " Refinements"},
-            effectDescription: "Produce 1% of blessings per second (excluding RC1).",
+            effectDescription: "Produce 1% of blessings per second.",
             done() { return player.hre.refinement.gte(player.h.stage.mul(14))},
             unlocked() { return hasMilestone("hre", 11) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
@@ -407,7 +411,7 @@ addLayer("hre", {
                 player.hre.refinementGain.gt(0) ? look.color = "white" : look.color = "gray"
                 return look
             }],
-            ["raw-html", () => {return player.hre.refinement.gte(player.h.stage.mul(10)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
+            ["raw-html", () => {return player.hre.refinement.gte(player.h.stage.mul(15)) ? "[SOFTCAPPED<sup>2</sup>]" : player.hre.refinement.gte(player.h.stage.mul(10)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["blank", "10px"],
         ["clickable", 1],

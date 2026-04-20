@@ -56,9 +56,9 @@ addLayer("h", {
         if (!hasChallenge("ip", 13) && layerShown("h")) player.h.hexPointGain = Decimal.mul(2, player.h.stage)
         if (hasChallenge("ip", 13)) {
             if (!hasMilestone("hre", 0)) {
-                player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(1)))
+                player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(4)))
             } else {
-                player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(1)))
+                player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(4)))
             }
         }
         player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[0][1])
@@ -98,7 +98,7 @@ addLayer("h", {
         player.h.hexPointGain = player.h.hexPointGain.mul(buyableEffect("hrm", 4))
 
         // PER SECOND CALCULATIONS
-        if (inChallenge("hrm", 13)) player.h.hexPointGain = player.h.hexPointGain.sub(player.h.hexPoint.mul(0.06))
+        if (inChallenge("hrm", 13)) player.h.hexPointGain = player.h.hexPointGain.sub(player.h.hexPoint.mul(0.05))
         if (player.h.hexPoint.add(player.h.hexPointGain.mul(delta)).gt(0)) player.h.hexPoint = player.h.hexPoint.add(player.h.hexPointGain.mul(delta))
 
         // PRE-POWER MULTIPLIER

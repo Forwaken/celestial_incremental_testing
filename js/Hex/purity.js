@@ -41,14 +41,15 @@ addLayer("hpu", {
         purifierAssign: 1,
     }},
     update(delta) {
-        player.hpu.purityReq = player.hpu.totalPurity.mul(6).add(42).sub(player.hpu.keptPurity.mul(6)).ceil()
-        player.hpu.purityGain = player.hre.refinement.add(player.hpu.keptPurity.mul(6)).sub(42).div(6).add(1).sub(player.hpu.totalPurity).floor()
+        player.hpu.purityReq = player.hpu.totalPurity.mul(player.h.stage).add(player.h.stage.mul(7)).sub(player.hpu.keptPurity.mul(player.h.stage)).ceil()
+        player.hpu.purityGain = player.hre.refinement.add(player.hpu.keptPurity.mul(player.h.stage)).sub(player.h.stage.mul(7)).div(player.h.stage).add(1).sub(player.hpu.totalPurity).floor()
 
         if (inChallenge("hrm", 12)) {
-            if (player.hpu.totalPurity.lt(10)) player.hpu.purityReq = player.hpu.totalPurity.mul(4).add(28).sub(player.hpu.keptPurity.mul(4)).ceil()
-            if (player.hpu.totalPurity.gte(10)) player.hpu.purityReq = player.hpu.totalPurity.mul(6).add(12).sub(player.hpu.keptPurity.mul(6)).ceil()
-            if (player.hre.refinement.lt(60)) player.hpu.purityGain = player.hre.refinement.add(player.hpu.keptPurity.mul(4)).sub(28).div(4).add(1).sub(player.hpu.totalPurity).floor()
-            if (player.hre.refinement.gte(60)) player.hpu.purityGain = player.hre.refinement.add(player.hpu.keptPurity.mul(6)).sub(12).div(6).add(1).sub(player.hpu.totalPurity).floor()
+            let connect = player.h.stage.div(1.5).mul(15).sub(player.h.stage.mul(10))
+            if (player.hpu.totalPurity.lt(10)) player.hpu.purityReq = player.hpu.totalPurity.add(5).mul(player.h.stage.div(1.5)).sub(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).ceil()
+            if (player.hpu.totalPurity.gte(10)) player.hpu.purityReq = player.hpu.totalPurity.mul(player.h.stage).sub(player.hpu.keptPurity.mul(player.h.stage)).add(connect).ceil()
+            if (player.hre.refinement.lt(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.add(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).div(player.h.stage.div(1.5)).sub(4).sub(player.hpu.totalPurity).floor()
+            if (player.hre.refinement.gte(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.sub(connect).add(player.hpu.keptPurity.mul(6)).div(5).sub(player.hpu.totalPurity).floor()
         }
 
         if (player.hpu.purityGain.lt(1)) player.hpu.purityGain = new Decimal(0)
@@ -70,31 +71,31 @@ addLayer("hpu", {
         if (hasUpgrade("hpw", 1106)) player.hpu.purifiers[5].amount = player.hpu.totalPurity
 
         player.hpu.purifiers[0].effect = player.hpu.purifiers[0].amount.mul(0.1).add(1)
-        if (player.hpu.purifiers[0].effect.gt(1.5)) player.hpu.purifiers[0].effect = player.hpu.purifiers[0].effect.div(1.5).pow(0.6).mul(1.5)
+        if (player.hpu.purifiers[0].effect.gt(1.5)) player.hpu.purifiers[0].effect = player.hpu.purifiers[0].effect.div(1.5).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(1.5)
         if (inChallenge("hrm", 16) && player.hpu.purifiers[0].effect.gt(3)) player.hpu.purifiers[0].effect = new Decimal(3)
 
         player.hpu.purifiers[1].effect = Decimal.pow(1.5, player.hpu.purifiers[1].amount)
-        if (player.hpu.purifiers[1].effect.gt(8)) player.hpu.purifiers[1].effect = player.hpu.purifiers[1].effect.div(8).pow(0.6).mul(8)
+        if (player.hpu.purifiers[1].effect.gt(8)) player.hpu.purifiers[1].effect = player.hpu.purifiers[1].effect.div(8).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(8)
         if (hasUpgrade("hpw", 1102)) player.hpu.purifiers[1].effect = player.hpu.purifiers[1].effect.pow(0.5)
 
         player.hpu.purifiers[2].effect = player.hpu.purifiers[2].amount.mul(0.1).add(1)
-        if (player.hpu.purifiers[2].effect.gt(1.5)) player.hpu.purifiers[2].effect = player.hpu.purifiers[2].effect.div(1.5).pow(0.6).mul(1.5)
+        if (player.hpu.purifiers[2].effect.gt(1.5)) player.hpu.purifiers[2].effect = player.hpu.purifiers[2].effect.div(1.5).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(1.5)
 
         player.hpu.purifiers[3].effect = player.hpu.purifiers[3].amount.mul(0.1).add(1)
-        if (player.hpu.purifiers[3].effect.gt(1.5)) player.hpu.purifiers[3].effect = player.hpu.purifiers[3].effect.div(1.5).pow(0.6).mul(1.5)
+        if (player.hpu.purifiers[3].effect.gt(1.5)) player.hpu.purifiers[3].effect = player.hpu.purifiers[3].effect.div(1.5).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(1.5)
 
         player.hpu.purifiers[4].effect = new Decimal(0)
         if (player.hpu.purifiers[4].amount.gt(0) && !inChallenge("hrm", 11)) player.hpu.purifiers[4].effect = Decimal.pow(2, player.hpu.purifiers[4].amount.sub(1)).mul(0.2)
-        if (player.hpu.purifiers[4].effect.gt(3.2) && !hasUpgrade("hpw", 61)) player.hpu.purifiers[4].effect = player.hpu.purifiers[4].effect.div(3.2).pow(0.6).mul(3.2)
-        if (player.hpu.purifiers[4].effect.gt(3.2) && hasUpgrade("hpw", 61)) player.hpu.purifiers[4].effect = player.hpu.purifiers[4].effect.div(3.2).pow(0.7).mul(3.2)
+        if (player.hpu.purifiers[4].effect.gt(3.2) && !hasUpgrade("hpw", 61)) player.hpu.purifiers[4].effect = player.hpu.purifiers[4].effect.div(3.2).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(3.2)
+        if (player.hpu.purifiers[4].effect.gt(3.2) && hasUpgrade("hpw", 61)) player.hpu.purifiers[4].effect = player.hpu.purifiers[4].effect.div(3.2).pow(Decimal.div(3.6, player.h.stage.max(4)).add(0.1)).mul(3.2)
 
         if (!inChallenge("hrm", 12)) {
             player.hpu.purifiers[5].effect = player.hpu.purifiers[5].amount.mul(0.15).add(1)
-            if (player.hpu.purifiers[5].effect.gt(1.75)) player.hpu.purifiers[5].effect = player.hpu.purifiers[5].effect.div(1.75).pow(0.6).mul(1.75)
+            if (player.hpu.purifiers[5].effect.gt(1.75)) player.hpu.purifiers[5].effect = player.hpu.purifiers[5].effect.div(1.75).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(1.75)
         }
         if (inChallenge("hrm", 12)) {
             player.hpu.purifiers[5].effect = player.hpu.purifiers[5].amount.mul(0.1).add(1)
-            if (player.hpu.purifiers[5].effect.gt(1.5)) player.hpu.purifiers[5].effect = player.hpu.purifiers[5].effect.div(1.5).pow(0.6).mul(1.5)
+            if (player.hpu.purifiers[5].effect.gt(1.5)) player.hpu.purifiers[5].effect = player.hpu.purifiers[5].effect.div(1.5).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(1.5)
         }
 
         player.hpu.keptPurity = new Decimal(0)

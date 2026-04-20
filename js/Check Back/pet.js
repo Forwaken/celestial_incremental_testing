@@ -117,6 +117,8 @@ const fragShopBase = {
         2: new Decimal(1000),
     },
 }
+let blinkTime = 0
+if (blinkTime>0) blinkTime -= 1
 addLayer("pet", {
     name: "Pets", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "Pet", // This appears on the layer's node. Default is the id with the first letter capitalized
@@ -4318,7 +4320,9 @@ addLayer("pet", {
             } 
         },
         1205: {
-            image() { return this.canClick() ? "resources/Pets/eyeEvoPet.png" : "resources/secret.png"},
+            image() {
+                return blinkTime>0 ? "resources/Pets/eyeEvoPetBlink.png" : this.canClick() ? "resources/Pets/eyeEvoPet.png" : "resources/secret.png"
+            },
             title() { return "EYE" },
             lore() { return "Don't look at it." }, 
             description() {
@@ -4343,7 +4347,10 @@ addLayer("pet", {
             // CLICK CODE
             unlocked() { return hasMilestone("s", 12) },
             canClick() { return getLevelableAmount(this.layer, this.id).gt(0)},
-            onClick() { return layers[this.layer].levelables.index = this.id },
+            onClick() {
+                if (Math.random()<0.01) blinkTime = 20
+                return layers[this.layer].levelables.index = this.id
+            },
             // BUY CODE
             pay(amt) { player.cb.paragonShards = player.cb.paragonShards.sub(amt) },
             canAfford() { return player.cb.paragonShards.gte(this.xpReq()) },

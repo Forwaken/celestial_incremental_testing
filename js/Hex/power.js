@@ -15,8 +15,7 @@ addLayer("hpw", {
         vigor: 0,
     }},
     update(delta) {
-        player.hpw.powerGain = player.hbl.blessings.div(6e5).pow(0.6)
-        if (player.hbl.blessings.gte(2.8e7)) player.hpw.powerGain = Decimal.pow(2, player.hbl.blessings.add(1).div(6e5).log(6)).add(5.6)
+        player.hpw.powerGain = Decimal.pow(2, player.hbl.blessings.add(1).div(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).log(player.h.stage))
         if (hasUpgrade("hpw", 11)) player.hpw.powerGain = player.hpw.powerGain.mul(2)
         player.hpw.powerGain = player.hpw.powerGain.mul(player.hre.refinementEffect[5][0])
         player.hpw.powerGain = player.hpw.powerGain.mul(player.hrm.realmEffect)
@@ -145,8 +144,8 @@ addLayer("hpw", {
     },
     clickables: {
         1: {
-            title() { return "<h2>Amplify Power, but reset previous " + player.h.stageName[1] + " content.</h2><br><h3>Req: 600,000 Blessings</h3>"},
-            canClick() { return player.hbl.blessings.gte(6e5)},
+            title() { return "<h2>Amplify Power, but reset previous " + player.h.stageName[1] + " content.</h2><br><h3>Req: " + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + " Blessings</h3>"},
+            canClick() { return player.hbl.blessings.gte(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage))},
             unlocked: true,
             onClick() {
                 player.hpw.power = player.hpw.power.add(player.hpw.powerGain)
@@ -180,14 +179,14 @@ addLayer("hpw", {
             title: "Might 1:1",
             unlocked: true,
             description: "Boost blessings based on power.",
-            tooltip: "(log6(Power+1)+1)*2",
+            tooltip() {return "(log" + formatWhole(player.h.stage.max(2)) + "(Power+1)+1)*2"},
             cost() {return new Decimal(1).pow(player.hpw.upgScale[0])},
             onPurchase() {player.hpw.upgScale[0] = player.hpw.upgScale[0] + 1},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hpw.power.add(1).log(6).add(1).mul(2)
+                return player.hpw.power.add(1).log(player.h.stage.max(2)).add(1).mul(2)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -197,8 +196,8 @@ addLayer("hpw", {
             unlocked: true,
             description() {return "Boost " + player.h.stageName[1] + " points based on power."},
             tooltip() {
-                if (hasUpgrade("hpw", 32)) return "(log1.6((Power+1)^3)+1)*6"
-                return "(log2(Power+1)+1)*3"
+                if (hasUpgrade("hpw", 32)) return "(log1.6((Power+1)^" + formatSimple(Decimal.div(12, player.h.stage).add(1)) + ")+1)*" + formatWhole(Decimal.div(30, player.h.stage).add(1))
+                return "(log2(Power+1)+1)*" + formatWhole(Decimal.div(12, player.h.stage).add(1))
             },
             cost() {return new Decimal(1).pow(player.hpw.upgScale[0])},
             onPurchase() {player.hpw.upgScale[0] = player.hpw.upgScale[0] + 1},
@@ -206,8 +205,8 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                if (hasUpgrade("hpw", 32)) return player.hpw.power.add(1).pow(3).log(1.6).add(1).mul(6)
-                return player.hpw.power.add(1).log(2).add(1).mul(3)
+                if (hasUpgrade("hpw", 32)) return player.hpw.power.add(1).pow(Decimal.div(12, player.h.stage).add(1)).log(1.6).add(1).mul(player.h.stage)
+                return player.hpw.power.add(1).log(2).add(1).mul(Decimal.div(12, player.h.stage).add(1))
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -230,7 +229,7 @@ addLayer("hpw", {
             unlocked: true,
             description: "Increase the base of Refiner Req Booster by 50%.",
             branches: [1, 2],
-            cost() {return new Decimal(3).pow(player.hpw.upgScale[1])},
+            cost() {return new Decimal(player.h.stage.div(2)).pow(player.hpw.upgScale[1])},
             canAfford() { return hasUpgrade("hpw", 1) || hasUpgrade("hpw", 2)},
             onPurchase() {player.hpw.upgScale[1] = player.hpw.upgScale[1] + 1},
             currencyLocation() { return player.hpw },
@@ -243,7 +242,7 @@ addLayer("hpw", {
             unlocked: true,
             description: "Gain 1 free purity.",
             branches: [12],
-            cost() {return new Decimal(9).pow(player.hpw.upgScale[2])},
+            cost() {return new Decimal(player.h.stage.div(2).pow(2)).pow(player.hpw.upgScale[2])},
             canAfford() { return hasUpgrade("hpw", 12)},
             onPurchase() {
                 player.hpu.purity = player.hpu.purity.add(1)
@@ -260,14 +259,14 @@ addLayer("hpw", {
             unlocked: true,
             description: "Boost curse gain based on refinement.",
             branches: [12],
-            cost() {return new Decimal(9).pow(player.hpw.upgScale[2])},
+            cost() {return new Decimal(player.h.stage.div(2).pow(2)).pow(player.hpw.upgScale[2])},
             canAfford() { return hasUpgrade("hpw", 12)},
             onPurchase() {player.hpw.upgScale[2] = player.hpw.upgScale[2] + 1},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return Decimal.pow(6, player.hre.refinement.div(6).pow(0.66))
+                return Decimal.pow(Decimal.div(30, player.h.stage).add(1), player.hre.refinement.div(player.h.stage).pow(Decimal.div(3.96, player.h.stage.max(4))))
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -277,7 +276,7 @@ addLayer("hpw", {
             unlocked: true,
             description: "Unlock 3 new purifiers.",
             branches: [21],
-            cost() {return new Decimal(27).pow(player.hpw.upgScale[3])},
+            cost() {return new Decimal(player.h.stage.div(2).pow(3)).pow(player.hpw.upgScale[3])},
             canAfford() { return hasUpgrade("hpw", 21)},
             onPurchase() {player.hpw.upgScale[3] = player.hpw.upgScale[3] + 1},
             currencyLocation() { return player.hpw },
@@ -289,9 +288,9 @@ addLayer("hpw", {
             title: "Might 4:2",
             unlocked: true,
             description: "Improve Might 1:2's effect.",
-            tooltip: "(log2(Power+1)+1)*3<br>↓<br>(log1.6((Power+1)^3)+1)*6",
+            tooltip() {return "(log2(Power+1)+1)*" + formatWhole(Decimal.div(12, player.h.stage).add(1)) + "<br>↓<br>(log1.6((Power+1)^" + formatSimple(Decimal.div(12, player.h.stage).add(1)) + ")+1)*" + formatWhole(Decimal.div(30, player.h.stage).add(1))},
             branches: [31, 33],
-            cost() {return new Decimal(6).pow(player.hpw.upgScale[3])},
+            cost() {return new Decimal(player.h.stage).pow(player.hpw.upgScale[3])},
             canAfford() { return hasUpgrade("hpw", 31) && hasUpgrade("hpw", 33)},
             onPurchase() {player.hpw.upgScale[3] = player.hpw.upgScale[3] + 1},
             currencyLocation() { return player.hpw },
@@ -304,14 +303,14 @@ addLayer("hpw", {
             unlocked: true,
             description: "Boost jinx cap based on jinx score.",
             branches: [22],
-            cost() {return new Decimal(27).pow(player.hpw.upgScale[3])},
+            cost() {return new Decimal(player.h.stage.div(2).pow(3)).pow(player.hpw.upgScale[3])},
             canAfford() { return hasUpgrade("hpw", 22)},
             onPurchase() {player.hpw.upgScale[3] = player.hpw.upgScale[3] + 1},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hcu.jinxTotal.pow(1.6).add(1).log(6).floor()
+                return player.hcu.jinxTotal.pow(Decimal.div(3.6, player.h.stage).add(1)).add(1).log(player.h.stage.max(2)).floor()
             },
             effectDisplay() { return "+" + formatWhole(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -1195,38 +1194,38 @@ addLayer("hpw", {
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         2: {
-            requirementDescription: "<h3>6 Total Power",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage) + " Total Power"},
             effectDescription: "Keep IP related boosters on power resets.",
             onComplete() { player.hpw.vigor = player.hpw.vigor + 1 },
-            done() { return player.hpw.totalPower.gte(6)},
+            done() { return player.hpw.totalPower.gte(player.h.stage)},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         3: {
-            requirementDescription: "<h3>36 Total Power",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.pow(2)) + " Total Power"},
             effectDescription: "Double blessing gain below power requirement.",
             onComplete() { player.hpw.vigor = player.hpw.vigor + 1 },
-            done() { return player.hpw.totalPower.gte(36)},
+            done() { return player.hpw.totalPower.gte(player.h.stage.pow(2))},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         4: {
-            requirementDescription: "<h3>216 Total Power",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.pow(3)) + " Total Power"},
             effectDescription: "Keep NIP related jinxes on power resets.",
             onComplete() { player.hpw.vigor = player.hpw.vigor + 1 },
-            done() { return player.hpw.totalPower.gte(216)},
+            done() { return player.hpw.totalPower.gte(player.h.stage.pow(3))},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         5: {
-            requirementDescription: "<h3>1296 Total Power",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.pow(4)) + " Total Power"},
             effectDescription: "Buying jinxes no longer spends curses.",
             onComplete() { player.hpw.vigor = player.hpw.vigor + 1 },
-            done() { return player.hpw.totalPower.gte(1296)},
+            done() { return player.hpw.totalPower.gte(player.h.stage.pow(4))},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         6: {
-            requirementDescription: "<h3>7776 Total Power",
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.pow(5)) + " Total Power"},
             effectDescription: "Double blessing gain below power requirement again.",
             onComplete() { player.hpw.vigor = player.hpw.vigor + 1 },
-            done() { return player.hpw.totalPower.gte(7776)},
+            done() { return player.hpw.totalPower.gte(player.h.stage.pow(5))},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
     },
@@ -1399,11 +1398,12 @@ addLayer("hpw", {
             ["raw-html", () => {return "You have <h3>" + formatWhole(player.hpw.power) + "</h3> Power." }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return "(+" + formatWhole(player.hpw.powerGain) + ")"}, () => {
                 let look = {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
-                player.hbl.blessings.gte(6e5) ? look.color = "white" : look.color = "gray"
+                player.hbl.blessings.gte(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) ? look.color = "white" : look.color = "gray"
                 return look
             }],
-            ["raw-html", () => {return player.hbl.blessings.gte(2.8e7) ? "<small style='margin-left:10px'>[SOFTCAPPED]</small>" : ""}, {color: "red", fontSize: "20px", fontFamily: "monospace"}],
-            ["raw-html", () => {return player.hbl.blessings.gte(2.8e7) ? "<div class='bottomTooltip'>Base Formula<hr><small>2^(log6(Blessings/600k))+5.6</small></div>" : "<div class='bottomTooltip'>Base Formula<hr><small>(Blessings/600k)^0.6</small></div>"}],
+            ["raw-html", () => {
+                let connect = Decimal.pow(2, new Decimal(10).pow(Decimal.div(player.h.stage, 3.6)).mul(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).add(1).div(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).log(player.h.stage))
+                return "<div class='bottomTooltip'>Base Formula<hr><small>2^(log" + formatWhole(player.h.stage) + "(Blessings/" + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + "))</small></div>"}],
         ]],
         ["blank", "10px"],
         ["clickable", 1],
