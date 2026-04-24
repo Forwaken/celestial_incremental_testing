@@ -118,7 +118,6 @@ const fragShopBase = {
     },
 }
 let blinkTime = 0
-if (blinkTime>0) blinkTime -= 1
 addLayer("pet", {
     name: "Pets", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "Pet", // This appears on the layer's node. Default is the id with the first letter capitalized
@@ -782,6 +781,8 @@ addLayer("pet", {
         for (let thing in player.pet.legPetTimers) {
             player.pet.legPetTimers[thing].cooldown = player.pet.legPetTimers[thing].cooldown.sub(delta)
         }
+
+        if (blinkTime && blinkTime>0) blinkTime = blinkTime-1
     },
     clickables: {
         2: {
@@ -1347,6 +1348,7 @@ addLayer("pet", {
                         doPopup("none", "Geroa gets enhancements", "Pet Obtained!", 5, "#eed200", "resources/Pets/geroaLegendaryPet.png")
                         break;
                     case 9:
+                        if (!hasAchievement("achievements", 922)) completeAchievement("achievements", 922)
                         addLevelableXP("pet", 503, new Decimal(player.pet.fragShopBulk))
                         doPopup("none", "Vespasian mutates further", "Pet Obtained!", 5, "#eed200", "resources/Pets/vespasianLegendaryPet.png")
                         break;
@@ -4348,7 +4350,7 @@ addLayer("pet", {
             unlocked() { return hasMilestone("s", 12) },
             canClick() { return getLevelableAmount(this.layer, this.id).gt(0)},
             onClick() {
-                if (Math.random()<0.01) blinkTime = 20
+                if (Math.random()<0.01) blinkTime = 5
                 return layers[this.layer].levelables.index = this.id
             },
             // BUY CODE
@@ -4680,6 +4682,7 @@ addLayer("pet", {
                 doPopup("none", "Geroa gets enhancements", "Pet Obtained!", 5, "#eed200", "resources/Pets/geroaLegendaryPet.png")
             }
             if (player.pet.summonIndex.eq(2)) {
+                if (!hasAchievement("achievements", 922)) completeAchievement("achievements", 922)
                 player.pet.levelables[503][1] = player.pet.levelables[503][1].add(1)
                 doPopup("none", "Vespasian mutates further", "Pet Obtained!", 5, "#eed200", "resources/Pets/vespasianLegendaryPet.png")
             }
@@ -4750,6 +4753,7 @@ addLayer("pet", {
                 doPopup("none", "Geroa gets enhancements", "Pet Obtained!", 5, "#eed200", "resources/Pets/geroaLegendaryPet.png")
             }
             if (player.pet.summonIndex.eq(2)) {
+                if (!hasAchievement("achievements", 922)) completeAchievement("achievements", 922)
                 player.pet.levelables[503][1] = player.pet.levelables[503][1].add(1)
                 doPopup("none", "Vespasian mutates further", "Pet Obtained!", 5, "#eed200", "resources/Pets/vespasianLegendaryPet.png")
             }

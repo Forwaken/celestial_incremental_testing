@@ -256,8 +256,6 @@ addLayer("ir", {
         player.ir.timers[9].max = new Decimal(1500)
         for (let i in player.ir.timers) {
             if (hasUpgrade("ir", 18)) player.ir.timers[i].max = player.ir.timers[i].max.div(upgradeEffect("ir", 18))
-
-            if (hasUpgrade("ir", 18)) player.ir.timers[i].max = player.ir.timers[i].max.div(upgradeEffect("ir", 18))
             player.ir.timers[i].max = player.ir.timers[i].max.div(levelableEffect("pu", 401)[1])
             player.ir.timers[i].current = player.ir.timers[i].current.sub(delta)
         }
@@ -982,7 +980,7 @@ addLayer("ir", {
             unlocked() { return buyableEffect("sb", 12).gte(3) },
             description: "Cut ship cooldown times based on space gems.",
             effect() {
-                return player.ir.spaceGem.pow(0.75).mul(0.02).add(1)
+                return player.ir.spaceGem.pow(0.75).mul(0.03).add(1)
             },
             effectDisplay() { return "/" + format(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             cost: new Decimal(8000),
@@ -1181,6 +1179,20 @@ addLayer("ir", {
                 return look
             },
         },
+        207: {
+            title: "Advanced Medkit",
+            unlocked() { return getLevelableAmount("pet", 502).gt(0) && false },
+            description: "\"Self Repair\" now requires being under 50% health, and heals 20% more",
+            cost: new Decimal(1e9),
+            currencyLocation() { return player.ir },
+            currencyDisplayName: "Space Rocks",
+            currencyInternalName: "spaceRock",
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "3px solid #37078f", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#151230"
+                return look
+            },
+        },
     },
     microtabs: {
         stuff: {
@@ -1245,7 +1257,8 @@ addLayer("ir", {
                     ["row", [["upgrade", 101],["upgrade", 102],["upgrade", 103],["upgrade", 104],["upgrade", 105],["upgrade", 106],]],
                     ["blank", "25px"],
                     ["raw-html", () => {return getLevelableAmount("pet", 502).gt(0) ? "Geroa Skills" : ""}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                    ["row", [["upgrade", 201], ["upgrade", 202], ["upgrade", 203], ["upgrade", 204], ["upgrade", 205], ["upgrade", 206]]],
+                    ["row", [["upgrade", 201], ["upgrade", 202], ["upgrade", 203], ["upgrade", 204], ["upgrade", 205], ["upgrade", 206],
+                        ["upgrade", 207]]],
                 ]
             },
             "Perks": {
