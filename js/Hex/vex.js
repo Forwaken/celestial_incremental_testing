@@ -20,27 +20,29 @@ addLayer("hve", {
     }},
     update(delta) {
         player.hve.vexDiv = new Decimal(1)
-        if (hasUpgrade("hpw", 112)) player.hve.vexDiv = player.hve.vexDiv.mul(1e6)
+        if (hasUpgrade("hpw", 112)) player.hve.vexDiv = player.hve.vexDiv.mul(Decimal.pow10(player.h.stage))
 
-        if (player.hve.vexTotal.lt(12)) player.hve.vexReq = Decimal.pow(1e6, player.hve.vexTotal).mul(1e60).div(player.hve.vexDiv)
-        if (player.hve.vexTotal.gte(12)) player.hve.vexReq = Decimal.pow(1e12, player.hve.vexTotal).div(1e6).div(player.hve.vexDiv)
-        if (player.hcu.curses.lt(1e120)) player.hve.vexGain = player.hcu.curses.add(1).div(1e60).mul(player.hve.vexDiv).ln().div(new Decimal(1e6).ln()).add(1).sub(player.hve.vexTotal).floor()
-        if (player.hcu.curses.gte(1e120)) player.hve.vexGain = player.hcu.curses.add(1).mul(1e6).mul(player.hve.vexDiv).ln().div(new Decimal(1e12).ln()).add(1).sub(player.hve.vexTotal).floor()
+        let connect = Decimal.pow10(player.h.stage.mul(4))
+
+        if (player.hve.vexTotal.lt(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage), player.hve.vexTotal).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv)
+        if (player.hve.vexTotal.gte(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage.mul(2)), player.hve.vexTotal).div(connect).div(player.hve.vexDiv)
+        if (player.hcu.curses.lt(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))))) player.hve.vexGain = player.hcu.curses.add(1).div(Decimal.pow10(player.h.stage.mul(10))).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage)).ln()).add(1).sub(player.hve.vexTotal).floor()
+        if (player.hcu.curses.gte(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))))) player.hve.vexGain = player.hcu.curses.add(1).mul(connect).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage.mul(2))).ln()).add(1).sub(player.hve.vexTotal).floor()
         if (player.hve.vexGain.lt(1)) player.hve.vexGain = new Decimal(0)
 
         player.hve.vexEffects = [new Decimal(0), new Decimal(1), new Decimal(1)]
         player.hve.vexEffects[0] = player.hve.vexTotal.mul(2)
         if (hasUpgrade("hpw", 62)) player.hve.vexEffects[1] = player.hve.vexTotal.mul(0.05).add(1)
-        if (hasUpgrade("hpw", 92)) player.hve.vexEffects[2] = Decimal.pow(1.66, player.hve.vexTotal.pow(0.66))
+        if (hasUpgrade("hpw", 92)) player.hve.vexEffects[2] = Decimal.pow(Decimal.div(3.96, player.h.stage).add(1), player.hve.vexTotal.pow(Decimal.div(3.96, player.h.stage)))
     },
     clickables: {
         1: {
             title() {
                 let str = "<h3>Vex, but reset curse content.<br><small>Req: " + format(player.hve.vexReq) + " curses</small></h3>"
-                if (player.hve.vexTotal.gte(12)) str = str.concat("<br><small style='color:red'>[SOFTCAPPED]</small>")
+                if (player.hve.vexTotal.gte(player.h.stage.mul(2))) str = str.concat("<br><small style='color:red'>[SOFTCAPPED]</small>")
                 return str
             },
-            canClick() { return player.hve.vexGain.gte(1)},
+            canClick() { return player.hve.vexGain.gte(1) && player.hcu.curses.gte(Decimal.pow10(player.h.stage.mul(10)).div(player.hve.vexDiv))},
             unlocked: true,
             onClick() {
                 if (!hasMilestone("hre", 16)) {
@@ -116,7 +118,7 @@ addLayer("hve", {
             currencyDisplayName: "Vex",
             currencyInternalName: "vex",
             effect() {
-                let eff = player.h.hexPoint.div(1e36).add(1).log(1e6).pow(0.6).add(1).mul(2)
+                let eff = player.h.hexPoint.div(Decimal.pow10(player.h.stage.pow(2))).add(1).log(Decimal.pow10(player.h.stage)).pow(Decimal.div(3.6, player.h.stage)).add(1).mul(2)
                 if (hasUpgrade("hve", 41)) eff = eff.pow(upgradeEffect("hve", 41))
                 return eff
             },
@@ -135,7 +137,7 @@ addLayer("hve", {
             currencyDisplayName: "Vex",
             currencyInternalName: "vex",
             effect() {
-                let eff = player.hbl.blessings.div(1e5).add(1).log(36).pow(0.6).add(1).mul(2)
+                let eff = player.hbl.blessings.div(Decimal.pow10(player.h.stage.sub(1))).add(1).log(player.h.stage.pow(2)).pow(Decimal.div(3.6, player.h.stage)).add(1).mul(2)
                 if (hasUpgrade("hve", 42)) eff = eff.pow(upgradeEffect("hve", 42))
                 return eff
             },
@@ -154,7 +156,7 @@ addLayer("hve", {
             currencyDisplayName: "Vex",
             currencyInternalName: "vex",
             effect() {
-                let eff = player.hcu.curses.div(1e30).add(1).log(1e12).pow(0.6).add(1).mul(2)
+                let eff = player.hcu.curses.div(Decimal.pow10(player.h.stage.mul(5))).add(1).log(Decimal.pow10(player.h.stage.mul(2))).pow(Decimal.div(3.6, player.h.stage)).add(1).mul(2)
                 if (hasUpgrade("hve", 43)) eff = eff.pow(upgradeEffect("hve", 43))
                 return eff
             },
@@ -259,7 +261,7 @@ addLayer("hve", {
             currencyDisplayName: "Vex",
             currencyInternalName: "vex",
             effect() {
-                return player.hre.refinement.div(3).pow(0.6).div(6).add(1)
+                return player.hre.refinement.div(player.h.stage.div(2)).pow(Decimal.div(3.6, player.h.stage)).div(player.h.stage).add(1)
             },
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },
@@ -276,7 +278,7 @@ addLayer("hve", {
             currencyDisplayName: "Vex",
             currencyInternalName: "vex",
             effect() {
-                return player.hbl.boons.add(1).log(12).pow(0.6).div(6).add(1)
+                return player.hbl.boons.add(1).log(player.h.stage.mul(2)).pow(Decimal.div(3.6, player.h.stage)).div(player.h.stage).add(1)
             },
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },
@@ -293,7 +295,7 @@ addLayer("hve", {
             currencyDisplayName: "Vex",
             currencyInternalName: "vex",
             effect() {
-                return player.hcu.jinxTotal.div(15).pow(0.6).div(6).add(1)
+                return player.hcu.jinxTotal.div(player.h.stage.mul(2.5)).pow(Decimal.div(3.6, player.h.stage)).div(player.h.stage).add(1)
             },
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },

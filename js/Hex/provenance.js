@@ -31,7 +31,7 @@ addLayer("hpr", {
         if (hasAchievement("achievements", 121)) alphaDiv = alphaDiv.mul(2)
 
         player.hpr.rankReq[0] = player.hpr.rank[0].add(1).pow(player.hpr.rank[0].add(1).log(Decimal.div(30, player.h.stage).add(1))).mul(player.h.stage.pow(2)).div(player.hpr.divider.mul(alphaDiv))
-        player.hpr.rankGain[0] = Decimal.pow(Decimal.div(30, player.h.stage).add(1), player.h.hexPoint.div(player.h.stage.pow(2)).mul(player.hpr.divider.mul(alphaDiv)).log(Decimal.div(30, player.h.stage).add(1)).pow(0.5)).floor().sub(player.hpr.rank[0])
+        player.hpr.rankGain[0] = Decimal.pow(Decimal.div(30, player.h.stage).add(1), player.h.hexPoint.max(1).div(player.h.stage.pow(2)).mul(player.hpr.divider.mul(alphaDiv)).log(Decimal.div(30, player.h.stage).add(1)).pow(0.5)).floor().sub(player.hpr.rank[0])
 
         let betaDiv = new Decimal(1)
         if (hasAchievement("achievements", 110)) betaDiv = betaDiv.mul(1.2)

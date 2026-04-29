@@ -45,11 +45,11 @@ addLayer("hpu", {
         player.hpu.purityGain = player.hre.refinement.add(player.hpu.keptPurity.mul(player.h.stage)).sub(player.h.stage.mul(7)).div(player.h.stage).add(1).sub(player.hpu.totalPurity).floor()
 
         if (inChallenge("hrm", 12)) {
-            let connect = player.h.stage.div(1.5).mul(15).sub(player.h.stage.mul(10))
+            let connect = new Decimal(15).mul(player.h.stage.div(1.5)).sub(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).sub(new Decimal(10).mul(player.h.stage).sub(player.hpu.keptPurity.mul(player.h.stage)))
             if (player.hpu.totalPurity.lt(10)) player.hpu.purityReq = player.hpu.totalPurity.add(5).mul(player.h.stage.div(1.5)).sub(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).ceil()
             if (player.hpu.totalPurity.gte(10)) player.hpu.purityReq = player.hpu.totalPurity.mul(player.h.stage).sub(player.hpu.keptPurity.mul(player.h.stage)).add(connect).ceil()
             if (player.hre.refinement.lt(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.add(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).div(player.h.stage.div(1.5)).sub(4).sub(player.hpu.totalPurity).floor()
-            if (player.hre.refinement.gte(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.sub(connect).add(player.hpu.keptPurity.mul(6)).div(5).sub(player.hpu.totalPurity).floor()
+            if (player.hre.refinement.gte(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.sub(connect).add(player.hpu.keptPurity.mul(player.h.stage)).div(player.h.stage).add(1).sub(player.hpu.totalPurity).floor()
         }
 
         if (player.hpu.purityGain.lt(1)) player.hpu.purityGain = new Decimal(0)
@@ -76,7 +76,7 @@ addLayer("hpu", {
 
         player.hpu.purifiers[1].effect = Decimal.pow(1.5, player.hpu.purifiers[1].amount)
         if (player.hpu.purifiers[1].effect.gt(8)) player.hpu.purifiers[1].effect = player.hpu.purifiers[1].effect.div(8).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(8)
-        if (hasUpgrade("hpw", 1102)) player.hpu.purifiers[1].effect = player.hpu.purifiers[1].effect.pow(0.5)
+        if (hasUpgrade("hpw", 1102)) player.hpu.purifiers[1].effect = player.hpu.purifiers[1].effect.pow(0.7)
 
         player.hpu.purifiers[2].effect = player.hpu.purifiers[2].amount.mul(0.1).add(1)
         if (player.hpu.purifiers[2].effect.gt(1.5)) player.hpu.purifiers[2].effect = player.hpu.purifiers[2].effect.div(1.5).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(1.5)
@@ -87,7 +87,7 @@ addLayer("hpu", {
         player.hpu.purifiers[4].effect = new Decimal(0)
         if (player.hpu.purifiers[4].amount.gt(0) && !inChallenge("hrm", 11)) player.hpu.purifiers[4].effect = Decimal.pow(2, player.hpu.purifiers[4].amount.sub(1)).mul(0.2)
         if (player.hpu.purifiers[4].effect.gt(3.2) && !hasUpgrade("hpw", 61)) player.hpu.purifiers[4].effect = player.hpu.purifiers[4].effect.div(3.2).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(3.2)
-        if (player.hpu.purifiers[4].effect.gt(3.2) && hasUpgrade("hpw", 61)) player.hpu.purifiers[4].effect = player.hpu.purifiers[4].effect.div(3.2).pow(Decimal.div(3.6, player.h.stage.max(4)).add(0.1)).mul(3.2)
+        if (player.hpu.purifiers[4].effect.gt(3.2) && hasUpgrade("hpw", 61)) player.hpu.purifiers[4].effect = player.hpu.purifiers[4].effect.div(3.2).pow(Decimal.div(4.2, player.h.stage.max(4))).mul(3.2)
 
         if (!inChallenge("hrm", 12)) {
             player.hpu.purifiers[5].effect = player.hpu.purifiers[5].amount.mul(0.15).add(1)
@@ -107,6 +107,7 @@ addLayer("hpu", {
         1: {
             title() {
                 if (inChallenge("hrm", 16)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
+                if (inChallenge("hrm", 12) && player.hpu.totalPurity.gte(10)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3><br><small style='color:darkred'>[SOFTCAPPED]</small>"
                 return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
             },
             canClick() { return player.hpu.purityGain.gte(1) && (!hasMilestone("hre", 17) || inChallenge("hrm", 15))},
