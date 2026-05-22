@@ -268,10 +268,18 @@ addLayer("ep2", {
         if (Decimal.gte(player.ep2.barClicks, player.ep2.barMax)) {
             player.ep2.barClicks = 0
             player.ep2.currScale = player.ep2.currScale.add(1)
-            if (getLevelableAmount("pet", 2003).gt(0) && Math.random() < levelableEffect("pet", 2003)[0]) {
-                makeShinies(WRATH_COOKIE, 1)
+            if (player.tab == "bh" && player.subtabs["bh"]["stuff"] == "bullet") {
+                if (getLevelableAmount("pet", 2003).gt(0) && Math.random() < levelableEffect("pet", 2003)[0]) {
+                    WRATH_COOKIE.onClick()
+                } else {
+                    GOLDEN_COOKIE.onClick()
+                }
             } else {
-                makeShinies(GOLDEN_COOKIE, 1)
+                if (getLevelableAmount("pet", 2003).gt(0) && Math.random() < levelableEffect("pet", 2003)[0]) {
+                    makeShinies(WRATH_COOKIE, 1)
+                } else {
+                    makeShinies(GOLDEN_COOKIE, 1)
+                }
             }
         }
 
@@ -569,7 +577,7 @@ addLayer("ep2", {
             img: "resources/currencies/dimensional_power.png",
             unlocked() {return getBuyableAmount("ep2", 18).gte(15)},
             title: "<span style='color:#3A812Bcc'>Dimensional Fuel</span>",
-            description() {return "Dimension Power buildings reduce star exploration time.<br>Currently: /" + formatSimple(upgradeEffect(this.layer, this.id), 2)},
+            description() {return "Dimension Power buildings reduce SE time.<br>Currently: /" + formatSimple(upgradeEffect(this.layer, this.id), 2)},
             cost: new Decimal(5e24),
             currencyLocation() { return player.ep2 },
             currencyDisplayName: "Cookies",

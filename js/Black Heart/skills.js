@@ -16,7 +16,12 @@ BHA.none = {
 // General Skills
 BHA.general_slap = {
     name: "Slap",
-    description() {return "Deals " + formatWhole(new Decimal(75).add(player.bh.skillData["general_slap"].level.mul(15))) + "% physical damage and soft-stuns the celestialite for a second."},
+    description(char) {
+        if (hasUpgrade("depth1", 106)) {
+            return "Deals " + formatWhole(new Decimal(75).add(player.bh.skillData["general_slap"].level.mul(15))) + "% physical damage, with a " + formatSimple(Decimal.mul(10, Decimal.div(Decimal.add(100, char.luck), 100))) + "% chance to hit twice, and soft-stuns the celestialite for a second."
+        }
+        return "Deals " + formatWhole(new Decimal(75).add(player.bh.skillData["general_slap"].level.mul(15))) + "% physical damage and soft-stuns the celestialite for a second."
+    },
     passiveText() {return "+" + formatSimple(player.bh.skillData["general_slap"].maxLevel.div(5)) + " DMG"},
     char: "general",
     spCost: new Decimal(6),
@@ -31,6 +36,14 @@ BHA.general_slap = {
     method: "physical",
     properties: {
         "stun": [new Decimal(1), "soft", new Decimal(1)], // Chance / Stun-Type / Stun-Time
+        "multi-hit"(char) {
+            let luckMult = Decimal.div(Decimal.add(100, char.luck), 100)
+            if (hasUpgrade("depth1", 106) && Decimal.lt(Math.random(), luckMult.div(10))) {
+                return [2, 200]
+            } else {
+                return [1, 200]
+            }
+        },
     },
     value() {return new Decimal(0.75).add(player.bh.skillData["general_slap"].level.mul(0.15))},
     cooldown: new Decimal(10),
@@ -40,7 +53,12 @@ BHA.general_bandage = {
     name: "Bandage",
     description(char) {
         let heal = new Decimal(10).add(player.bh.skillData["general_bandage"].level.mul(2))
-        if (player.matosLair.milestone[25] >= 2) heal = heal.mul(char.mending.div(10).add(1))
+        let heal2 = new Decimal(10).add(player.bh.skillData["general_bandage"].level.mul(2))
+        if (player.matosLair.milestone[25] >= 2) {
+            heal = heal.mul(char.mending.div(10).add(1))
+            heal2 = heal2.mul(char.mending.div(10).add(1))
+        }
+        if (hasUpgrade("depth2", 106)) return "Heal yourself by " + formatWhole(heal) + " health, and passively increase your regen by " + formatSimple(heal2) + "%"
         return "Heal yourself by " + formatWhole(heal) + " health"
     },
     passiveText() {return "+" + formatSimple(player.bh.skillData["general_bandage"].maxLevel) + " HP"},
@@ -57,6 +75,16 @@ BHA.general_bandage = {
     value() {return new Decimal(10).add(player.bh.skillData["general_bandage"].level.mul(2))},
     cooldown: new Decimal(15),
     cooldownCap: new Decimal(5),
+
+    passive: true,
+    constantType: "effect",
+    constantTarget: "self",
+    effects: {
+        "regenMult"() {
+            if (hasUpgrade("depth2", 106)) return new Decimal(1.1).add(player.bh.skillData["general_bandage"].level.mul(0.02))
+            return new Decimal(1)
+        }
+    },
 }
 BHA.general_scream = {
     name: "Scream",
@@ -168,8 +196,37 @@ BHA.general_poisonNeedle = {
     cooldown: new Decimal(10),
     cooldownCap: new Decimal(2),
 }
+BHA.general_rest = {
+    name: "Rest",
+    description(char) {
+        let effect = new Decimal(10).add(player.bh.skillData["general_rest"].level.mul(2))
+        if (player.alephsChamber.milestone[25] >= 2) effect = effect.mul(Decimal.div(char.potency.add(100), 100))
+        return "Soft-stun yourself for 5 seconds. While stunned, boost your regen by x" + formatSimple(effect)
+    },
+    passiveText() {return "+" + formatSimple(player.bh.skillData["general_rest"].maxLevel.div(40), 2) + " RGN"},
+    char: "general",
+    spCost: new Decimal(16),
+    curCostBase: new Decimal(25),
+    curCostScale: new Decimal(5),
+    currency: "darkEther",
+    unlocked() {return hasUpgrade("depth1", 102)},
 
-//Rest: Character is unavailable to perform actions for 20 seconds but regen is boosted by x4
+    instant: true,
+    type: "none",
+    target: "self",
+    stun() {return ["soft", new Decimal(5)]},
+
+    active: true,
+    constantType: "effect",
+    constantTarget: "self",
+    effects: {
+        "regenMult"(char) {return char.regen.gt(0) ? Decimal.add(10, player.bh.skillData["general_rest"].level.mul(2)) : new Decimal(1)}, // Multiplicative Effect
+    },
+    cooldown: new Decimal(30),
+    cooldownCap: new Decimal(5),
+    duration: new Decimal(10),
+}
+
 // Skill that disables regen but increases damage.
 
 // Kres Skills
@@ -284,7 +341,7 @@ BHA.kres_berserker = {
     effects: {
         "damageMult"() {return new Decimal(1.5).add(player.bh.skillData["kres_berserker"].level.mul(0.1))}, // Multiplicative Effect
         "agilityMult"() {return new Decimal(1.5).add(player.bh.skillData["kres_berserker"].level.mul(0.1))}, // Multiplicative Effect
-        "regenMult"() {return new Decimal(1.5).add(player.bh.skillData["kres_berserker"].level.mul(0.1))}, // Multiplicative Effect
+        "regenMult"(char) {return char.regen.gt(0) ? new Decimal(1.5).add(player.bh.skillData["kres_berserker"].level.mul(0.1)) : new Decimal(1)}, // Multiplicative Effect
         "attributes"() {
             if (hasUpgrade("sp", 12)) return {"berserk": new Decimal(0.1)}
             return {"berserk": new Decimal(0.2)}
@@ -639,7 +696,7 @@ BHA.eclipse_solarRetinopathy = {
     instant: true,
     type: "damage",
     target: "celestialite",
-    method: "true",
+    method: "spirit",
     value() {return new Decimal(0.75).add(player.bh.skillData["eclipse_solarRetinopathy"].level.mul(0.15))},
     active: true,
     constantType: "effect",
@@ -688,7 +745,7 @@ BHA.geroa_radioactiveMissile = {
     char: "geroa",
     spCost: new Decimal(8),
     curCostBase: new Decimal(1000),
-    curCostScale: new Decimal(1000),
+    curCostScale: new Decimal(10),
     currency: "spaceRock",
     unlocked() {return getLevelableAmount("pet", 502).gt(0)},
 
@@ -714,9 +771,9 @@ BHA.geroa_selfRepair = {
     passiveText() {return "+" + formatSimple(player.bh.skillData["geroa_selfRepair"].maxLevel) + " HP"},
     char: "geroa",
     spCost: new Decimal(10),
-    curCostBase: new Decimal(5000),
-    curCostScale: new Decimal(2500),
-    currency: "spaceRock",
+    curCostBase: new Decimal(20),
+    curCostScale: new Decimal(2),
+    currency: "spaceGem",
     unlocked() {return hasUpgrade("ir", 201)},
 
     instant: true,
@@ -740,8 +797,8 @@ BHA.geroa_cosmicRay = {
     passiveText() {return "+" + formatSimple(player.bh.skillData["geroa_cosmicRay"].maxLevel.div(5)) + " DMG"},
     char: "geroa",
     spCost: new Decimal(12),
-    curCostBase: new Decimal(20000),
-    curCostScale: new Decimal(5000),
+    curCostBase: new Decimal(5000),
+    curCostScale: new Decimal(25),
     currency: "spaceRock",
     unlocked() {return hasUpgrade("ir", 202)},
 
@@ -765,9 +822,9 @@ BHA.geroa_orbitalCannon = {
     passiveText() {return "+" + formatSimple(player.bh.skillData["geroa_orbitalCannon"].maxLevel.div(5)) + " DMG"},
     char: "geroa",
     spCost: new Decimal(14),
-    curCostBase: new Decimal(100000),
-    curCostScale: new Decimal(10000),
-    currency: "spaceRock", // Temp, probably something else
+    curCostBase: new Decimal(50),
+    curCostScale: new Decimal(3),
+    currency: "spaceGem", // Temp, probably something else
     unlocked() {return hasUpgrade("ir", 203)},
 
     instant: true,
@@ -789,8 +846,8 @@ BHA.geroa_defenseSatellites = {
     passiveText() {return "+" + formatSimple(player.bh.skillData["geroa_defenseSatellites"].maxLevel.div(5)) + " DMG"},
     char: "geroa",
     spCost: new Decimal(16),
-    curCostBase: new Decimal(1e6),
-    curCostScale: new Decimal(1e5),
+    curCostBase: new Decimal(1e5),
+    curCostScale: new Decimal(100),
     currency: "spaceRock",
     unlocked() {return hasUpgrade("ir", 204)},
 
@@ -893,7 +950,7 @@ BHA.vespasian_overdrive = {
         "damageMult"() {return new Decimal(1.5).add(player.bh.skillData["vespasian_overdrive"].level.div(10))},
         "agilityMult"() {return new Decimal(1.5).add(player.bh.skillData["vespasian_overdrive"].level.div(10))},
         "defenseAdd"() {return new Decimal(-25).sub(player.bh.skillData["vespasian_overdrive"].level.mul(5))},
-        "regenMult"() {return new Decimal(0)},
+        "regenMult"(char) {return char.regen.gt(0) ? new Decimal(0) : new Decimal(1)},
     },
     duration: new Decimal(8),
     cooldown: new Decimal(20),

@@ -1444,7 +1444,7 @@ function loadVue() {
 		props: ['layer', 'data'],
 		template: `
 		<button v-bind:class="{bhMilestoneButton: true, selected: player[data[1]].comboStart == data[0], semiFinish: player[data[1]].milestone[data[0]]>0 && player[data[1]].milestone[data[0]]<3, finish: player[data[1]].milestone[data[0]]>2}"
-			style="width:257px;height:50px" v-on:click="if(player[data[1]].milestone[data[0]]>0 && !data[3])player[data[1]].comboStart=data[0]"
+			style="width:257px;height:50px" v-on:click="if(player[data[1]].milestone[data[0]]>0 && !run(data[3], data))player[data[1]].comboStart=data[0]"
 			v-html="data[0] + ' Combo (' + player[data[1]].milestone[data[0]] + '/3)<br><small>[' + (player[data[1]].milestone[data[0]]>2 ? '1 Character' : formatWhole(3-player[data[1]].milestone[data[0]]) + ' Characters') + ']</small>' + data[2]">
 		</button>
 		`,
@@ -1455,7 +1455,7 @@ function loadVue() {
 		template: `
 		<div class="upgRow">
 			<div style="margin:0" v-for="(value, name, index) in BHA"  v-if="run(value.unlocked, value)">
-				<button v-bind:class="{can: true, bhSkill: true, selected: player.bh.skillData[name].selected[0] != 'none', outline: player.bh.skillSelection == name}" v-bind:style="{background: BHP[value.char].color, filter: (value.char == 'general' || value.char == player.bh.characters[Math.floor(player.bh.inputSkillSelection/4)].id) ? '' : 'brightness(25%)'}" v-on:click="player.bh.skillSelection = name"
+				<button v-bind:class="{can: true, bhSkill: true, selected: player.bh.skillData[name].selected[0] != 'none', outline: player.bh.skillSelection == name}" v-bind:style="[{background: BHP[value.char].color, filter: (value.char == 'general' || value.char == player.bh.characters[Math.floor(player.bh.inputSkillSelection/4)].id) ? '' : 'brightness(25%)'}, BHA[name].style ? run(BHA[name].style, BHA[name]) : {}]" v-on:click="player.bh.skillSelection = name"
 				v-html="value.name + '<br><small>[Lv ' + formatWhole(player.bh.skillData[name].level.add(1)) + '/' + formatWhole(player.bh.skillData[name].maxLevel.add(1)) + ']'"></button>
 			</div>
 		</div>
