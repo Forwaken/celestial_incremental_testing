@@ -278,7 +278,7 @@ addLayer("hsa", {
             currencyDisplayName: "Holy Power",
             currencyInternalName: "holyPower",
             effect() {
-                return player.hpw.power.add(1).pow(0.06)
+                return player.hpw.power.add(1).pow(0.03)
             },
             effectDisplay() {return "x" + formatSimple(upgradeEffect(this.layer, this.id)) },
             style: {color: "rgba(0,0,0,0.6)", borderColor: "rgba(0,0,0,0.6)", borderRadius: "15px", margin: "2px"},
@@ -356,13 +356,13 @@ addLayer("hsa", {
         26: {
             title: "Conscious",
             unlocked: true,
-            description() {return "Total mights above " + formatWhole(player.h.stage.pow(2)) + " boosts the 6th holy dimension."},
+            description() {return "Total mights above " + formatWhole(player.h.stage.mul(10)) + " boosts the 6th holy dimension."},
             cost() {return player.h.stage.pow(20)},
             currencyLocation() { return player.hsa },
             currencyDisplayName: "Holy Power",
             currencyInternalName: "holyPower",
             effect() {
-                return Decimal.sub(player.hpw.upgTotal.max(player.h.stage.pow(2)), player.h.stage.pow(2)).div(5).add(1)
+                return Decimal.sub(player.hpw.upgTotal.max(player.h.stage.mul(10)), player.h.stage.mul(10)).div(10).add(1)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" },
             style: {color: "rgba(0,0,0,0.6)", borderColor: "rgba(0,0,0,0.6)", borderRadius: "15px", margin: "2px"},
