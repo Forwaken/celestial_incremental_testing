@@ -87,14 +87,11 @@ addLayer("h", {
         if (hasUpgrade("hve", 61)) player.h.hexPointGain = player.h.hexPointGain.pow(1.03)
 
         // SOFTCAPS
-        if (inChallenge("hrm", 14)) player.h.hexPointGain = player.h.hexPointGain.pow(Decimal.add(0.1, player.hsa.sacredEffect))
-        if (player.h.hexPointGain.gte(1e308)) player.h.hexPointGain = player.h.hexPointGain.div(1e308).pow(Decimal.add(0.1, player.hsa.sacredEffect)).mul(1e308)
+        if (inChallenge("hrm", 14)) player.h.hexPointGain = player.h.hexPointGain.pow(Decimal.mul(0.1, player.hsa.sacredEffect).min(0.6))
+        if (player.h.hexPointGain.gte(1e308)) player.h.hexPointGain = player.h.hexPointGain.div(1e308).pow(Decimal.mul(0.1, player.hsa.sacredEffect)).mul(1e308)
 
         // POST-SOFTCAP MULTIPLIERS
-        if (hasUpgrade("hsa", 11)) player.h.hexPointGain = player.h.hexPointGain.mul(2)
-        if (hasUpgrade("hsa", 13)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hsa", 13))
-        if (hasUpgrade("hsa", 21)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hsa", 21))
-        player.h.hexPointGain = player.h.hexPointGain.mul(buyableEffect("hsa", 2))
+        player.h.hexPointGain = player.h.hexPointGain.mul(player.hsa.sacredEffect2)
         player.h.hexPointGain = player.h.hexPointGain.mul(buyableEffect("hrm", 4))
 
         // PER SECOND CALCULATIONS

@@ -103,6 +103,26 @@ addLayer("hve", {
                 return look
             },
         },
+        3: {
+            title() { return "Fill rows with available vexes<br><small style='font-size:11px'>(Goes from left->right)</small>"},
+            canClick() { return player.hve.rowCurrent.some((x) => x > 0)},
+            unlocked: true,
+            onClick() {
+                let count = player.hve.rowCurrent
+                for (let j = 1; j < 7; j++) {
+                    for (let i = 1+(j*10); i < 4+(j*10); i++) {
+                        console.log(j + " " + i + " " + count)
+                        if (!hasUpgrade("hve", i) && count[j-1] > 0) {buyUpgrade("hve", i)}
+                    }
+                }
+            },
+            style() {
+                let look = {width: "250px", minHeight: "40px", fontSize: "9px", lineHeight: "0.9", border: "2px solid black", borderRadius: "15px"}
+                this.canClick() ? look.backgroundColor = "#404" : look.backgroundColor = "#bf8f8f"
+                this.canClick() ? look.color = "white" : look.color = "black"
+                return look
+            },
+        },
     },
     upgrades: {
         11: {
@@ -447,18 +467,21 @@ addLayer("hve", {
                 ]],
             ], {width: "472px", height: "600px", backgroundColor: "#160016", borderRight: "3px solid white", borderRadius: "15px 0 0 15px"}],
             ["column", [
-                ["style-column", [
-                    ["row", [
-                        ["raw-html", () => {return "You have " + formatWhole(player.hve.vex) + "/" + formatWhole(player.hve.vexTotal) + " Vexes."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return hasMilestone("hre", 16) ? "(+" + formatWhole(player.hve.vexGain) + ")" : "" }, () => {
-                            let look = {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}
-                            player.hve.vexGain.gt(0) ? look.color = "white" : look.color = "gray"
-                            return look
-                        }],
-                    ]],
-                    ["raw-html", () => {return player.hve.vexTotal.lt(18) ? "The next Vex will go in Row " + VEXROW[player.hve.vexTotal.toNumber()] + "." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                    ["blank", "20px"],
+                ["top-column", [
+                    ["style-column", [
+                        ["row", [
+                            ["raw-html", () => {return "You have " + formatWhole(player.hve.vex) + "/" + formatWhole(player.hve.vexTotal) + " Vexes."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return hasMilestone("hre", 16) ? "(+" + formatWhole(player.hve.vexGain) + ")" : "" }, () => {
+                                let look = {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}
+                                player.hve.vexGain.gt(0) ? look.color = "white" : look.color = "gray"
+                                return look
+                            }],
+                        ]],
+                        ["raw-html", () => {return player.hve.vexTotal.lt(18) ? "The next Vex will go in Row " + VEXROW[player.hve.vexTotal.toNumber()] + "." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ], {width: "325px", height: "70px"}],
                     ["clickable", 1],
+                    ["blank", "10px"],
+                    ["clickable", 3],
                 ], {width: "325px", height: "200px"}],
                 ["style-column", [
                     ["style-column", [

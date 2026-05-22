@@ -120,7 +120,7 @@
             currencyInternalName: "anonymity",
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -138,7 +138,7 @@
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -152,7 +152,7 @@
             currencyInternalName: "anonymity",
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -166,7 +166,7 @@
             currencyInternalName: "anonymity",
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -180,7 +180,7 @@
             currencyInternalName: "anonymity",
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -198,7 +198,7 @@
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -212,7 +212,7 @@
             currencyInternalName: "anonymity",
             style() {
                 let look = {width: "150px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -230,7 +230,7 @@
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -248,7 +248,7 @@
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
             style() {
                 let look = {width: "130px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -262,7 +262,7 @@
             currencyInternalName: "anonymity",
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -280,7 +280,7 @@
             effectDisplay() { return "/" + format(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             style() {
                 let look = {width: "135px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },
@@ -298,7 +298,7 @@
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
             style() {
                 let look = {width: "130px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                !canAffordUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
+                canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id) ? look.color = "white" : look.color = "rgba(0,0,0,0.8)"
                 return look
             },
         },

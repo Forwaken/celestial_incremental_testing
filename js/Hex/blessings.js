@@ -100,10 +100,12 @@ addLayer("hbl", {
 
         if (inChallenge("hrm", 13)) player.hbl.boonsGain = player.hbl.boonsGain.sub(player.hbl.boons.mul(0.05))
         if (player.hbl.boons.add(player.hbl.boonsGain.mul(delta)).gt(0)) player.hbl.boons = player.hbl.boons.add(player.hbl.boonsGain.mul(delta))
-        if (hasUpgrade("hpw", 52) && !inChallenge("hrm", 15)) {
-            let val = 0.1
-            if (hasUpgrade("hpw", 51)) val = val * 10
-            if (hasUpgrade("hpw", 53)) val = val * 10
+        if (!inChallenge("hrm", 15)) {
+            let val = 0
+            if (hasUpgrade("hpw", 52)) val += 0.1
+            if (hasUpgrade("hpw", 51)) val *= 10
+            if (hasUpgrade("hpw", 53)) val *= 10
+            if (hasMilestone("s", 20)) val += 0.06
             for (let i in player.hbl.boosters) {
                 player.hbl.boosters[i].xp = player.hbl.boosters[i].xp.add(player.hbl.boons.mul(val).mul(delta))
             }

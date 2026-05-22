@@ -22,7 +22,6 @@ addLayer("hpr", {
     }},
     update(delta) {
         player.hpr.divider = player.hre.refinementEffect[1][0]
-        if (hasUpgrade("hsa", 15)) player.hpr.divider = player.hpr.divider.mul(1.3)
         if (hasUpgrade("hpw", 132)) player.hpr.divider = player.hpr.divider.mul(1.5)
 
         player.hpr.rankReq = {0: new Decimal(36), 1: new Decimal(6), 2: new Decimal(36), 3: new Decimal(216), 4: new Decimal(1296), 5: new Decimal(7776)}

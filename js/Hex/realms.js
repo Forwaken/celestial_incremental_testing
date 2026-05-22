@@ -345,15 +345,15 @@ addLayer("hrm", {
             name() { return "Dimensional Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
             completionLimit() {return buyableEffect("hpw", 4).add(player.h.stage.div(2).floor())},
             marked: false,
-            goal() {return Decimal.pow(Decimal.pow10(player.h.stage.div(3)), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage.div(1.5)))},
+            goal() {return Decimal.pow(1e5, challengeCompletions(this.layer, this.id)).mul(1e10)},
             fullDisplay() {
-                let str = "<h4>" + player.h.stageName[0] + " points are heavily softcapped, but unlock " + player.h.stageName[0] + " of sacrifice.</h4>"
-                if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Sacred Energy")
+                let str = "<h4>" + player.h.stageName[0] + " points are heavily softcapped, but unlock " + player.h.stageName[0] + " of Sacrifice.</h4>"
+                if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Hex Points")
                 if (Decimal.gte(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>COMPLETED")
                 return str
             },
             canComplete() {
-                return player.hsa.sacredEnergy.gte(this.goal())
+                return player.h.hexPoint.gte(this.goal())
             },
             unlocked() { return hasUpgrade("hpw", 1004) || challengeCompletions(this.layer, this.id) > 0 },
             canClick() { return hasUpgrade("hpw", 1004) },

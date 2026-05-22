@@ -41,17 +41,28 @@ addLayer("hpw", {
     },
     powerReset(type) {
         // SACRIFICE
+        player.hsa.holyPower = new Decimal(0)
+        player.hsa.holyPowerGain = new Decimal(0)
         player.hsa.sacredEnergy = new Decimal(0)
-        player.hsa.sacredEnergyGain = new Decimal(0)
+        player.hsa.sacredEnergyPerSecond = new Decimal(0)
         player.hsa.sacredEffect = new Decimal(0)
+        player.hsa.sacredEffect2 = new Decimal(1)
+        player.hsa.dimensionAmounts = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)]
+        player.hsa.dimensionsPerSecond = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)]
+        player.hsa.prayerTime = new Decimal(0)
+        player.hsa.prayerMult = new Decimal(1)
+        player.hsa.prayTimeCheck = new Decimal(0)
+        player.hsa.praying = false
+        if (player.hsa.autoSac >= 0) player.hsa.autoSac = false
 
         for (let i = 0; i < player.hsa.upgrades.length; i++) {
             player.hsa.upgrades.splice(i, 1);
             i--;
         }
 
-        player.hsa.buyables[1] = new Decimal(0)
-        player.hsa.buyables[2] = new Decimal(0)
+        for (let i in player.hsa.buyables) {
+            if (i > 10) player.hsa.buyables[i] = new Decimal(0)
+        }
         
         // TEMP REALM
         player.hrm.blessLimit = new Decimal(0)
