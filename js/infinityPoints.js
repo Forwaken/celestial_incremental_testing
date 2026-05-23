@@ -735,11 +735,11 @@
                 return "2 Refinements"
             },
             goal() {
-                if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return new Decimal("1e2000")
+                if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return new Decimal("1e2400")
                 return new Decimal("2")
             },
             canComplete() {
-                if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return player.points.gte("1e2000")
+                if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return player.points.gte("1e2400")
                 return player.hre.refinement.gte(2)
             },
             rewardDescription() {return "Permanently unlock " + player.h.stageName[1] + " as an otherworldly feature, and change base " + player.h.stageName[1] + " point formula to:<br><small>(log<sub>" + formatWhole(player.h.stage.max(2)) + "</sub>(Celestial Points+1)*" + formatWhole(player.h.stage.max(1)) + ")<sup>" + formatSimple(Decimal.div(3.6, player.h.stage.max(3.6)), 2) + "</sup></small>"},
