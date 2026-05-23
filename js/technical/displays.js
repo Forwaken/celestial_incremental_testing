@@ -126,8 +126,20 @@ function challengeStyle(layer, id) {
 }
 
 function challengeButtonText(layer, id) {
-    return (player[layer].activeChallenge==(id)?(canCompleteChallenge(layer, id)?"Finish":"Exit Early"):(maxedChallenge(layer, id)?"Completed":"Start"))
-
+	if (player[layer].activeChallenge==(id)) {
+		if (canCompleteChallenge(layer, id)) {
+			if (canCompleteChallenge(layer, id) > 1) return "Finish x" + formatWhole(canCompleteChallenge(layer, id))
+			return "Finish"
+		} else {
+			return "Exit Early"
+		}
+	} else {
+		if (maxedChallenge(layer, id)) {
+			return "Completed"
+		} else {
+			return "Start"
+		}
+	}
 }
 
 function achievementStyle(layer, id){

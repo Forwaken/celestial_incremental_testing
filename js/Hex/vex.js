@@ -22,7 +22,7 @@ addLayer("hve", {
         player.hve.vexDiv = new Decimal(1)
         if (hasUpgrade("hpw", 112)) player.hve.vexDiv = player.hve.vexDiv.mul(Decimal.pow10(player.h.stage))
 
-        let connect = Decimal.pow10(player.h.stage.mul(4))
+        let connect = Decimal.pow10(player.h.stage.mul(2))
 
         if (player.hve.vexTotal.lt(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage), player.hve.vexTotal).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv)
         if (player.hve.vexTotal.gte(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage.mul(2)), player.hve.vexTotal).div(connect).div(player.hve.vexDiv)
@@ -111,7 +111,6 @@ addLayer("hve", {
                 let count = player.hve.rowCurrent
                 for (let j = 1; j < 7; j++) {
                     for (let i = 1+(j*10); i < 4+(j*10); i++) {
-                        console.log(j + " " + i + " " + count)
                         if (!hasUpgrade("hve", i) && count[j-1] > 0) {buyUpgrade("hve", i)}
                     }
                 }

@@ -50,7 +50,7 @@ addLayer("hrm", {
 
         player.hrm.challengeSoftcap = new Decimal(1)
         if (player.hrm.activeChallenge) {
-            if (player.hrm.challenges[player.hrm.activeChallenge] > 5) {
+            if (player.hrm.challenges[player.hrm.activeChallenge] > player.h.stage.sub(1).toNumber()) {
                 player.hrm.challengeSoftcap = Decimal.pow(3, player.hrm.challenges[player.hrm.activeChallenge] - player.h.stage.sub(1).toNumber())
             }
         }
@@ -263,7 +263,8 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                return player.hbl.blessings.gte(this.goal())
+                let clear = player.hbl.blessings.div(Decimal.pow10(player.h.stage.div(1.5))).ln().div(Decimal.ln(Decimal.pow10(player.h.stage.div(6)))).add(1).sub(challengeCompletions(this.layer, this.id))
+                return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1001) || challengeCompletions(this.layer, this.id) > 0 },
             canClick() { return hasUpgrade("hpw", 1001) },
@@ -293,7 +294,8 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                return player.hbl.blessings.gte(this.goal())
+                let clear = player.hbl.blessings.div(Decimal.pow10(player.h.stage)).ln().div(Decimal.ln(player.h.stage.mul(5))).add(1).sub(challengeCompletions(this.layer, this.id))
+                return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1002) || challengeCompletions(this.layer, this.id) > 0 },
             canClick() { return hasUpgrade("hpw", 1002) },
@@ -315,15 +317,16 @@ addLayer("hrm", {
             name() { return "Death Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
             completionLimit() {return buyableEffect("hpw", 3).add(player.h.stage.div(2).floor())},
             marked: false,
-            goal() {return Decimal.mul(player.h.stage.div(2), challengeCompletions(this.layer, this.id)).add(player.h.stage.div(2)).floor()},
+            goal() {return Decimal.pow(Decimal.pow10(player.h.stage.mul(3)), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage.mul(12)))},
             fullDisplay() {
                 let str = "<h4>" + player.h.stageName[0] + " points, blessings, and boons now decay. Base curse formula is buffed.</h4>"
-                if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Vexes")
+                if (Decimal.lt(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>Goal: " + formatShortWhole(this.goal()) + " Curses")
                 if (Decimal.gte(challengeCompletions(this.layer, this.id), this.completionLimit())) str = str.concat("<br>COMPLETED")
                 return str
             },
             canComplete() {
-                return player.hve.vexTotal.gte(this.goal())
+                let clear = player.hcu.curses.div(Decimal.pow10(player.h.stage.mul(12))).ln().div(Decimal.ln(Decimal.pow10(player.h.stage.mul(3)))).add(1).sub(challengeCompletions(this.layer, this.id))
+                return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1003) || challengeCompletions(this.layer, this.id) > 0 },
             canClick() { return hasUpgrade("hpw", 1003) },
@@ -353,7 +356,8 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                return player.h.hexPoint.gte(this.goal())
+                let clear = player.h.hexPoint.max(1).div(1e10).ln().div(Decimal.ln(1e5)).add(1).sub(challengeCompletions(this.layer, this.id))
+                return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1004) || challengeCompletions(this.layer, this.id) > 0 },
             canClick() { return hasUpgrade("hpw", 1004) },
@@ -383,7 +387,8 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                return player.hbl.blessings.gte(this.goal())
+                let clear = player.hbl.blessings.max(1).div(Decimal.pow10(player.h.stage).mul(player.h.stage)).ln().div(Decimal.mul(Decimal.ln(10), player.h.stage.div(6))).add(1).sub(challengeCompletions(this.layer, this.id))
+                return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1005) || challengeCompletions(this.layer, this.id) > 0 },
             canClick() { return hasUpgrade("hpw", 1005) },
@@ -406,7 +411,7 @@ addLayer("hrm", {
             name() { return "Void Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
             completionLimit() {return buyableEffect("hpw", 6).add(player.h.stage.div(2).floor())},
             marked: false,
-            goal() {return Decimal.mul(player.h.stage, challengeCompletions(this.layer, this.id)).add(player.h.stage.mul(15))},
+            goal() {return Decimal.mul(player.h.stage.div(2), challengeCompletions(this.layer, this.id)).add(player.h.stage.mul(12.5))},
             fullDisplay() {
                 let str = "<h4>The void has made you forget the concept of provenances.</h4>"
                 if (inChallenge("hrm", 16)) str = "<h4>The void has made you forget the concept of ███████████.</h4>"
@@ -415,7 +420,8 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                return player.hre.refinement.gte(this.goal())
+                let clear = player.hre.refinement.sub(player.h.stage.mul(12.5)).div(player.h.stage.div(2)).add(1).sub(challengeCompletions(this.layer, this.id))
+                return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1006) || challengeCompletions(this.layer, this.id) > 0 },
             canClick() { return hasUpgrade("hpw", 1006) },

@@ -76,12 +76,12 @@ addLayer("hre", {
         if (player.hre.refinement.gte(24)) player.hre.refinementEffect[3][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hre.refinement.sub(23).pow(Decimal.div(3.6, player.h.stage.max(4))))
         if (player.hre.refinement.gte(24)) player.hre.refinementEffect[3][1] = Decimal.pow(player.h.stage.div(2.65), player.hre.refinement.sub(12))
 
-        if (player.hre.refinement.gte(54) && !hasUpgrade("hpw", 91)) player.hre.refinementEffect[4][0] = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1), player.hre.refinement.sub(53).pow(Decimal.div(3.6, player.h.stage.max(4))))
-        if (player.hre.refinement.gte(54) && hasUpgrade("hpw", 91)) player.hre.refinementEffect[4][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hre.refinement.sub(53).pow(Decimal.div(3.6, player.h.stage.max(4))))
-        if (player.hre.refinement.gte(54)) player.hre.refinementEffect[4][1] = Decimal.pow(player.h.stage.div(3), player.hre.refinement.sub(27))
+        if (player.hre.refinement.gte(48) && !hasUpgrade("hpw", 91)) player.hre.refinementEffect[4][0] = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1), player.hre.refinement.sub(47).pow(Decimal.div(3.6, player.h.stage.max(4))))
+        if (player.hre.refinement.gte(48) && hasUpgrade("hpw", 91)) player.hre.refinementEffect[4][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hre.refinement.sub(47).pow(Decimal.div(3.6, player.h.stage.max(4))))
+        if (player.hre.refinement.gte(48)) player.hre.refinementEffect[4][1] = Decimal.pow(player.h.stage.div(3), player.hre.refinement.sub(23))
 
-        if (player.hre.refinement.gte(90)) player.hre.refinementEffect[5][0] = player.hre.refinement.sub(89).div(player.h.stage).add(1)
-        if (player.hre.refinement.gte(90)) player.hre.refinementEffect[5][1] = Decimal.pow(player.h.stage.div(4), player.hre.refinement.sub(45).pow(Decimal.div(player.h.stage, 1.25)))
+        if (player.hre.refinement.gte(72)) player.hre.refinementEffect[5][0] = player.hre.refinement.sub(71).pow(Decimal.div(4.8, player.h.stage.max(5))).div(player.h.stage).add(1)
+        if (player.hre.refinement.gte(72)) player.hre.refinementEffect[5][1] = Decimal.pow(player.h.stage.div(4), player.hre.refinement.sub(35).pow(0.8))
 
         for (let i = 0; i < 6; i++) {
             player.hre.refinementEffect[i][1] = player.hre.refinementEffect[i][1].pow(player.hpu.purifiers[2].effect)
@@ -281,14 +281,6 @@ addLayer("hre", {
                 buttonStyle() { return {borderRadius: "5px"}},
                 unlocked: true,
                 content: [
-                    ["row", [
-                        ["raw-html", () => {return player.hre.refinement.lt(1) && !hasMilestone("hre", 1) ? "Next refiner at 1 refinement" : "" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return (player.hre.refinement.gte(1) || hasMilestone("hre", 1)) && player.hre.refinement.lt(3) ? "Next refiner at 3 refinements" : "" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return player.hre.refinement.gte(3) && player.hre.refinement.lt(9) ? "Next refiner at 9 refinements" : "" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return player.hre.refinement.gte(9) && player.hre.refinement.lt(24) ? "Next refiner at 24 refinements" : "" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return player.hre.refinement.gte(24) && player.hre.refinement.lt(54) ? "Next refiner at 54 refinements" : "" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return player.hre.refinement.gte(54) && player.hre.refinement.lt(90) ? "Next refiner at 90 refinements" : "" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                    ]],
                     ["blank", "5px"],
                     ["row", [
                         ["style-column", [
@@ -297,44 +289,68 @@ addLayer("hre", {
                             ], {width: "150px", height: "36px", backgroundColor: "#333", borderBottom: "2px solid white", borderRadius: "10px 10px 0px 0px"}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[0][0]) + "<br>" + player.h.stageName[0] + " Points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px", borderBottom: "2px solid white"}],
+                            ], () => {return player.hre.refinement.gte(1) || hasMilestone("hre", 1) ? {width: "150px", height: "40px", borderBottom: "2px solid white"} : {display: "none !important"}}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[0][1]) + "<br>Factor Power"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px"}],
-                        ], () => {return player.hre.refinement.gte(1) || hasMilestone("hre", 1) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {display: "none !important"}}],
+                            ], () => {return player.hre.refinement.gte(1) || hasMilestone("hre", 1) ? {width: "150px", height: "40px"} : {display: "none !important"}}],
+                            ["style-column", [
+                                ["raw-html", () => {
+                                    let amt = Decimal.sub(1, player.hre.refinement)
+                                    return amt.eq(1) ? "Unlocked in " + formatWhole(amt) + " refinement" : "Unlocked in " + formatWhole(amt) + " refinements"
+                                }, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {return player.hre.refinement.lt(1) && !hasMilestone("hre", 1) ? {width: "150px", height: "82px"} : {display: "none !important"}}],
+                        ], () => {return player.hre.refinement.gte(1) || hasMilestone("hre", 1) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px", filter: "brightness(50%)", userSelect: "none"}}],
                         ["style-column", [
                             ["style-column", [
                                 ["raw-html", "Refiner 2", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "150px", height: "36px", backgroundColor: "#333", borderBottom: "2px solid white", borderRadius: "10px 10px 0px 0px"}],
                             ["style-column", [
                                 ["raw-html", () => {return inChallenge("hrm", 16) ? "/" + format(player.hre.refinementEffect[1][0]) + "<br>Refinement Req" : "/" + format(player.hre.refinementEffect[1][0]) + "<br>Provenance Req's"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px", borderBottom: "2px solid white"}],
+                            ], () => {return player.hre.refinement.gte(3) ? {width: "150px", height: "40px", borderBottom: "2px solid white"} : {display: "none !important"}}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[1][1]) + "<br>Prestige Points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px"}],
-                        ], () => {return player.hre.refinement.gte(3) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {display: "none !important"}}],
+                            ], () => {return player.hre.refinement.gte(3) ? {width: "150px", height: "40px"} : {display: "none !important"}}],
+                            ["style-column", [
+                                ["raw-html", () => {
+                                    let amt = Decimal.sub(3, player.hre.refinement)
+                                    return amt.eq(1) ? "Unlocked in " + formatWhole(amt) + " refinement" : "Unlocked in " + formatWhole(amt) + " refinements"
+                                }, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {return player.hre.refinement.lt(3) ? {width: "150px", height: "82px"} : {display: "none !important"}}],
+                        ], () => {return player.hre.refinement.gte(3) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px", filter: "brightness(50%)", userSelect: "none"}}],
                         ["style-column", [
                             ["style-column", [
                                 ["raw-html", "Refiner 3", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "150px", height: "36px", backgroundColor: "#333", borderBottom: "2px solid white", borderRadius: "10px 10px 0px 0px"}],
                             ["style-column", [
                                 ["raw-html", () => {return inChallenge("hrm", 16) ? "^" + format(player.hre.refinementEffect[2][0]) + "<br>Refiner 1 Effects" : "x" + format(player.hre.refinementEffect[2][0]) + "<br>Provenance Effects"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                                ], {width: "150px", height: "40px", borderBottom: "2px solid white"}],
+                            ], () => {return player.hre.refinement.gte(9) ? {width: "150px", height: "40px", borderBottom: "2px solid white"} : {display: "none !important"}}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[2][1]) + "<br>Trees"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px"}],
-                        ], () => {return player.hre.refinement.gte(9) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {display: "none !important"}}],
+                            ], () => {return player.hre.refinement.gte(9) ? {width: "150px", height: "40px"} : {display: "none !important"}}],
+                            ["style-column", [
+                                ["raw-html", () => {
+                                    let amt = Decimal.sub(9, player.hre.refinement)
+                                    return amt.eq(1) ? "Unlocked in " + formatWhole(amt) + " refinement" : "Unlocked in " + formatWhole(amt) + " refinements"
+                                }, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {return player.hre.refinement.lt(9) ? {width: "150px", height: "82px"} : {display: "none !important"}}],
+                        ], () => {return player.hre.refinement.gte(9) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px", filter: "brightness(50%)", userSelect: "none"}}],
                         ["style-column", [
                             ["style-column", [
                                 ["raw-html", "Refiner 4", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "150px", height: "36px", backgroundColor: "#333", borderBottom: "2px solid white", borderRadius: "10px 10px 0px 0px"}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[3][0]) + "<br>Boons"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px", borderBottom: "2px solid white"}],
+                            ], () => {return player.hre.refinement.gte(24) ? {width: "150px", height: "40px", borderBottom: "2px solid white"} : {display: "none !important"}}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[3][1]) + "<br>Grass"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px"}],
-                        ], () => {return player.hre.refinement.gte(24) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {display: "none !important"}}],
+                            ], () => {return player.hre.refinement.gte(24) ? {width: "150px", height: "40px"} : {display: "none !important"}}],
+                            ["style-column", [
+                                ["raw-html", () => {
+                                    let amt = Decimal.sub(24, player.hre.refinement)
+                                    return amt.eq(1) ? "Unlocked in " + formatWhole(amt) + " refinement" : "Unlocked in " + formatWhole(amt) + " refinements"
+                                }, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {return player.hre.refinement.lt(24) ? {width: "150px", height: "82px"} : {display: "none !important"}}],
+                        ], () => {return player.hre.refinement.gte(24) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px", filter: "brightness(50%)", userSelect: "none"}}],
                     ]],
                     ["row", [
                         ["style-column", [
@@ -343,22 +359,34 @@ addLayer("hre", {
                             ], {width: "150px", height: "36px", backgroundColor: "#333", borderBottom: "2px solid white", borderRadius: "10px 10px 0px 0px"}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[4][0]) + "<br>Blessings"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px", borderBottom: "2px solid white"}],
+                            ], () => {return player.hre.refinement.gte(48) ? {width: "150px", height: "40px", borderBottom: "2px solid white"} : {display: "none !important"}}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[4][1]) + "<br>Grasshoppers"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px"}],
-                        ], () => {return player.hre.refinement.gte(54) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {display: "none !important"}}],
+                            ], () => {return player.hre.refinement.gte(48) ? {width: "150px", height: "40px"} : {display: "none !important"}}],
+                            ["style-column", [
+                                ["raw-html", () => {
+                                    let amt = Decimal.sub(48, player.hre.refinement)
+                                    return amt.eq(1) ? "Unlocked in " + formatWhole(amt) + " refinement" : "Unlocked in " + formatWhole(amt) + " refinements"
+                                }, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {return player.hre.refinement.lt(48) ? {width: "150px", height: "82px"} : {display: "none !important"}}],
+                        ], () => {return player.hre.refinement.gte(48) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px", filter: "brightness(50%)", userSelect: "none"}}],
                         ["style-column", [
                             ["style-column", [
                                 ["raw-html", "Refiner 6", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "150px", height: "36px", backgroundColor: "#333", borderBottom: "2px solid white", borderRadius: "10px 10px 0px 0px"}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[5][0]) + "<br>Power"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px", borderBottom: "2px solid white"}],
+                            ], () => {return player.hre.refinement.gte(72) ? {width: "150px", height: "40px", borderBottom: "2px solid white"} : {display: "none !important"}}],
                             ["style-column", [
                                 ["raw-html", () => {return "x" + format(player.hre.refinementEffect[5][1]) + "<br>Pre-OTF"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "150px", height: "40px"}],
-                        ], () => {return player.hre.refinement.gte(90) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {display: "none !important"}}],
+                            ], () => {return player.hre.refinement.gte(72) ? {width: "150px", height: "40px"} : {display: "none !important"}}],
+                            ["style-column", [
+                                ["raw-html", () => {
+                                    let amt = Decimal.sub(72, player.hre.refinement)
+                                    return amt.eq(1) ? "Unlocked in " + formatWhole(amt) + " refinement" : "Unlocked in " + formatWhole(amt) + " refinements"
+                                }, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {return player.hre.refinement.lt(72) ? {width: "150px", height: "82px"} : {display: "none !important"}}],
+                        ], () => {return player.hre.refinement.gte(72) ? {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {width: "150px", height: "120px", backgroundColor: "#222", border: "2px solid white", margin: "5px", borderRadius: "10px", filter: "brightness(50%)", userSelect: "none"}}],
                     ]],
                 ]
             },
