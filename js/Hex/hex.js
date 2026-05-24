@@ -55,7 +55,7 @@ addLayer("h", {
         player.h.hexPointGain = new Decimal(0)
         if (!hasChallenge("ip", 13) && layerShown("h")) player.h.hexPointGain = Decimal.mul(2, player.h.stage)
         if (hasChallenge("ip", 13)) {
-            if (!hasMilestone("hre", 0)) {
+            if (!hasMilestone("hre", 2)) {
                 player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(4)))
             } else {
                 player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(4)))

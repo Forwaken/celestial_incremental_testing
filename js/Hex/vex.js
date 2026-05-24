@@ -45,14 +45,8 @@ addLayer("hve", {
             canClick() { return player.hve.vexGain.gte(1) && player.hcu.curses.gte(Decimal.pow10(player.h.stage.mul(10)).div(player.hve.vexDiv))},
             unlocked: true,
             onClick() {
-                if (!hasMilestone("hre", 16)) {
-                    player.hve.vexTotal = player.hve.vexTotal.add(1)
-                    player.hve.vex = player.hve.vex.add(1)
-                }
-                if (hasMilestone("hre", 16)) {
-                    player.hve.vexTotal = player.hve.vexTotal.add(player.hve.vexGain)
-                    player.hve.vex = player.hve.vex.add(player.hve.vexGain)
-                }
+                player.hve.vexTotal = player.hve.vexTotal.add(player.hve.vexGain)
+                player.hve.vex = player.hve.vex.add(player.hve.vexGain)
 
                 let rowTot = [0, 0, 0, 0, 0, 0]
                 let rowVal = VEXROW.slice(0, player.hve.vexTotal)
@@ -470,7 +464,7 @@ addLayer("hve", {
                     ["style-column", [
                         ["row", [
                             ["raw-html", () => {return "You have " + formatWhole(player.hve.vex) + "/" + formatWhole(player.hve.vexTotal) + " Vexes."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return hasMilestone("hre", 16) ? "(+" + formatWhole(player.hve.vexGain) + ")" : "" }, () => {
+                            ["raw-html", () => {return "(+" + formatWhole(player.hve.vexGain) + ")"}, () => {
                                 let look = {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}
                                 player.hve.vexGain.gt(0) ? look.color = "white" : look.color = "gray"
                                 return look

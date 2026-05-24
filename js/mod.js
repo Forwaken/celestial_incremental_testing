@@ -28,7 +28,7 @@
 		"Black Heart/blackHeart.js", "Black Heart/blackHeartFunctions.js", "Black Heart/characters.js", "Black Heart/skills.js", "Black Heart/depth1.js",
 		"Black Heart/depth2.js", "Black Heart/depth3.js", "Black Heart/matosLair.js", "Black Heart/darkTemple.js", "Black Heart/bulletHell.js",
 		"Black Heart/stagnantSynestia.js", "Black Heart/depth4.js", "Black Heart/alephsChamber.js", "Black Heart/laboratory.js", "DarkU1/grassJump.js",
-		"Hive/nest.js", "Check Back/gwaTemple.js",
+		"Hive/nest.js", "Check Back/gwaTemple.js", "Hex/tera.js",
 
 		"Ordinal/ordinal.js", "Ordinal/markup.js",
 	],
@@ -186,6 +186,9 @@ function updateStyles() {
 			break;
 		case "hsa":
 			layerBG = "#aaab88"
+			break;
+		case "tera":
+			layerBG = "linear-gradient(180deg, #273345, #182740)"
 			break;
 		case "bigc":
 			layerBG = "#b87c34"
@@ -661,6 +664,7 @@ function updateStyles() {
 			break;
 		case "h": case "hpr": case "hre": case "hbl": case "hcu":
 		case "hpu": case "hpw": case "hrm": case "hve": case "hsa":
+		case "tera":
 			player.musuniverse = "UA"
 			break;
 		case "i": case "r": case "f": case "p": case "t":

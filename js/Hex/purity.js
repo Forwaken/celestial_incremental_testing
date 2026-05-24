@@ -54,7 +54,7 @@ addLayer("hpu", {
 
         if (player.hpu.purityGain.lt(1)) player.hpu.purityGain = new Decimal(0)
 
-        if (hasMilestone("hre", 17) && !inChallenge("hrm", 15)) {
+        if (hasMilestone("hre", 14) && !inChallenge("hrm", 15)) {
             player.hpu.purity = player.hpu.purity.add(player.hpu.purityGain)
             player.hpu.totalPurity = player.hpu.totalPurity.add(player.hpu.purityGain)
         }
@@ -110,11 +110,10 @@ addLayer("hpu", {
                 if (inChallenge("hrm", 12) && player.hpu.totalPurity.gte(10)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3><br><small style='color:darkred'>[SOFTCAPPED]</small>"
                 return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
             },
-            canClick() { return player.hpu.purityGain.gte(1) && (!hasMilestone("hre", 17) || inChallenge("hrm", 15))},
+            canClick() { return player.hpu.purityGain.gte(1) && (!hasMilestone("hre", 14) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
-                let amt = new Decimal(1)
-                if (hasMilestone("hre", 15)) amt = player.hpu.purityGain
+                let amt = player.hpu.purityGain
                 player.hpu.purity = player.hpu.purity.add(amt)
                 player.hpu.totalPurity = player.hpu.totalPurity.add(amt)
 
@@ -132,7 +131,7 @@ addLayer("hpu", {
             },
             style() {
                 let look = {width: "400px", minHeight: "100px", border: "2px solid black", borderRadius: "15px"}
-                if (hasMilestone("hre", 17) && !inChallenge("hrm", 15)) look.cursor = "default !important"
+                if (hasMilestone("hre", 14) && !inChallenge("hrm", 15)) look.cursor = "default !important"
                 return look
             },
         },
@@ -299,7 +298,7 @@ addLayer("hpu", {
         101: {
             title: "1",
             canClick() { return player.hpu.purifierAssign != 1},
-            unlocked() { return hasMilestone("hre", 10)},
+            unlocked() { return true},
             onClick() {
                 player.hpu.purifierAssign = 1
             },
@@ -308,7 +307,7 @@ addLayer("hpu", {
         102: {
             title: "5",
             canClick() { return player.hpu.purifierAssign != 5},
-            unlocked() { return hasMilestone("hre", 10)},
+            unlocked() { return true},
             onClick() {
                 player.hpu.purifierAssign = 5
             },
@@ -317,7 +316,7 @@ addLayer("hpu", {
         103: {
             title: "25",
             canClick() { return player.hpu.purifierAssign != 25},
-            unlocked() { return hasMilestone("hre", 10)},
+            unlocked() { return true},
             onClick() {
                 player.hpu.purifierAssign = 25
             },
@@ -338,7 +337,7 @@ addLayer("hpu", {
         ["blank", "10px"],
         ["row", [
             ["raw-html", () => {return "You have <h3>" + formatWhole(player.hpu.purity) + "</h3> purity." }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-            ["raw-html", () => {return hasMilestone("hre", 15) ? "(+" + formatWhole(player.hpu.purityGain) + ")" : "" }, () => {
+            ["raw-html", () => {return "(+" + formatWhole(player.hpu.purityGain) + ")"}, () => {
                 let look = {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
                 player.hpu.purityGain.gt(0) ? look.color = "white" : look.color = "gray"
                 return look
@@ -358,10 +357,7 @@ addLayer("hpu", {
                 ["raw-html", "Level Amount", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
             ], {width: "98px", height: "40px", borderRight: "2px solid black"}],
             ["clickable", 101], ["clickable", 102], ["clickable", 103]
-        ], () => {
-            if (hasMilestone("hre", 10)) return {width: "250px", height: "40px", backgroundColor: "#2c2a22", border: "2px solid black", borderRadius: "15px"}
-            return {display: "none !important"}
-        }],
+        ], {width: "250px", height: "40px", backgroundColor: "#2c2a22", border: "2px solid black", borderRadius: "15px"}],
         ["blank", "25px"],
     ],
     layerShown() { return hasUpgrade("i", 29) }, // Decides if this node is shown or not.

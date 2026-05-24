@@ -80,7 +80,6 @@ addLayer("hbl", {
 
         let bps = new Decimal(0)
         if (!inChallenge("hrm", 11)) bps = player.hpu.purifiers[4].effect
-        if (hasMilestone("hre", 12) && !inChallenge("hrm", 11)) bps = bps.add(0.01)
         if (hasMilestone("s", 13) && !inChallenge("hrm", 11)) bps = bps.add(0.05)
         player.hbl.blessingPerSec = player.hbl.blessingsGain.mul(bps)
         if (inChallenge("hrm", 13)) player.hbl.blessingPerSec = player.hbl.blessingPerSec.sub(player.hbl.blessings.mul(0.05))
@@ -126,20 +125,20 @@ addLayer("hbl", {
         }
 
         player.hbl.boosters[0].effect = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1), player.hbl.boosters[0].level)
-        if (hasMilestone("hre", 2)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.mul(player.hbl.boosters[0].xp.div(player.hbl.boosters[0].req).mul(Decimal.div(0.9, player.h.stage)).add(1))
+        if (hasMilestone("hre", 4)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.mul(player.hbl.boosters[0].xp.div(player.hbl.boosters[0].req).mul(Decimal.div(0.9, player.h.stage)).add(1))
         if (player.hbl.boosters[0].effect.gte(Decimal.pow10(player.h.stage.mul(1.5)))) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.div(Decimal.pow10(player.h.stage.mul(1.5))).pow(Decimal.div(1.8, player.h.stage.max(2))).mul(Decimal.pow10(player.h.stage.mul(1.5)))
         if (!inChallenge("hrm", 12)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.pow(player.hpu.purifiers[3].effect)
         
         player.hbl.boosters[1].effect = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hbl.boosters[1].level)
-        if (hasMilestone("hre", 2)) player.hbl.boosters[1].effect = player.hbl.boosters[1].effect.mul(player.hbl.boosters[1].xp.div(player.hbl.boosters[1].req).mul(Decimal.div(1.8, player.h.stage)).add(1))
+        if (hasMilestone("hre", 4)) player.hbl.boosters[1].effect = player.hbl.boosters[1].effect.mul(player.hbl.boosters[1].xp.div(player.hbl.boosters[1].req).mul(Decimal.div(1.8, player.h.stage)).add(1))
 
         player.hbl.boosters[2].effect = Decimal.pow(Decimal.mul(Decimal.div(player.h.stage, 100), player.hbl.boosters[5].effect).add(1), player.hbl.boosters[2].level)
-        if (hasMilestone("hre", 2)) player.hbl.boosters[2].effect = player.hbl.boosters[2].effect.mul(player.hbl.boosters[2].xp.div(player.hbl.boosters[2].req).mul(Decimal.mul(Decimal.div(player.h.stage, 100), player.hbl.boosters[5].effect)).add(1))
+        if (hasMilestone("hre", 4)) player.hbl.boosters[2].effect = player.hbl.boosters[2].effect.mul(player.hbl.boosters[2].xp.div(player.hbl.boosters[2].req).mul(Decimal.mul(Decimal.div(player.h.stage, 100), player.hbl.boosters[5].effect)).add(1))
         if (player.hbl.boosters[2].effect.gte(Decimal.pow10(player.h.stage.mul(1.5)))) player.hbl.boosters[2].effect = player.hbl.boosters[2].effect.div(Decimal.pow10(player.h.stage.mul(1.5))).pow(Decimal.add(0.3, buyableEffect("hrm", 3))).mul(Decimal.pow10(player.h.stage.mul(1.5)))
 
         if (!hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = Decimal.pow(Decimal.div(6, player.h.stage).add(1), player.hbl.boosters[3].level)
         if (hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = Decimal.pow(Decimal.div(12, player.h.stage).add(1), player.hbl.boosters[3].level)
-        if (hasMilestone("hre", 2)) {
+        if (hasMilestone("hre", 4)) {
             if (!hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = player.hbl.boosters[3].effect.mul(player.hbl.boosters[3].xp.div(player.hbl.boosters[3].req).mul(Decimal.div(3, player.h.stage)).add(1))
             if (hasUpgrade("hpw", 12)) player.hbl.boosters[3].effect = player.hbl.boosters[3].effect.mul(player.hbl.boosters[3].xp.div(player.hbl.boosters[3].req).add(Decimal.div(4.5, player.h.stage)))
         }
@@ -147,14 +146,14 @@ addLayer("hbl", {
 
         if (!hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = Decimal.pow(Decimal.div(3, player.h.stage).add(1), player.hbl.boosters[4].level)
         if (hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = Decimal.pow(Decimal.div(3, player.h.stage).add(1.1), player.hbl.boosters[4].level)
-        if (hasMilestone("hre", 2)) {
+        if (hasMilestone("hre", 4)) {
             if (!hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = player.hbl.boosters[4].effect.mul(player.hbl.boosters[4].xp.div(player.hbl.boosters[4].req).mul(Decimal.div(1.5, player.h.stage)).add(1))
             if (hasUpgrade("hve", 32)) player.hbl.boosters[4].effect = player.hbl.boosters[4].effect.mul(player.hbl.boosters[4].xp.div(player.hbl.boosters[4].req).mul(Decimal.div(1.5, player.h.stage).add(0.05)).add(1))
         }
 
         if (!hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = Decimal.pow(Decimal.div(player.h.stage, 3), player.hbl.boosters[5].level)
         if (hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = Decimal.pow(Decimal.div(player.h.stage, 3).mul(1.2), player.hbl.boosters[5].level)
-        if (hasMilestone("hre", 2)) {
+        if (hasMilestone("hre", 4)) {
             if (!hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = player.hbl.boosters[5].effect.mul(player.hbl.boosters[5].xp.div(player.hbl.boosters[5].req).mul(Decimal.div(player.h.stage, 6)).add(1))
             if (hasMilestone("hbl", 2)) player.hbl.boosters[5].effect = player.hbl.boosters[5].effect.mul(player.hbl.boosters[5].xp.div(player.hbl.boosters[5].req).mul(Decimal.div(player.h.stage, 6).mul(1.1)).add(1))
         }
@@ -361,7 +360,7 @@ addLayer("hbl", {
         102: {
             title: "5%",
             canClick() { return player.hbl.boosterDeposit != 0.05},
-            unlocked() { return hasMilestone("hre", 7)},
+            unlocked() { return true},
             onClick() {
                 player.hbl.boosterDeposit = 0.05
             },
@@ -370,7 +369,7 @@ addLayer("hbl", {
         103: {
             title: "25%",
             canClick() { return player.hbl.boosterDeposit != 0.25},
-            unlocked() { return hasMilestone("hre", 7)},
+            unlocked() { return true},
             onClick() {
                 player.hbl.boosterDeposit = 0.25
             },
@@ -379,7 +378,7 @@ addLayer("hbl", {
         104: {
             title: "100%",
             canClick() { return player.hbl.boosterDeposit != 1},
-            unlocked() { return hasMilestone("hre", 7)},
+            unlocked() { return true},
             onClick() {
                 player.hbl.boosterDeposit = 1
             },
@@ -563,10 +562,7 @@ addLayer("hbl", {
                             ["raw-html", "Deposit Rate", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ], {width: "98px", height: "40px", borderRight: "2px solid black"}],
                         ["clickable", 102], ["clickable", 103], ["clickable", 104]
-                    ], () => {
-                        if (hasMilestone("hre", 7)) return {width: "250px", height: "40px", backgroundColor: "#332600", border: "2px solid black", borderRadius: "15px"}
-                        return {display: "none !important"}
-                    }],
+                    ], {width: "250px", height: "40px", backgroundColor: "#332600", border: "2px solid black", borderRadius: "15px"}],
                 ]
             },
             "Graces": {
@@ -593,7 +589,7 @@ addLayer("hbl", {
             },
             "Autoclicker": {
                 buttonStyle() { return {borderRadius: "5px"}},
-                unlocked() {return hasMilestone("hre", 5) && !inChallenge("hrm", 15)},
+                unlocked() {return hasMilestone("hre", 8) && !inChallenge("hrm", 15)},
                 content: [
                     ["blank", "10px"],
                     ["row", [
