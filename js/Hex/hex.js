@@ -33,7 +33,11 @@ addLayer("h", {
         stageName:["Hex", "hex"],
         stage: new Decimal(6),
 
-        ragePower: new Decimal(1),
+        // Global Nerfs
+        tickspeed: new Decimal(1),
+        externalRaise: new Decimal(1),
+        preNerf: new Decimal(1),
+        powNerf: new Decimal(1),
     }},
     nodeStyle() { return {color: "white", backgroundColor: "black", borderColor: "#0061ff"}},
     glowColor: "rgba(0, 0, 0, 0)",
@@ -51,6 +55,16 @@ addLayer("h", {
             player.h.stageName = ["???", "???"]
         }
 
+        // GLOBAL NERFS
+        player.h.externalRaise = new Decimal(1)
+        if (player.h.stage.neq(6)) player.h.externalRaise = Decimal.pow(0.5, player.h.stage.sub(6).abs())
+
+        player.h.preNerf = new Decimal(1)
+        if (player.h.stage.neq(6)) player.h.preNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
+
+        player.h.powNerf = new Decimal(1)
+        if (player.h.stage.neq(6)) player.h.powNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
+
         // START OF HEX POINT GAIN
         player.h.hexPointGain = new Decimal(0)
         if (!hasChallenge("ip", 13) && layerShown("h")) player.h.hexPointGain = Decimal.mul(2, player.h.stage)
@@ -61,19 +75,12 @@ addLayer("h", {
                 player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(4)))
             }
         }
-        player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[0][1])
-        player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[1][1])
-        player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[2][1])
-        player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[3][1])
-        player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[4][1])
-        player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[5][1])
+        for (let i = 0; i < 7; i++) {
+            player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[i][1])
+        }
         player.h.hexPointGain = player.h.hexPointGain.mul(player.hre.refinementEffect[0][0])
-        player.h.hexPointGain = player.h.hexPointGain.mul(player.d.boosterEffects[14])
-        player.h.hexPointGain = player.h.hexPointGain.mul(buyableEffect("cb", 11))
         player.h.hexPointGain = player.h.hexPointGain.mul(player.hbl.boosters[0].effect)
         player.h.hexPointGain = player.h.hexPointGain.mul(buyableEffect("hcu", 107))
-        player.h.hexPointGain = player.h.hexPointGain.mul(buyableEffect("ta", 48))
-        if (player.pol.pollinatorEffects.ant.enabled) player.h.hexPointGain = player.h.hexPointGain.mul(player.pol.pollinatorEffects.ant.effects[2])
         if (hasUpgrade("hbl", 2)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hbl", 2))
         if (hasUpgrade("hbl", 5)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hbl", 5))
         if (hasUpgrade("hpw", 2)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hpw", 2))
@@ -81,7 +88,17 @@ addLayer("h", {
         if (hasUpgrade("hve", 12)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hve", 12))
         if (hasUpgrade("hve", 13)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hve", 13))
         player.h.hexPointGain = player.h.hexPointGain.mul(player.h.prePowerMult)
-        player.h.hexPointGain = player.h.hexPointGain.mul(levelableEffect("pu", 209)[1])
+
+        // EXTERNAL MODIFIERS
+        let externalHex = new Decimal(1)
+        externalHex = externalHex.mul(player.d.boosterEffects[14])
+        externalHex = externalHex.mul(buyableEffect("cb", 11))
+        externalHex = externalHex.mul(buyableEffect("ta", 48))
+        if (player.pol.pollinatorEffects.ant.enabled) externalHex = externalHex.mul(player.pol.pollinatorEffects.ant.effects[2])
+        externalHex = externalHex.mul(levelableEffect("pu", 209)[1])
+
+        externalHex = externalHex.pow(player.h.externalRaise)
+        player.h.hexPointGain = player.h.hexPointGain.mul(externalHex)
 
         // POWER
         if (hasUpgrade("hve", 61)) player.h.hexPointGain = player.h.hexPointGain.pow(1.03)
@@ -103,10 +120,17 @@ addLayer("h", {
         player.h.prePowerMult = player.h.prePowerMult.mul(player.hrm.realmEssenceEffects[0])
         if (hasUpgrade("hpw", 121)) player.h.prePowerMult = player.h.prePowerMult.mul(3)
         if (hasUpgrade("hpw", 141)) player.h.prePowerMult = player.h.prePowerMult.mul(upgradeEffect("hpw", 141))
-        player.h.prePowerMult = player.h.prePowerMult.mul(levelableEffect("pu", 107)[1])
-        player.h.prePowerMult = player.h.prePowerMult.mul(levelableEffect("pet", 1106)[0])
-        player.h.prePowerMult = player.h.prePowerMult.mul(buyableEffect("al", 106))
+        player.h.prePowerMult = player.h.prePowerMult.mul(player.hre.refinementEffect[6][0])
         player.h.prePowerMult = player.h.prePowerMult.div(player.hrm.challengeSoftcap)
+        player.h.prePowerMult = player.h.prePowerMult.div(player.h.preNerf)
+
+        let externalPre = new Decimal(1)
+        externalPre = externalPre.mul(levelableEffect("pu", 107)[1])
+        externalPre = externalPre.mul(levelableEffect("pet", 1106)[0])
+        externalPre = externalPre.mul(buyableEffect("al", 106))
+
+        externalPre = externalPre.pow(player.h.externalRaise)
+        player.h.prePowerMult = player.h.prePowerMult.mul(externalPre)
     },
     hexReq(value, base, scale, div = new Decimal(1), add = new Decimal(1)) {
         return value.add(add).pow(scale).mul(base).div(div).ceil()
@@ -120,8 +144,12 @@ addLayer("h", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
+        ["raw-html", () => {return player.h.externalRaise.neq(1) ? "External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.preNerf.neq(1) ? "Pre-power resources are divided by /" + formatSimple(player.h.preNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.powNerf.neq(1) ? "Power is divided by /" + formatSimple(player.h.powNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-        ["blank", "25px"],
+        ["blank", "10px"],
+        ["blank", "15px"],
     ],
     layerShown() { return player.startedGame == true && (inChallenge("ip", 13) || player.po.hex || hasUpgrade("s", 18)) && !player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge}
 })

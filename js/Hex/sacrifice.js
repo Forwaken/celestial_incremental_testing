@@ -36,6 +36,7 @@ addLayer("hsa", {
         if (player.hpr.rank[3].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[3].pow(Decimal.add(0.5, step.mul(3))).add(1))
         if (player.hpr.rank[4].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[4].pow(Decimal.add(0.5, step.mul(4))).mul(2).add(1))
         if (player.hpr.rank[5].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[5].pow(Decimal.add(0.5, step.mul(5))).mul(4).add(1))
+        if (player.hpr.rank[6].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[6].pow(Decimal.sub(0.5, step)).div(10).add(1))
         if (hasUpgrade("hsa", 11)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(2)
         if (hasUpgrade("hsa", 16)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(upgradeEffect("hsa", 16))
 
@@ -47,7 +48,7 @@ addLayer("hsa", {
             player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
 
             // RESET CODE
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 12; i++) {
                 player.hpr.rank[i] = new Decimal(0)
                 player.hpr.rankGain[i] = new Decimal(0)
                 player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
@@ -123,7 +124,7 @@ addLayer("hsa", {
                 player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
 
                 // RESET CODE
-                for (let i = 0; i < 6; i++) {
+                for (let i = 0; i < 12; i++) {
                     player.hpr.rank[i] = new Decimal(0)
                     player.hpr.rankGain[i] = new Decimal(0)
                     player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
@@ -726,6 +727,9 @@ addLayer("hsa", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "rgba(255,0,0,0.6)", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
+        ["raw-html", () => {return player.h.externalRaise.neq(1) ? "External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.preNerf.neq(1) ? "Pre-power resources are divided by /" + formatSimple(player.h.preNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.powNerf.neq(1) ? "Power is divided by /" + formatSimple(player.h.powNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [

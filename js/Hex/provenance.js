@@ -6,17 +6,26 @@ addLayer("hpr", {
     nodeStyle: {background: "linear-gradient(140deg, #0061ff 0%, #004dcc 100%)", backgroundOrigin: "borderBox", borderColor: "#00307f"},
     color: "#0061ff", // Decides the nodes color.
     startData() { return {
-        rank: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
+        rank: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0),
+            new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
         rankReq: {
             0: new Decimal(36),
             1: new Decimal(6),
             2: new Decimal(36),
             3: new Decimal(216),
             4: new Decimal(1296),
-            5: new Decimal(7776)
+            5: new Decimal(7776),
+            6: new Decimal(7),
+            7: new Decimal(64),
+            8: new Decimal(729),
+            9: new Decimal(10000),
+            10: new Decimal(161051),
+            11: new Decimal(2985984),
         },
-        rankGain: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
-        rankEffect: [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]],
+        rankGain: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0),
+            new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
+        rankEffect: [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)],
+            [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]],
         divider: new Decimal(1),
         effectMult: new Decimal(1),
     }},
@@ -24,7 +33,8 @@ addLayer("hpr", {
         player.hpr.divider = player.hre.refinementEffect[1][0]
         if (hasUpgrade("hpw", 132)) player.hpr.divider = player.hpr.divider.mul(1.5)
 
-        player.hpr.rankReq = {0: new Decimal(36), 1: new Decimal(6), 2: new Decimal(36), 3: new Decimal(216), 4: new Decimal(1296), 5: new Decimal(7776)}
+        player.hpr.rankReq = {0: new Decimal(36), 1: new Decimal(6), 2: new Decimal(36), 3: new Decimal(216), 4: new Decimal(1296), 5: new Decimal(7776),
+            6: new Decimal(7), 7: new Decimal(64), 8: new Decimal(729), 9: new Decimal(10000), 10: new Decimal(161051), 11: new Decimal(2985984)}
 
         let alphaDiv = new Decimal(1)
         if (hasAchievement("achievements", 121)) alphaDiv = alphaDiv.mul(2)
@@ -50,7 +60,10 @@ addLayer("hpr", {
         player.hpr.rankReq[5] = layers.h.hexReq(player.hpr.rank[5], player.h.stage.pow(5), Decimal.div(player.h.stage, 5.5), player.hpr.divider)
         player.hpr.rankGain[5] = layers.h.hexGain(player.hpr.rank[4], player.h.stage.pow(5), Decimal.div(player.h.stage, 5.5), player.hpr.divider).sub(player.hpr.rank[5])
 
-        for (let i = 0; i < 6; i++) {
+        player.hpr.rankReq[6] = layers.h.hexReq(player.hpr.rank[6], player.h.stage.pow(player.h.stage), player.h.stage, player.hpr.divider)
+        player.hpr.rankGain[6] = layers.h.hexGain(player.hpr.rank[0], player.h.stage.pow(player.h.stage), player.h.stage, player.hpr.divider).sub(player.hpr.rank[6])
+
+        for (let i = 0; i < 12; i++) {
             if (player.hpr.rankGain[i].lt(0)) player.hpr.rankGain[i] = new Decimal(0)
         }
 
@@ -88,6 +101,9 @@ addLayer("hpr", {
 
         player.hpr.rankEffect[5][0] = player.hpr.rank[5].pow(player.h.stage).mul(player.h.stage.mul(8)).mul(player.hpr.effectMult).add(1)
         player.hpr.rankEffect[5][1] = player.hpr.rank[5].pow(Decimal.add(1, Decimal.div(12, player.h.stage))).mul(Decimal.div(30, player.h.stage)).mul(player.hpr.effectMult).add(1)
+
+        player.hpr.rankEffect[6][0] = player.hpr.rank[6].pow(player.h.stage.pow(2)).mul(player.h.stage.pow10()).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[6][1] = player.hpr.rank[6].pow(Decimal.add(1, Decimal.div(3, player.h.stage))).div(player.h.stage.div(2)).mul(player.hpr.effectMult).add(1)
 
         if (hasUpgrade("tad", 1001)) {
             for (let i = 0; i < 6; i++) {
@@ -224,6 +240,28 @@ addLayer("hpr", {
                 return look
             },
         },
+        7: {
+            title() { return "<h2>Reset prior provenances,<br>but gain η-Provenance.</h2><br><h3>Req: " + formatWhole(player.hpr.rankReq[6]) + " α-Provenance</h3>"},
+            canClick() { return player.hpr.rankGain[6].gt(0)},
+            unlocked: true,
+            onClick() {
+                player.hpr.rank[6] = player.hpr.rank[6].add(player.hpr.rankGain[6])
+
+                // RESET CODE
+                for (let i = 0; i < 6; i++) {
+                    player.hpr.rank[i] = new Decimal(0)
+                    player.hpr.rankGain[i] = new Decimal(0)
+                    player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+                }
+                player.h.hexPointGain = new Decimal(0)
+                player.h.hexPoint = new Decimal(0)
+            },
+            style() {
+                let look = {width: "250px", minHeight: "75px", fontSize: "7px", border: "0px", borderRadius: "0px 0px 8px 8px"}
+                //if (hasMilestone("hre", 15) && !inChallenge("hrm", 15)) look.cursor = "default !important"
+                return look
+            },
+        },
     },
     tabFormat: [
         ["row", [
@@ -231,6 +269,9 @@ addLayer("hpr", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
+        ["raw-html", () => {return player.h.externalRaise.neq(1) ? "External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.preNerf.neq(1) ? "Pre-power resources are divided by /" + formatSimple(player.h.preNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.powNerf.neq(1) ? "Power is divided by /" + formatSimple(player.h.powNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
@@ -324,6 +365,22 @@ addLayer("hpr", {
                 ], {width: "250px", height: "76px", borderBottom: "2px solid white"}],
                 ["clickable", 6],
             ], {width: "250px", height: "205px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
+        ]],
+        ["row", [
+            ["style-column", [
+                ["style-column", [
+                    ["raw-html", () => {return formatWhole(player.hpr.rank[6]) + " η-Provenance"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "(+" + formatWhole(player.hpr.rankGain[6]) + ")"}, () => {
+                        let look = {color: "white", fontSize: "16px", fontFamily: "monospace"}
+                        player.hpr.rankGain[6].gt(0) ? look.color = "white" : look.color = "gray"
+                        return look
+                    }],
+                ], {width: "250px", height: "50px", borderBottom: "2px solid white"}],
+                ["style-column", [
+                   ["raw-html", () => {return "x" + format(player.hpr.rankEffect[6][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[6][1]) + " " + player.h.stageName[1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                ], {width: "250px", height: "76px", borderBottom: "2px solid white"}],
+                ["clickable", 7],
+            ], () => {return player.h.stage.gte(7) ? {width: "250px", height: "205px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {display: "none !important"}}],
         ]],
         ["row", [
             ["style-row", [

@@ -21,16 +21,26 @@ addLayer("hpw", {
         player.hpw.powerGain = player.hpw.powerGain.mul(player.hrm.realmEffect)
         if (hasUpgrade("hpw", 72)) player.hpw.powerGain = player.hpw.powerGain.mul(2)
         if (hasUpgrade("hpw", 131)) player.hpw.powerGain = player.hpw.powerGain.mul(2)
-        if (hasUpgrade("cs", 202)) player.hpw.powerGain = player.hpw.powerGain.mul(2)
-        player.hpw.powerGain = player.hpw.powerGain.mul(levelableEffect("pu", 203)[2])
-        player.hpw.powerGain = player.hpw.powerGain.mul(levelableEffect("pet", 1106)[1])
-        player.hpw.powerGain = player.hpw.powerGain.mul(buyableEffect("sme", 144))
-        player.hpw.powerGain = player.hpw.powerGain.mul(buyableEffect("al", 206))
-        if (player.alephsChamber.milestone[25] > 0) player.hpw.powerGain = player.hpw.powerGain.mul(36)
+        player.hpw.powerGain = player.hpw.powerGain.div(player.h.powNerf)
+
+        let external = new Decimal(1)
+        if (hasUpgrade("cs", 202)) external = external.mul(2)
+        external = external.mul(levelableEffect("pu", 203)[2])
+        external = external.mul(levelableEffect("pet", 1106)[1])
+        external = external.mul(buyableEffect("sme", 144))
+        external = external.mul(buyableEffect("al", 206))
+        if (player.alephsChamber.milestone[25] > 0) external = external.mul(36)
+
+        external = external.pow(player.h.externalRaise)
+        player.hpw.powerGain = player.hpw.powerGain.mul(external)
 
         // POWER MODIFIERS
-        player.hpw.powerGain = player.hpw.powerGain.pow(levelableEffect("pu", 210)[1])
-        player.hpw.powerGain = player.hpw.powerGain.pow(player.n.pylonPassiveEffect)
+        let externalPow = new Decimal(1)
+        externalPow = externalPow.mul(levelableEffect("pu", 210)[1])
+        externalPow = externalPow.mul(player.n.pylonPassiveEffect)
+
+        externalPow = externalPow.pow(player.h.externalRaise)
+        player.hpw.powerGain = player.hpw.powerGain.pow(externalPow)
 
         player.hpw.powerGain = player.hpw.powerGain.floor() // To keep power to whole numbers
 
@@ -93,6 +103,9 @@ addLayer("hpw", {
         player.hcu.buyables[110] = new Decimal(0)
         player.hcu.buyables[111] = new Decimal(0)
         if (!hasMilestone("hpw", 4)) player.hcu.buyables[112] = new Decimal(0)
+        for (let i = 113; i < 115; i++) {
+            player.hcu.buyables[i] = new Decimal(0)
+        }
 
         // VEXES
         if (type != 2) {
@@ -131,6 +144,11 @@ addLayer("hpw", {
             }
         }
         for (let i = 0; i < player.hbl.milestones.length; i++) {
+            if (type != 1 && hasMilestone("hpw", 7) && +player.hbl.milestones[i] > player.hpw.vigor) {
+                player.hbl.milestones.splice(i, 1);
+                i--;
+                continue
+            }
             if (+player.hbl.milestones[i] > getBuyableAmount("hrm", 2)) {
                 player.hbl.milestones.splice(i, 1);
                 i--;
@@ -140,10 +158,12 @@ addLayer("hpw", {
         // REFINEMENT
         player.hre.refinement = new Decimal(0)
         player.hre.refinementGain = new Decimal(0)
-        player.hre.refinementEffect = [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]]
+        for (let i = 0; i < 12; i++) {
+            player.hre.refinementEffect[i] = [new Decimal(1), new Decimal(1)]
+        }
         
         // RANK
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 12; i++) {
             player.hpr.rank[i] = new Decimal(0)
             player.hpr.rankGain[i] = new Decimal(0)
             player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
@@ -639,7 +659,7 @@ addLayer("hpw", {
 
         1001: {
             title: "Might A:0",
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             description: "Unlock the Creator Realm challenge.",
             branches: [12],
             cost() {return new Decimal(player.h.stage.pow(2)).floor()},
@@ -651,7 +671,7 @@ addLayer("hpw", {
         },
         1002: {
             title: "Might B:0",
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             description: "Unlock the Higher Plane challenge.",
             branches: [31],
             cost() {return new Decimal(player.h.stage.pow(3)).floor()},
@@ -663,7 +683,7 @@ addLayer("hpw", {
         },
         1003: {
             title: "Might C:0",
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             description: "Unlock the Death Realm challenge.",
             branches: [42],
             cost() {return new Decimal(player.h.stage.pow(4)).floor()},
@@ -675,7 +695,7 @@ addLayer("hpw", {
         },
         1004: {
             title: "Might D:0",
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             description: "Unlock the Dimensional Realm challenge.",
             branches: [71],
             cost() {return new Decimal(player.h.stage.pow(7)).floor()},
@@ -687,7 +707,7 @@ addLayer("hpw", {
         },
         1005: {
             title: "Might E:0",
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             description: "Unlock the Dream Realm challenge.",
             branches: [102],
             cost() {return new Decimal(player.h.stage.pow(9)).floor()},
@@ -699,7 +719,7 @@ addLayer("hpw", {
         },
         1006: {
             title: "Might F:0",
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             description: "Unlock the Void Realm challenge.",
             branches: [132],
             cost() {return new Decimal(player.h.stage.pow(12)).floor()},
@@ -711,7 +731,7 @@ addLayer("hpw", {
         },
         1011: {
             title: "Might A:1",
-            unlocked() {return challengeCompletions("hrm", 11) >= 1 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 11) >= 1 && layers.hrm.layerShown()},
             description: "Raise rank, tier, tetr, and pent effects by ^1.18.",
             tooltip() {return "Realm mights work outside of " + player.h.stageName[1] + "."},
             branches: [1001],
@@ -724,7 +744,7 @@ addLayer("hpw", {
         },
         1012: {
             title: "Might A:2",
-            unlocked() {return challengeCompletions("hrm", 11) >= 2 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 11) >= 2 && layers.hrm.layerShown()},
             description: "Multiply factor base by x120.",
             branches: [1001],
             cost() {return new Decimal(player.h.stage.pow(2)).floor()},
@@ -736,7 +756,7 @@ addLayer("hpw", {
         },
         1013: {
             title: "Might A:3",
-            unlocked() {return challengeCompletions("hrm", 11) >= 3 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 11) >= 3 && layers.hrm.layerShown()},
             description: "Boost check back xp based on power.",
             branches: [1001],
             cost() {return new Decimal(player.h.stage.pow(3)).floor()},
@@ -755,7 +775,7 @@ addLayer("hpw", {
         },
         1021: {
             title: "Might B:1",
-            unlocked() {return challengeCompletions("hrm", 12) >= 1 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 12) >= 1 && layers.hrm.layerShown()},
             description: "Raise prestige points gain by ^1.36.",
             branches: [1002],
             cost() {return new Decimal(player.h.stage.pow(2)).floor()},
@@ -767,7 +787,7 @@ addLayer("hpw", {
         },
         1022: {
             title: "Might B:2",
-            unlocked() {return challengeCompletions("hrm", 12) >= 2 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 12) >= 2 && layers.hrm.layerShown()},
             description: "Raise tree gain by ^1.24.",
             branches: [1002],
             cost() {return new Decimal(player.h.stage.pow(3)).floor()},
@@ -779,7 +799,7 @@ addLayer("hpw", {
         },
         1023: {
             title: "Might B:3",
-            unlocked() {return challengeCompletions("hrm", 12) >= 3 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 12) >= 3 && layers.hrm.layerShown()},
             description: "Boost crystals and steel based on power.",
             branches: [1002],
             cost() {return new Decimal(player.h.stage.pow(4)).floor()},
@@ -795,7 +815,7 @@ addLayer("hpw", {
         },
         1031: {
             title: "Might C:1",
-            unlocked() {return challengeCompletions("hrm", 13) >= 1 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 13) >= 1 && layers.hrm.layerShown()},
             description: "Raise grass gain by ^1.18.",
             branches: [1003],
             cost() {return new Decimal(player.h.stage.pow(3)).floor()},
@@ -807,7 +827,7 @@ addLayer("hpw", {
         },
         1032: {
             title: "Might C:2",
-            unlocked() {return challengeCompletions("hrm", 13) >= 2 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 13) >= 2 && layers.hrm.layerShown()},
             description: "Raise golden grass gain by ^1.06.",
             branches: [1003],
             cost() {return new Decimal(player.h.stage.pow(4)).floor()},
@@ -819,7 +839,7 @@ addLayer("hpw", {
         },
         1033: {
             title: "Might C:3",
-            unlocked() {return challengeCompletions("hrm", 13) >= 3 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 13) >= 3 && layers.hrm.layerShown()},
             description: "Boost pollinators based on power.",
             branches: [1003],
             cost() {return new Decimal(player.h.stage.pow(5)).floor()},
@@ -835,7 +855,7 @@ addLayer("hpw", {
         },
         1041: {
             title: "Might D:1",
-            unlocked() {return challengeCompletions("hrm", 14) >= 1 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 14) >= 1 && layers.hrm.layerShown()},
             description: "Raise grasshopper gain by ^1.1.",
             branches: [1004],
             cost() {return new Decimal(player.h.stage.pow(6)).floor()},
@@ -847,7 +867,7 @@ addLayer("hpw", {
         },
         1042: {
             title: "Might D:2",
-            unlocked() {return challengeCompletions("hrm", 14) >= 2 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 14) >= 2 && layers.hrm.layerShown()},
             description: "Raise mod gain by ^1.1.",
             branches: [1004],
             cost() {return new Decimal(player.h.stage.pow(7)).floor()},
@@ -859,7 +879,7 @@ addLayer("hpw", {
         },
         1043: {
             title: "Might D:3",
-            unlocked() {return challengeCompletions("hrm", 14) >= 3 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 14) >= 3 && layers.hrm.layerShown()},
             description: "Boost infinity dimensions based on power.",
             branches: [1004],
             cost() {return new Decimal(player.h.stage.pow(8)).floor()},
@@ -875,7 +895,7 @@ addLayer("hpw", {
         },
         1051: {
             title: "Might E:1",
-            unlocked() {return challengeCompletions("hrm", 15) >= 1 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 15) >= 1 && layers.hrm.layerShown()},
             description: "Raise AD and antimatter by ^1.05.",
             branches: [1005],
             cost() {return new Decimal(player.h.stage.pow(8)).floor()},
@@ -887,7 +907,7 @@ addLayer("hpw", {
         },
         1052: {
             title: "Might E:2",
-            unlocked() {return challengeCompletions("hrm", 15) >= 2 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 15) >= 2 && layers.hrm.layerShown()},
             description: "Multiply NIP by x100.",
             branches: [1005],
             cost() {return new Decimal(player.h.stage.pow(9)).floor()},
@@ -899,7 +919,7 @@ addLayer("hpw", {
         },
         1053: {
             title: "Might E:3",
-            unlocked() {return challengeCompletions("hrm", 15) >= 3 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 15) >= 3 && layers.hrm.layerShown()},
             description: "Boost mastery point effects based on power.",
             branches: [1005],
             cost() {return new Decimal(player.h.stage.pow(10)).floor()},
@@ -922,7 +942,7 @@ addLayer("hpw", {
         },
         1061: {
             title: "Might F:1",
-            unlocked() {return challengeCompletions("hrm", 16) >= 1 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 16) >= 1 && layers.hrm.layerShown()},
             description: "+25% crate roll multiplier.",
             branches: [1006],
             cost() {return new Decimal(player.h.stage.pow(11)).floor()},
@@ -934,7 +954,7 @@ addLayer("hpw", {
         },
         1062: {
             title: "Might F:2",
-            unlocked() {return challengeCompletions("hrm", 16) >= 2 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 16) >= 2 && layers.hrm.layerShown()},
             description: "Triple replicanti mult.",
             branches: [1006],
             cost() {return new Decimal(player.h.stage.pow(12)).floor()},
@@ -946,7 +966,7 @@ addLayer("hpw", {
         },
         1063: {
             title: "Might F:3",
-            unlocked() {return challengeCompletions("hrm", 16) >= 3 && hasUpgrade("bi", 27)},
+            unlocked() {return challengeCompletions("hrm", 16) >= 3 && layers.hrm.layerShown()},
             description: "Boost infinity points based on power.",
             branches: [1006],
             cost() {return new Decimal(player.h.stage.pow(13)).floor()},
@@ -1044,7 +1064,7 @@ addLayer("hpw", {
             purchaseLimit() { return new Decimal(27) },
             currency() { return player.hpw.power},
             effect(x) { return getBuyableAmount(this.layer, this.id) },
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && hasUpgrade("hpw", 141)},
             branches: [0],
@@ -1064,7 +1084,7 @@ addLayer("hpw", {
             purchaseLimit() { return new Decimal(27) },
             currency() { return player.hpw.power},
             effect(x) { return getBuyableAmount(this.layer, this.id) },
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 1).gte(1)},
             branches: [1],
@@ -1084,7 +1104,7 @@ addLayer("hpw", {
             purchaseLimit() { return new Decimal(27) },
             currency() { return player.hpw.power},
             effect(x) { return getBuyableAmount(this.layer, this.id) },
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 2).gte(1)},
             branches: [2],
@@ -1104,7 +1124,7 @@ addLayer("hpw", {
             purchaseLimit() { return new Decimal(27) },
             currency() { return player.hpw.power},
             effect(x) { return getBuyableAmount(this.layer, this.id) },
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 3).gte(1)},
             branches: [3],
@@ -1124,7 +1144,7 @@ addLayer("hpw", {
             purchaseLimit() { return new Decimal(27) },
             currency() { return player.hpw.power},
             effect(x) { return getBuyableAmount(this.layer, this.id) },
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 4).gte(1)},
             branches: [4],
@@ -1144,7 +1164,7 @@ addLayer("hpw", {
             purchaseLimit() { return new Decimal(27) },
             currency() { return player.hpw.power},
             effect(x) { return getBuyableAmount(this.layer, this.id) },
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 5).gte(1)},
             branches: [5],
@@ -1175,7 +1195,7 @@ addLayer("hpw", {
             purchaseLimit() { return new Decimal(1) },
             currency() { return player.hpw.power},
             effect(x) { return getBuyableAmount(this.layer, this.id) },
-            unlocked() { return hasUpgrade("bi", 27) },
+            unlocked() { return layers.hrm.layerShown() },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 6).gte(1) && false},
             branches: [6],
@@ -1204,7 +1224,7 @@ addLayer("hpw", {
     milestones: {
         1: {
             requirementDescription: "<h3>1 Total Power",
-            effectDescription: "Keep a grace on power reset per vigor.",
+            effectDescription() {return hasMilestone("hpw", 7) ? "Keep a grace and miracle on power reset per vigor." : "Keep a grace on power reset per vigor."},
             onComplete() { player.hpw.vigor = player.hpw.vigor + 1 },
             done() { return player.hpw.totalPower.gte(1)},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
@@ -1242,6 +1262,14 @@ addLayer("hpw", {
             effectDescription: "Double blessing gain below power requirement again.",
             onComplete() { player.hpw.vigor = player.hpw.vigor + 1 },
             done() { return player.hpw.totalPower.gte(player.h.stage.pow(5))},
+            style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
+        },
+        7: {
+            unlocked() {return player.h.stage.gte(7)},
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.pow(6)) + " Total Power"},
+            effectDescription: "1st vigor now also keeps miracles.",
+            onComplete() { player.hpw.vigor = player.hpw.vigor + 1 },
+            done() { return player.h.stage.gte(7) && player.hpw.totalPower.gte(player.h.stage.pow(6))},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
     },
@@ -1367,7 +1395,7 @@ addLayer("hpw", {
                         ["style-column", [
                             ["raw-html", "Kept on singularity<br>First purchase keeps the respective realm challenge on singularity", {color: "rgba(0,0,0,0.6)", userSelect: "none", fontSize: "14px", fontFamily: "monospace"}],
                         ], () => {
-                            if (hasUpgrade("bi", 27)) return {width: "180px", height: "110px", backgroundColor: "#933", border: "5px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "25px"}
+                            if (layers.hrm.layerShown()) return {width: "180px", height: "110px", backgroundColor: "#933", border: "5px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "25px"}
                             return {width: "210px", height: "140px", visibility: "hidden"}
                         }],
                     ]],
@@ -1394,6 +1422,7 @@ addLayer("hpw", {
                     ["milestone", 4],
                     ["milestone", 5],
                     ["milestone", 6],
+                    ["milestone", 7],
                 ],
             },
         },
@@ -1404,6 +1433,9 @@ addLayer("hpw", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
+        ["raw-html", () => {return player.h.externalRaise.neq(1) ? "External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.preNerf.neq(1) ? "Pre-power resources are divided by /" + formatSimple(player.h.preNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.powNerf.neq(1) ? "Power is divided by /" + formatSimple(player.h.powNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [

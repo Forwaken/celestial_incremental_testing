@@ -28,12 +28,17 @@ addLayer("hcu", {
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 101))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 103))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 105))
-        player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("ta", 49))
         if (hasUpgrade("hbl", 4)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("hbl", 4))
         if (hasUpgrade("hpw", 22)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("hpw", 22))
-        player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("g", 27))
-        if (hasUpgrade("ep2", 17)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("ep2", 17))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(player.h.prePowerMult)
+
+        let externalCur = new Decimal(1)
+        externalCur = externalCur.mul(buyableEffect("ta", 49))
+        externalCur = externalCur.mul(buyableEffect("g", 27))
+        if (hasUpgrade("ep2", 17)) externalCur = externalCur.mul(upgradeEffect("ep2", 17))
+
+        externalCur = externalCur.pow(player.h.externalRaise)
+        player.hcu.cursesGain = player.hcu.cursesGain.mul(externalCur)
 
         // CURSE EXPONENT
         player.hcu.cursesGain = player.hcu.cursesGain.pow(buyableEffect("hcu", 106))
@@ -48,12 +53,12 @@ addLayer("hcu", {
 
         // JINX TOTAL
         player.hcu.jinxTotal = new Decimal(0)
-        for (let i = 101; i < 113; i++) {
+        for (let i = 101; i < 115; i++) {
             player.hcu.jinxTotal = player.hcu.jinxTotal.add(getBuyableAmount("hcu", i))
             if (tmp["hcu"].buyables[i].extraAmount != null) player.hcu.jinxTotal = player.hcu.jinxTotal.add(tmp["hcu"].buyables[i].extraAmount)
         }
         player.hcu.jinxTotal = player.hcu.jinxTotal.mul(player.hve.vexEffects[1])
-        player.hcu.jinxTotal = player.hcu.jinxTotal.mul(levelableEffect("pet", 109)[1])
+        player.hcu.jinxTotal = player.hcu.jinxTotal.mul(levelableEffect("pet", 109)[1].pow(player.h.externalRaise))
 
         // JINX ADD CAP
         player.hcu.jinxAddCap = new Decimal(0)
@@ -72,14 +77,14 @@ addLayer("hcu", {
             title: "<h3>Buy Max Jinxes</h3>",
             canClick() {
                 let can = false
-                for (let i = 101; i < 113; i++) {
+                for (let i = 101; i < 115; i++) {
                     if (canBuyBuyable("hcu", i)) can = true
                 }
                 return can
             },
             unlocked: true,
             onClick() {
-                for (let i = 101; i < 113; i++) {
+                for (let i = 101; i < 115; i++) {
                     buyMaxExBuyable("hcu", i)
                 }
             },
@@ -250,7 +255,7 @@ addLayer("hcu", {
                 if (hasUpgrade("hve", 53)) amt = amt.add(3)
                 return amt
             },
-            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))},
+            effect(x) { return Decimal.pow(Decimal.mul(2, buyableEffect("hcu", 113)), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))},
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
                 if (x.lt(player.h.stage.mul(3))) {
@@ -263,7 +268,7 @@ addLayer("hcu", {
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Δ-Jinx" },
-            display() { return "All jinxes are 2x cheaper"},
+            display() { return "All jinxes are " + formatSimple(Decimal.mul(2, buyableEffect("hcu", 113)), 2) + "x cheaper"},
             total() { return "(Total: " + format(tmp[this.layer].buyables[this.id].effect) + "x)"},
             buy(mult) {
                 if (mult != true) {
@@ -714,6 +719,100 @@ addLayer("hcu", {
                 return look
             },
         },
+        113: {
+            purchaseLimit() {
+                return new Decimal(player.h.stage.div(2)).add(player.hcu.jinxAddCap.div(10)).floor()
+            },
+            currency() { return player.hcu.curses},
+            pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(50).add(1)},
+            unlocked() { return player.h.stage.gte(7) },
+            cost(x = getBuyableAmount(this.layer, this.id)) {
+                if (x.lt(player.h.stage.div(2))) {
+                    return Decimal.pow(Decimal.pow10(player.h.stage.mul(2)), x).mul(Decimal.pow10(player.h.stage.mul(6))).div(player.hcu.jinxDiv)
+                } else if (x.lt(player.h.stage)) {
+                    return Decimal.pow(Decimal.pow10(player.h.stage.mul(4)), x).div(player.hcu.jinxDiv)
+                } else {
+                    return Decimal.pow(Decimal.pow10(player.h.stage.mul(6)), x).mul(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).recip().div(player.hcu.jinxDiv))
+                }
+            },
+            canAfford() { return player.h.stage.gte(7) && this.currency().gte(this.cost()) },
+            title() { return "Ν-Jinx" },
+            display() {
+                let str = "Increase Δ-Jinx's effect by 2%"
+                return str
+            },
+            total() { return "(Total: +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100)) + "%)"},
+            buy(mult) {
+                if (mult != true) {
+                    if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 12)) this.pay(this.cost())
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(Decimal.pow10(player.h.stage.mul(6)), player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(2)), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(Decimal.pow10(player.h.stage.mul(6)), player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(2)), getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage.div(2))) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(1, player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(4)), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.div(1, player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(4)), getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).recip().div(player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(6)), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).recip().div(player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(6)), getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 12)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: '200px', height: '125px', fontSize: "12px"},
+        },
+        114: {
+            purchaseLimit() {
+                return new Decimal(player.h.stage.div(2)).add(player.hcu.jinxAddCap.div(10)).floor()
+            },
+            currency() { return player.hcu.curses},
+            pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
+            effect(x) {return getBuyableAmount(this.layer, this.id).add(1)},
+            unlocked() { return player.h.stage.gte(7) },
+            cost(x = getBuyableAmount(this.layer, this.id)) {
+                if (x.lt(player.h.stage.div(2))) {
+                    return Decimal.pow(Decimal.pow10(player.h.stage.mul(5)), x).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hcu.jinxDiv)
+                } else if (x.lt(player.h.stage)) {
+                    return Decimal.pow(Decimal.pow10(player.h.stage.mul(10)), x).mul(Decimal.pow10(player.h.stage.mul(5)).recip().div(player.hcu.jinxDiv))
+                } else {
+                    return Decimal.pow(Decimal.pow10(player.h.stage.mul(15)), x).mul(Decimal.pow10(player.h.stage.mul(35)).recip().div(player.hcu.jinxDiv))
+                }
+            },
+            canAfford() { return player.h.stage.gte(7) && this.currency().gte(this.cost()) },
+            title() { return "Ξ-Jinx" },
+            display() {
+                let str = "Reduce purity requirement by 1 refinement"
+                return str
+            },
+            total() { return "(Total: -" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1)) + ")"},
+            buy(mult) {
+                if (mult != true) {
+                    if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 12)) this.pay(this.cost())
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), Decimal.div(Decimal.pow10(player.h.stage.mul(10)), player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(5)), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, Decimal.div(Decimal.pow10(player.h.stage.mul(10)), player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(5)), getBuyableAmount(this.layer, this.id))
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage.div(2))) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow10(player.h.stage.mul(5)).recip().div(player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(10)), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow10(player.h.stage.mul(5)).recip().div(player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(10)), getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.add(getBuyableAmount(this.layer, this.id)).gte(player.h.stage)) {
+                        max = Decimal.affordGeometricSeries(this.currency(), Decimal.pow10(player.h.stage.mul(35)).recip().div(player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(15)), getBuyableAmount(this.layer, this.id))
+                        cost = Decimal.sumGeometricSeries(max, Decimal.pow10(player.h.stage.mul(35)).recip().div(player.hcu.jinxDiv), Decimal.pow10(player.h.stage.mul(15)), getBuyableAmount(this.layer, this.id))
+                    }
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    if (!hasMilestone("hpw", 5) && !hasMilestone("hre", 12)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: '200px', height: '125px', fontSize: "12px"},
+        },
     },
     microtabs: {
         curse: {
@@ -724,6 +823,7 @@ addLayer("hcu", {
                     ["blank", "5px"],
                     ["row", [["jinx-buyable", 101], ["jinx-buyable", 102], ["jinx-buyable", 103]]],
                     ["row", [["jinx-buyable", 104], ["jinx-buyable", 105], ["jinx-buyable", 106]]],
+                    ["row", [["jinx-buyable", 113]]],
                     ["blank", "10px"],
                     ["style-row", [
                         ["style-row", [
@@ -742,6 +842,7 @@ addLayer("hcu", {
                     ["blank", "5px"],
                     ["row", [["jinx-buyable", 107], ["jinx-buyable", 108], ["jinx-buyable", 109]]],
                     ["row", [["jinx-buyable", 110], ["jinx-buyable", 111], ["jinx-buyable", 112]]],
+                    ["row", [["jinx-buyable", 114]]],
                     ["blank", "10px"],
                     ["style-row", [
                         ["style-row", [
@@ -761,6 +862,9 @@ addLayer("hcu", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
+        ["raw-html", () => {return player.h.externalRaise.neq(1) ? "External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.preNerf.neq(1) ? "Pre-power resources are divided by /" + formatSimple(player.h.preNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.powNerf.neq(1) ? "Power is divided by /" + formatSimple(player.h.powNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [

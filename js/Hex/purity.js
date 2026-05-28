@@ -41,15 +41,17 @@ addLayer("hpu", {
         purifierAssign: 1,
     }},
     update(delta) {
-        player.hpu.purityReq = player.hpu.totalPurity.mul(player.h.stage).add(player.h.stage.mul(7)).sub(player.hpu.keptPurity.mul(player.h.stage)).ceil()
-        player.hpu.purityGain = player.hre.refinement.add(player.hpu.keptPurity.mul(player.h.stage)).sub(player.h.stage.mul(7)).div(player.h.stage).add(1).sub(player.hpu.totalPurity).floor()
+        let requirementSub = new Decimal(0)
+        requirementSub = requirementSub.add(buyableEffect("hcu", 114).sub(1))
+        player.hpu.purityReq = player.hpu.totalPurity.mul(player.h.stage).add(player.h.stage.mul(7)).sub(player.hpu.keptPurity.mul(player.h.stage)).sub(requirementSub).ceil()
+        player.hpu.purityGain = player.hre.refinement.add(requirementSub).add(player.hpu.keptPurity.mul(player.h.stage)).sub(player.h.stage.mul(7)).div(player.h.stage).add(1).sub(player.hpu.totalPurity).floor()
 
         if (inChallenge("hrm", 12)) {
             let connect = new Decimal(15).mul(player.h.stage.div(1.5)).sub(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).sub(new Decimal(10).mul(player.h.stage).sub(player.hpu.keptPurity.mul(player.h.stage)))
-            if (player.hpu.totalPurity.lt(10)) player.hpu.purityReq = player.hpu.totalPurity.add(5).mul(player.h.stage.div(1.5)).sub(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).ceil()
-            if (player.hpu.totalPurity.gte(10)) player.hpu.purityReq = player.hpu.totalPurity.mul(player.h.stage).sub(player.hpu.keptPurity.mul(player.h.stage)).add(connect).ceil()
-            if (player.hre.refinement.lt(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.add(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).div(player.h.stage.div(1.5)).sub(4).sub(player.hpu.totalPurity).floor()
-            if (player.hre.refinement.gte(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.sub(connect).add(player.hpu.keptPurity.mul(player.h.stage)).div(player.h.stage).add(1).sub(player.hpu.totalPurity).floor()
+            if (player.hpu.totalPurity.lt(10)) player.hpu.purityReq = player.hpu.totalPurity.add(5).mul(player.h.stage.div(1.5)).sub(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).sub(requirementSub).ceil()
+            if (player.hpu.totalPurity.gte(10)) player.hpu.purityReq = player.hpu.totalPurity.mul(player.h.stage).sub(player.hpu.keptPurity.mul(player.h.stage)).sub(requirementSub).add(connect).ceil()
+            if (player.hre.refinement.lt(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.add(requirementSub).add(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).div(player.h.stage.div(1.5)).sub(4).sub(player.hpu.totalPurity).floor()
+            if (player.hre.refinement.gte(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.add(requirementSub).sub(connect).add(player.hpu.keptPurity.mul(player.h.stage)).div(player.h.stage).add(1).sub(player.hpu.totalPurity).floor()
         }
 
         if (player.hpu.purityGain.lt(1)) player.hpu.purityGain = new Decimal(0)
@@ -120,8 +122,10 @@ addLayer("hpu", {
                 // RESET CODE
                 player.hre.refinement = new Decimal(0)
                 player.hre.refinementGain = new Decimal(0)
-                player.hre.refinementEffect = [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]]
-                for (let i = 0; i < 6; i++) {
+                for (let i = 0; i < 12; i++) {
+                    player.hre.refinementEffect[i] = [new Decimal(1), new Decimal(1)]
+                }
+                for (let i = 0; i < 12; i++) {
                     player.hpr.rank[i] = new Decimal(0)
                     player.hpr.rankGain[i] = new Decimal(0)
                     player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
@@ -329,6 +333,9 @@ addLayer("hpu", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
+        ["raw-html", () => {return player.h.externalRaise.neq(1) ? "External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.preNerf.neq(1) ? "Pre-power resources are divided by /" + formatSimple(player.h.preNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.powNerf.neq(1) ? "Power is divided by /" + formatSimple(player.h.powNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [

@@ -32,7 +32,7 @@ addLayer("hrm", {
         player.hrm.realmEssenceGain = Decimal.pow(1.35, player.hrm.realmCompletions).sub(1)
         player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(levelableEffect("pet", 1106)[2])
         player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(buyableEffect("hrm", 6))
-        if (hasUpgrade("depth3", 6)) player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(upgradeEffect("depth3", 6))
+        if (hasUpgrade("depth3", 6)) player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(upgradeEffect("depth3", 6).pow(player.h.externalRaise))
 
         player.hrm.realmEssenceEffects = [new Decimal(1), new Decimal(1)]
         player.hrm.realmEssenceEffects[0] = Decimal.pow(2.5, player.hrm.realmEssence.add(1).log(player.h.stage)).min(1e10)
@@ -516,6 +516,9 @@ addLayer("hrm", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
+        ["raw-html", () => {return player.h.externalRaise.neq(1) ? "External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.preNerf.neq(1) ? "Pre-power resources are divided by /" + formatSimple(player.h.preNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.h.powNerf.neq(1) ? "Power is divided by /" + formatSimple(player.h.powNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
@@ -525,5 +528,5 @@ addLayer("hrm", {
         ["microtabs", "realm", {borderWidth: "0px"}],
         ["blank", "25px"],
     ],
-    layerShown() { return hasUpgrade("bi", 27) || hasMilestone("s", 11)}, // Decides if this node is shown or not.
+    layerShown() { return player.h.stage.eq(6) && (hasUpgrade("bi", 27) || hasMilestone("s", 11))}, // Decides if this node is shown or not.
 });
