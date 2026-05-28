@@ -11,6 +11,9 @@ addLayer("tera", {
         trueHexReq: new Decimal(1e60),
         trueHexGain: new Decimal(0),
 
+        hexEssence: new Decimal(0),
+        hexEssencePerSecond: new Decimal(0),
+
         trueHept: new Decimal(0),
         trueHeptReq: new Decimal(1e70),
         trueHeptGain: new Decimal(0),
@@ -22,6 +25,8 @@ addLayer("tera", {
 
         player.tera.trueHexReq = Decimal.pow(1e6, player.tera.trueHex).mul(1e60)
         player.tera.trueHexGain = player.hpw.power.add(1).div(1e60).ln().div(Decimal.ln(1e6)).add(1).sub(player.tera.trueHex).floor().max(0)
+
+        player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.sub(1).mul(buyableEffect("tera", "hexGreen"))).mul(buyableEffect("tera", "hexBlue")).div(60).pow(buyableEffect("tera", "hexOpacity")) : new Decimal(0)
         
         player.tera.trueHeptReq = Decimal.pow(1e7, player.tera.trueHept).mul(1e70)
         player.tera.trueHeptGain = player.hpw.power.add(1).div(1e70).ln().div(Decimal.ln(1e7)).add(1).sub(player.tera.trueHept).floor().max(0)
@@ -362,7 +367,184 @@ addLayer("tera", {
             },
         },
     },
+    buyables: {
+        "hexRed": {
+            costBase() { return new Decimal(1) },
+            costGrowth() { return new Decimal(2) },
+            purchaseLimit() { return new Decimal(255) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked: true,
+            cost(x) {
+                let amt = x || getBuyableAmount(this.layer, this.id)
+                if (Decimal.gte(amt, 196)) return this.costGrowth().pow(amt).pow(4).mul(this.costBase())
+                if (Decimal.gte(amt, 128)) return this.costGrowth().pow(amt).pow(3).mul(this.costBase())
+                if (Decimal.gte(amt, 64)) return this.costGrowth().pow(amt).pow(2).mul(this.costBase())
+                return this.costGrowth().pow(amt).mul(this.costBase())
+            },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Increase Red Value</h3>\n\
+                    [Multiplies base value]\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "200px", height: "70px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ff4444"
+                return look
+            },
+        },
+        "hexGreen": {
+            costBase() { return new Decimal(1) },
+            costGrowth() { return new Decimal(2) },
+            purchaseLimit() { return new Decimal(255) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
+            unlocked: true,
+            cost(x) {
+                let amt = x || getBuyableAmount(this.layer, this.id)
+                if (Decimal.gte(amt, 196)) return this.costGrowth().pow(amt).pow(4).mul(this.costBase())
+                if (Decimal.gte(amt, 128)) return this.costGrowth().pow(amt).pow(3).mul(this.costBase())
+                if (Decimal.gte(amt, 64)) return this.costGrowth().pow(amt).pow(2).mul(this.costBase())
+                return this.costGrowth().pow(amt).mul(this.costBase())
+            },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Increase Green Value</h3>\n\
+                    [Multiplies base exponent]\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "200px", height: "70px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#44ff44"
+                return look
+            },
+        },
+        "hexBlue": {
+            costBase() { return new Decimal(1) },
+            costGrowth() { return new Decimal(2) },
+            purchaseLimit() { return new Decimal(255) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id)) },
+            unlocked: true,
+            cost(x) {
+                let amt = x || getBuyableAmount(this.layer, this.id)
+                if (Decimal.gte(amt, 196)) return this.costGrowth().pow(amt).pow(4).mul(this.costBase())
+                if (Decimal.gte(amt, 128)) return this.costGrowth().pow(amt).pow(3).mul(this.costBase())
+                if (Decimal.gte(amt, 64)) return this.costGrowth().pow(amt).pow(2).mul(this.costBase())
+                return this.costGrowth().pow(amt).mul(this.costBase())
+            },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Increase Blue Value</h3>\n\
+                    [Multiplies final effect]\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "200px", height: "70px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#4444ff"
+                return look
+            },
+        },
+        "hexOpacity": {
+            costBase() { return new Decimal(255) },
+            costGrowth() { return new Decimal(256) },
+            purchaseLimit() { return new Decimal(255) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Increase Opacity Value</h3>\n\
+                    [Raises final effect]\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount("tera", "hexRed", new Decimal(0))
+                setBuyableAmount("tera", "hexGreen", new Decimal(0))
+                setBuyableAmount("tera", "hexBlue", new Decimal(0))
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "200px", height: "70px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffffff"
+                return look
+            },
+        },
+    },
     microtabs: {
+        "hex": {
+            "Color": {
+                buttonStyle() { return {borderColor: "#85ade6", borderRadius: "5px"}},
+                unlocked: true,
+                content: [
+                    ["blank", "5px"],
+                    ["style-row", [
+                        ["raw-html", () => {
+                            return "Your current color is<br>#" +
+                            getBuyableAmount("tera", "hexRed").toString(16).padStart(2, '0') +
+                            getBuyableAmount("tera", "hexGreen").toString(16).padStart(2, '0') +
+                            getBuyableAmount("tera", "hexBlue").toString(16).padStart(2, '0') +
+                            getBuyableAmount("tera", "hexOpacity").toString(16).padStart(2, '0') +
+                            "<br>Which generates +" + formatSimple(player.tera.hexEssencePerSecond, 2) + " HE/s"
+                        }, () => {return {color: "white", fontSize: "16px", fontFamily: "monospace"}}],
+                    ], {width: "400px", height: "60px", background: "#425673", border: "3px solid #85ade6", borderRadius: "15px"}],
+                    ["blank", "10px"],
+                    ["row", [
+                        ["style-column", [
+                            ["raw-html", "Red", {color: "#633", fontSize: "20px", fontFamily: "monospace"}],
+                            ["blank", "5px"],
+                            ["buyable", "hexRed"],
+                        ], {width: "225px", height: "110px", backgroundColor: "#f88", border: "3px solid #844", borderRadius: "30px 0 0 0"}],
+                        ["style-column", [
+                            ["raw-html", "Green", {color: "#363", fontSize: "20px", fontFamily: "monospace"}],
+                            ["blank", "5px"],
+                            ["buyable", "hexGreen"],
+                        ], {width: "225px", height: "110px", backgroundColor: "#8f8", border: "3px solid #484", borderRadius: "0 30px 0 0"}],
+                    ]],
+                    ["row", [
+                        ["style-column", [
+                            ["raw-html", "Blue", {color: "#336", fontSize: "20px", fontFamily: "monospace"}],
+                            ["blank", "5px"],
+                            ["buyable", "hexBlue"],
+                        ], {width: "225px", height: "110px", backgroundColor: "#88f", border: "3px solid #448", borderRadius: "0 0 0 30px"}],
+                        ["style-column", [
+                            ["raw-html", "Opacity<div style='font-size:12px;color:#966;margin-top:-5px'>[Will reset previous colors]</div>", {color: "#666", fontSize: "20px", fontFamily: "monospace"}],
+                            ["buyable", "hexOpacity"],
+                        ], {width: "225px", height: "110px", backgroundColor: "#fff", border: "3px solid #888", borderRadius: "0 0 30px 0"}],
+                    ]],
+                ],
+            },
+            "Spells": {
+                buttonStyle() { return {borderColor: "#85ade6", borderRadius: "5px"}},
+                unlocked: true,
+                content: [
+
+                ],
+            },
+        },
         "stuff": {
             "hex": {
                 unlocked: true,
@@ -394,6 +576,17 @@ addLayer("tera", {
                         ["blank", "10px"],
                         ["clickable", "hexReset"],
                         ["blank", "5px"],
+                        ["row", [
+                            ["raw-html", () => {return "You have <h3>" + formatWhole(player.tera.hexEssence) + "</h3> hex essence."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "(+" + formatSimple(player.tera.hexEssencePerSecond, 2) + "/s)"}, () => {
+                                let look = {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}
+                                player.tera.hexEssencePerSecond.gt(0) ? look.color = "white" : look.color = "gray"
+                                return look
+                            }],
+                        ]],
+                        ["blank", "5px"],
+                        ["microtabs", "hex", {borderWidth: "0px"}],
+
                         /*
                         It is going to revolve around using hex essence (gained based on your true hex) to buy three resources with different mechanics that work together.
                         First is Hex (color), which will be upgrades themed on hex colors.
