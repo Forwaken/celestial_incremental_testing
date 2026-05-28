@@ -374,7 +374,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(255) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
             unlocked: true,
             cost(x) {
                 let amt = x || getBuyableAmount(this.layer, this.id)
@@ -395,7 +395,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "200px", height: "70px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                let look = {width: "200px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ff4444"
                 return look
             },
@@ -427,7 +427,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "200px", height: "70px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                let look = {width: "200px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#44ff44"
                 return look
             },
@@ -459,7 +459,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "200px", height: "70px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                let look = {width: "200px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#4444ff"
                 return look
             },
@@ -470,7 +470,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(255) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -488,7 +488,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "200px", height: "70px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                let look = {width: "200px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffffff"
                 return look
             },
@@ -500,7 +500,7 @@ addLayer("tera", {
                 buttonStyle() { return {borderColor: "#85ade6", borderRadius: "5px"}},
                 unlocked: true,
                 content: [
-                    ["blank", "5px"],
+                    ["blank", "10px"],
                     ["style-row", [
                         ["raw-html", () => {
                             return "Your current color is<br>#" +
@@ -511,30 +511,37 @@ addLayer("tera", {
                             "<br>Which generates +" + formatSimple(player.tera.hexEssencePerSecond, 2) + " HE/s"
                         }, () => {return {color: "white", fontSize: "16px", fontFamily: "monospace"}}],
                     ], {width: "400px", height: "60px", background: "#425673", border: "3px solid #85ade6", borderRadius: "15px"}],
-                    ["blank", "10px"],
+                    ["blank", "15px"],
                     ["row", [
                         ["style-column", [
-                            ["raw-html", "Red", {color: "#633", fontSize: "20px", fontFamily: "monospace"}],
-                            ["blank", "5px"],
+                            ["style-row", [
+                                ["raw-html", "Red", {color: "#633", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "225px", height: "30px"}],
                             ["buyable", "hexRed"],
-                        ], {width: "225px", height: "110px", backgroundColor: "#f88", border: "3px solid #844", borderRadius: "30px 0 0 0"}],
+                        ], {width: "225px", height: "120px", backgroundColor: "#f88", border: "3px solid #844", borderRadius: "30px 0 0 0", marginRight: "5px"}],
                         ["style-column", [
-                            ["raw-html", "Green", {color: "#363", fontSize: "20px", fontFamily: "monospace"}],
-                            ["blank", "5px"],
+                            ["style-row", [
+                                ["raw-html", "Green", {color: "#363", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "225px", height: "30px"}],
                             ["buyable", "hexGreen"],
-                        ], {width: "225px", height: "110px", backgroundColor: "#8f8", border: "3px solid #484", borderRadius: "0 30px 0 0"}],
+                        ], {width: "225px", height: "120px", backgroundColor: "#8f8", border: "3px solid #484", borderRadius: "0 30px 0 0"}],
                     ]],
+                    ["blank", "5px"],
                     ["row", [
                         ["style-column", [
-                            ["raw-html", "Blue", {color: "#336", fontSize: "20px", fontFamily: "monospace"}],
-                            ["blank", "5px"],
+                            ["style-row", [
+                                ["raw-html", "Blue", {color: "#336", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "225px", height: "30px"}],
                             ["buyable", "hexBlue"],
-                        ], {width: "225px", height: "110px", backgroundColor: "#88f", border: "3px solid #448", borderRadius: "0 0 0 30px"}],
+                        ], {width: "225px", height: "120px", backgroundColor: "#88f", border: "3px solid #448", borderRadius: "0 0 0 30px", marginRight: "5px"}],
                         ["style-column", [
-                            ["raw-html", "Opacity<div style='font-size:12px;color:#966;margin-top:-5px'>[Will reset previous colors]</div>", {color: "#666", fontSize: "20px", fontFamily: "monospace"}],
+                            ["style-row", [
+                                ["raw-html", "Opacity<div style='color:#966;font-size:12px;margin-top:-5px'>[Resets previous colors]</div>", {color: "#666", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "225px", height: "30px"}],
                             ["buyable", "hexOpacity"],
-                        ], {width: "225px", height: "110px", backgroundColor: "#fff", border: "3px solid #888", borderRadius: "0 0 30px 0"}],
+                        ], {width: "225px", height: "120px", backgroundColor: "#fff", border: "3px solid #888", borderRadius: "0 0 30px 0"}],
                     ]],
+                    ["blank", "20px"],
                 ],
             },
             "Spells": {
@@ -549,7 +556,7 @@ addLayer("tera", {
             "hex": {
                 unlocked: true,
                 content: [
-                    ["top-column", [
+                    ["always-scroll-column", [
                         ["blank", "25px"],
                         ["style-column", [
                             ["style-column", [
@@ -575,7 +582,7 @@ addLayer("tera", {
                         ]],
                         ["blank", "10px"],
                         ["clickable", "hexReset"],
-                        ["blank", "5px"],
+                        ["blank", "10px"],
                         ["row", [
                             ["raw-html", () => {return "You have <h3>" + formatWhole(player.tera.hexEssence) + "</h3> hex essence."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return "(+" + formatSimple(player.tera.hexEssencePerSecond, 2) + "/s)"}, () => {
@@ -584,7 +591,7 @@ addLayer("tera", {
                                 return look
                             }],
                         ]],
-                        ["blank", "5px"],
+                        ["blank", "10px"],
                         ["microtabs", "hex", {borderWidth: "0px"}],
 
                         /*
@@ -594,13 +601,13 @@ addLayer("tera", {
                         Third is Hex (spell), which are active abilities to boost both hex essence gain and uni-alpha resource gain.
                         */
                         // Three increasing resources (in the style of neutrons from matter dimensions). All named hex with paranthesis with the 3 meanings of hex (color, number, spell)
-                    ], {width: "597px", height: "800px", background: "#273345", borderRadius: "0 17px 17px 0"}],
+                    ], {width: "597px", height: "800px", background: "#273345"}],
                 ],
             },
             "hept": {
                 unlocked: true,
                 content: [
-                    ["top-column", [
+                    ["always-scroll-column", [
                         ["blank", "25px"],
                         ["style-column", [
                             ["style-column", [
@@ -628,7 +635,7 @@ addLayer("tera", {
                         ["blank", "10px"],
                         ["clickable", "heptReset"],
                         ["blank", "5px"],
-                    ], {width: "597px", height: "800px", background: "#2c3142", borderRadius: "0 17px 17px 0"}],
+                    ], {width: "597px", height: "800px", background: "#2c3142"}],
                 ],
             },
             // Upgrade grid of 5x5 for pent perhaps? (in the vein of tree game rewritten)
@@ -660,7 +667,7 @@ addLayer("tera", {
             ["style-column", [
                 ["buttonless-microtabs", "stuff", {borderWidth: "0"}],
             ], {width: "597px", height: "800px", }],
-        ], {width: "800px", height: "800px", border: "3px solid #5085D8", borderRadius: "20px"}],
+        ], {width: "800px", height: "800px", border: "3px solid #5085D8", borderRadius: "20px 0 0 20px"}],
     ],
     layerShown() { return true }, // Decides if this node is shown or not.
 });
