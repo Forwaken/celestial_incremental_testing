@@ -61,6 +61,7 @@ addLayer("h", {
 
         player.h.preNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.preNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
+        player.h.preNerf = player.h.preNerf.mul(player.hrm.challengeSoftcap)
 
         player.h.powNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.powNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
@@ -138,15 +139,21 @@ addLayer("h", {
     hexGain(value, base, scale, div = new Decimal(1)) {
         return value.mul(div).div(base).pow(Decimal.div(1, scale)).floor()
     },
+    effects() {
+        let str = ""
+        if (player.h.tickspeed.neq(1)) str = str.concat("Tickspeed is divided by /" + formatSimple(player.h.tickspeed) + "<br>")
+        if (player.h.externalRaise.neq(1)) str = str.concat("External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "<br>")
+        if (player.h.preNerf.neq(1)) str = str.concat("Pre-power resources are divided by /" + formatSimple(player.h.preNerf) + "<br>")
+        if (player.h.powNerf.neq(1)) str = str.concat("Power is divided by /" + formatSimple(player.h.powNerf) + "<br>")
+        return str
+    },
     tabFormat: [
         ["row", [
             ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
-        ["raw-html", () => {return player.h.externalRaise.neq(1) ? "External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
-        ["raw-html", () => {return player.h.preNerf.neq(1) ? "Pre-power resources are divided by /" + formatSimple(player.h.preNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
-        ["raw-html", () => {return player.h.powNerf.neq(1) ? "Power is divided by /" + formatSimple(player.h.powNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["blank", "15px"],

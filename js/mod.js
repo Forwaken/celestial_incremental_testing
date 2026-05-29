@@ -1740,7 +1740,7 @@ var doNotCallTheseFunctionsEveryTick = [
 	"startCutscene38", "startCutscene39", "cookieClick", "generateFlower", "generateMult", "flowerClick",
 	"selectCelestialites", "petDeath", "celestialiteDeath", "petAbility", "celestialiteAbility",
 	"arriveAtStar", "spaceEnergyReset", "coinFlip", "randomizeSegments", "spinWheel", "spinSlots", "evaluateRewards",
-	"slotReset", "enhanceReset", "teraReset"
+	"slotReset", "enhanceReset", "teraReset", "effects"
 ]
 
 function getStartPoints(){

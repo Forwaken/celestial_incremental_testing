@@ -1433,9 +1433,7 @@ addLayer("hpw", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
-        ["raw-html", () => {return player.h.externalRaise.neq(1) ? "External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
-        ["raw-html", () => {return player.h.preNerf.neq(1) ? "Pre-power resources are divided by /" + formatSimple(player.h.preNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
-        ["raw-html", () => {return player.h.powNerf.neq(1) ? "Power is divided by /" + formatSimple(player.h.powNerf) : ""}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [
