@@ -551,6 +551,40 @@ addLayer("tera", {
 
                 ],
             },
+            "Realm Mastery": {
+                buttonStyle() { return {borderColor: "#85ade6", borderRadius: "5px"}},
+                unlocked: true,
+                content: [
+                    ["blank", "10px"],
+                    ["style-column", [
+                        ["style-column", [
+                            ["raw-html", "Realm Mastery", () => {return {color: "white", fontSize: "24px", fontFamily: "monospace"}}],
+                        ], {width: "500px", height: "30px", borderBottom: "3px solid #85ade6"}],
+                        ["style-column", [
+                            ["style-column", [
+
+                            ], {width: "485px", height: "70px", background: "#c44", border: "3px solid #800", borderRadius: "10px", margin: "3px"}],
+                            ["style-column", [
+
+                            ], {width: "485px", height: "70px", background: "#c84", border: "3px solid #840", borderRadius: "10px", margin: "3px"}],
+                            ["style-column", [
+
+                            ], {width: "485px", height: "70px", background: "#cc4", border: "3px solid #880", borderRadius: "10px", margin: "3px"}],
+                            ["style-column", [
+
+                            ], {width: "485px", height: "70px", background: "#4c4", border: "3px solid #080", borderRadius: "10px", margin: "3px"}],
+                            ["style-column", [
+
+                            ], {width: "485px", height: "70px", background: "#44c", border: "3px solid #008", borderRadius: "10px", margin: "3px"}],
+                            ["style-column", [
+
+                            ], {width: "485px", height: "70px", background: "#84c", border: "3px solid #408", borderRadius: "10px", margin: "3px"}],
+                        ], {width: "500px", height: "480px", background: "#1a222e"}],
+                        ["style-column", [], {width: "500px", height: "30px", borderTop: "3px solid #85ade6"}],
+                    ], {width: "500px", height: "546px", background: "#425673", border: "3px solid #85ade6", borderRadius: "15px"}],
+                    ["blank", "20px"],
+                ],
+            },
         },
         "stuff": {
             "hex": {
