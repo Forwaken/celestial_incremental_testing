@@ -85,7 +85,7 @@
         player.p.prestigePointsToGet = player.p.prestigePointsToGet.mul(player.co.cores.prestige.effect[0])
 
         // POWER MODIFIERS
-        if (hasUpgrade("hpw", 1021)) player.p.prestigePointsToGet = player.p.prestigePointsToGet.pow(1.36)
+        if (hasUpgrade("hpw", 1021) || player.tera.realmMastery[1]) player.p.prestigePointsToGet = player.p.prestigePointsToGet.pow(1.36)
         player.p.prestigePointsToGet = player.p.prestigePointsToGet.pow(buyableEffect("fu", 33))
         player.p.prestigePointsToGet = player.p.prestigePointsToGet.pow(player.co.cores.prestige.effect[1])
 
@@ -138,7 +138,7 @@
         player.p.crystalsToGet = player.r.tier.pow(0.002).mul(4)
         player.p.crystalsToGet = player.p.crystalsToGet.mul(buyableEffect("id", 22))
         player.p.crystalsToGet = player.p.crystalsToGet.mul(buyableEffect("r", 12))
-        if (hasUpgrade("hpw", 1023)) player.p.crystalsToGet = player.p.crystalsToGet.mul(upgradeEffect("hpw", 1023))
+        if (hasUpgrade("hpw", 1023) || player.tera.realmMastery[1]) player.p.crystalsToGet = player.p.crystalsToGet.mul(upgradeEffect("hpw", 1023))
         if (!hasUpgrade("depth2", 103)) player.p.crystalsToGet = player.p.crystalsToGet.mul(buyableEffect("oi", 22))
         if (hasUpgrade("pol", 17)) player.p.crystalsToGet = player.p.crystalsToGet.mul(upgradeEffect("pol", 17))
         if (hasUpgrade("ep1", 11)) player.p.crystalsToGet = player.p.crystalsToGet.mul(upgradeEffect("ep1", 11))

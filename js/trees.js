@@ -73,7 +73,7 @@
         player.t.treesToGet = player.t.treesToGet.mul(player.co.cores.tree.effect[0])
 
         // POWER MODIFIERS
-        if (hasUpgrade("hpw", 1022)) player.t.treesToGet = player.t.treesToGet.pow(1.24)
+        if (hasUpgrade("hpw", 1022) || player.tera.realmMastery[1]) player.t.treesToGet = player.t.treesToGet.pow(1.24)
         player.t.treesToGet = player.t.treesToGet.pow(player.co.cores.tree.effect[1])
         if (hasUpgrade("cs", 401)) player.t.treesToGet = player.t.treesToGet.pow(1.1)
 

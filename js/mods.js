@@ -162,7 +162,7 @@
         if (hasUpgrade("cs", 702)) player.m.modsToGet = player.m.modsToGet.mul(1e15)
 
         // POWER MODIFIERS
-        if (hasUpgrade("hpw", 1042)) player.m.modsToGet = player.m.modsToGet.pow(1.1)
+        if (hasUpgrade("hpw", 1042) || player.tera.realmMastery[3]) player.m.modsToGet = player.m.modsToGet.pow(1.1)
         player.m.modsToGet = player.m.modsToGet.pow(player.cs.scraps.code.effect)
         if (hasUpgrade("cs", 703)) player.m.modsToGet = player.m.modsToGet.pow(1.1)
         player.m.modsToGet = player.m.modsToGet.pow(buyableEffect("cof", 17))

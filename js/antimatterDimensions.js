@@ -98,7 +98,7 @@
         player.ad.antimatterPerSecond = player.ad.antimatterPerSecond.mul(player.co.cores.antimatter.effect[0])
 
         // POWER MODIFIERS
-        if (hasUpgrade("hpw", 1051)) player.ad.antimatterPerSecond = player.ad.antimatterPerSecond.pow(1.05)
+        if (hasUpgrade("hpw", 1051) || player.tera.realmMastery[4]) player.ad.antimatterPerSecond = player.ad.antimatterPerSecond.pow(1.05)
         player.ad.antimatterPerSecond = player.ad.antimatterPerSecond.pow(levelableEffect("ir", 3)[0])
         player.ad.antimatterPerSecond = player.ad.antimatterPerSecond.pow(buyableEffect("sb", 105))
         player.ad.antimatterPerSecond = player.ad.antimatterPerSecond.pow(buyableEffect("cof", 21))
@@ -160,7 +160,7 @@
 
             // POWER MODIFIERS
             player.ad.dimensionsPerSecond[i] = player.ad.dimensionsPerSecond[i].pow(player.co.cores.antimatter.effect[1])
-            if (hasUpgrade("hpw", 1051)) player.ad.dimensionsPerSecond[i] = player.ad.dimensionsPerSecond[i].pow(1.05)
+            if (hasUpgrade("hpw", 1051) || player.tera.realmMastery[4]) player.ad.dimensionsPerSecond[i] = player.ad.dimensionsPerSecond[i].pow(1.05)
             player.ad.dimensionsPerSecond[i] = player.ad.dimensionsPerSecond[i].pow(levelableEffect("ir", 3)[0])
 
         }

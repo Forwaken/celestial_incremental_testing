@@ -78,7 +78,7 @@
         player.om.diceMasteryPointsEffect = player.om.diceMasteryPoints.pow(0.1).div(8).add(1).pow(levelableEffect("ir", 6)[0])
         player.om.rocketFuelMasteryPointsEffect = player.om.rocketFuelMasteryPoints.pow(0.08).div(10).add(1).pow(levelableEffect("ir", 6)[0])
         player.om.hexMasteryPointsEffect = player.om.hexMasteryPoints.pow(0.16).add(1).pow(levelableEffect("ir", 6)[0])
-        if (hasUpgrade("hpw", 1053)) {
+        if (hasUpgrade("hpw", 1053) || player.tera.realmMastery[4]) {
             player.om.diceMasteryPointsEffect = player.om.diceMasteryPointsEffect.pow(upgradeEffect("hpw", 1053))
             player.om.rocketFuelMasteryPointsEffect = player.om.rocketFuelMasteryPointsEffect.pow(upgradeEffect("hpw", 1053))
             player.om.hexMasteryPointsEffect = player.om.hexMasteryPointsEffect.pow(upgradeEffect("hpw", 1053))

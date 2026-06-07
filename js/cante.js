@@ -86,7 +86,7 @@
         player.ca.replicantiMult = player.ca.replicantiMult.mul(levelableEffect("pet", 108)[0])
         if (hasUpgrade("ep0", 11)) player.ca.replicantiMult = player.ca.replicantiMult.mul(upgradeEffect("ep0", 11))
         if (hasUpgrade("bi", 117)) player.ca.replicantiMult = player.ca.replicantiMult.mul(3)
-        if (hasUpgrade("hpw", 1062)) player.ca.replicantiMult = player.ca.replicantiMult.mul(3)
+        if (hasUpgrade("hpw", 1062) || player.tera.realmMastery[5]) player.ca.replicantiMult = player.ca.replicantiMult.mul(3)
         player.ca.replicantiMult = player.ca.replicantiMult.mul(player.cof.coreFragmentEffects[5])
         
         player.ca.replicantiMult = player.ca.replicantiMult.div(player.ca.replicantiSoftcap)

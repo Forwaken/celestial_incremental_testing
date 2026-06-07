@@ -79,7 +79,7 @@
         player.r.rankEffect = player.r.rank.mul(0.4).add(1).pow(1.055)
         if (hasUpgrade("ad", 13)) player.r.rankEffect = player.r.rankEffect.mul(upgradeEffect("ad", 13))
         player.r.rankEffect = player.r.rankEffect.pow(player.p.crystalEffect)
-        if (hasUpgrade("hpw", 1011)) player.r.rankEffect = player.r.rankEffect.pow(1.18)
+        if (hasUpgrade("hpw", 1011) || player.tera.realmMastery[0]) player.r.rankEffect = player.r.rankEffect.pow(1.18)
         player.r.rankEffect = player.r.rankEffect.pow(buyableEffect("sb", 106))
         player.r.rankReq = layers.r.getRankReq(rankDiv)
         if (player.points.gte(player.r.rankReq) && player.r.rank.add(player.r.ranksToGet).lte(20) && hasUpgrade("p", 14)) {
@@ -116,7 +116,7 @@
         player.r.tierEffect = player.r.tier.mul(0.55).add(1).pow(1.1)
         player.r.tierEffect = player.r.tierEffect.pow(player.p.crystalEffect)
         player.r.tierEffect = player.r.tierEffect.pow(buyableEffect("sb", 106))
-        if (hasUpgrade("hpw", 1011)) player.r.tierEffect = player.r.tierEffect.pow(1.18)
+        if (hasUpgrade("hpw", 1011) || player.tera.realmMastery[0]) player.r.tierEffect = player.r.tierEffect.pow(1.18)
         player.r.tierReq = layers.r.getTierReq(tierDiv)
         if (player.r.rank.gte(player.r.tierReq) && hasUpgrade("p", 14)) {
              player.r.tiersToGet = tiersGain.sub(player.r.tier)
@@ -139,12 +139,12 @@
         player.r.tetrEffect = player.r.tetr.add(1).pow(1.2)
         player.r.tetrEffect = player.r.tetrEffect.pow(player.p.crystalEffect)
         player.r.tetrEffect = player.r.tetrEffect.pow(buyableEffect("sb", 106))
-        if (hasUpgrade("hpw", 1011)) player.r.tetrEffect = player.r.tetrEffect.pow(1.18)
+        if (hasUpgrade("hpw", 1011) || player.tera.realmMastery[0]) player.r.tetrEffect = player.r.tetrEffect.pow(1.18)
         
         player.r.tetrEffect2 = player.r.tetr.pow(0.6).add(1)
         player.r.tetrEffect2 = player.r.tetrEffect2.pow(player.p.crystalEffect)
         player.r.tetrEffect2 = player.r.tetrEffect2.pow(buyableEffect("sb", 106))
-        if (hasUpgrade("hpw", 1011)) player.r.tetrEffect2 = player.r.tetrEffect2.pow(1.18)
+        if (hasUpgrade("hpw", 1011) || player.tera.realmMastery[0]) player.r.tetrEffect2 = player.r.tetrEffect2.pow(1.18)
         player.r.tetrReq = layers.r.getTetrReq(tetrDiv)
         if (player.r.tier.gte(player.r.tetrReq) && hasUpgrade("p", 14)) {
             player.r.tetrsToGet = tetrGain.sub(player.r.tetr)
@@ -160,7 +160,7 @@
         player.r.pentEffect = player.r.pent.add(1).pow(3)
         if (hasUpgrade("cs", 102)) player.r.pentEffect = player.r.pentEffect.mul(Decimal.pow(1.08, player.r.pent))
         player.r.pentEffect = player.r.pentEffect.pow(player.p.crystalEffect)
-        if (hasUpgrade("hpw", 1011)) player.r.pentEffect = player.r.pentEffect.pow(1.18)
+        if (hasUpgrade("hpw", 1011) || player.tera.realmMastery[0]) player.r.pentEffect = player.r.pentEffect.pow(1.18)
 
         let pentDiv = new Decimal(1)
         if (hasAchievement("achievements", 17)) pentDiv = pentDiv.mul(8)

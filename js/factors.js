@@ -143,7 +143,7 @@
         if (hasUpgrade("ep2", 3)) player.f.factorBase = player.f.factorBase.add(upgradeEffect("ep2", 3))
         if (hasUpgrade("p", 10)) player.f.factorBase = player.f.factorBase.mul(1.2)
         if (player.pol.pollinatorEffects.beetle.enabled) player.f.factorBase = player.f.factorBase.mul(player.pol.pollinatorEffects.beetle.effects[1])
-        if (hasUpgrade("hpw", 1012)) player.f.factorBase = player.f.factorBase.mul(120)
+        if (hasUpgrade("hpw", 1012) || player.tera.realmMastery[0]) player.f.factorBase = player.f.factorBase.mul(120)
         player.f.factorBase = player.f.factorBase.mul(player.co.cores.factor.effect[2])
         if (hasUpgrade("cs", 203)) player.f.factorBase = player.f.factorBase.mul(8000)
         if (hasUpgrade("cs", 701)) player.f.factorBase = player.f.factorBase.mul(player.m.codeExperienceEffect)

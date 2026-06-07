@@ -14,6 +14,8 @@ addLayer("tera", {
         hexEssence: new Decimal(0),
         hexEssencePerSecond: new Decimal(0),
 
+        realmMastery: [false, false, false, false, false, false],
+
         trueHept: new Decimal(0),
         trueHeptReq: new Decimal(1e70),
         trueHeptGain: new Decimal(0),
@@ -395,7 +397,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "200px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                let look = {width: "200px", height: "100px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ff4444"
                 return look
             },
@@ -427,7 +429,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "200px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                let look = {width: "200px", height: "100px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#44ff44"
                 return look
             },
@@ -459,7 +461,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "200px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                let look = {width: "200px", height: "100px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#4444ff"
                 return look
             },
@@ -478,7 +480,8 @@ addLayer("tera", {
                 return "<h3>Increase Opacity Value</h3>\n\
                     [Raises final effect]\n\
                     Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
-                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence\n\
+                    <small style='color:rgba(255,0,0,0.5)'>[Resets previous colors]</small>"
             },
             buy() {
                 this.pay(this.cost())
@@ -488,7 +491,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "200px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                let look = {width: "200px", height: "100px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffffff"
                 return look
             },
@@ -516,30 +519,30 @@ addLayer("tera", {
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", "Red", {color: "#633", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "225px", height: "30px"}],
+                            ], {width: "225px", height: "25px", paddingBottom: "5px"}],
                             ["buyable", "hexRed"],
-                        ], {width: "225px", height: "120px", backgroundColor: "#f88", border: "3px solid #844", borderRadius: "30px 0 0 0", marginRight: "5px"}],
+                        ], {width: "225px", height: "140px", backgroundColor: "#f88", border: "3px solid #844", borderRadius: "30px 0 0 0", marginRight: "5px"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", "Green", {color: "#363", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "225px", height: "30px"}],
+                            ], {width: "225px", height: "25px", paddingBottom: "5px"}],
                             ["buyable", "hexGreen"],
-                        ], {width: "225px", height: "120px", backgroundColor: "#8f8", border: "3px solid #484", borderRadius: "0 30px 0 0"}],
+                        ], {width: "225px", height: "140px", backgroundColor: "#8f8", border: "3px solid #484", borderRadius: "0 30px 0 0"}],
                     ]],
                     ["blank", "5px"],
                     ["row", [
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", "Blue", {color: "#336", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "225px", height: "30px"}],
+                            ], {width: "225px", height: "25px", paddingBottom: "5px"}],
                             ["buyable", "hexBlue"],
-                        ], {width: "225px", height: "120px", backgroundColor: "#88f", border: "3px solid #448", borderRadius: "0 0 0 30px", marginRight: "5px"}],
+                        ], {width: "225px", height: "140px", backgroundColor: "#88f", border: "3px solid #448", borderRadius: "0 0 0 30px", marginRight: "5px"}],
                         ["style-column", [
                             ["style-row", [
-                                ["raw-html", "Opacity<div style='color:#966;font-size:12px;margin-top:-5px'>[Resets previous colors]</div>", {color: "#666", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "225px", height: "30px"}],
+                                ["raw-html", "Opacity", {color: "#666", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "225px", height: "25px", paddingBottom: "5px"}],
                             ["buyable", "hexOpacity"],
-                        ], {width: "225px", height: "120px", backgroundColor: "#fff", border: "3px solid #888", borderRadius: "0 0 30px 0"}],
+                        ], {width: "225px", height: "140px", backgroundColor: "#fff", border: "3px solid #888", borderRadius: "0 0 30px 0"}],
                     ]],
                     ["blank", "20px"],
                 ],
@@ -558,30 +561,87 @@ addLayer("tera", {
                     ["blank", "10px"],
                     ["style-column", [
                         ["style-column", [
-                            ["raw-html", "Realm Mastery", () => {return {color: "white", fontSize: "24px", fontFamily: "monospace"}}],
+                            ["raw-html", "Realm Challenge Mastery", () => {return {color: "white", fontSize: "24px", fontFamily: "monospace"}}],
                         ], {width: "500px", height: "30px", borderBottom: "3px solid #85ade6"}],
                         ["style-column", [
                             ["style-column", [
-
-                            ], {width: "485px", height: "70px", background: "#c44", border: "3px solid #800", borderRadius: "10px", margin: "3px"}],
+                                ["raw-html", () => {
+                                    return "<div style='line-height:1.2'><h3>Creator Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    "Raises rank, tier, tetr, and pent effects by ^1.18<br>" +
+                                    "Multiplies factor base by x120<br>" +
+                                    "Multiplies check back xp by x" + formatSimple(upgradeEffect("hpw", 1013)) + " <small>[Based on power]</small></div>"
+                                }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {
+                                let look = {width: "485px", height: "80px", background: "#c44", border: "3px solid #800", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                if (!player.tera.realmMastery[0]) look.filter = "brightness(25%) blur(10px)"
+                                return look
+                            }],
                             ["style-column", [
-
-                            ], {width: "485px", height: "70px", background: "#c84", border: "3px solid #840", borderRadius: "10px", margin: "3px"}],
+                                ["raw-html", () => {
+                                    return "<div style='line-height:1.2'><h3>Higher Plane Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    "Raises prestige points gain by ^1.36<br>" +
+                                    "Raises tree gain by ^1.24<br>" +
+                                    "Multiplies crystals and steel by x" + formatSimple(upgradeEffect("hpw", 1023)) + " <small>[Based on power]</small></div>"
+                                }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {
+                                let look = {width: "485px", height: "80px", background: "#c84", border: "3px solid #840", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                if (!player.tera.realmMastery[1]) look.filter = "brightness(25%) blur(10px)"
+                                return look
+                            }],
                             ["style-column", [
-
-                            ], {width: "485px", height: "70px", background: "#cc4", border: "3px solid #880", borderRadius: "10px", margin: "3px"}],
+                                ["raw-html", () => {
+                                    return "<div style='line-height:1.2'><h3>Death Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    "Raises grass gain by ^1.18<br>" +
+                                    "Raises golden grass gain by ^1.06<br>" +
+                                    "Multiplies pollinators by x" + formatSimple(upgradeEffect("hpw", 1033)) + " <small>[Based on power]</small></div>"
+                                }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {
+                                let look = {width: "485px", height: "80px", background: "#cc4", border: "3px solid #880", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                if (!player.tera.realmMastery[2]) look.filter = "brightness(25%) blur(10px)"
+                                return look
+                            }],
                             ["style-column", [
-
-                            ], {width: "485px", height: "70px", background: "#4c4", border: "3px solid #080", borderRadius: "10px", margin: "3px"}],
+                                ["raw-html", () => {
+                                    return "<div style='line-height:1.2'><h3>Dimension Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    "Raises grasshopper gain by ^1.1<br>" +
+                                    "Raises mod gain by ^1.1<br>" +
+                                    "Multiplies infinity dimensions by x" + formatSimple(upgradeEffect("hpw", 1043)) + " <small>[Based on power]</small></div>"
+                                }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {
+                                let look = {width: "485px", height: "80px", background: "#4c4", border: "3px solid #080", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                if (!player.tera.realmMastery[3]) look.filter = "brightness(25%) blur(10px)"
+                                return look
+                            }],
                             ["style-column", [
-
-                            ], {width: "485px", height: "70px", background: "#44c", border: "3px solid #008", borderRadius: "10px", margin: "3px"}],
+                                ["raw-html", () => {
+                                    return "<div style='line-height:1.2'><h3>Dream Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    "Raises AD and antimatter by ^1.05<br>" +
+                                    "Multiplies NIP by x100<br>" +
+                                    "Raises mastery point effects by ^" + formatSimple(upgradeEffect("hpw", 1053), 2) + " <small>[Based on power]</small></div>"
+                                }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
+                            ], () => {
+                                let look = {width: "485px", height: "80px", background: "#44c", border: "3px solid #008", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                if (!player.tera.realmMastery[4]) look.filter = "brightness(25%) blur(10px)"
+                                return look
+                            }],
                             ["style-column", [
+                                ["raw-html", () => {
+                                    return "<div style='line-height:1.2'><h3>Void Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    "Increases crate roll chance by +25%<br>" +
+                                    "Triples replicanti multiplier<br>" +
+                                    "Multiplies infinity points by x" + formatSimple(upgradeEffect("hpw", 1063)) + " <small>[Based on power]</small></div>"
+                                }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
 
-                            ], {width: "485px", height: "70px", background: "#84c", border: "3px solid #408", borderRadius: "10px", margin: "3px"}],
-                        ], {width: "500px", height: "480px", background: "#1a222e"}],
-                        ["style-column", [], {width: "500px", height: "30px", borderTop: "3px solid #85ade6"}],
-                    ], {width: "500px", height: "546px", background: "#425673", border: "3px solid #85ade6", borderRadius: "15px"}],
+                            ], () => {
+                                let look = {width: "485px", height: "80px", background: "#84c", border: "3px solid #408", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                if (!player.tera.realmMastery[5]) look.filter = "brightness(25%) blur(10px)"
+                                return look
+                            }],
+                        ], {width: "500px", height: "540px", background: "#1a222e"}],
+                        ["style-column", [
+                            ["raw-html", "Obtaining realm mastery requires you to reach 30 clears.<br>Realm mastery effects do not stack with realm mights.<br>Realm mastery is kept on Tera resets.", () => {return {color: "white", fontSize: "14px", fontFamily: "monospace"}}],
+                        ], {width: "500px", height: "60px", borderTop: "3px solid #85ade6"}],
+                    ], {width: "500px", height: "636px", background: "#425673", border: "3px solid #85ade6", borderRadius: "15px"}],
                     ["blank", "20px"],
                 ],
             },

@@ -249,7 +249,7 @@ addLayer("cb", {
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(player.cb.XPBoostEffect)
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(player.d.boosterEffects[12])
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(buyableEffect("g", 25))
-            if (hasUpgrade("hpw", 1013)) player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(upgradeEffect("hpw", 1013))
+            if (hasUpgrade("hpw", 1013) || player.tera.realmMastery[0]) player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(upgradeEffect("hpw", 1013))
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(player.cs.scraps.checkback.effect)
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(player.co.cores.checkback.effect[0])
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(levelableEffect("pu", 202)[2])
@@ -335,6 +335,7 @@ addLayer("cb", {
         for (let i in player.cb.crateTimers) {
             if (hasAchievement("achievements", 104)) player.cb.crateTimers[i].base = player.cb.crateTimers[i].base.mul(1.05)
             if (hasUpgrade("ev8", 14)) player.cb.crateTimers[i].base = player.cb.crateTimers[i].base.mul(1.2)
+            if (hasUpgrade("hpw", 1061) || player.tera.realmMastery[5]) player.cb.crateTimers[i].base = player.cb.crateTimers[i].base.mul(1.25)
             player.cb.crateTimers[i].base = player.cb.crateTimers[i].base.mul(levelableEffect("pet", 1205)[2])
             player.cb.crateTimers[i].base = player.cb.crateTimers[i].base.mul(buyableEffect("ep0", 12))
             player.cb.crateTimers[i].base = player.cb.crateTimers[i].base.mul(buyableEffect("ev2", 21))

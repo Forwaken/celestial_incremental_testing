@@ -109,7 +109,7 @@ addLayer('g', {
         if (hasUpgrade("cs", 501)) player.g.grassVal = player.g.grassVal.mul("1e450")
 
         // POWER MODIFIERS
-        if (hasUpgrade("hpw", 1031)) player.g.grassVal = player.g.grassVal.pow(1.18)
+        if (hasUpgrade("hpw", 1031) || player.tera.realmMastery[2]) player.g.grassVal = player.g.grassVal.pow(1.18)
         player.g.grassVal = player.g.grassVal.pow(buyableEffect('st', 101))
         player.g.grassVal = player.g.grassVal.pow(buyableEffect("cof", 14))
 
@@ -200,7 +200,7 @@ addLayer('g', {
         player.g.goldGrassVal = player.g.goldGrassVal.mul(player.cof.coreFragmentEffects[1])
 
         // POWER MODIFIERS
-        if (hasUpgrade("hpw", 1032)) player.g.goldGrassVal = player.g.goldGrassVal.pow(1.06)
+        if (hasUpgrade("hpw", 1032) || player.tera.realmMastery[2]) player.g.goldGrassVal = player.g.goldGrassVal.pow(1.06)
         player.g.goldGrassVal = player.g.goldGrassVal.pow(levelableEffect("pu", 113)[1])
         if (hasMilestone("n", 19)) player.g.goldGrassVal = player.g.goldGrassVal.pow(player.n.milestone19Effect)
 

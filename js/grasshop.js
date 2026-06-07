@@ -90,7 +90,7 @@
         if (hasUpgrade("cs", 602)) player.gh.grasshoppersToGet = player.gh.grasshoppersToGet.mul(player.gs.grassSkipEffect2)
 
         // POWER MODIFIERS
-        if (hasUpgrade("hpw", 1041)) player.gh.grasshoppersToGet = player.gh.grasshoppersToGet.pow(1.1)
+        if (hasUpgrade("hpw", 1041) || player.tera.realmMastery[3]) player.gh.grasshoppersToGet = player.gh.grasshoppersToGet.pow(1.1)
         player.gh.grasshoppersToGet = player.gh.grasshoppersToGet.pow(buyableEffect("fu", 34))
         player.gh.grasshoppersToGet = player.gh.grasshoppersToGet.pow(buyableEffect("cof", 15))
         player.gh.grasshoppersToGet = player.gh.grasshoppersToGet.pow(player.se.starsExploreEffect[0][4])
@@ -212,7 +212,7 @@
         if (hasUpgrade("bi", 107)) player.gh.steelToGet = player.gh.steelToGet.mul(upgradeEffect("bi", 107))
         player.gh.steelToGet = player.gh.steelToGet.mul(buyableEffect("p", 14))
         player.gh.steelToGet = player.gh.steelToGet.mul(buyableEffect("id", 21))
-        if (hasUpgrade("hpw", 1023)) player.gh.steelToGet = player.gh.steelToGet.mul(upgradeEffect("hpw", 1023))
+        if (hasUpgrade("hpw", 1023) || player.tera.realmMastery[1]) player.gh.steelToGet = player.gh.steelToGet.mul(upgradeEffect("hpw", 1023))
         if (!hasUpgrade("depth2", 103)) player.gh.steelToGet = player.gh.steelToGet.mul(buyableEffect("oi", 21))
         if (hasUpgrade("ep2", 9)) player.gh.steelToGet = player.gh.steelToGet.mul(upgradeEffect("ep2", 9))
         if (hasUpgrade("s", 14)) player.gh.steelToGet = player.gh.steelToGet.mul(upgradeEffect("s", 14))
