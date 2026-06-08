@@ -28,7 +28,7 @@ addLayer("tera", {
         player.tera.trueHexReq = Decimal.pow(1e6, player.tera.trueHex).mul(1e60)
         player.tera.trueHexGain = player.hpw.power.add(1).div(1e60).ln().div(Decimal.ln(1e6)).add(1).sub(player.tera.trueHex).floor().max(0)
 
-        player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.sub(1).mul(buyableEffect("tera", "hexGreen"))).mul(buyableEffect("tera", "hexBlue")).div(60).pow(buyableEffect("tera", "hexOpacity")) : new Decimal(0)
+        player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).pow(buyableEffect("tera", "hexOpacity")) : new Decimal(0)
         
         player.tera.trueHeptReq = Decimal.pow(1e7, player.tera.trueHept).mul(1e70)
         player.tera.trueHeptGain = player.hpw.power.add(1).div(1e70).ln().div(Decimal.ln(1e7)).add(1).sub(player.tera.trueHept).floor().max(0)
@@ -481,7 +481,7 @@ addLayer("tera", {
                     [Raises final effect]\n\
                     Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence\n\
-                    <small style='color:rgba(255,0,0,0.5)'>[Resets previous colors]</small>"
+                    <small style='color:darkred'>[Resets previous colors]</small>"
             },
             buy() {
                 this.pay(this.cost())
