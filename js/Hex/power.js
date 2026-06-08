@@ -30,6 +30,8 @@ addLayer("hpw", {
         external = external.mul(buyableEffect("sme", 144))
         external = external.mul(buyableEffect("al", 206))
         if (player.alephsChamber.milestone[25] > 0) external = external.mul(36)
+        external = external.mul(levelableEffect("car", 305)[0])
+        external = external.mul(buyableEffect("zd", 12))
 
         external = external.pow(player.h.externalRaise)
         player.hpw.powerGain = player.hpw.powerGain.mul(external)

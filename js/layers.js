@@ -98,7 +98,7 @@
         player.i.preOTFMult = player.i.preOTFMult.mul(player.depth2.negComboEffect)
 
         player.i.preOTFMult = player.i.preOTFMult.pow(player.i.pylonEnergyEffect2)
-
+        player.i.preOTFMult = player.i.preOTFMult.pow(levelableEffect("car", 301)[0])
         //----------------------------------------
 
         //cutscene
@@ -111,6 +111,7 @@
         player.i.postOTFMult = player.i.postOTFMult.mul(player.hre.refinementEffect[6][1])
 
         player.i.postOTFMult = player.i.postOTFMult.pow(player.i.pylonEnergyEffect3)
+        player.i.postOTFMult = player.i.postOTFMult.pow(levelableEffect("car", 302)[0])
 
         //----------------------------------------
 
@@ -185,11 +186,13 @@
 
         // SOFTCAP OF DOOM START
         player.i.doomSoftcapStart = new Decimal("1e2000000")
+        player.i.doomSoftcapStart = player.i.doomSoftcapStart.mul(levelableEffect("car", 313)[0])
         player.i.doomSoftcapStart = player.i.doomSoftcapStart.pow(buyableEffect("fa", 405))
 
         // SOFTCAP WEAKENER
         let doomWeaken = new Decimal(1)
         doomWeaken = doomWeaken.mul(buyableEffect("fa", 401))
+        if (player.zarDungeon.zarDefeated) doomWeaken = doomWeaken.mul(1.5)
 
         // PLACE ANY BASE MODIFIERS TO SOFTCAP OF DOOM BEFORE SCALING
         let amt = player.points
