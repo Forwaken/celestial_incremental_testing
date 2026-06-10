@@ -88,7 +88,7 @@ addLayer("n", {
             player.n.pylonEnergyPerSecond = player.n.pylonEnergyPerSecond.mul(buyableEffect("n", 3))
             player.n.pylonEnergyPerSecond = player.n.pylonEnergyPerSecond.mul(player.s.pylonEnergyEffect4)
 
-            player.n.pylonPassiveEffect = player.bee.bees.add(1).log(10).pow(0.06).div(6).add(1).pow(player.n.pylonTierEffect)
+            player.n.pylonPassiveEffect = player.bee.bees.add(1).log(10).pow(0.05).sub(1).div(5).add(1.1).pow(player.n.pylonTierEffect)
         } else {
             player.n.pylonEnergyPerSecond = new Decimal(0)
 
@@ -962,7 +962,7 @@ addLayer("n", {
                     ["raw-html", () => {return "Boosts UB tickspeed by x" + format(player.n.pylonEnergyEffect) + "."}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                     ["raw-html", () => {return "Boosts glossary effect base by x" + format(player.n.pylonEnergyEffect2) + "."}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                     ["raw-html", () => {return "Boosts temporal pylon energy by x" + format(player.n.pylonEnergyEffect3) + "."}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
-                    ["raw-html", () => {return "Passive effect: Boosts " + player.h.stageName[1] + " power gain by ^" + format(player.n.pylonPassiveEffect) + " (Based on bees)"}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "Passive effect: Boosts " + player.h.stageName[1] + " power gain by ^" + format(player.n.pylonPassiveEffect, 3) + " (Based on bees)"}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                     ["blank", "25px"],
                     ["row", [["ex-buyable", 1], ["ex-buyable", 2], ["ex-buyable", 3],]], 
                     ["blank", "25px"],

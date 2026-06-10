@@ -103,7 +103,13 @@ addLayer("h", {
 
         // POWER
         if (hasUpgrade("hve", 61)) player.h.hexPointGain = player.h.hexPointGain.pow(1.03)
-        player.h.hexPointGain = player.h.hexPointGain.pow(levelableEffect("car", 304)[0])
+
+        // EXTERNAL POWER
+        let externalPow = new Decimal(1)
+        externalPow = externalPow.mul(levelableEffect("car", 304)[0])
+
+        externalPow = externalPow.pow(player.h.externalRaise)
+        player.h.hexPointGain = player.h.hexPointGain.pow(externalPow)
 
         // SOFTCAPS
         if (inChallenge("hrm", 14)) player.h.hexPointGain = player.h.hexPointGain.pow(Decimal.mul(0.1, player.hsa.sacredEffect).min(0.6))

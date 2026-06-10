@@ -14,6 +14,13 @@ addLayer("tera", {
         hexEssence: new Decimal(0),
         hexEssencePerSecond: new Decimal(0),
 
+        hexEnergy: new Decimal(0),
+        hexEnergyCap: new Decimal(10),
+        hexEnergyGain: new Decimal(0),
+
+        piositySpell: new Decimal(1),
+        chronotachysisSpell: new Decimal(0),
+
         realmMastery: [false, false, false, false, false, false],
 
         trueHept: new Decimal(0),
@@ -29,6 +36,8 @@ addLayer("tera", {
         player.tera.trueHexGain = player.hpw.power.add(1).div(1e60).ln().div(Decimal.ln(1e6)).add(1).sub(player.tera.trueHex).floor().max(0)
 
         player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).pow(buyableEffect("tera", "hexOpacity")) : new Decimal(0)
+
+        player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
         
         player.tera.trueHeptReq = Decimal.pow(1e7, player.tera.trueHept).mul(1e70)
         player.tera.trueHeptGain = player.hpw.power.add(1).div(1e70).ln().div(Decimal.ln(1e7)).add(1).sub(player.tera.trueHept).floor().max(0)
@@ -156,6 +165,26 @@ addLayer("tera", {
         // HEX POINTS
         player.h.hexPointGain = new Decimal(0)
         player.h.hexPoint = new Decimal(0)
+    },
+    bars: {
+        hexEnergy: {
+            unlocked: true,
+            direction: RIGHT,
+            width: 300,
+            height: 40,
+            progress() {
+                return player.tera.hexEnergy.div(player.tera.hexEnergyCap)
+            },
+            baseStyle: {backgroundColor: "rgba(0,0,0,0.5)"},
+            fillStyle: {backgroundColor: "#48C353"},
+            borderStyle: {
+                border: "3px solid rgba(0,0,0,0.5)",
+                borderRadius: "10px",
+            },
+            display() {
+                return formatSimple(player.tera.hexEnergy) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy<br><small>[" + formatSimple(player.tera.hexEnergyGain) + "/s]</small>"
+            },
+        },
     },
     clickables: {
         1: {
@@ -312,6 +341,8 @@ addLayer("tera", {
             unlocked: true,
             onClick() {
                 if (Decimal.lte(player.tera.clickables[106], 0)) {
+                    layers.tera.teraReset()
+                    player.h.stage = new Decimal(6)
                     player.tera.clickables[106] = new Decimal(2)
                 } else {
                     player.tera.clickables[106] = new Decimal(0)
@@ -330,6 +361,8 @@ addLayer("tera", {
             unlocked: true,
             onClick() {
                 if (Decimal.lte(player.tera.clickables[107], 0)) {
+                    layers.tera.teraReset()
+                    player.h.stage = new Decimal(7)
                     player.tera.clickables[107] = new Decimal(2)
                 } else {
                     player.tera.clickables[107] = new Decimal(0)
@@ -347,7 +380,9 @@ addLayer("tera", {
             canClick() {return player.h.stage.eq(6) && player.hpw.power.gte(player.tera.trueHexReq)},
             unlocked: true,
             onClick() {
+                player.tera.trueHex = player.tera.trueHex.add(player.tera.trueHexGain)
 
+                layers.tera.teraReset()
             },
             style() {
                 let look = {width: "400px", minHeight: "100px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
@@ -360,11 +395,27 @@ addLayer("tera", {
             canClick() {return player.h.stage.eq(7) && player.hpw.power.gte(player.tera.trueHeptReq)},
             unlocked: true,
             onClick() {
+                player.tera.trueHept = player.tera.trueHept.add(player.tera.trueHeptGain)
 
+                layers.tera.teraReset()
             },
             style() {
                 let look = {width: "400px", minHeight: "100px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 this.canClick() ? look.background = "#85ADE6" : look.background = "#bf8f8f"
+                return look
+            },
+        },
+        "piositySpell": {
+            title() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>Cost: 5 Hex-Energy"},
+            canClick() {return player.tera.hexEnergy.gte(5)},
+            unlocked: true,
+            onClick() {
+                player.tera.hexEnergy.sub(5)
+                player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(1.2).pow(2).add(1).pow(0.5).mul(1.2).add(1)
+            },
+            style() {
+                let look = {width: "180px", minHeight: "100px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "10px"}
+                this.canClick() ? look.background = "#ffbf00" : look.background = "#bf8f8f"
                 return look
             },
         },
@@ -376,7 +427,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(255) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
+            effect(x) { return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) {
                 let amt = x || getBuyableAmount(this.layer, this.id)
@@ -408,7 +459,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(255) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
+            effect(x) { return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) {
                 let amt = x || getBuyableAmount(this.layer, this.id)
@@ -472,7 +523,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(255) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
+            effect(x) { return Decimal.pow(1.02, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -551,7 +602,10 @@ addLayer("tera", {
                 buttonStyle() { return {borderColor: "#85ade6", borderRadius: "5px"}},
                 unlocked: true,
                 content: [
-
+                    ["blank", "10px"],
+                    ["bar", "hexEnergy"],
+                    ["blank", "10px"],
+                    ["row", [["clickable", "piositySpell"]]],
                 ],
             },
             "Realm Mastery": {
@@ -678,7 +732,7 @@ addLayer("tera", {
                         ["clickable", "hexReset"],
                         ["blank", "10px"],
                         ["row", [
-                            ["raw-html", () => {return "You have <h3>" + formatWhole(player.tera.hexEssence) + "</h3> hex essence."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "You have <h3>" + formatSimple(player.tera.hexEssence) + "</h3> hex essence."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return "(+" + formatSimple(player.tera.hexEssencePerSecond, 2) + "/s)"}, () => {
                                 let look = {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}
                                 player.tera.hexEssencePerSecond.gt(0) ? look.color = "white" : look.color = "gray"

@@ -1407,14 +1407,14 @@
             levelLimit() { return new Decimal(99) },
             description() {
                 let str = [
-                    "^" + format(this.effect()[0]) + " to hex points.<br>", //not implemented
+                    "^" + format(this.effect()[0], 3) + " to " + player.h.stageName[1] + " points.<br>", //not implemented
                     "x" + format(this.effect()[1]) + " to diamond points.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
-                eff[0] = getLevelableAmount(this.layer, this.id).pow(0.5).mul(0.03).add(1)
+                eff[0] = getLevelableAmount(this.layer, this.id).pow(0.5).div(40).add(1)
                 eff[1] = Decimal.pow(1.2, getLevelableAmount(this.layer, this.id).pow(0.7))
                 return eff
             },
@@ -1445,14 +1445,14 @@
             levelLimit() { return new Decimal(99) },
             description() {
                 let str = [
-                    "x" + format(this.effect()[0]) + " to hex power (affected by hex power).<br>", //not implemented
+                    "^" + format(this.effect()[0], 3) + " to " + player.h.stageName[1] + " power.<br>", //not implemented
                     "x" + format(this.effect()[1]) + " to diamond points.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
-                eff[0] = player.hpw.power.pow(0.01).pow(getLevelableAmount(this.layer, this.id).mul(0.3))
+                eff[0] = getLevelableAmount(this.layer, this.id).pow(0.5).div(50).add(1)
                 eff[1] = Decimal.pow(1.2, getLevelableAmount(this.layer, this.id).pow(0.7))
                 return eff
             },

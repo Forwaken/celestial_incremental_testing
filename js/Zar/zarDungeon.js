@@ -482,14 +482,14 @@
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.zd.zarChips},
             pay(amt) { player.zd.zarChips = this.currency().sub(amt) },
-            effect(x) {return Decimal.pow(2, getBuyableAmount(this.layer, this.id))},
+            effect(x) {return getBuyableAmount(this.layer, this.id).add(1)},
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>ZC-2</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
-                    Double hex power gain\n\
-                    Currently: x" + formatWhole(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Raise dice score\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
             },
             buy() {

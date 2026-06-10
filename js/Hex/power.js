@@ -15,7 +15,7 @@ addLayer("hpw", {
         vigor: 0,
     }},
     update(delta) {
-        player.hpw.powerGain = Decimal.pow(2, player.hbl.blessings.add(1).div(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).log(player.h.stage))
+        player.hpw.powerGain = Decimal.pow(2, player.hbl.blessings.add(1).div(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).log(player.h.stage)).div(Decimal.pow(2, player.h.stage.sub(6).abs().add(1)))
         if (hasUpgrade("hpw", 11)) player.hpw.powerGain = player.hpw.powerGain.mul(2)
         player.hpw.powerGain = player.hpw.powerGain.mul(player.hre.refinementEffect[5][0])
         player.hpw.powerGain = player.hpw.powerGain.mul(player.hrm.realmEffect)
@@ -30,8 +30,6 @@ addLayer("hpw", {
         external = external.mul(buyableEffect("sme", 144))
         external = external.mul(buyableEffect("al", 206))
         if (player.alephsChamber.milestone[25] > 0) external = external.mul(36)
-        external = external.mul(levelableEffect("car", 305)[0])
-        external = external.mul(buyableEffect("zd", 12))
 
         external = external.pow(player.h.externalRaise)
         player.hpw.powerGain = player.hpw.powerGain.mul(external)
@@ -40,11 +38,12 @@ addLayer("hpw", {
         let externalPow = new Decimal(1)
         externalPow = externalPow.mul(levelableEffect("pu", 210)[1])
         externalPow = externalPow.mul(player.n.pylonPassiveEffect)
+        externalPow = externalPow.mul(levelableEffect("car", 305)[0])
 
         externalPow = externalPow.pow(player.h.externalRaise)
         player.hpw.powerGain = player.hpw.powerGain.pow(externalPow)
 
-        player.hpw.powerGain = player.hpw.powerGain.floor() // To keep power to whole numbers
+        player.hpw.powerGain = player.hpw.powerGain.floor().max(1) // To keep power to whole numbers
 
         player.hpw.upgTotal = new Decimal(0).add(player.hpw.upgrades.length)
         for (let i = 1; i < 7; i++) {
