@@ -414,8 +414,25 @@ addLayer("tera", {
                 player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(1.2).pow(2).add(1).pow(0.5).mul(1.2).add(1)
             },
             style() {
-                let look = {width: "180px", minHeight: "100px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "10px"}
+                let look = {width: "180px", minHeight: "100px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 this.canClick() ? look.background = "#ffbf00" : look.background = "#bf8f8f"
+                return look
+            },
+        },
+        "piosityPin": {
+            title() {return player.tera.clickables["piosityPin"] ? "Unpin from tree" : "Pin to tree"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.tera.clickables["piosityPin"]) {
+                    player.tera.clickables["piosityPin"] = false
+                } else {
+                    player.tera.clickables["piosityPin"] = true
+                }
+            },
+            style() {
+                let look = {width: "180px", minHeight: "50px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                !player.tera.clickables["piosityPin"] ? look.background = "white" : look.background = "gray"
                 return look
             },
         },
@@ -605,7 +622,7 @@ addLayer("tera", {
                     ["blank", "10px"],
                     ["bar", "hexEnergy"],
                     ["blank", "10px"],
-                    ["row", [["clickable", "piositySpell"]]],
+                    ["column", [["clickable", "piositySpell"], ["clickable", "piosityPin"]]],
                 ],
             },
             "Realm Mastery": {
