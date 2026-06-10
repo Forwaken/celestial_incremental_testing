@@ -1,3 +1,21 @@
+addNode("piositySpell", {
+    symbol() {return "🙏"},
+    tooltip() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(6, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
+    tooltipLocked() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(6, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
+    canClick() {return player.tera.hexEnergy.gte(Decimal.sub(6, buyableEffect("tera", "piosityCost")))},
+    layerShown() {return player.tera.clickables["piosityPin"]},
+    onClick() {
+        if (this.canClick()) {
+            player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(6, buyableEffect("tera", "piosityCost")))
+            player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1)).add(1)
+        }
+    },
+    nodeStyle() {
+        let look = {width: "60px !important", height: "60px !important", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "10px"}
+        this.canClick() ? look.background = "#ffbf00" : look.background = "#4c3900"
+        return look
+    },
+})
 addLayer("tera", {
     name() {return "Tera"},
     symbol: "目", // Decides what text appears on the node.
@@ -38,6 +56,9 @@ addLayer("tera", {
         player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).pow(buyableEffect("tera", "hexOpacity")) : new Decimal(0)
 
         player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
+
+        player.tera.hexEnergyGain = Decimal.pow(1.01, player.tera.trueHex).sub(1)
+        player.tera.hexEnergy = player.tera.hexEnergy.add(player.tera.hexEnergyGain.mul(delta)).min(player.tera.hexEnergyCap)
         
         player.tera.trueHeptReq = Decimal.pow(1e7, player.tera.trueHept).mul(1e70)
         player.tera.trueHeptGain = player.hpw.power.add(1).div(1e70).ln().div(Decimal.ln(1e7)).add(1).sub(player.tera.trueHept).floor().max(0)
@@ -176,7 +197,7 @@ addLayer("tera", {
                 return player.tera.hexEnergy.div(player.tera.hexEnergyCap)
             },
             baseStyle: {backgroundColor: "rgba(0,0,0,0.5)"},
-            fillStyle: {backgroundColor: "#48C353"},
+            fillStyle: {backgroundColor: "#425673", borderRadius: "7px"},
             borderStyle: {
                 border: "3px solid rgba(0,0,0,0.5)",
                 borderRadius: "10px",
@@ -406,15 +427,15 @@ addLayer("tera", {
             },
         },
         "piositySpell": {
-            title() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>Cost: 5 Hex-Energy"},
-            canClick() {return player.tera.hexEnergy.gte(5)},
+            title() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(Decimal.sub(6, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
+            canClick() {return player.tera.hexEnergy.gte(Decimal.sub(6, buyableEffect("tera", "piosityCost")))},
             unlocked: true,
             onClick() {
-                player.tera.hexEnergy.sub(5)
-                player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(1.2).pow(2).add(1).pow(0.5).mul(1.2).add(1)
+                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(6, buyableEffect("tera", "piosityCost")))
+                player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1)).add(1)
             },
             style() {
-                let look = {width: "180px", minHeight: "100px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "180px", minHeight: "110px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 this.canClick() ? look.background = "#ffbf00" : look.background = "#bf8f8f"
                 return look
             },
@@ -564,6 +585,86 @@ addLayer("tera", {
                 return look
             },
         },
+        "piosityBuff": {
+            costBase() { return new Decimal(1) },
+            costGrowth() { return new Decimal(6) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id)) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Increase Piosity Boost</h3>\n\
+                    Currently: +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100), 2) + "%\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
+                return look
+            },
+        },
+        "piosityCost": {
+            costBase() { return new Decimal(10) },
+            costGrowth() { return new Decimal(10) },
+            purchaseLimit() { return new Decimal(20) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Decrease Piosity Cost</h3>\n\
+                    Currently: -" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1)) + " HE\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
+                return look
+            },
+        },
+        "piosityAuto": {
+            costBase() { return new Decimal(216) },
+            costGrowth() { return new Decimal(36) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return Decimal.div(300, Decimal.pow(1.05, getBuyableAmount(this.layer, this.id).sub(1))) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                if (getBuyableAmount(this.layer, this.id).eq(0)) {
+                    return "<h3>Auto-cast Piosity</h3>\n\ \n\
+                        Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+                }
+                return "<h3>Auto-cast Piosity</h3>\n\
+                    Currently every " + formatTime(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            tooltip: "Auto-casts are free.",
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
+                return look
+            },
+        },
     },
     microtabs: {
         "hex": {
@@ -622,7 +723,12 @@ addLayer("tera", {
                     ["blank", "10px"],
                     ["bar", "hexEnergy"],
                     ["blank", "10px"],
-                    ["column", [["clickable", "piositySpell"], ["clickable", "piosityPin"]]],
+                    ["style-row", [
+                        ["column", [["clickable", "piositySpell"], ["clickable", "piosityPin"]]],
+                        ["buyable", "piosityBuff"],
+                        ["buyable", "piosityCost"],
+                        ["buyable", "piosityAuto"],
+                    ], {border: "3px solid #85ade6"}],
                 ],
             },
             "Realm Mastery": {
