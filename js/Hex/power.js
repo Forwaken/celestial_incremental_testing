@@ -15,7 +15,7 @@ addLayer("hpw", {
         vigor: 0,
     }},
     update(delta) {
-        player.hpw.powerGain = Decimal.pow(2, player.hbl.blessings.add(1).div(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).log(player.h.stage)).div(Decimal.pow(2, player.h.stage.sub(6).abs().add(1)))
+        player.hpw.powerGain = Decimal.pow(2, player.hbl.blessings.add(1).div(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).log(player.h.stage)).div(Decimal.pow(2, player.h.stage.sub(6).abs()))
         if (hasUpgrade("hpw", 11)) player.hpw.powerGain = player.hpw.powerGain.mul(2)
         player.hpw.powerGain = player.hpw.powerGain.mul(player.hre.refinementEffect[5][0])
         player.hpw.powerGain = player.hpw.powerGain.mul(player.hrm.realmEffect)
@@ -1448,7 +1448,7 @@ addLayer("hpw", {
                 return look
             }],
             ["raw-html", () => {
-                let connect = Decimal.pow(2, new Decimal(10).pow(Decimal.div(player.h.stage, 3.6)).mul(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).add(1).div(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).log(player.h.stage))
+                if (player.h.stage.neq(6)) return "<div class='bottomTooltip'>Base Formula<hr><small>2^(log" + formatWhole(player.h.stage) + "(Blessings/" + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + "))/" + formatSimple(Decimal.pow(2, player.h.stage.sub(6).abs())) + "</small></div>"
                 return "<div class='bottomTooltip'>Base Formula<hr><small>2^(log" + formatWhole(player.h.stage) + "(Blessings/" + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + "))</small></div>"}],
         ]],
         ["blank", "10px"],

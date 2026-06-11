@@ -12,7 +12,38 @@ addNode("piositySpell", {
     },
     nodeStyle() {
         let look = {width: "60px !important", height: "60px !important", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "10px"}
-        this.canClick() ? look.background = "#ffbf00" : look.background = "#4c3900"
+        this.canClick() ? look.background = "radial-gradient(#b38600, #ffbf00)" : look.background = "#4c3900"
+        return look
+    },
+})
+addNode("bewitchSpell", {
+    symbol() {return "🔮"},
+    tooltip() {
+        let str = "<h3>Bewitch</h3><br>Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " free Δ-jinxes<br>"
+        if (getBuyableAmount("tera", "bewitchEnhance").gte(1)) str = str.concat("Improve B-jinx by " + formatSimple(buyableEffect("tera", "bewitchBuff").mul(5)) + "%<br>")
+        if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) str = str.concat("Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " effective vexes<br>")
+        return str.concat("<br>" + formatSimple(Decimal.div(6, buyableEffect("tera", "bewitchCost"))) + " Hex-Energy per minute")
+    },
+    tooltipLocked() {
+        let str = "<h3>Bewitch</h3><br>Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " free Δ-jinxes<br>"
+        if (getBuyableAmount("tera", "bewitchEnhance").gte(1)) str = str.concat("Improve B-jinx by " + formatSimple(buyableEffect("tera", "bewitchBuff").mul(5)) + "%<br>")
+        if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) str = str.concat("Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " effective vexes<br>")
+        return str.concat("<br>" + formatSimple(Decimal.div(6, buyableEffect("tera", "bewitchCost"))) + " Hex-Energy per minute")
+    },
+    canClick() {return player.tera.hexEnergy.gt(0)},
+    layerShown() {return player.tera.clickables["bewitchPin"]},
+    onClick() {
+        if (this.canClick()) {
+            if (player.tera.clickables["bewitchSpell"]) {
+                player.tera.clickables["bewitchSpell"] = false
+            } else {
+                player.tera.clickables["bewitchSpell"] = true
+            }
+        }
+    },
+    nodeStyle() {
+        let look = {width: "60px !important", height: "60px !important", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "10px"}
+        !this.canClick() ? look.background = "#bf8f8f" : player.tera.clickables["bewitchSpell"] ? look.background = "linear-gradient(30deg, #7fbebe, #d4e9e9, #7fbebe)" : look.background = "#7c9797"
         return look
     },
 })
@@ -50,6 +81,7 @@ addLayer("tera", {
             if (player.tera.clickables[i] && Decimal.gt(player.tera.clickables[i], 0)) player.tera.clickables[i] = Decimal.sub(player.tera.clickables[i], delta)
         }
 
+        // TRUE HEX CONTENT
         player.tera.trueHexReq = Decimal.pow(1e6, player.tera.trueHex).mul(1e60)
         player.tera.trueHexGain = player.hpw.power.add(1).div(1e60).ln().div(Decimal.ln(1e6)).add(1).sub(player.tera.trueHex).floor().max(0)
 
@@ -58,8 +90,12 @@ addLayer("tera", {
         player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
 
         player.tera.hexEnergyGain = Decimal.pow(1.01, player.tera.trueHex).sub(1)
-        player.tera.hexEnergy = player.tera.hexEnergy.add(player.tera.hexEnergyGain.mul(delta)).min(player.tera.hexEnergyCap)
+        if (player.tera.clickables["bewitchSpell"]) player.tera.hexEnergyGain = player.tera.hexEnergyGain.sub(Decimal.div(6, buyableEffect("tera", "bewitchCost")).div(60))
+        player.tera.hexEnergy = player.tera.hexEnergy.add(player.tera.hexEnergyGain.mul(delta)).min(player.tera.hexEnergyCap).max(0)
+
+        if (player.tera.clickables["bewitchSpell"] && player.tera.hexEnergy.lte(0)) player.tera.clickables["bewitchSpell"] = false
         
+        // TRUE HEPT CONTENT
         player.tera.trueHeptReq = Decimal.pow(1e7, player.tera.trueHept).mul(1e70)
         player.tera.trueHeptGain = player.hpw.power.add(1).div(1e70).ln().div(Decimal.ln(1e7)).add(1).sub(player.tera.trueHept).floor().max(0)
     },
@@ -203,6 +239,7 @@ addLayer("tera", {
                 borderRadius: "10px",
             },
             display() {
+                if (player.tera.hexEnergyGain.lt(0)) return formatSimple(player.tera.hexEnergy) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy<br><small>[-" + formatSimple(player.tera.hexEnergyGain.abs()) + "/s]</small>"
                 return formatSimple(player.tera.hexEnergy) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy<br><small>[" + formatSimple(player.tera.hexEnergyGain) + "/s]</small>"
             },
         },
@@ -436,7 +473,7 @@ addLayer("tera", {
             },
             style() {
                 let look = {width: "180px", minHeight: "110px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
-                this.canClick() ? look.background = "#ffbf00" : look.background = "#bf8f8f"
+                this.canClick() ? look.background = "radial-gradient(#cc9900, #ffbf00)" : look.background = "#bf8f8f"
                 return look
             },
         },
@@ -454,6 +491,45 @@ addLayer("tera", {
             style() {
                 let look = {width: "180px", minHeight: "50px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 !player.tera.clickables["piosityPin"] ? look.background = "white" : look.background = "gray"
+                return look
+            },
+        },
+        "bewitchSpell": {
+            title() {
+                let str = "<h3>Bewitch</h3><br>Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " free Δ-jinxes<br>"
+                if (getBuyableAmount("tera", "bewitchEnhance").gte(1)) str = str.concat("Improve B-jinx by " + formatSimple(buyableEffect("tera", "bewitchBuff").mul(5)) + "%<br>")
+                if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) str = str.concat("Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " effective vexes<br>")
+                return str.concat("<br>" + formatSimple(Decimal.div(6, buyableEffect("tera", "bewitchCost"))) + " Hex-Energy per minute")
+            },
+            canClick() {return player.tera.hexEnergy.gt(0)},
+            unlocked: true,
+            onClick() {
+                if (player.tera.clickables["bewitchSpell"]) {
+                    player.tera.clickables["bewitchSpell"] = false
+                } else {
+                    player.tera.clickables["bewitchSpell"] = true
+                }
+            },
+            style() {
+                let look = {width: "180px", minHeight: "110px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                !this.canClick() ? look.background = "#bf8f8f" : player.tera.clickables["bewitchSpell"] ? look.background = "linear-gradient(30deg, #7fbebe, #d4e9e9, #7fbebe)" : look.background = "#7c9797"
+                return look
+            },
+        },
+        "bewitchPin": {
+            title() {return player.tera.clickables["bewitchPin"] ? "Unpin from tree" : "Pin to tree"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.tera.clickables["bewitchPin"]) {
+                    player.tera.clickables["bewitchPin"] = false
+                } else {
+                    player.tera.clickables["bewitchPin"] = true
+                }
+            },
+            style() {
+                let look = {width: "180px", minHeight: "50px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                !player.tera.clickables["bewitchPin"] ? look.background = "white" : look.background = "gray"
                 return look
             },
         },
@@ -665,6 +741,91 @@ addLayer("tera", {
                 return look
             },
         },
+        "bewitchBuff": {
+            costBase() { return new Decimal(81) },
+            costGrowth() { return new Decimal(9) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Improve Bewitch Effects</h3>\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#b2d8d8"
+                return look
+            },
+        },
+        "bewitchCost": {
+            costBase() { return new Decimal(729) },
+            costGrowth() { return new Decimal(27) },
+            purchaseLimit() { return new Decimal(20) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Reduce Bewitch Cost</h3>\n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#b2d8d8"
+                return look
+            },
+        },
+        "bewitchEnhance": {
+            costBase() { return new Decimal(59049) },
+            costGrowth() { return new Decimal(59049) },
+            purchaseLimit() { return new Decimal(2) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                if (getBuyableAmount(this.layer, this.id).gte(2)) {
+                    return "<h3>Unlock new Bewitch Effect</h3>\n\
+                        [MAXED]\n\ \n\
+                        Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+                }
+                if (getBuyableAmount(this.layer, this.id).gte(1)) {
+                    return "<h3>Unlock new Bewitch Effect</h3>\n\
+                        Next: Increase Effective Vexes\n\ \n\
+                        Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+                }
+                return "<h3>Unlock new Bewitch Effect</h3>\n\
+                    Next: Improve B-Jinx Effect\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#b2d8d8"
+                return look
+            },
+        },
     },
     microtabs: {
         "hex": {
@@ -729,6 +890,13 @@ addLayer("tera", {
                         ["buyable", "piosityCost"],
                         ["buyable", "piosityAuto"],
                     ], {border: "3px solid #85ade6"}],
+                    ["style-row", [
+                        ["column", [["clickable", "bewitchSpell"], ["clickable", "bewitchPin"]]],
+                        ["buyable", "bewitchBuff"],
+                        ["buyable", "bewitchCost"],
+                        ["buyable", "bewitchEnhance"],
+                    ], {border: "3px solid #85ade6", marginTop: "-3px"}],
+                    ["blank", "20px"],
                 ],
             },
             "Realm Mastery": {
@@ -854,13 +1022,14 @@ addLayer("tera", {
                         ["blank", "10px"],
                         ["clickable", "hexReset"],
                         ["blank", "10px"],
-                        ["row", [
+                        ["tooltip-row", [
                             ["raw-html", () => {return "You have <h3>" + formatSimple(player.tera.hexEssence) + "</h3> hex essence."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return "(+" + formatSimple(player.tera.hexEssencePerSecond, 2) + "/s)"}, () => {
                                 let look = {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}
                                 player.tera.hexEssencePerSecond.gt(0) ? look.color = "white" : look.color = "gray"
                                 return look
                             }],
+                            ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>(((6*Red)<sup>(True Hex*Green)-1</sup>)*Blue/60)<sup>Opacity</sup></small></div>"}],
                         ]],
                         ["blank", "10px"],
                         ["microtabs", "hex", {borderWidth: "0px"}],

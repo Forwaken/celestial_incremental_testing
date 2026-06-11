@@ -121,7 +121,7 @@ addUniverse("U1", {
 addUniverse("UA", {
     name() {return "Universe α<br>" + player.h.stageName[0]},
     symbol: "α",
-    tree: [["hpr", "hsa"], ["hre", "hpu"], ["hbl", "hcu", "hve"], ["hpw", "hrm"], ["tera"], ["piositySpell"]],
+    tree: [["hpr", "hsa"], ["hre", "hpu"], ["hbl", "hcu", "hve"], ["hpw", "hrm"], ["tera"], ["piositySpell", "bewitchSpell"]],
     nodeStyle() {
         let style = {
             backgroundColor: "black",

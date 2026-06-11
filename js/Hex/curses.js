@@ -153,10 +153,16 @@ addLayer("hcu", {
                 if (hasUpgrade("hve", 22)) amt = amt.add(9)
                 return amt
             },
+            subEffect(x) {
+                let eff = new Decimal(0.1)
+                if (player.tera.clickables["bewitchSpell"] && getBuyableAmount("tera", "bewitchEnhance").gte(1)) eff = eff.mul(buyableEffect("tera", "bewitchBuff").div(20).add(1))
+                if (getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount).gte(100)) eff = eff.div(10)
+                return eff
+            },
             effect(x) {
                 let amt = getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)
-                if (amt.gte(100)) return Decimal.mul(0.01, amt).add(9)
-                return Decimal.mul(0.1, amt)
+                if (amt.gte(100)) return Decimal.mul(tmp[this.layer].buyables[this.id].subEffect, amt.sub(100)).add(Decimal.mul(tmp[this.layer].buyables[this.id].subEffect, 1000))
+                return Decimal.mul(tmp[this.layer].buyables[this.id].subEffect, amt)
             },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
@@ -171,9 +177,10 @@ addLayer("hcu", {
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Β-Jinx" },
             display() {
+                if (tmp[this.layer].buyables[this.id].subEffect.eq(0.1)) return "Increase Α-Jinx's effect by +0.1x"
                 let amt = getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)
-                if (amt.gte(100)) return "Increase Α-Jinx's effect by +0.01x<br><small style='color:red'>[SOFTCAPPED]</small>"
-                return "Increase Α-Jinx's effect by +0.1x"
+                if (amt.gte(100)) return "Increase Α-Jinx's effect by +" + format(tmp[this.layer].buyables[this.id].subEffect, 3) + "x<br><small style='color:red'>[SOFTCAPPED]</small>"
+                return "Increase Α-Jinx's effect by +" + format(tmp[this.layer].buyables[this.id].subEffect, 3) + "x"
             },
             total() { return "(Total: +" + format(tmp[this.layer].buyables[this.id].effect) + "x)" },
             buy(mult) {
@@ -253,6 +260,7 @@ addLayer("hcu", {
             extraAmount() {
                 let amt = new Decimal(0)
                 if (hasUpgrade("hve", 53)) amt = amt.add(3)
+                if (player.tera.clickables["bewitchSpell"]) amt = amt.add(buyableEffect("tera", "bewitchBuff"))
                 return amt
             },
             effect(x) { return Decimal.pow(Decimal.mul(2, buyableEffect("hcu", 113)), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))},

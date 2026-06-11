@@ -80,6 +80,7 @@ addLayer("hbl", {
         if (hasUpgrade("hpw", 71)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 71))
         if (hasUpgrade("hve", 31)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(3)
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.h.prePowerMult)
+        player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.tera.piositySpell)
 
         // POWER AND AUTOMATION
         if (hasUpgrade("hve", 62)) player.hbl.blessingsGain = player.hbl.blessingsGain.pow(1.03)
