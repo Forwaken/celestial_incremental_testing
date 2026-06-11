@@ -100,6 +100,9 @@ addLayer("tera", {
         player.tera.trueHeptGain = player.hpw.power.add(1).div(1e70).ln().div(Decimal.ln(1e7)).add(1).sub(player.tera.trueHept).floor().max(0)
     },
     teraReset(type) {
+        // TERA
+        player.tera.piositySpell = new Decimal(1)
+
         // POWER
         player.hpw.totalPower = new Decimal(0)
         player.hpw.power = new Decimal(0)
