@@ -1,4 +1,5 @@
 addNode("piositySpell", {
+    name() {return "🙏"},
     symbol() {return "🙏"},
     tooltip() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(6, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
     tooltipLocked() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(6, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
@@ -17,6 +18,7 @@ addNode("piositySpell", {
     },
 })
 addNode("bewitchSpell", {
+    name() {return "🔮"},
     symbol() {return "🔮"},
     tooltip() {
         let str = "<h3>Bewitch</h3><br>Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " free Δ-jinxes<br>"
@@ -68,7 +70,8 @@ addLayer("tera", {
         hexEnergyGain: new Decimal(0),
 
         piositySpell: new Decimal(1),
-        chronotachysisSpell: new Decimal(0),
+        chronotachysisSpell: [new Decimal(0), new Decimal(2)], // Duration / Multiplier
+        // Add spell that increases cost and power of next cast.
 
         realmMastery: [false, false, false, false, false, false],
 
@@ -89,7 +92,8 @@ addLayer("tera", {
 
         player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
 
-        player.tera.hexEnergyGain = Decimal.pow(1.01, player.tera.trueHex).sub(1)
+        player.tera.hexEnergyCap = new Decimal(9).add(buyableEffect("tera", "hexEnergyCap"))
+        player.tera.hexEnergyGain = Decimal.pow(1.01, player.tera.trueHex).sub(1).mul(buyableEffect("tera", "hexEnergyBuff"))
         if (player.tera.clickables["bewitchSpell"]) player.tera.hexEnergyGain = player.tera.hexEnergyGain.sub(Decimal.div(6, buyableEffect("tera", "bewitchCost")).div(60))
         player.tera.hexEnergy = player.tera.hexEnergy.add(player.tera.hexEnergyGain.mul(delta)).min(player.tera.hexEnergyCap).max(0)
 
@@ -536,6 +540,20 @@ addLayer("tera", {
                 return look
             },
         },
+        "chronotachysisSpell": {
+            title() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed for " + formatTime(60) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell) + "<br><br>" + formatSimple(Decimal.sub(11, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
+            canClick() {return player.tera.hexEnergy.gte(Decimal.sub(11, buyableEffect("tera", "piosityCost")))},
+            unlocked: true,
+            onClick() {
+                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(11, buyableEffect("tera", "piosityCost")))
+                player.tera.chronotachysisSpell = new Decimal(60)
+            },
+            style() {
+                let look = {width: "180px", minHeight: "110px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                this.canClick() ? look.background = "linear-gradient(0deg, #094599, #0098E5, #094599)" : look.background = "#bf8f8f"
+                return look
+            },
+        },
     },
     buyables: {
         "hexRed": {
@@ -661,6 +679,82 @@ addLayer("tera", {
             style() {
                 let look = {width: "200px", height: "100px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffffff"
+                return look
+            },
+        },
+        "hexEnergyBuff": {
+            costBase() { return new Decimal(2).mul(buyableEffect("tera", "hexEnergyPrestige")) },
+            costGrowth() { return new Decimal(0.4).mul(buyableEffect("tera", "hexEnergyPrestige").pow(0.5)) },
+            purchaseLimit() { return new Decimal(90) },
+            currency() { return player.tera.hexEnergy},
+            pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))) },
+            unlocked: true,
+            cost(x) { return getBuyableAmount(this.layer, this.id).mul(this.costGrowth()).add(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Increase Hex Energy Gain</h3>\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Hex Energy"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "150px", height: "110px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
+                return look
+            },
+        },
+        "hexEnergyCap": {
+            costBase() { return new Decimal(5).mul(buyableEffect("tera", "hexEnergyPrestige")) },
+            costGrowth() { return new Decimal(0.5).mul(buyableEffect("tera", "hexEnergyPrestige").pow(0.5)) },
+            purchaseLimit() { return new Decimal(90) },
+            currency() { return player.tera.hexEnergy},
+            pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).add(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))) },
+            unlocked: true,
+            cost(x) { return getBuyableAmount(this.layer, this.id).mul(this.costGrowth()).add(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Increase Hex Energy Cap</h3>\n\
+                    Currently: +" + formatWhole(tmp[this.layer].buyables[this.id].effect.sub(1)) + "\n\ \n\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Hex Energy"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "150px", height: "110px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
+                return look
+            },
+        },
+        "hexEnergyPrestige": {
+            costBase() { return new Decimal(100) },
+            costGrowth() {return new Decimal(10)},
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.tera.hexEnergy},
+            pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(10, getBuyableAmount(this.layer, this.id)) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "Reset hex energy buyables and increase their prices, but keep and improve hex energy buyable effects\n\ \n\
+                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Energy"
+            },
+            buy() {
+                this.pay(this.cost())
+                player.tera.buyables["hexEnergyBuff"] = new Decimal(0)
+                player.tera.buyables["hexEnergyCap"] = new Decimal(0)
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "255px", height: "110px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0", padding: "10px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
                 return look
             },
         },
@@ -888,16 +982,27 @@ addLayer("tera", {
                     ["bar", "hexEnergy"],
                     ["blank", "10px"],
                     ["style-row", [
+                        ["buyable", "hexEnergyBuff"],
+                        ["buyable", "hexEnergyCap"],
+                        ["buyable", "hexEnergyPrestige"],
+                    ], {border: "3px solid #85ade6"}],
+                    ["style-row", [
                         ["column", [["clickable", "piositySpell"], ["clickable", "piosityPin"]]],
                         ["buyable", "piosityBuff"],
                         ["buyable", "piosityCost"],
                         ["buyable", "piosityAuto"],
-                    ], {border: "3px solid #85ade6"}],
+                    ], {border: "3px solid #85ade6", marginTop: "-3px"}],
                     ["style-row", [
                         ["column", [["clickable", "bewitchSpell"], ["clickable", "bewitchPin"]]],
                         ["buyable", "bewitchBuff"],
                         ["buyable", "bewitchCost"],
                         ["buyable", "bewitchEnhance"],
+                    ], {border: "3px solid #85ade6", marginTop: "-3px"}],
+                    ["style-row", [
+                        ["column", [["clickable", "chronotachysisSpell"], ["clickable", "chronotachysisPin"]]],
+                        ["buyable", "chronotachysisBuff"],
+                        ["buyable", "chronotachysisCost"],
+                        ["buyable", "chronotachysisDuration"],
                     ], {border: "3px solid #85ade6", marginTop: "-3px"}],
                     ["blank", "20px"],
                 ],
