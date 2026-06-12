@@ -56,6 +56,9 @@ addLayer("h", {
         }
 
         // GLOBAL NERFS
+        player.h.tickspeed = new Decimal(1)
+        if (player.tera.chronotachysisSpell[0].gt(0)) player.h.tickspeed = player.h.tickspeed.mul(player.tera.chronotachysisSpell[1])
+
         player.h.externalRaise = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.externalRaise = Decimal.pow(0.5, player.h.stage.sub(6).abs())
 
@@ -120,6 +123,7 @@ addLayer("h", {
         player.h.hexPointGain = player.h.hexPointGain.mul(buyableEffect("hrm", 4))
 
         // PER SECOND CALCULATIONS
+        player.h.hexPointGain = player.h.hexPointGain.mul(player.h.tickspeed)
         if (inChallenge("hrm", 13)) player.h.hexPointGain = player.h.hexPointGain.sub(player.h.hexPoint.mul(0.05))
         if (player.h.hexPoint.add(player.h.hexPointGain.mul(delta)).gt(0)) player.h.hexPoint = player.h.hexPoint.add(player.h.hexPointGain.mul(delta))
 
@@ -148,7 +152,8 @@ addLayer("h", {
     },
     effects() {
         let str = ""
-        if (player.h.tickspeed.neq(1)) str = str.concat("Tickspeed is divided by /" + formatSimple(player.h.tickspeed) + "<br>")
+        if (player.h.tickspeed.lt(1)) str = str.concat("Tickspeed is divided by /" + formatSimple(player.h.tickspeed) + "<br>")
+        if (player.h.tickspeed.gt(1)) str = str.concat("<span style='color:#8f8'>Tickspeed is multiplied by x" + formatSimple(player.h.tickspeed) + "</span><br>")
         if (player.h.externalRaise.neq(1)) str = str.concat("External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "<br>")
         if (player.h.preNerf.neq(1)) str = str.concat("Pre-power resources are divided by /" + formatSimple(player.h.preNerf) + "<br>")
         if (player.h.powNerf.neq(1)) str = str.concat("Power is divided by /" + formatSimple(player.h.powNerf) + "<br>")

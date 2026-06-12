@@ -49,6 +49,27 @@ addNode("bewitchSpell", {
         return look
     },
 })
+addNode("chronotachysisSpell", {
+    name() {return "⏳"},
+    symbol() {return "⏳"},
+    tooltip() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
+    tooltipLocked() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
+    canClick() {return player.tera.hexEnergy.gte(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))},
+    layerShown() {return player.tera.clickables["chronotachysisPin"]},
+    onClick() {
+        if (this.canClick()) {
+            player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))
+            let duration = player.tera.chronotachysisSpell[0]
+            duration = duration.add(60).add(buyableEffect("tera", "chronotachysisDuration").sub(1))
+            player.tera.chronotachysisSpell = [duration, Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))]
+        }
+    },
+    nodeStyle() {
+        let look = {width: "60px !important", height: "60px !important", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "10px"}
+        this.canClick() ? look.background = "linear-gradient(0deg, #0d66e1, #0098E5, #0d66e1)" : look.background = "#004c72"
+        return look
+    },
+})
 addLayer("tera", {
     name() {return "Tera"},
     symbol: "目", // Decides what text appears on the node.
@@ -98,6 +119,8 @@ addLayer("tera", {
         player.tera.hexEnergy = player.tera.hexEnergy.add(player.tera.hexEnergyGain.mul(delta)).min(player.tera.hexEnergyCap).max(0)
 
         if (player.tera.clickables["bewitchSpell"] && player.tera.hexEnergy.lte(0)) player.tera.clickables["bewitchSpell"] = false
+
+        if (player.tera.chronotachysisSpell[0].gt(0)) player.tera.chronotachysisSpell[0] = player.tera.chronotachysisSpell[0].sub(delta).max(0)
         
         // TRUE HEPT CONTENT
         player.tera.trueHeptReq = Decimal.pow(1e7, player.tera.trueHept).mul(1e70)
@@ -541,16 +564,35 @@ addLayer("tera", {
             },
         },
         "chronotachysisSpell": {
-            title() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed for " + formatTime(60) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell) + "<br><br>" + formatSimple(Decimal.sub(11, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
-            canClick() {return player.tera.hexEnergy.gte(Decimal.sub(11, buyableEffect("tera", "piosityCost")))},
+            title() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
+            canClick() {return player.tera.hexEnergy.gte(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))},
             unlocked: true,
             onClick() {
-                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(11, buyableEffect("tera", "piosityCost")))
-                player.tera.chronotachysisSpell = new Decimal(60)
+                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))
+                let duration = player.tera.chronotachysisSpell[0]
+                duration = duration.add(60).add(buyableEffect("tera", "chronotachysisDuration").sub(1))
+                player.tera.chronotachysisSpell = [duration, Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))]
             },
             style() {
                 let look = {width: "180px", minHeight: "110px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
-                this.canClick() ? look.background = "linear-gradient(0deg, #094599, #0098E5, #094599)" : look.background = "#bf8f8f"
+                this.canClick() ? look.background = "linear-gradient(0deg, #0d66e1, #0098E5, #0d66e1)" : look.background = "#bf8f8f"
+                return look
+            },
+        },
+        "chronotachysisPin": {
+            title() {return player.tera.clickables["chronotachysisPin"] ? "Unpin from tree" : "Pin to tree"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.tera.clickables["chronotachysisPin"]) {
+                    player.tera.clickables["chronotachysisPin"] = false
+                } else {
+                    player.tera.clickables["chronotachysisPin"] = true
+                }
+            },
+            style() {
+                let look = {width: "180px", minHeight: "50px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                !player.tera.clickables["chronotachysisPin"] ? look.background = "white" : look.background = "gray"
                 return look
             },
         },
@@ -839,7 +881,7 @@ addLayer("tera", {
             },
         },
         "bewitchBuff": {
-            costBase() { return new Decimal(81) },
+            costBase() { return new Decimal(9) },
             costGrowth() { return new Decimal(9) },
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.tera.hexEssence},
@@ -864,7 +906,7 @@ addLayer("tera", {
             },
         },
         "bewitchCost": {
-            costBase() { return new Decimal(729) },
+            costBase() { return new Decimal(27) },
             costGrowth() { return new Decimal(27) },
             purchaseLimit() { return new Decimal(20) },
             currency() { return player.tera.hexEssence},
@@ -920,6 +962,81 @@ addLayer("tera", {
             style() {
                 let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#b2d8d8"
+                return look
+            },
+        },
+        "chronotachysisBuff": {
+            costBase() { return new Decimal(12) },
+            costGrowth() { return new Decimal(12) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(20).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Improve Chronotachysis Multiplier</h3>\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#0098E5"
+                return look
+            },
+        },
+        "chronotachysisCost": {
+            costBase() { return new Decimal(48) },
+            costGrowth() { return new Decimal(48) },
+            purchaseLimit() { return new Decimal(50) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Reduce Chronotachysis Cost</h3>\n\
+                    Currently: -" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1)) + " HE\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#0098E5"
+                return look
+            },
+        },
+        "chronotachysisDuration": {
+            costBase() { return new Decimal(300) },
+            costGrowth() { return new Decimal(30) },
+            purchaseLimit() { return new Decimal(30) },
+            currency() { return player.tera.hexEssence},
+            pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).mul(10).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Improve Chronotachysis Duration</h3>\n\
+                    Currently: +" + formatTime(tmp[this.layer].buyables[this.id].effect.sub(1)) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#0098E5"
                 return look
             },
         },

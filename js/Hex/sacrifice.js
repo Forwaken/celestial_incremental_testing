@@ -42,7 +42,7 @@ addLayer("hsa", {
 
         if (hasUpgrade("hsa", 13)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.pow(upgradeEffect("hsa", 13))
 
-        player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(delta))
+        player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(player.h.tickspeed).mul(delta))
 
         if (player.hsa.autoSac == true) {
             player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
@@ -64,6 +64,7 @@ addLayer("hsa", {
         if (hasUpgrade("hsa", 12)) player.hsa.sacredEnergyPerSecond = player.hsa.sacredEnergyPerSecond.mul(upgradeEffect("hsa", 12))
         if (hasUpgrade("hsa", 21)) player.hsa.sacredEnergyPerSecond = player.hsa.sacredEnergyPerSecond.mul(upgradeEffect("hsa", 21))
 
+        player.hsa.sacredEnergyPerSecond = player.hsa.sacredEnergyPerSecond.mul(player.h.tickspeed)
         player.hsa.sacredEnergy = player.hsa.sacredEnergy.add(player.hsa.sacredEnergyPerSecond.mul(delta))
 
         // Dimension Gain
@@ -83,6 +84,7 @@ addLayer("hsa", {
 
         // Dimension Per Second Calc
         for (let i = 0; i < player.hsa.dimensionAmounts.length; i++) {
+            player.hsa.dimensionsPerSecond[i] = player.hsa.dimensionsPerSecond[i].mul(player.h.tickspeed)
             player.hsa.dimensionAmounts[i] = player.hsa.dimensionAmounts[i].add(player.hsa.dimensionsPerSecond[i].mul(delta))
         }
 
@@ -103,7 +105,7 @@ addLayer("hsa", {
 
         player.hsa.prayerTime = player.hsa.prayerTime.add(buyableEffect("hsa", 1).sub(1).mul(delta))
         if (player.hsa.praying) {
-            player.hsa.prayerTime = player.hsa.prayerTime.add(delta)
+            player.hsa.prayerTime = player.hsa.prayerTime.add(Decimal.mul(delta, player.h.tickspeed))
         } else if (player.hsa.prayerTime.gt(0)) {
             player.hsa.prayerTime = player.hsa.prayerTime.sub(player.hsa.prayerDecay.mul(delta)).max(0)
         }
@@ -112,7 +114,7 @@ addLayer("hsa", {
         if (hasUpgrade("hsa", 14)) prayDist = prayDist.sub(1).div(upgradeEffect("hsa", 14)).add(1)
 
         player.hsa.prayerMult = Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0).div(3).add(1)
-        player.hsa.prayerDecay = Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0).pow(0.7).div(20).add(0.05)
+        player.hsa.prayerDecay = Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0).pow(0.7).div(20).add(0.05).mul(player.h.tickspeed)
         player.hsa.prayPercent = player.hsa.prayerTime.sub(Decimal.sumArithmeticSeries(Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0), prayDist, prayDist, 0)).div(Decimal.sumArithmeticSeries(1, prayDist, prayDist, Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0)))
     },
     clickables: {
@@ -190,8 +192,8 @@ addLayer("hsa", {
         },
         100: {
             title() {
-                let curTime = buyableEffect("hsa", 1).sub(1)
-                if (player.hsa.praying) curTime = curTime.add(1)
+                let curTime = buyableEffect("hsa", 1).sub(1).mul(player.h.tickspeed)
+                if (player.hsa.praying) curTime = curTime.add(Decimal.mul(1, player.h.tickspeed))
                 if (!player.hsa.praying && player.hsa.prayerTime.gt(0)) curTime = curTime.sub(player.hsa.prayerDecay)
                 let str = "<h3>Pray to speed up holy dimensions</h3><br>x" + formatSimple(player.hsa.prayerMult) + " holy dimension tickspeed<br>Prayer Time: " + formatTime(player.hsa.prayerTime)
                 if (curTime.gt(0.01)) str = str.concat("<small style='color:rgba(0,100,0,0.6)'> (+" + formatTime(curTime) + ")</small>")

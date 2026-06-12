@@ -104,7 +104,7 @@ addLayer("hre", {
                 if (inChallenge("hrm", 16)) return "<h2>Refine, but reset " + player.h.stageName[1] + " points.</h2><br><h3>Req: " + format(player.hre.refinementReq) + " " + player.h.stageName[0] + " Points</h3>"
                 return "<h2>Refine, but reset " + player.h.stageName[1] + " points and provenance.</h2><br><h3>Req: " + format(player.hre.refinementReq) + " " + player.h.stageName[0] + " Points</h3>"
             },
-            canClick() { return player.hre.refinementGain.gte(1) && (!hasMilestone("hre", 6) || inChallenge("hrm", 15))},
+            canClick() { return player.h.hexPoint.gt(0) && player.hre.refinementGain.gte(1) && (!hasMilestone("hre", 6) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
                 if (!hasMilestone("hre", 1)) player.hre.refinement = player.hre.refinement.add(1)

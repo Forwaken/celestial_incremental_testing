@@ -89,7 +89,7 @@
         player.cbs.ritualCosts[1] = Decimal.mul(player.cbs.ascensionShards.pow(1.125).mul(0.15).add(1), 15).floor()
 
         player.cbs.ritualSpiritCooldownMax = new Decimal(21600)
-        player.cbs.ritualSpiritCooldown = player.cbs.ritualSpiritCooldown.sub(delta)
+        player.cbs.ritualSpiritCooldown = player.cbs.ritualSpiritCooldown.sub(Decimal.mul(delta, player.cb.cbTickspeed))
 
 
         //pylon

@@ -49,6 +49,7 @@ addLayer("hcu", {
         if (inChallenge("hrm", 12)) player.hcu.cursesGain = player.hcu.cursesGain.pow(Decimal.div(3.6, player.h.stage.max(4)))
         if (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2)))) player.hcu.cursesGain = player.hcu.cursesGain.div(Decimal.pow10(player.h.stage.mul(2))).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(Decimal.pow10(player.h.stage.mul(2)))
         if (player.hcu.cursesGain.gte(Decimal.pow(1e100, player.h.stage.mul(2)))) player.hcu.cursesGain = player.hcu.cursesGain.div(Decimal.pow(1e100, player.h.stage.mul(2))).pow(0.1).mul(Decimal.pow(1e100, player.h.stage.mul(2)))
+        player.hcu.cursesGain = player.hcu.cursesGain.mul(player.h.tickspeed)
         player.hcu.curses = player.hcu.curses.add(player.hcu.cursesGain.mul(delta))
 
         // JINX TOTAL

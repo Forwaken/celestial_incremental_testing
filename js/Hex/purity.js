@@ -112,7 +112,7 @@ addLayer("hpu", {
                 if (inChallenge("hrm", 12) && player.hpu.totalPurity.gte(10)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3><br><small style='color:darkred'>[SOFTCAPPED]</small>"
                 return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
             },
-            canClick() { return player.hpu.purityGain.gte(1) && (!hasMilestone("hre", 14) || inChallenge("hrm", 15))},
+            canClick() { return player.hre.refinement.gt(0) && player.hpu.purityGain.gte(1) && (!hasMilestone("hre", 14) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
                 let amt = player.hpu.purityGain

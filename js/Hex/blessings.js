@@ -88,6 +88,7 @@ addLayer("hbl", {
         let bps = new Decimal(0)
         if (!inChallenge("hrm", 11)) bps = player.hpu.purifiers[4].effect
         if (hasMilestone("s", 13) && !inChallenge("hrm", 11)) bps = bps.add(0.05)
+        bps = bps.mul(player.h.tickspeed)
         player.hbl.blessingPerSec = player.hbl.blessingsGain.mul(bps)
         if (inChallenge("hrm", 13)) player.hbl.blessingPerSec = player.hbl.blessingPerSec.sub(player.hbl.blessings.mul(0.05))
         if (player.hbl.blessings.add(player.hbl.blessingPerSec.mul(delta)).gt(0)) player.hbl.blessings = player.hbl.blessings.add(player.hbl.blessingPerSec.mul(delta))
@@ -105,6 +106,7 @@ addLayer("hbl", {
         if (inChallenge("hrm", 12)) player.hbl.boonsGain = player.hbl.boonsGain.pow(Decimal.div(3.6, player.h.stage.max(4)))
 
         if (inChallenge("hrm", 13)) player.hbl.boonsGain = player.hbl.boonsGain.sub(player.hbl.boons.mul(0.05))
+        player.hbl.boonsGain = player.hbl.boonsGain.mul(player.h.tickspeed)
         if (player.hbl.boons.add(player.hbl.boonsGain.mul(delta)).gt(0)) player.hbl.boons = player.hbl.boons.add(player.hbl.boonsGain.mul(delta))
         if (!inChallenge("hrm", 15)) {
             let val = 0
@@ -112,6 +114,7 @@ addLayer("hbl", {
             if (hasUpgrade("hpw", 51)) val *= 10
             if (hasUpgrade("hpw", 53)) val *= 10
             if (hasMilestone("s", 20)) val += 0.06
+            val = val * player.h.tickspeed.toNumber()
             for (let i in player.hbl.boosters) {
                 if (Decimal.lte(i, player.h.stage.sub(1))) player.hbl.boosters[i].xp = player.hbl.boosters[i].xp.add(player.hbl.boons.mul(val).mul(delta))
             }

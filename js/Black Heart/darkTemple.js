@@ -1829,7 +1829,7 @@ BHS.darkTemple = {
     nameCap: "Dark Temple",
     nameLow: "Dark Temple",
     music: "music/confrontation.mp3",
-    comboLimit: 666,
+    comboLimit: 2,
     comboScaling: 6,
     comboScalingStart: 66,
     generateCelestialite(combo) {
@@ -1848,10 +1848,10 @@ BHC.nac = {
     health: new Decimal(666666666),
     damage: new Decimal(666666),
     attributes: {
-        "air": new Decimal(1), // Resistance DMG Mult
-        "warded": new Decimal(1), // Resistance DMG Mult
-        "stealthy": new Decimal(1), // Resistance DMG Mult
-        "anima": new Decimal(1), // Resistance DMG Mult
+        "air": new Decimal(0.1), // Resistance DMG Mult
+        "warded": new Decimal(0.1), // Resistance DMG Mult
+        "stealthy": new Decimal(0.1), // Resistance DMG Mult
+        "anima": new Decimal(0.1), // Resistance DMG Mult
     },
     actions: {
         0: {
@@ -1893,6 +1893,8 @@ BHC.nac = {
     },
     reward() {
         let gain = {}
+        gain.darkEssence = new Decimal(6666)
+        gain.darkEther = new Decimal(666)
         return gain
     },
 }
