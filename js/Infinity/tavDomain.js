@@ -2495,109 +2495,61 @@ addLayer("tad", {
             },
         },
         221: {
-            costBase() { return new Decimal(1e100) },
-            costGrowth() {
-                let amt = getBuyableAmount(this.layer, this.id)
-                if (amt.eq(1)) return new Decimal("1e300")
-                if (amt.eq(2)) return new Decimal("1e550")
-                if (amt.eq(3)) return new Decimal("1e1050")
-                if (amt.eq(4)) return new Decimal("1e2050")
-                if (amt.eq(5)) return new Decimal("1e4050")
-                return new Decimal("1e8050")
-            },
             purchaseLimit() { return hasMilestone("tad", 103) ? new Decimal(10) : new Decimal(5) },
-            currency() { return player.in.infinityPoints},
-            pay(amt) {player.in.infinityPoints = this.currency().sub(amt)},
             effect(x) { return getBuyableAmount(this.layer, this.id).add(1) },
             unlocked() { return true },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
-            canAfford() { return this.currency().gte(this.cost()) },
+            canAfford() { return getBuyableAmount("tad", 201).gt(new Decimal(10).mul(getBuyableAmount(this.layer, this.id).add(1))) && getBuyableAmount("tad", 211).gt(new Decimal(5).mul(getBuyableAmount(this.layer, this.id).add(1))) },
             display() {
                 return "<h3>Stabilization [3:1]</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")\n\
                     Multiplies first column caps by x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + " and multiplies row 1 base by x" + formatSimple(Decimal.pow(4, getBuyableAmount(this.layer, this.id))) +  ", but raises cost scaling by ^" + formatSimple(Decimal.pow(2, getBuyableAmount(this.layer, this.id))) + ".\n\ \n\
-                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " IP"
+                    Requires<hr style='border-color:black;margin:1px'>" + formatWhole(new Decimal(10).mul(getBuyableAmount(this.layer, this.id).add(1))) + " Stabilization [1:1]<br>" + formatWhole(new Decimal(5).mul(getBuyableAmount(this.layer, this.id).add(1))) + " Stabilization [2:1]"
             },
             buy() {
-                let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
-                this.pay(buyonecost)
-
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "150px", height: "120px", color: "black", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
+                let look = {width: "150px", height: "150px", color: "black", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
                 if (getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit())) {look.background = "#77bf5f"} else if (this.canAfford()) {look.background = "#b9bcd5"} else {look.background = "#bf8f8f"}
                 return look
             },
         },
         222: {
-            costBase() { return new Decimal(1e100) },
-            costGrowth() {
-                let amt = getBuyableAmount(this.layer, this.id)
-                if (amt.eq(1)) return new Decimal("1e300")
-                if (amt.eq(2)) return new Decimal("1e550")
-                if (amt.eq(3)) return new Decimal("1e1050")
-                if (amt.eq(4)) return new Decimal("1e2050")
-                if (amt.eq(5)) return new Decimal("1e4050")
-                return new Decimal("1e8050")
-            },
             purchaseLimit() { return hasMilestone("tad", 103) ? new Decimal(10) : new Decimal(5) },
-            currency() { return player.ta.negativeInfinityPoints},
-            pay(amt) {player.ta.negativeInfinityPoints = this.currency().sub(amt)},
             effect(x) { return getBuyableAmount(this.layer, this.id).add(1) },
             unlocked() { return true },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
-            canAfford() { return this.currency().gte(this.cost()) },
+            canAfford() { return getBuyableAmount("tad", 202).gt(new Decimal(10).mul(getBuyableAmount(this.layer, this.id).add(1))) && getBuyableAmount("tad", 212).gt(new Decimal(5).mul(getBuyableAmount(this.layer, this.id).add(1))) },
             display() {
                 return "<h3>Stabilization [3:2]</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")\n\
                     Multiplies second column caps by x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + " and multiplies row 1 base by x" + formatSimple(Decimal.pow(4, getBuyableAmount(this.layer, this.id))) +  ", but raises cost scaling by ^" + formatSimple(Decimal.pow(2, getBuyableAmount(this.layer, this.id))) + ".\n\ \n\
-                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " NIP"
+                    Requires<hr style='border-color:black;margin:1px'>" + formatWhole(new Decimal(10).mul(getBuyableAmount(this.layer, this.id).add(1))) + " Stabilization [1:2]<br>" + formatWhole(new Decimal(5).mul(getBuyableAmount(this.layer, this.id).add(1))) + " Stabilization [2:2]"
             },
             buy() {
-                let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
-                this.pay(buyonecost)
-
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "150px", height: "120px", color: "black", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
+                let look = {width: "150px", height: "150px", color: "black", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
                 if (getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit())) {look.background = "#77bf5f"} else if (this.canAfford()) {look.background = "#b9bcd5"} else {look.background = "#bf8f8f"}
                 return look
             },
         },
         223: {
-            costBase() { return new Decimal(1e10) },
-            costGrowth() {
-                let amt = getBuyableAmount(this.layer, this.id)
-                if (amt.eq(1)) return new Decimal("1e30")
-                if (amt.eq(2)) return new Decimal("1e55")
-                if (amt.eq(3)) return new Decimal("1e105")
-                if (amt.eq(4)) return new Decimal("1e205")
-                if (amt.eq(5)) return new Decimal("1e405")
-                return new Decimal("1e805")
-            },
             purchaseLimit() { return hasMilestone("tad", 103) ? new Decimal(10) : new Decimal(5) },
-            currency() { return player.s.singularityPoints},
-            pay(amt) {player.s.singularityPoints = this.currency().sub(amt)},
             effect(x) { return getBuyableAmount(this.layer, this.id).add(1) },
             unlocked() { return true },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
-            canAfford() { return this.currency().gte(this.cost()) },
+            canAfford() { return getBuyableAmount("tad", 203).gt(new Decimal(10).mul(getBuyableAmount(this.layer, this.id).add(1))) && getBuyableAmount("tad", 213).gt(new Decimal(5).mul(getBuyableAmount(this.layer, this.id).add(1))) },
             display() {
                 return "<h3>Stabilization [3:3]</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")\n\
                     Multiplies third column caps by x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + " and multiplies row 1 base by x" + formatSimple(Decimal.pow(4, getBuyableAmount(this.layer, this.id))) +  ", but raises cost scaling by ^" + formatSimple(Decimal.pow(2, getBuyableAmount(this.layer, this.id))) + ".\n\ \n\
-                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " SP"
+                    Requires<hr style='border-color:black;margin:1px'>" + formatWhole(new Decimal(10).mul(getBuyableAmount(this.layer, this.id).add(1))) + " Stabilization [1:3]<br>" + formatWhole(new Decimal(5).mul(getBuyableAmount(this.layer, this.id).add(1))) + " Stabilization [2:3]"
             },
             buy() {
-                let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
-                this.pay(buyonecost)
-
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "150px", height: "120px", color: "black", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
+                let look = {width: "150px", height: "150px", color: "black", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
                 if (getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit())) {look.background = "#77bf5f"} else if (this.canAfford()) {look.background = "#b9bcd5"} else {look.background = "#bf8f8f"}
                 return look
             },

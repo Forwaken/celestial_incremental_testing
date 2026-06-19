@@ -94,7 +94,9 @@ addLayer("hcu", {
     },
     buyables: {
         101: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(5)).add(player.hcu.jinxAddCap) },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(5)).add(player.hcu.jinxAddCap).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -146,7 +148,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         102: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(5)).add(player.hcu.jinxAddCap) },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(5)).add(player.hcu.jinxAddCap).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -208,7 +212,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         103: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(4)).add(player.hcu.jinxAddCap.div(1.25)).floor() },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(4)).add(player.hcu.jinxAddCap.div(1.25)).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -255,7 +261,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         104: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(3)).add(player.hcu.jinxAddCap.mul(2).div(3)).floor() },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(3)).add(player.hcu.jinxAddCap.mul(2).div(3)).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -303,7 +311,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         105: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(2)).add(player.hcu.jinxAddCap.div(2.5)).floor() },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(2)).add(player.hcu.jinxAddCap.div(2.5)).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             effectBase() {
@@ -355,7 +365,7 @@ addLayer("hcu", {
         },
         106: {
             purchaseLimit() {
-                return new Decimal(player.h.stage).add(player.hcu.jinxAddCap.div(5)).floor()
+                return new Decimal(player.h.stage).add(player.hcu.jinxAddCap.div(5)).div(player.h.jinxDiv).floor()
             },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
@@ -404,7 +414,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         107: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(5)).add(player.hcu.jinxAddCap) },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(5)).add(player.hcu.jinxAddCap).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -459,7 +471,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         108: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(3)).add(player.hcu.jinxAddCap.mul(2).div(3)).floor() },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(3)).add(player.hcu.jinxAddCap.mul(2).div(3)).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -514,7 +528,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         109: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(2)).add(player.hcu.jinxAddCap.div(2.5)).floor() },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(2)).add(player.hcu.jinxAddCap.div(2.5)).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             tooltip() {return "Works outside of " + player.h.stageName[1] + "."},
@@ -577,7 +593,9 @@ addLayer("hcu", {
             },
         },
         110: {
-            purchaseLimit() { return new Decimal(player.h.stage).add(player.hcu.jinxAddCap.div(5)).floor() },
+            purchaseLimit() {
+                return new Decimal(player.h.stage).add(player.hcu.jinxAddCap.div(5)).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -624,7 +642,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         111: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(1.5)).add(player.hcu.jinxAddCap.div(10).mul(3)).floor() },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(1.5)).add(player.hcu.jinxAddCap.div(10).mul(3)).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -674,7 +694,9 @@ addLayer("hcu", {
             style: {width: '200px', height: '125px', fontSize: "12px"},
         },
         112: {
-            purchaseLimit() { return new Decimal(player.h.stage.mul(2)).add(player.hcu.jinxAddCap.div(2.5)).floor() },
+            purchaseLimit() {
+                return new Decimal(player.h.stage.mul(2)).add(player.hcu.jinxAddCap.div(2.5)).div(player.h.jinxDiv).floor()
+            },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
             extraAmount() {
@@ -730,7 +752,7 @@ addLayer("hcu", {
         },
         113: {
             purchaseLimit() {
-                return new Decimal(player.h.stage.div(2)).add(player.hcu.jinxAddCap.div(10)).floor()
+                return new Decimal(player.h.stage.div(2)).add(player.hcu.jinxAddCap.div(10)).div(player.h.jinxDiv).floor()
             },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
@@ -777,7 +799,7 @@ addLayer("hcu", {
         },
         114: {
             purchaseLimit() {
-                return new Decimal(player.h.stage.div(2)).add(player.hcu.jinxAddCap.div(10)).floor()
+                return new Decimal(player.h.stage.div(2)).add(player.hcu.jinxAddCap.div(10)).div(player.h.jinxDiv).floor()
             },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
@@ -871,7 +893,7 @@ addLayer("hcu", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
-        ["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["style-row", [["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}]], {lineHeight: "1"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [

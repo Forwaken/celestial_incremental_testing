@@ -90,7 +90,8 @@ addLayer("tera", {
         hexEnergyCap: new Decimal(10),
         hexEnergyGain: new Decimal(0),
 
-        piositySpell: new Decimal(1),
+        piositySpell: new Decimal(300),
+        piosityAuto: new Decimal(0),
         chronotachysisSpell: [new Decimal(0), new Decimal(2)], // Duration / Multiplier
         // Add spell that increases cost and power of next cast.
 
@@ -109,12 +110,20 @@ addLayer("tera", {
         player.tera.trueHexReq = Decimal.pow(1e6, player.tera.trueHex).mul(1e60)
         player.tera.trueHexGain = player.hpw.power.add(1).div(1e60).ln().div(Decimal.ln(1e6)).add(1).sub(player.tera.trueHex).floor().max(0)
 
-        player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).pow(buyableEffect("tera", "hexOpacity")) : new Decimal(0)
+        player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).add(1).pow(buyableEffect("tera", "hexOpacity")).sub(1) : new Decimal(0)
 
         player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
 
         player.tera.hexEnergyCap = new Decimal(9).add(buyableEffect("tera", "hexEnergyCap"))
         player.tera.hexEnergyGain = Decimal.pow(1.01, player.tera.trueHex).sub(1).mul(buyableEffect("tera", "hexEnergyBuff"))
+
+        if (getBuyableAmount("tera", "piosityAuto").gt(0)) player.tera.piosityAuto = player.tera.piosityAuto.sub(delta)
+
+        if (player.tera.piosityAuto.lte(0)) {
+            player.tera.piosityAuto = buyableEffect("tera", "piosityAuto")
+            player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).max(0.001)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1).max(0.001)).add(1)
+        }
+        
         if (player.tera.clickables["bewitchSpell"]) player.tera.hexEnergyGain = player.tera.hexEnergyGain.sub(Decimal.div(6, buyableEffect("tera", "bewitchCost")).div(60))
         player.tera.hexEnergy = player.tera.hexEnergy.add(player.tera.hexEnergyGain.mul(delta)).min(player.tera.hexEnergyCap).max(0)
 
@@ -424,8 +433,8 @@ addLayer("tera", {
             },
         },
         106: {
-            title() {return player.h.stage.neq(6) ? (Decimal.gt(player.tera.clickables[106], 0) ? "<h2>Are you sure?</h2><br><h3>[Resets ALL previous Uni-α content]</h3>" : "<h2>Switch to Hex Universe</h2><br><h3>[Resets ALL previous Uni-α content]</h3>") : "<h2>Switch to Hex Universe</h2><br><h3>[ALREADY IN HEX UNIVERSE]</h3>"},
-            canClick() {return player.h.stage.neq(6)},
+            title() {return true ? "<h2>CURRENTLY SEALED</h2><br><h3>[Perhaps a virtuous power could break this seal?]</h3>" : player.h.stage.neq(6) ? (Decimal.gt(player.tera.clickables[106], 0) ? "<h2>Are you sure?</h2><br><h3>[Resets ALL previous Uni-α content]</h3>" : "<h2>Switch to Hex Universe</h2><br><h3>[Resets ALL previous Uni-α content]</h3>") : "<h2>Switch to Hex Universe</h2><br><h3>[ALREADY IN HEX UNIVERSE]</h3>"},
+            canClick() {return player.h.stage.neq(6) && false},
             unlocked: true,
             onClick() {
                 if (Decimal.lte(player.tera.clickables[106], 0)) {
@@ -708,14 +717,10 @@ addLayer("tera", {
                 return "<h3>Increase Opacity Value</h3>\n\
                     [Raises final effect]\n\
                     Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
-                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence\n\
-                    <small style='color:darkred'>[Resets previous colors]</small>"
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
             buy() {
                 this.pay(this.cost())
-                setBuyableAmount("tera", "hexRed", new Decimal(0))
-                setBuyableAmount("tera", "hexGreen", new Decimal(0))
-                setBuyableAmount("tera", "hexBlue", new Decimal(0))
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
@@ -866,7 +871,8 @@ addLayer("tera", {
                         Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
                 }
                 return "<h3>Auto-cast Piosity</h3>\n\
-                    Currently every " + formatTime(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Currently every " + formatTime(tmp[this.layer].buyables[this.id].effect) + "\n\
+                    [" + formatTime(player.tera.piosityAuto) + "]\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
             tooltip: "Auto-casts are free.",
@@ -1021,7 +1027,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(30) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).mul(10).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).mul(15).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -1304,6 +1310,7 @@ addLayer("tera", {
                 ],
             },
             // Upgrade grid of 5x5 for pent perhaps? (in the vein of tree game rewritten)
+            // Keep Project Claustrophoia's double compacted boxes in mind
             // Absolute button simulator for hept+ maybe?
             // Circular 9 grid of buyables should be used
             // Keep kaizo incremental in mind as a simple minigame here
@@ -1315,7 +1322,7 @@ addLayer("tera", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
-        ["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["style-row", [["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}]], {lineHeight: "1"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "25px"],
         ["style-row", [

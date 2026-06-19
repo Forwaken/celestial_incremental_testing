@@ -38,6 +38,8 @@ addLayer("h", {
         externalRaise: new Decimal(1),
         preNerf: new Decimal(1),
         powNerf: new Decimal(1),
+        jinxDiv: new Decimal(1),
+        purifierDiv: new Decimal(1),
     }},
     nodeStyle() { return {color: "white", backgroundColor: "black", borderColor: "#0061ff"}},
     glowColor: "rgba(0, 0, 0, 0)",
@@ -61,6 +63,7 @@ addLayer("h", {
 
         player.h.externalRaise = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.externalRaise = Decimal.pow(0.5, player.h.stage.sub(6).abs())
+        player.h.externalRaise = player.h.externalRaise.mul(player.hpu.purifiers[6].effect)
 
         player.h.preNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.preNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
@@ -68,6 +71,13 @@ addLayer("h", {
 
         player.h.powNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.powNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
+
+        player.h.jinxDiv = new Decimal(1)
+        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(6)
+
+        player.h.purifierDiv = new Decimal(1)
+        if (player.sins.clickables["lust"]) player.h.purifierDiv = player.h.purifierDiv.mul(6)
+        if (hasUpgrade("hpw", 37)) player.h.purifierDiv = player.h.purifierDiv.div(upgradeEffect("hpw", 37))
 
         // START OF HEX POINT GAIN
         player.h.hexPointGain = new Decimal(0)
@@ -154,7 +164,12 @@ addLayer("h", {
         let str = ""
         if (player.h.tickspeed.lt(1)) str = str.concat("Tickspeed is divided by /" + formatSimple(player.h.tickspeed) + "<br>")
         if (player.h.tickspeed.gt(1)) str = str.concat("<span style='color:#8f8'>Tickspeed is multiplied by x" + formatSimple(player.h.tickspeed) + "</span><br>")
-        if (player.h.externalRaise.neq(1)) str = str.concat("External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "<br>")
+        if (player.h.externalRaise.lt(1)) str = str.concat("External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "<br>")
+        if (player.h.externalRaise.gt(1)) str = str.concat("<span style='color:#8f8'>External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "</span><br>")
+        if (player.h.jinxDiv.gt(1)) str = str.concat("Jinx caps are divided by /" + formatSimple(player.h.jinxDiv) + "<br>")
+        if (player.h.jinxDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Jinx caps are multiplied by x" + formatSimple(player.h.jinxDiv) + "</span><br>")
+        if (player.h.purifierDiv.gt(1)) str = str.concat("Purifier Efficiency are divided by /" + formatSimple(player.h.purifierDiv) + "<br>")
+        if (player.h.purifierDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Purifier Efficiency are multiplied by x" + formatSimple(player.h.purifierDiv) + "</span><br>")
         if (player.h.preNerf.neq(1)) str = str.concat("Pre-power resources are divided by /" + formatSimple(player.h.preNerf) + "<br>")
         if (player.h.powNerf.neq(1)) str = str.concat("Power is divided by /" + formatSimple(player.h.powNerf) + "<br>")
         return str
@@ -165,7 +180,7 @@ addLayer("h", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
-        ["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["style-row", [["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}]], {lineHeight: "1"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["blank", "15px"],

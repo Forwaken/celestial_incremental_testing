@@ -4895,7 +4895,7 @@ addLayer("bh", {
                                         }
                                     }
                                 }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                                ["raw-html", () => {return player.bh.combo.gte(player.bh.comboScalingStart) || player.bh.combo.lt(0) ? "[SOFTCAP: x" + formatShort(player.bh.comboSoftcap) + " Celestialite Stats]" : ""}, {color: "red", fontSize: "12px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return Decimal.gt(player.bh.comboSoftcap, 1) && (player.bh.combo.gte(player.bh.comboScalingStart) || player.bh.combo.lt(0)) ? "[SOFTCAP: x" + formatShort(player.bh.comboSoftcap) + " Celestialite Stats]" : ""}, {color: "red", fontSize: "12px", fontFamily: "monospace"}],
                             ], {width: "300px", height: "60px"}],
                             ["style-column", [
                                 ["bar", "celestialite-Health"],

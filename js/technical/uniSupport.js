@@ -14,7 +14,7 @@ function pauseUniverse(universe, type = "toggle", temp = false) {
         let tree = universes[universe].tree
 		for (row in tree) {
 			for (thing in tree[row]) {
-                layers[tree[row][thing]].update(time)
+                if (layers[tree[row][thing]].update) layers[tree[row][thing]].update(time)
             }
         }
         if (!temp) {
@@ -44,7 +44,7 @@ function pauseUniverseAll(exemptions, type = "toggle", temp = false) {
     		for (row in tree) {
 	    		for (thing in tree[row]) {
                     if (tree[row][thing] == "bh" && universe == "U3") continue
-                    layers[tree[row][thing]].update(time)
+                    if (layers[tree[row][thing]].update) layers[tree[row][thing]].update(time)
                 }
             }
             if (!temp) {
@@ -121,7 +121,7 @@ addUniverse("U1", {
 addUniverse("UA", {
     name() {return "Universe α<br>" + player.h.stageName[0]},
     symbol: "α",
-    tree: [["hpr", "hsa"], ["hre", "hpu"], ["hbl", "hcu", "hve"], ["hpw", "hrm"], ["tera"], ["piositySpell", "bewitchSpell", "chronotachysisSpell"]],
+    tree: [["hpr", "hsa"], ["hre", "hpu"], ["hbl", "hcu", "hve"], ["sins", "hpw", "hrm"], ["tera"], ["piositySpell", "bewitchSpell", "chronotachysisSpell"]],
     nodeStyle() {
         let style = {
             backgroundColor: "black",

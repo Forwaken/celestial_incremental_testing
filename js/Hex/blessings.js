@@ -81,6 +81,7 @@ addLayer("hbl", {
         if (hasUpgrade("hve", 31)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(3)
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.h.prePowerMult)
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.tera.piositySpell)
+        if (hasUpgrade("hpw", 13)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 13))
 
         // POWER AND AUTOMATION
         if (hasUpgrade("hve", 62)) player.hbl.blessingsGain = player.hbl.blessingsGain.pow(1.03)
@@ -92,6 +93,11 @@ addLayer("hbl", {
         player.hbl.blessingPerSec = player.hbl.blessingsGain.mul(bps)
         if (inChallenge("hrm", 13)) player.hbl.blessingPerSec = player.hbl.blessingPerSec.sub(player.hbl.blessings.mul(0.05))
         if (player.hbl.blessings.add(player.hbl.blessingPerSec.mul(delta)).gt(0)) player.hbl.blessings = player.hbl.blessings.add(player.hbl.blessingPerSec.mul(delta))
+
+        // BLESSING RESET AUTOMATION
+        let resetGain = new Decimal(1)
+        if (hasUpgrade("hpw", 16)) resetGain = resetGain.mul(upgradeEffect("hpw", 16))
+        if (hasUpgrade("hpw", 14)) player.hrm.blessLimit = player.hrm.blessLimit.add(upgradeEffect("hpw", 14).mul(resetGain).mul(delta))
         
         // BOON START
         player.hbl.boonsGain = player.hbl.blessings.pow(Decimal.div(3.6, player.h.stage.max(4)).add(1)).div(player.h.stage)
@@ -194,7 +200,9 @@ addLayer("hbl", {
             onClick() {
                 if (!hasAchievement("achievements", 121)) completeAchievement("achievements", 121)
                 player.hbl.blessings = player.hbl.blessings.add(player.hbl.blessingsGain)
-                if (inChallenge("hrm", 11)) player.hrm.blessLimit = player.hrm.blessLimit.add(1)
+                let resetGain = new Decimal(1)
+                if (hasUpgrade("hpw", 16)) resetGain = resetGain.mul(upgradeEffect("hpw", 16))
+                player.hrm.blessLimit = player.hrm.blessLimit.add(resetGain)
 
                 // RESET CODE
                 player.hre.refinement = new Decimal(0)
@@ -689,7 +697,7 @@ addLayer("hbl", {
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
-        ["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}],
+        ["style-row", [["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}]], {lineHeight: "1"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["style-column", [

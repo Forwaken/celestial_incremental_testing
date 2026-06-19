@@ -76,6 +76,7 @@
         player.cof.fragmentScore[1] = player.t.trees.plus(1).log10().pow(0.425).div(6).div(1.25)
         player.cof.fragmentScore[1] = player.cof.fragmentScore[1].mul(player.g.grass.plus(1).log10().pow(0.35).div(5))
         player.cof.fragmentScore[1] = player.cof.fragmentScore[1].mul(player.gh.grasshoppers.plus(1).log10().pow(0.35).div(5))
+        if (player.sins.clickables["lust"]) player.cof.fragmentScore[1] = player.cof.fragmentScore[1].mul(player.sins.lust[1])
         } else
         {
             player.cof.fragmentScore[1] = new Decimal(0)
@@ -95,6 +96,7 @@
         player.cof.fragmentScore[4] = player.s.singularityPoints.plus(1).log10().pow(0.65).div(3).mul(2.5)
         player.cof.fragmentScore[4] = player.cof.fragmentScore[4].mul(player.ra.radiation.plus(1).log10().div(1.5))
         player.cof.fragmentScore[4] = player.cof.fragmentScore[4].mul(player.sd.singularityPower.plus(1).log10().pow(0.555).div(17,5))
+        if (player.sins.clickables["wrath"]) player.cof.fragmentScore[4] = player.cof.fragmentScore[4].mul(player.sins.wrath[1])
 
         //cosmic
         player.cof.fragmentScore[5] = player.ad.antimatter.plus(1).log10().pow(0.5).div(3).mul(2)

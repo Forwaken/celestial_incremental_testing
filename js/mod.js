@@ -28,7 +28,8 @@
 		"Black Heart/blackHeart.js", "Black Heart/blackHeartFunctions.js", "Black Heart/characters.js", "Black Heart/skills.js", "Black Heart/depth1.js",
 		"Black Heart/depth2.js", "Black Heart/depth3.js", "Black Heart/matosLair.js", "Black Heart/darkTemple.js", "Black Heart/bulletHell.js",
 		"Black Heart/stagnantSynestia.js", "Black Heart/depth4.js", "Black Heart/alephsChamber.js", "Black Heart/laboratory.js", "DarkU1/grassJump.js",
-		"Hive/nest.js", "Check Back/gwaTemple.js", "Hex/tera.js", "Zar/zarDungeon.js", "Black Heart/creation.js", "DarkU1/rerollPoints.js",
+		"Hive/nest.js", "Check Back/gwaTemple.js", "Zar/zarDungeon.js", "Black Heart/creation.js", "DarkU1/rerollPoints.js",
+		"Hex/tera.js", "Hex/sins.js",
 
 		"Ordinal/ordinal.js", "Ordinal/markup.js",
 	],
@@ -189,6 +190,9 @@ function updateStyles() {
 			break;
 		case "tera":
 			layerBG = "linear-gradient(180deg, #273345, #182740)"
+			break;
+		case "sins":
+			layerBG = "#0e140e"
 			break;
 		case "bigc":
 			layerBG = "#b87c34"
