@@ -74,6 +74,7 @@ addLayer("h", {
 
         player.h.jinxDiv = new Decimal(1)
         if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(6)
+        if (hasUpgrade("hpw", 46)) player.h.jinxDiv = player.h.jinxDiv.div(upgradeEffect("hpw", 46))
 
         player.h.purifierDiv = new Decimal(1)
         if (player.sins.clickables["lust"]) player.h.purifierDiv = player.h.purifierDiv.mul(6)
@@ -126,7 +127,7 @@ addLayer("h", {
 
         // SOFTCAPS
         if (inChallenge("hrm", 14)) player.h.hexPointGain = player.h.hexPointGain.pow(Decimal.mul(0.1, player.hsa.sacredEffect).min(0.6))
-        if (player.h.hexPointGain.gte(1e308)) player.h.hexPointGain = player.h.hexPointGain.div(1e308).pow(Decimal.mul(0.1, player.hsa.sacredEffect)).mul(1e308)
+        if (player.h.hexPointGain.gte(1.79e308)) player.h.hexPointGain = player.h.hexPointGain.div(1.79e308).pow(Decimal.div(0.1, player.h.hexPointGain.log(1.79e308).pow(0.7)).mul(player.hsa.sacredEffect)).mul(1.79e308)
 
         // POST-SOFTCAP MULTIPLIERS
         player.h.hexPointGain = player.h.hexPointGain.mul(player.hsa.sacredEffect2)

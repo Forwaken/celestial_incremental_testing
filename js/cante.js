@@ -26,6 +26,7 @@
         galaxyDustToGet: new Decimal(0),
 
         canteCores: new Decimal(0),
+        canteCoreGain: new Decimal(0),
 
         canteEnergy: new Decimal(0),
         canteEnergyReq: new Decimal(100),
@@ -37,6 +38,7 @@
         rememberanceCores: new Decimal(0),
         rememberanceCoresEffect: new Decimal(0),
         rememberanceCoreCost: new Decimal(1000),
+        rememberanceCoresGain: new Decimal(0),
 
         canteTrial1: false,
         canteTrial2: false,
@@ -47,6 +49,12 @@
         cantepocalypseUnlock: false,
         cantepocalypsePrep: false,
         defeatedCante: false,
+
+        replicanticanti: new Decimal(1),
+        replicanticantiEffect: new Decimal(1),
+        replicanticantiEffect2: new Decimal(1),
+        replicanticantiMult: new Decimal(1),
+        replicanticantiSoftcap: new Decimal(1),
     }},
     automate() {
         if (hasMilestone("s", 16)) {
@@ -88,6 +96,7 @@
         if (hasUpgrade("bi", 117)) player.ca.replicantiMult = player.ca.replicantiMult.mul(3)
         if (hasUpgrade("hpw", 1062) || player.tera.realmMastery[5]) player.ca.replicantiMult = player.ca.replicantiMult.mul(3)
         player.ca.replicantiMult = player.ca.replicantiMult.mul(player.cof.coreFragmentEffects[5])
+        player.ca.replicantiMult = player.ca.replicantiMult.mul(player.ca.replicanticantiEffect)
         
         player.ca.replicantiMult = player.ca.replicantiMult.div(player.ca.replicantiSoftcap)
 
@@ -117,11 +126,19 @@
             player.ca.replicantiEffect3 = player.ca.replicantiEffect3.pow(player.ca.replicanti.plus(1).log(10).pow(0.4))
         }
 
+        player.ca.replicantiEffect = player.ca.replicantiEffect.pow(player.ca.replicanticantiEffect2)
+        player.ca.replicantiEffect2 = player.ca.replicantiEffect2.pow(player.ca.replicanticantiEffect2)
+        player.ca.replicantiEffect3 = player.ca.replicantiEffect3.pow(player.ca.replicanticantiEffect2)
+
         //CANTE
         player.ca.canteEnergyMult = new Decimal(1)
         player.ca.canteEnergyMult = player.ca.canteEnergyMult.mul(player.ca.rememberanceCoresEffect)
         player.ca.canteEnergyMult = player.ca.canteEnergyMult.mul(levelableEffect("pet", 403)[0])
+        player.ca.canteEnergyMult = player.ca.canteEnergyMult.mul(buyableEffect("ca", 34))
 
+        if (getBuyableAmount("ca", 36).gt(0)) player.ca.canteEnergy = player.ca.canteEnergy.add(player.ca.canteEnergyMult.mul(buyableEffect("ca", 36).sub(1)).mul(delta))
+
+        player.ca.canteCoreGain = Decimal.affordArithmeticSeries(player.ca.canteEnergy, 100, 10, player.ca.canteCores).floor().max(1)
         if (player.ca.canteEnergy.gte(player.ca.canteEnergyReq))
         {
             layers.ca.gainCanteCore()
@@ -144,9 +161,12 @@
         player.ca.replicantiGalaxiesCap = buyableEffect("ca", 23)
         if (hasUpgrade("cs", 1003)) player.ca.replicantiGalaxies = player.ca.replicantiGalaxiesCap
 
-        //rememberance
+        //remembrance
         player.ca.rememberanceCoreCost = player.ca.rememberanceCores.add(1).pow(1.5).mul(1000)
-        player.ca.rememberanceCoresEffect = player.ca.rememberanceCores.mul(0.05).add(1)
+        player.ca.rememberanceCoresEffect = player.ca.rememberanceCores.div(10).add(1)
+        player.ca.rememberanceCoresGain = player.oi.protoMemories.div(1000).pow(1/1.5).sub(player.ca.rememberanceCores).floor()
+        if (player.ca.rememberanceCoresGain.gt(player.ca.canteCores)) player.ca.rememberanceCoresGain = player.ca.canteCores.floor()
+
 
         if (player.ca.replicanti.gte("1.8e308")) {
             player.ca.replicantiSoftcap = Decimal.pow(10, player.ca.replicanti.div(1.79e308).add(1).log(1e100))
@@ -161,18 +181,31 @@
                 player.ca.cantepocalypsePrep = true
             }
         }
+
+        // Replicanticanti
+        player.ca.replicanticantiMult = Decimal.pow(Decimal.mul(1.05, buyableEffect("ca", 31)), player.ca.replicanti.div("1e2000").add(1).log("1e250"))
+        player.ca.replicanticantiMult = player.ca.replicanticantiMult.mul(buyableEffect("ca", 32))
+
+        // Softcap
+        player.ca.replicanticantiSoftcap = Decimal.pow(Decimal.div(0.05, buyableEffect("ca", 33)).add(1), player.ca.replicanticanti.add(1).log(10)).max(1)
+
+        player.ca.replicanticantiMult = player.ca.replicanticantiMult.div(player.ca.replicanticantiSoftcap).max(1)
+
+        // Effects
+        if (player.ca.replicanticanti.gt(1)) { player.ca.replicanticantiEffect = Decimal.pow(1.2, player.ca.replicanticanti.add(1).log(10)).mul(player.ca.replicanticanti.add(1).log(10).add(1)) } else { player.ca.replicanticantiEffect = new Decimal(1) }
+        if (player.ca.replicanticanti.gt(1)) { player.ca.replicanticantiEffect2 = player.ca.replicanticanti.add(1).log(2).add(1) } else { player.ca.replicanticantiEffect2 = new Decimal(1) }
     },
     gainCanteCore() {
-        let leftover = new Decimal(0)
-        leftover = player.ca.canteEnergy.sub(player.ca.canteEnergyReq)
-        player.ca.canteCores = player.ca.canteCores.add(1)
+        let cost = Decimal.sumArithmeticSeries(player.ca.canteCoreGain, 100, 10, player.ca.canteCores)
+        let leftover = player.ca.canteEnergy.sub(cost).max(0)
+        player.ca.canteCores = player.ca.canteCores.add(player.ca.canteCoreGain)
         player.ca.canteEnergy = new Decimal(0)
         player.ca.canteEnergy = player.ca.canteEnergy.add(leftover)
     },
     convertRememberanceCore() {
-        player.ca.canteCores = player.ca.canteCores.sub(1)
-        player.oi.protoMemories = player.oi.protoMemories.sub(player.ca.rememberanceCoreCost)
-        player.ca.rememberanceCores = player.ca.rememberanceCores.add(1)
+        player.ca.canteCores = player.ca.canteCores.sub(player.ca.rememberanceCoresGain)
+        player.oi.protoMemories = player.oi.protoMemories.sub(player.ca.rememberanceCores.add(player.ca.rememberanceCoresGain).pow(1.5).mul(1000)).max(0)
+        player.ca.rememberanceCores = player.ca.rememberanceCores.add(player.ca.rememberanceCoresGain)
     },
     replicantiMultiply() {
         let random = new Decimal(0)
@@ -216,7 +249,7 @@
             style: { width: '400px', "min-height": '160px', borderRadius: '15px' },
         },
         12: {
-            title() { return "<h3>Reset replicanti, but gain galaxy dust. (Req: 1e10 replicanti)" },
+            title() { return "<h3>Reset replicanti, but gain galaxy dust.<br>(Req: 1e10 replicanti)" },
             canClick() { return player.ca.replicanti.gte(1e10) },
             unlocked() { return true },
             onClick() {
@@ -246,7 +279,10 @@
             },
         },
         15: {
-            title() { return "<h3>Convert a cante core into a rememberance core</h3><br>Cost: " + format(player.ca.rememberanceCoreCost) + " Proto Memories" },
+            title() {
+                if (player.ca.rememberanceCoresGain.gt(1)) return "<h3>Convert " + formatWhole(player.ca.rememberanceCoresGain) + " cante cores into remembrance cores</h3><br>Cost: " + format(player.ca.rememberanceCores.add(player.ca.rememberanceCoresGain).pow(1.5).mul(1000)) + " Proto Memories"
+                return "<h3>Convert a cante core into a remembrance core</h3><br>Cost: " + format(player.ca.rememberanceCoreCost) + " Proto Memories"
+            },
             canClick() { return player.ca.canteCores.gte(1) && player.oi.protoMemories.gte(player.ca.rememberanceCoreCost) },
             unlocked: true,
             onClick() {
@@ -255,7 +291,7 @@
             style: {width: "300px", minHeight: "100px", borderRadius: "15px"},
         },
         16: {
-            title() { return "<h2>REMEMBER THE PROTO OVERWORLD.<br>DESTROY CANTE.<br>END THE SUFFERING.</h2><br><br><h3>[REQ: 10 Rememberance Cores]</h3>" },
+            title() { return "<h2>REMEMBER THE PROTO OVERWORLD.<br>DESTROY CANTE.<br>END THE SUFFERING.</h2><br><br><h3>[REQ: 10 Remembrance Cores]</h3>" },
             canClick() { return player.ca.rememberanceCores.gte(10) },
             unlocked() { return true },
             onClick() {
@@ -266,6 +302,20 @@
             style() {
                 let look = {width: "450px", minHeight: "150px", color: "white", border: "8px solid #626170", borderRadius: "40px"}
                 this.canClick() ? look.backgroundColor = "#4b4a5b" : look.backgroundColor = "#361e1e"
+                return look
+            },
+        },
+        17: {
+            title() { return "<h3>Reset replicanti, but multiply replicanticanti.<br>(Req: 1e2,000 replicanti)" },
+            canClick() { return player.ca.replicanti.gte("1e2000") && player.ca.replicanticantiMult.gt(1) },
+            unlocked() { return true },
+            onClick() {
+                player.ca.replicanticanti = player.ca.replicanticanti.mul(player.ca.replicanticantiMult).min("1.79e308")
+                player.ca.replicanti = new Decimal(1)
+            },
+            style() {
+                let look = {width: "400px", minHeight: "100px", color: "rgba(0,0,0,0.7)", border: '3px solid rgba(0,0,0,0.5)', borderRadius: "15px"}
+                this.canClick() ? look.backgroundColor = "#00c5ff" : look.backgroundColor = "#bf8f8f"
                 return look
             },
         },
@@ -346,7 +396,7 @@
         bar: {
             unlocked: true,
             direction: RIGHT,
-            width: 700,
+            width: 800,
             height: 50,
             progress() {
                 return player.ca.canteEnergy.div(player.ca.canteEnergyReq)
@@ -820,6 +870,210 @@
             },
             style: {width: '275px', height: '150px', backgroundColor: '#333c81', color: 'white'},
         },
+        31: {
+            costBase() { return new Decimal(1000) },
+            costGrowth() { return new Decimal(1.2) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.ca.canteEnergy},
+            pay(amt) { player.ca.canteEnergy = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Base Gains"
+            },
+            display() {
+                return "which are multiplying replicanticanti's base formula exponent by x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Cante Energy"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35))
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).div(buyableEffect("ca", 35))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: '275px', height: '150px', backgroundColor: '#00c5ff', color: 'black'},
+        },
+        32: {
+            costBase() { return new Decimal(50) },
+            costGrowth() { return new Decimal(1.2) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.ca.canteCores},
+            pay(amt) { player.ca.canteCores = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)).floor() },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Practical Mult"
+            },
+            display() {
+                return "which are multiplying replicanticanti gain by x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + ".\n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Cante Cores"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)).floor()
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).div(buyableEffect("ca", 35)).floor()
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: '275px', height: '150px', backgroundColor: '#00c5ff', color: 'black'},
+        },
+        33: {
+            costBase() { return new Decimal(50) },
+            costGrowth() { return new Decimal(1.3) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.ca.rememberanceCores},
+            pay(amt) { player.ca.rememberanceCores = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)).floor() },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Reduced Conflict"
+            },
+            display() {
+                return "which are dividing replicanticanti's softcap formula base exponent by /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + ".\n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Remembrance Cores"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)).floor()
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).div(buyableEffect("ca", 35)).floor()
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: '275px', height: '150px', backgroundColor: '#00c5ff', color: 'black'},
+        },
+        34: {
+            costBase() { return new Decimal(10) },
+            costGrowth() { return new Decimal(10) },
+            purchaseLimit() { return new Decimal(308) },
+            currency() { return player.ca.replicanticanti},
+            pay(amt) { player.ca.replicanticanti = this.currency().sub(amt.sub(1)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(20).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Energy Fraud"
+            },
+            display() {
+                return "which are multiplying cante energy by x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + ".\n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Replicanticanti"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: '275px', height: '150px', backgroundColor: '#00c5ff', color: 'black'},
+        },
+        35: {
+            costBase() { return new Decimal(100) },
+            costGrowth() { return new Decimal(100) },
+            purchaseLimit() { return new Decimal(154) },
+            currency() { return player.ca.replicanticanti},
+            pay(amt) { player.ca.replicanticanti = this.currency().sub(amt.sub(1)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Efficient Spending"
+            },
+            display() {
+                return "which are dividing top 3 buyable costs by /" + formatSimple(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Replicanticanti"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: '275px', height: '150px', backgroundColor: '#00c5ff', color: 'black'},
+        },
+        36: {
+            costBase() { return new Decimal(1e10) },
+            costGrowth() { return new Decimal(1e10) },
+            purchaseLimit() { return new Decimal(30) },
+            currency() { return player.ca.replicanticanti},
+            pay(amt) { player.ca.replicanticanti = this.currency().sub(amt.sub(1)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(1000).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Passive Energy"
+            },
+            display() {
+                return "which are generating +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100)) + "% of cante energy mult per second.\n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Replicanticanti"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: '275px', height: '150px', backgroundColor: '#00c5ff', color: 'black'},
+        },
     },
     milestones: {},
     challenges: {},
@@ -901,11 +1155,11 @@
                     ["style-row", [
                         ["style-column", [
                             ["raw-html", () => {return "You have <h3>" + formatWhole(player.ca.canteCores) + "</h3> Cante cores."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return "Energy multiplier: <h3>" + format(player.ca.canteEnergyMult) + "</h3>x"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "Current cante energy multiplier: x<h3>" + format(player.ca.canteEnergyMult) + "</h3>"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                             ["blank", "20px"],
-                            ["raw-html", "Cante energy is gained by clicking on check back buttons.", {color: "white", fontSize: "12px", fontFamily: "monospace"}],
+                            ["raw-html", "Cante energy is gained by<br>clicking on check back buttons.", {color: "white", fontSize: "12px", fontFamily: "monospace"}],
                             ["blank", "10px"],
-                        ], () => {return hasUpgrade("cp", 18) ? {width: "347px", height: "220px", borderRight: "3px solid white"} : {width: "700px", height: "220px"}}],
+                        ], () => {return hasUpgrade("cp", 18) ? {width: "397px", height: "220px", borderRight: "3px solid white"} : {width: "800px", height: "220px"}}],
                         ["style-column", [
                             ["raw-html", () => {return "You have <h3>" + formatWhole(player.ca.rememberanceCores) + "</h3> remembrance cores."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return "Boosts cante energy gain by x<h3>" + format(player.ca.rememberanceCoresEffect) + "</h3>."}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
@@ -913,8 +1167,8 @@
                             ["raw-html", () => {return "You have <h3>" + format(player.oi.protoMemories) + "</h3> proto memories."}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
                             ["blank", "20px"],
                             ["clickable", 15],
-                        ], () => {return hasUpgrade("cp", 18) ? {width: "350px", height: "220px"} : {display: "none !important"}}],
-                    ], {width: "700px", background: "#086894", border: "3px solid white", borderRadius: "0 0 20px 20px"}],
+                        ], () => {return hasUpgrade("cp", 18) ? {width: "400px", height: "220px"} : {display: "none !important"}}],
+                    ], {width: "800px", background: "#086894", border: "3px solid white", borderRadius: "0 0 20px 20px"}],
                     ["blank", "25px"],
                     ["row", [["clickable", 14]]],
                 ]
@@ -959,6 +1213,28 @@
                 content: [
                     ["blank", "100px"],
                     ["clickable", 16],
+                ]
+            },
+            "Replicanticanti": {
+                buttonStyle() { return { color: "rgba(0,0,0,0.7)", background: "#00c5ff", borderColor: "rgba(0,0,0,0.5)", borderRadius: "5px" } },
+                unlocked() { return hasUpgrade("laboratory", 25) },
+                content: [
+                    ["blank", "25px"],
+                    ["raw-html", () => {return "You have <h3>" + format(player.ca.replicanticanti) + "</h3> replicanticanti." }, { "color": "white", "font-size": "26px", "font-family": "monospace" }],
+                    ["raw-html", () => {return "Boosts replicanti by x" + format(player.ca.replicanticantiEffect)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "Boosts replicanti effects by ^" + formatSimple(player.ca.replicanticantiEffect2, 3)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "(Caps out at 1.79e308 replicanticanti)"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ["blank", "10px"],
+                    ["raw-html", () => { return "Replicanticanti Mult: x" + formatSimple(player.ca.replicanticantiMult, 2) }, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return "UNAVOIDABLE SOFTCAP: /" + formatSimple(player.ca.replicanticantiSoftcap, 2) }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
+                    //player.ca.replicanticantiSoftcap
+                    ["blank", "10px"],
+                    ["clickable", 17],
+                    ["blank", "25px"],
+                    ["style-row", [
+                        ["ex-buyable", 31], ["ex-buyable", 32], ["ex-buyable", 33],
+                        ["ex-buyable", 34], ["ex-buyable", 35], ["ex-buyable", 36]
+                    ], {maxWidth: "900px"}],
                 ]
             },
         },

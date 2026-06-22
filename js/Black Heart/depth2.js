@@ -213,9 +213,9 @@ addLayer("depth2", {
 
         
         101: {
-            title: "Innate Healing",
+            title: "sffuB derettacS",
             unlocked() {return player.depth2.lowestCombo.lt(0)},
-            description: "Give all characters without base RGN +0.1 base RGN stat.",
+            description: "Unlock a new upgrade for each character.",
             cost: new Decimal(30000),
             currencyLocation() { return player.depth2 },
             currencyDisplayName: "Faint Umbrite",

@@ -3125,7 +3125,7 @@
     challenges: {
         11: {
             name: "FEAR",
-            challengeDescription() { return "<h4>Alt-Uni 1 automation from singularity milestones is disabled, and a new emotion, fear is unlocked. All pre-funify currencies are raised by ^" + formatSimple(Decimal.mul(0.2, buyableEffect("fu", 88)), 2) + ". Replicanti point softcaps are ^2 stronger." },
+            challengeDescription() { return "Alt-Uni 1 automation from singularity milestones is disabled, and a new emotion, fear is unlocked. All pre-funify currencies are raised by ^" + formatSimple(Decimal.mul(0.2, buyableEffect("fu", 88)), 2) + ". Replicanti point softcaps are ^2 stronger." },
             goal() { return new Decimal("10") },
             canComplete: function () { return player.gs.grassSkip.gte(10) },
             goalDescription() { return "10 Grass-Skip" },
@@ -3150,11 +3150,11 @@
             onExit() {
                 player.fu.funifyPause = new Decimal(12)
             },
-            style: { width: '350px', height: '290px', }
+            style: {width: "500px"},
         },
         12: {
             name: "NUMBNESS",
-            challengeDescription() { return "<h4>All external A1 buffs are disabled, and a new emotion, numbness is unlocked. All pre-funify currencies are raised by ^" + formatSimple(Decimal.mul(0.2, buyableEffect("fu", 88)), 2) + ". All A1 softcaps (excluding replicanti softcap 4) start at 1 resource, and softcap modifiers are disabled." },
+            challengeDescription() { return "All external A1 buffs are disabled, and a new emotion, numbness is unlocked. All pre-funify currencies are raised by ^" + formatSimple(Decimal.mul(0.2, buyableEffect("fu", 88)), 2) + ". All A1 softcaps (excluding replicanti softcap 4) start at 1 resource, and softcap modifiers are disabled." },
             goal() { return new Decimal("1e75") },
             canComplete: function () { return player.cp.replicantiPoints.gte(1e75) },
             goalDescription() { return "1e75 Replicanti Points" },
@@ -3180,7 +3180,7 @@
                 player.fu.funifyPause = new Decimal(12)
             },
             onComplete() {if (!hasAchievement("achievements", 919)) completeAchievement("achievements", 919)},
-            style: { width: '350px', height: '290px', }
+            style: {width: "500px"},
         },
     },
     infoboxes: {},
@@ -3265,7 +3265,7 @@
                 unlocked() { return hasUpgrade("fu", 17) },
                 content: [
                     ["blank", "25px"],
-                    ["row", [["challenge", 11]]],
+                    ["row", [["ex-challenge", 11]]],
                     ["blank", "25px"],
                     ["row", [
                         ["raw-html", () => { return player.fu.enterFear ? "You have <h3>" + format(player.fu.jocusEssence) + "</h3> jocus essence" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -3291,7 +3291,7 @@
                 unlocked() { return player.al.cocoonLevel >= 10},
                 content: [
                     ["blank", "25px"],
-                    ["row", [["challenge", 12]]],
+                    ["row", [["ex-challenge", 12]]],
                     ["blank", "10px"],
                     ["row", [
                         ["raw-html", () => { return player.fu.enterNumb ? "You have <h3>" + formatSimple(player.fu.apathy) + "</h3> apathy" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],

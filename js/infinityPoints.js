@@ -343,13 +343,13 @@
                 if (!hasUpgrade("cs", 1103)) {
                     eff = player.ta.negativeInfinityPoints.plus(1).log10().pow(1.2).mul(0.2).add(1)
                 } else {
-                    eff =  player.ta.negativeInfinityPoints.pow(0.08).add(1)
+                    eff =  player.ta.negativeInfinityPoints.pow(0.1).add(1)
                 }
-                if (player.ta.negativeInfinityPoints.gte("1e6250")) eff = player.ta.negativeInfinityPoints.add(1).log(10).mul(5e58).pow(100).add(1)
+                if (eff.gt("1e1000")) eff = eff.div("1e1000").pow(0.5).mul("1e1000")
                 return eff
             },
             effectDisplay() {
-                if (player.ta.negativeInfinityPoints.gte("1e6250")) return format(upgradeEffect(this.layer, this.id))+"x<br><small style='color:red'>[SOFTCAPPED]</small>"
+                if (upgradeEffect(this.layer, this.id).gte("1e1000")) return format(upgradeEffect(this.layer, this.id))+"x<br><small style='color:red'>[SOFTCAPPED]</small>"
                 return format(upgradeEffect(this.layer, this.id))+"x"
             }, // Add formatting to the effect
             style: {width: "150px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
@@ -649,15 +649,15 @@
     challenges: {
         11: {
             name() {
-                if (hasUpgrade("bi", 28)) return "Challenge I (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"
-                return "Challenge I"
+                if (hasUpgrade("bi", 28)) return "CHALLENGE 1 (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"
+                return "CHALLENGE 1"
             },
             completionLimit() {
                 if (hasUpgrade("bi", 28)) return new Decimal(2)
                 return new Decimal(1)
             },
             marked: false,
-            challengeDescription() { return "<h4>You can't pick an otherworldy feature." },
+            challengeDescription() { return "You can't pick an otherworldy feature." },
             goal() {
                 if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return new Decimal("1e7500")
                 return new Decimal("1.79e308")
@@ -685,20 +685,19 @@
             },
             onComplete() {if (!hasAchievement("achievements", 107)) completeAchievement("achievements", 107)},
             buttonStyle: {backgroundColor: "white"},
-            style: { width: '350px', height: '275px'},
 
         },
         12: {
             name() {
-                if (hasUpgrade("bi", 28)) return "Challenge II (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"
-                return "Challenge II"
+                if (hasUpgrade("bi", 28)) return "CHALLENGE 2 (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"
+                return "CHALLENGE 2"
             },
             completionLimit() {
                 if (hasUpgrade("bi", 28)) return new Decimal(2)
                 return new Decimal(1)
             },
             marked: false,
-            challengeDescription() { return "<h4>Introduces pests, which do bad things to your grass :(" },
+            challengeDescription() { return "Introduces pests, which do bad things to your grass :(" },
             goal() {
                 if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return new Decimal("1e10000")
                 return new Decimal("1.79e308")
@@ -717,19 +716,18 @@
             },
             onComplete() {if (!hasAchievement("achievements", 109)) completeAchievement("achievements", 109)},
             buttonStyle: {backgroundColor: "white"},
-            style: { width: '350px', height: '275px'},
         },
         13: {
             name() {
-                if (hasUpgrade("bi", 28)) return "Challenge III (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"
-                return "Challenge III"
+                if (hasUpgrade("bi", 28)) return "CHALLENGE 3 (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"
+                return "CHALLENGE 3"
             },
             completionLimit() {
                 if (hasUpgrade("bi", 28)) return new Decimal(2)
                 return new Decimal(1)
             },
             marked: false,
-            challengeDescription() { return "<h4>" + player.h.stageName[0] + "... A feature seemingly coming from thin air. No check back effects either..." },
+            challengeDescription() { return player.h.stageName[0] + " ... A feature seemingly coming from thin air. No check back effects either..." },
             goalDescription() {
                 if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return "1e2400 celestial points"
                 return "2 Refinements"
@@ -762,20 +760,19 @@
             },
             onComplete() {if (!hasAchievement("achievements", 111)) completeAchievement("achievements", 111)},
             buttonStyle: {backgroundColor: "white"},
-            style: { width: '350px', height: '275px'},
 
         },
         14: {
             name() {
-                if (hasUpgrade("bi", 28)) return "Challenge IV (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"
-                return "Challenge IV"
+                if (hasUpgrade("bi", 28)) return "CHALLENGE 4 (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"
+                return "CHALLENGE 4"
             },
             completionLimit() {
                 if (hasUpgrade("bi", 28)) return new Decimal(2)
                 return new Decimal(1)
             },
             marked: false,
-            challengeDescription() { return "<h4>IP and AD upgrades are disabled, some IP milestones are disabled, and pent divides point gain, but is necessary to unlock OTFs." },
+            challengeDescription() { return "IP and AD upgrades are disabled, some IP milestones are disabled, and pent divides point gain, but is necessary to unlock OTFs." },
             goalDescription() {
                 if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return "1e6000 celestial points"
                 return "Pent 30"
@@ -800,12 +797,11 @@
             },
             onComplete() {if (!hasAchievement("achievements", 113)) completeAchievement("achievements", 113)},
             buttonStyle: {backgroundColor: "white"},
-            style: { width: '350px', height: '275px'},
 
         },
         15: {
-            name: "Challenge V",
-            challengeDescription() { return "<h4>You are stuck in dice, the booster dice automatically rolls but on every roll, it does a reset equivalent to a big crunch. There are also general debuffs." },
+            name: "CHALLENGE 5",
+            challengeDescription() { return "You are stuck in dice, the booster dice automatically rolls but on every roll, it does a reset equivalent to a big crunch. There are also general debuffs." },
             goalDescription() { return "1.79e308 celestial points" },
             goal() { return new Decimal("1.79e308") },
             canComplete: function () { return player.points.gte(1.79e308) },
@@ -842,11 +838,10 @@
             },
             onComplete() {if (!hasAchievement("achievements", 116)) completeAchievement("achievements", 116)},
             buttonStyle: {backgroundColor: "white"},
-            style: { width: '350px', height: '275px'},
         },
         16: {
-            name: "Challenge VI",
-            challengeDescription() { return "<h4>You are stuck in rocket fuel, and point gain is raised to the ^0.05." },
+            name: "CHALLENGE 6",
+            challengeDescription() { return "You are stuck in rocket fuel, and point gain is raised to the ^0.05." },
             goalDescription() { return "1.79e308 prestige points" },
             goal() { return new Decimal("1.79e308") },
             canComplete: function () { return player.p.prestigePoints.gte(1.79e308) },
@@ -870,11 +865,10 @@
             },
             onComplete() {if (!hasAchievement("achievements", 120)) completeAchievement("achievements", 120)},
             buttonStyle: {backgroundColor: "white"},
-            style: { width: '350px', height: '275px'},
         },
         17: {
-            name: "Challenge VII",
-            challengeDescription() { return "<h4>Clicking on a check back XP button resets the timer for all other check back XP buttons.</h4>" },
+            name: "CHALLENGE 7",
+            challengeDescription() { return "Clicking on a check back XP button resets the timer for all other check back XP buttons." },
             goalDescription() { return "Earning an evolution shard from a check back button." },
             goal() { return new Decimal("60") },
             canComplete: function () { return player.cb.IC7shardCount > 0 },
@@ -890,11 +884,10 @@
             },
             onComplete() {if (!hasAchievement("achievements", 122)) completeAchievement("achievements", 122)},
             buttonStyle: {backgroundColor: "white"},
-            style: { width: '350px', height: '275px'},
         },
         18: {
-            name: "Challenge VIII",
-            challengeDescription() { return "<h4>The 8th antimatter dimension is removed. Antimatter Galaxies now cost 7th dimensions." },
+            name: "CHALLENGE 8",
+            challengeDescription() { return "The 8th antimatter dimension is removed. Antimatter Galaxies now cost 7th dimensions." },
             goalDescription() { return "10 7th Dimensions" },
             goal() {return new Decimal("10") },
             canComplete() {return getBuyableAmount("ad", 17).gte(10) },
@@ -928,7 +921,6 @@
             },
             onComplete() {if (!hasAchievement("achievements", 124)) completeAchievement("achievements", 124)},
             buttonStyle: {backgroundColor: "white"},
-            style: { width: '350px', height: '275px'},
         },
     },
     infoboxes: {},
@@ -977,9 +969,9 @@
                 unlocked() { return hasMilestone("ip", 16) },
                 content: [
                     ["blank", "25px"],
-                    ["style-row", [["challenge", 11], ["challenge", 12], ["challenge", 13],
-                        ["challenge", 14], ["challenge", 15], ["challenge", 16],
-                        ["challenge", 17], ["challenge", 18]], {maxWidth: "1200px"}],
+                    ["style-row", [["ex-challenge", 11], ["ex-challenge", 12], ["ex-challenge", 13],
+                        ["ex-challenge", 14], ["ex-challenge", 15], ["ex-challenge", 16],
+                        ["ex-challenge", 17], ["ex-challenge", 18]], {maxWidth: "1200px"}],
                     ["blank", "10px"],
                     ["raw-html", () => { return player.in.unlockedBreak ? "Break Infinity works in all challenges." : ""}, { color: "white", fontSize: "24px", fontFamily: "monospace" }],
                     ["raw-html", () => { return hasChallenge("ip", 16) && !hasChallenge("ip", 17) && player.cb.highestLevel.lt(35) ? "Unlock Challenge VII by reaching Check Back Level 35" : ""}, { color: "white", fontSize: "24px", fontFamily: "monospace" }],

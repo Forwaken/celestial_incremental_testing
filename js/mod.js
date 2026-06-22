@@ -190,6 +190,7 @@ function updateStyles() {
 			break;
 		case "tera":
 			layerBG = "linear-gradient(180deg, #273345, #182740)"
+			if (!player.tera.unsealed) layerBG = "linear-gradient(180deg, #131922, #0c1320)"
 			break;
 		case "sins":
 			layerBG = "#0e140e"

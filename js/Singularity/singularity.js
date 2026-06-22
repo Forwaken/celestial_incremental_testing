@@ -59,6 +59,7 @@
         } else {
             player.s.singularityPointsToGet = player.in.infinityPoints.pow(0.02).mul(1.35e124)
         }
+        if (hasUpgrade("laboratory", 26)) player.s.singularityPointsToGet = player.s.singularityPointsToGet.pow(upgradeEffect("laboratory", 26))
 
         if (hasUpgrade("ev8", 22)) player.s.singularityPointsToGet = player.s.singularityPointsToGet.mul(upgradeEffect("ev8", 22))
         player.s.singularityPointsToGet = player.s.singularityPointsToGet.mul(buyableEffect("s", 11))

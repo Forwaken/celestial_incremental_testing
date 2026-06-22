@@ -79,7 +79,7 @@ addLayer("sp", {
         11: {
             title: "Regenerative Anger",
             unlocked() { return hasUpgrade("depth4", 4) },
-            description: "Increases Kres' base regen by +0.25",
+            description: "Increases Kres' base regen by +0.3",
             cost: new Decimal(5000),
             currencyLocation() { return player.sp },
             currencyDisplayName: "Kres Points",
@@ -92,7 +92,7 @@ addLayer("sp", {
         },
         12: {
             title: "Focused Fury",
-            unlocked() { return false},
+            unlocked() { return hasUpgrade("depth2", 101)},
             description: "Decreases \"Berserker\" skill penalty from 20%->10%",
             cost: new Decimal(10000),
             currencyLocation() { return player.sp },
@@ -120,7 +120,7 @@ addLayer("sp", {
         },
         22: {
             title: "Improved Knowledge",
-            unlocked() { return false },
+            unlocked() { return hasUpgrade("depth2", 101) },
             description: "Nav's \"Magic Missile\" skill now shoots 2 missiles that deal 60% damage",
             cost: new Decimal(10000),
             currencyLocation() { return player.sp },
@@ -148,7 +148,7 @@ addLayer("sp", {
         },
         32: {
             title: "Techinical Improvement",
-            unlocked() { return false },
+            unlocked() { return hasUpgrade("depth2", 101) },
             description: "Sel's \"Turret\" skill now does 50% damage every 0.5s for 6s.",
             cost: new Decimal(10000),
             currencyLocation() { return player.sp },

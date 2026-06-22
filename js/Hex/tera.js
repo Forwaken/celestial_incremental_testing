@@ -76,7 +76,10 @@ addLayer("tera", {
     universe: "UA",
     tooltip: "Tera", // Decides the nodes tooltip
     color: "#6D9BE0", // Decides the nodes color.
-    nodeStyle: {background: "linear-gradient(135deg, #85ADE6, #5085D8)", borderColor: "#0046AA", color: "#0046AA"}, // Decides the nodes style, in CSS format.
+    nodeStyle() {
+        if (!player.tera.unsealed) return {background: "linear-gradient(135deg, #425673, #28426c)", borderColor: "#002355", color: "#002355"}
+        return {background: "linear-gradient(135deg, #85ADE6, #5085D8)", borderColor: "#0046AA", color: "#0046AA"}
+    }, // Decides the nodes style, in CSS format.
     branches: [], // Decides the nodes branches.
     startData() { return {
         trueHex: new Decimal(0),
@@ -100,6 +103,8 @@ addLayer("tera", {
         trueHept: new Decimal(0),
         trueHeptReq: new Decimal(1e70),
         trueHeptGain: new Decimal(0),
+
+        seal: false,
     }},
     update (delta) {
         for (let i = 101; i < 113; i++) {
@@ -284,6 +289,84 @@ addLayer("tera", {
         },
     },
     clickables: {
+        "seal1": {
+            title() {return player.tera.clickables["seal1"] ? "" : formatSimple(player.points) + "/<br>e6,000,000<br>Points"},
+            canClick() {return player.points.gte("1e6000000")},
+            unlocked() {return !player.tera.clickables["seal1"]},
+            branches: [["sealCenter", "gray", 25]],
+            onClick() {
+                player.tera.clickables["seal1"] = true
+            },
+            style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
+        },
+        "seal2": {
+            title() {return player.tera.clickables["seal2"] ? "" : formatSimple(player.s.pylonEnergy) + "/1e12<br>Radiation Pylon Energy"},
+            canClick() {return player.s.pylonEnergy.gte(1e12)},
+            unlocked() {return !player.tera.clickables["seal2"]},
+            branches: [["sealCenter", "gray", 25]],
+            onClick() {
+                player.tera.clickables["seal2"] = true
+            },
+            style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
+        },
+        "seal3": {
+            title() {return player.tera.clickables["seal3"] ? "" : formatSimple(player.sma.starmetalAlloy) + "/1e18<br>Starmetal Alloy"},
+            canClick() {return player.sma.starmetalAlloy.gte(1e18)},
+            unlocked() {return !player.tera.clickables["seal3"]},
+            branches: [["sealCenter", "gray", 25]],
+            onClick() {
+                player.tera.clickables["seal3"] = true
+            },
+            style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
+        },
+        "seal4": {
+            title() {return player.tera.clickables["seal4"] ? "" : "0/1e24<br>???"},
+            canClick() {return false},
+            unlocked() {return !player.tera.clickables["seal4"]},
+            branches: [["sealCenter", "gray", 25]],
+            onClick() {
+                player.tera.clickables["seal4"] = true
+            },
+            style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
+        },
+        "seal5": {
+            title() {return player.tera.clickables["seal5"] ? "" : "0/1e30<br>???"},
+            canClick() {return false},
+            unlocked() {return !player.tera.clickables["seal5"]},
+            branches: [["sealCenter", "gray", 25]],
+            onClick() {
+                player.tera.clickables["seal5"] = true
+            },
+            style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
+        },
+        "seal6": {
+            title() {return player.tera.clickables["seal6"] ? "" : "0/1e36<br>???"},
+            canClick() {return false},
+            unlocked() {return !player.tera.clickables["seal6"]},
+            branches: [["sealCenter", "gray", 25]],
+            onClick() {
+                player.tera.clickables["seal6"] = true
+            },
+            style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
+        },
+        "sealCenter": {
+            title: "目",
+            canClick() {
+                let count = 0
+                for (let i = 1; i < 7; i++) {if (player.tera.clickables["seal"+i]) count++}
+                return count >= 6
+            },
+            unlocked: true,
+            onClick() {player.tera.unsealed = true},
+            style() {
+                let count = 0
+                for (let i = 1; i < 7; i++) {if (player.tera.clickables["seal"+i]) count++}
+                let look = {width: "100px", minHeight: "100px", background: "linear-gradient(135deg, #85ADE6, #5085D8)", fontSize: "30px", color: "#0046AA", border: "5px solid #0046AA", borderRadius: "50%"}
+                look.filter = "brightness(" + formatWhole((count+3)*10) + "%)"
+                if (!this.canClick()) {look.userSelect = "none"; look.cursor = "default"}
+                return look
+            },
+        },
         1: {
             title() {return false ? "<h3>True Base</h3>" : "<h3>???</h3>"},
             canClick() {return false},
@@ -350,22 +433,30 @@ addLayer("tera", {
             },
         },
         6: {
-            title() {return "<h3>True Hex</h3><br>" + formatWhole(player.tera.trueHex) + "<br><small>[Req: " + formatWhole(player.tera.trueHexReq) + " Power]"},
-            canClick: true,
+            title() {return this.canClick() ? "<h3>True Hex</h3><br>" + formatWhole(player.tera.trueHex) + "<br><small>[Req: " + formatWhole(player.tera.trueHexReq) + " Power]" : "<h3>???</h3>"},
+            canClick() {return player.tera.unsealed},
             unlocked: true,
             onClick() {
                 player.subtabs["tera"]["stuff"] = "hex"
             },
-            style: {width: "200px", minHeight: "60px", lineHeight: "1", color: "rgba(0,0,0,0.7)", background: "#85ADE6", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"},
+            style() {
+                let look = {width: "200px", minHeight: "60px", lineHeight: "1", color: "rgba(0,0,0,0.7)", background: "#85ADE6", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                if (!this.canClick()) look.filter = "brightness(50%)"
+                return look
+            },
         },
         7: {
-            title() {return "<h3>True Hept</h3><br>" + formatWhole(player.tera.trueHept) + "<br><small>[Req: " + formatWhole(player.tera.trueHeptReq) + " Power]"},
-            canClick: true,
+            title() {return this.canClick() ? "<h3>True Hept</h3><br>" + formatWhole(player.tera.trueHept) + "<br><small>[Req: " + formatWhole(player.tera.trueHeptReq) + " Power]" : "<h3>???</h3>"},
+            canClick() {return player.tera.unsealed},
             unlocked: true,
             onClick() {
                 player.subtabs["tera"]["stuff"] = "hept"
             },
-            style: {width: "200px", minHeight: "60px", lineHeight: "1", color: "rgba(0,0,0,0.7)", background: "#95A6DD", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"},
+            style() {
+                let look = {width: "200px", minHeight: "60px", lineHeight: "1", color: "rgba(0,0,0,0.7)", background: "#95A6DD", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                if (!this.canClick()) look.filter = "brightness(50%)"
+                return look
+            },
         },
         8: {
             title() {return false ? "<h3>True Oct</h3>" : "<h3>???</h3>"},
@@ -1276,7 +1367,7 @@ addLayer("tera", {
                 ],
             },
             "hept": {
-                unlocked: true,
+                unlocked() {return player.tera.unsealed},
                 content: [
                     ["always-scroll-column", [
                         ["blank", "25px"],
@@ -1333,11 +1424,16 @@ addLayer("tera", {
                     ["clickable", 7], ["clickable", 8], ["clickable", 9], ["clickable", 10], ["clickable", 11], ["clickable", 12],
                 ], {width: "200px", height: "720px"}],
                 ["style-row", [], {width: "200px", height: "37px", background: "#28426c", borderTop: "3px solid #5085d8", borderRadius: "0 0 0 17px"}],
-            ], {width: "200px", height: "800px", borderRight: "3px solid #5085d8"}],
+            ], () => {return player.tera.unsealed ? {width: "200px", height: "800px"} : {width: "200px", height: "800px", filter: "brightness(25%)"}}],
             ["style-column", [
                 ["buttonless-microtabs", "stuff", {borderWidth: "0"}],
-            ], {width: "597px", height: "800px", }],
-        ], {width: "800px", height: "800px", border: "3px solid #5085D8", borderRadius: "20px 0 0 20px"}],
+            ], {width: "597px", height: "800px", borderLeft: "3px solid #5085d8"}],
+        ], () => {return player.tera.unsealed ? {width: "800px", height: "800px", border: "3px solid #5085D8", borderRadius: "20px 0 0 20px"} : {display: "none !important"}}],
+        ["style-column", [
+            ["row", [["clickable", "seal1"], ["blank", ["200px", "10px"]], ["clickable", "seal2"]]],
+            ["style-row", [["clickable", "seal3"], ["blank", ["50px", "10px"]], ["clickable", "sealCenter"], ["blank", ["50px", "10px"]], ["clickable", "seal4"]], {height: "200px"}],
+            ["row", [["clickable", "seal5"], ["blank", ["200px", "10px"]], ["clickable", "seal6"]]],
+        ], () => {return !player.tera.unsealed ? {width: "700px", height: "700px", background: "radial-gradient(rgba(0,0,0,1), #13192200)", border: "10px solid #28426c88", borderRadius: "35%"} : {display: "none !important"}}],
     ],
-    layerShown() { return true }, // Decides if this node is shown or not.
+    layerShown() { return getBuyableAmount("hpw", 7).gt(0) || player.tera.trueHex.gt(0) }, // Decides if this node is shown or not.
 });

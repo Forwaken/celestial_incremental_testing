@@ -781,7 +781,7 @@
         },
         227: {
             title: "Hybrid Eclipse",
-            unlocked() { return hasUpgrade("sma", 226) && false},
+            unlocked() { return hasUpgrade("sma", 226) && hasUpgrade("depth2", 101)},
             description: "\"Syzygy\" now also increases eclipse's agility by +25%.",
             cost: new Decimal("100000"),
             currencyLocation() { return player.sma },

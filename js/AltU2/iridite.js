@@ -1121,7 +1121,7 @@ addLayer("ir", {
         },
         207: {
             title: "Advanced Medkit",
-            unlocked() { return getLevelableAmount("pet", 502).gt(0) && false },
+            unlocked() { return getLevelableAmount("pet", 502).gt(0) && hasUpgrade("depth2", 101) },
             description: "\"Self Repair\" now requires being under 50% health, and heals 20% more",
             cost: new Decimal(500),
             currencyLocation() { return player.ir },

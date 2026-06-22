@@ -507,7 +507,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Steel Rememberance"
+                return "Steel Remembrance"
             },
             display() {
                 if (hasUpgrade("depth2", 103)) {
@@ -557,7 +557,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Crystal Rememberance"
+                return "Crystal Remembrance"
             },
             display() {
                 if (hasUpgrade("depth2", 103)) {
@@ -607,7 +607,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Time Cube Rememberance"
+                return "Time Cube Remembrance"
             },
             display() {
                 if (hasUpgrade("depth2", 103)) {
@@ -657,7 +657,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Memory Rememberance"
+                return "Memory Remembrance"
             },
             display() {
                 if (hasUpgrade("depth2", 103)) {
@@ -857,7 +857,7 @@
                     ["style-row", [["ex-buyable", 21], ["ex-buyable", 22], ["ex-buyable", 23], ["ex-buyable", 24]], {maxWidth: "1200px"}],
                 ]
             },
-            "REMEMBERANCE CORES": {
+            "REMEMBRANCE CORES": {
                 buttonStyle() { return { color: "white", borderRadius: "5px" } },
                 unlocked() { return hasUpgrade("cp", 18) },
                 content: [

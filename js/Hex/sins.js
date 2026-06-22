@@ -278,7 +278,7 @@ addLayer("sins", {
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "^1.05 Power Gain", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "^1.05 Base Power Formula", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", "x1 Cosmic Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", "x1 Cosmic Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", "(Based on Provenances)", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
@@ -306,7 +306,7 @@ addLayer("sins", {
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "^1.05 Power Gain", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "^1.05 Base Power Formula", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", "x1 Paradox Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", "^1 Paradox Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on Refinements)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
@@ -334,7 +334,7 @@ addLayer("sins", {
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "^1.05 Power Gain", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "^1.05 Base Power Formula", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", "x1 Temporal Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", "x1 Temporal Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on " + player.h.stageName[0] + " Points)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],

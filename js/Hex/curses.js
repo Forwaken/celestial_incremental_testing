@@ -72,6 +72,7 @@ addLayer("hcu", {
         // JINX DIVIDER
         player.hcu.jinxDiv = new Decimal(1)
         player.hcu.jinxDiv = player.hcu.jinxDiv.mul(buyableEffect("hcu", 104))
+        if (hasUpgrade("hpw", 43)) player.hcu.jinxDiv = player.hcu.jinxDiv.mul(upgradeEffect("hpw", 43))
     },
     clickables: {
         1: {

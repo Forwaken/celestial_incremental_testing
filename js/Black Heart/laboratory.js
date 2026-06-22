@@ -53,6 +53,7 @@ addLayer("laboratory", {
         player.laboratory.unlocked = getLevelableAmount("pet", 503).gt(0) || getLevelableTier("pet", 503).gt(0)
 
         player.laboratory.matosMult = new Decimal(1)
+        player.laboratory.matosMult = player.laboratory.matosMult.mul(player.darkTemple.laboratoryCurMult)
 
         player.laboratory.cooldown = player.laboratory.cooldown.sub(delta)
 
@@ -254,6 +255,121 @@ addLayer("laboratory", {
                 return look
             },
         },
+
+        21: {
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires the defeat of a six sided being.</h3>"
+                return "<h3>MF-01</h3><br>Unlocks a new rune.<br><br>Cost: 10 Matos Fragments"
+            },
+            unlocked() {return player.laboratory.highestCombo.gt(10)},
+            cost: new Decimal(10),
+            canAfford() { return player.zarDungeon.zarDefeated},
+            currencyLocation() { return player.laboratory },
+            currencyDisplayName: "Matos Fragments",
+            currencyInternalName: "matosFragment",
+            style() {
+                let look = {minHeight: "100px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#250121"
+                if (!this.canAfford()) {look.background = "black";look.borderColor = "#250121"}
+                return look
+            },
+        },
+        22: {
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires true knowledge of effects.</h3>"
+                return "<h3>MF-02</h3><br>Give all characters without base RGN +0.15 base RGN stat.<br><br>Cost: 1,000 Matos Fragments"
+            },
+            unlocked() {return player.laboratory.highestCombo.gt(10)},
+            cost: new Decimal(1000),
+            canAfford() { return player.alephsChamber.milestone[25] >= 2},
+            currencyLocation() { return player.laboratory },
+            currencyDisplayName: "Matos Fragments",
+            currencyInternalName: "matosFragment",
+            style() {
+                let look = {minHeight: "100px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#250121"
+                if (!this.canAfford()) {look.background = "black";look.borderColor = "#250121"}
+                return look
+            },
+        },
+        23: {
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires another sides upgrade.</h3>"
+                return "<h3>MF-03</h3><br>Vespasian's \"Overdrive\" skill now nerfs regen by 90% instead of negating it.<br><br>Cost: 100,000 Matos Fragments"
+            },
+            unlocked() {return player.laboratory.highestCombo.gt(10)},
+            cost: new Decimal(100000),
+            canAfford() { return hasUpgrade("depth2", 101)},
+            currencyLocation() { return player.laboratory },
+            currencyDisplayName: "Matos Fragments",
+            currencyInternalName: "matosFragment",
+            style() {
+                let look = {minHeight: "100px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#250121"
+                if (!this.canAfford()) {look.background = "black";look.borderColor = "#250121"}
+                return look
+            },
+        },
+        24: {
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires further progress in the laboratory.</h3>"
+                return "<h3>MF-04</h3><br>Increase black heart tickspeed while in the laboratory.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 1,000,000 Matos Fragments"
+            },
+            unlocked() {return player.laboratory.highestCombo.gt(10)},
+            cost: new Decimal(1000000),
+            canAfford() { return player.laboratory.highestCombo.gte(25)},
+            currencyLocation() { return player.laboratory },
+            currencyDisplayName: "Matos Fragments",
+            currencyInternalName: "matosFragment",
+            effect() {
+                return player.laboratory.matosFragment.add(1).log(10).div(20).add(1)
+            },
+            style() {
+                let look = {minHeight: "100px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#250121"
+                if (!this.canAfford()) {look.background = "black";look.borderColor = "#250121"}
+                return look
+            },
+        },
+        25: {
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires knowledge of the other side.</h3>"
+                return "<h3>MF-05</h3><br>Unlock replicanticanti.<br><br>Cost: 100 Matos Fragments"
+            },
+            unlocked() {return player.laboratory.highestCombo.gt(10)},
+            cost: new Decimal(100),
+            canAfford() { return hasUpgrade("darkTemple", 10)},
+            currencyLocation() { return player.laboratory },
+            currencyDisplayName: "Matos Fragments",
+            currencyInternalName: "matosFragment",
+            style() {
+                let look = {minHeight: "100px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#250121"
+                if (!this.canAfford()) {look.background = "black";look.borderColor = "#250121"}
+                return look
+            },
+        },
+        26: {
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires infinite infinites.</h3>"
+                return "<h3>MF-06</h3><br>Raise base SP formula based on NIP.<br>Currently: ^" + formatSimple(upgradeEffect(this.layer, this.id), 3) + "<br><br>Cost: 10,000 Matos Fragments"
+            },
+            unlocked() {return player.laboratory.highestCombo.gt(10)},
+            cost: new Decimal(10000),
+            canAfford() { return hasUpgrade("laboratory", 26) || player.in.infinities.gte(1.79e308)},
+            currencyLocation() { return player.laboratory },
+            currencyDisplayName: "Matos Fragments",
+            currencyInternalName: "matosFragment",
+            effect() {
+                return player.ta.negativeInfinityPoints.add(1).log("1e1000").pow(0.5).div(50).add(1)
+            },
+            style() {
+                let look = {minHeight: "100px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#250121"
+                if (!this.canAfford()) {look.background = "black";look.borderColor = "#250121"}
+                return look
+            },
+        },
     },
     buyables: {
         1: {
@@ -361,6 +477,59 @@ addLayer("laboratory", {
                 return look
             },
         },
+
+        21: {
+            costBase() { return new Decimal(1) },
+            costGrowth() { return new Decimal(5) },
+            purchaseLimit() { return new Decimal(20) },
+            currency() { return player.laboratory.matosFragment},
+            pay(amt) { player.laboratory.matosFragment = this.currency().sub(amt) },
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(200).add(1)},
+            unlocked() {return player.laboratory.highestCombo.gt(10)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() {return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>MF-07</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/20)\n\
+                    Increase base character stats\n\
+                    Currently: +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100)) + "%\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Matos Fragments"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "120px", height: "100px", color: "white", border: "2px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#1a3b0f" : !this.canAfford() ? look.background =  "#361e1e" : look.background = "#250121"
+                return look
+            },
+        },
+        22: {
+            costBase() { return new Decimal(2) },
+            costGrowth() { return new Decimal(2) },
+            purchaseLimit() { return new Decimal(50) },
+            currency() { return player.laboratory.matosFragment},
+            pay(amt) { player.laboratory.matosFragment = this.currency().sub(amt) },
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(100).add(1)},
+            unlocked() {return player.laboratory.highestCombo.gt(10)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() {return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>MF-08</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                    Raise rocket fuel gain\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Matos Fragments"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "120px", height: "100px", color: "white", border: "2px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#1a3b0f" : !this.canAfford() ? look.background =  "#361e1e" : look.background = "#250121"
+                return look
+            },
+        },
     },
     tabFormat: [
         ["style-row", [
@@ -384,12 +553,13 @@ addLayer("laboratory", {
                     ["raw-html", () => {return "Boosts matos dust gain by x" + formatSimple(player.laboratory.matosFragment.add(1).log(10).add(1))}, {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
                 ], () => {return player.laboratory.highestCombo.gt(10) ? {width: "547px", height: "40px", background: "var(--miscButtonHover)", borderTop: "3px solid var(--regBorder)", borderBottom: "3px solid var(--regBorder)"} : {display: "none !important"}}],
                 ["blank", "4px"],
-
+                ["row", [["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 24]]],
+                ["row", [["upgrade", 25], ["upgrade", 26], ["buyable", 21], ["buyable", 22]]],
                 ["blank", "4px"],
                 ["style-column", [
                     ["raw-html", () => {return "You have " + formatWhole(player.laboratory.matosEssence) + " Matos Essence."}, {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
                     ["raw-html", () => {return "Boosts matos shard gain by x" + formatSimple(player.laboratory.matosEssence.add(1).log(10).add(1))}, {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
-                ], () => {return player.laboratory.highestCombo.gt(15) ? {width: "547px", height: "40px", background: "var(--miscButtonHover)", borderTop: "3px solid var(--regBorder)", borderBottom: "3px solid var(--regBorder)"} : {display: "none !important"}}],
+                ], () => {return player.laboratory.highestCombo.gt(20) ? {width: "547px", height: "40px", background: "var(--miscButtonHover)", borderTop: "3px solid var(--regBorder)", borderBottom: "3px solid var(--regBorder)"} : {display: "none !important"}}],
                 ["blank", "4px"],
 
                 ["blank", "4px"],
@@ -511,8 +681,8 @@ BHC.f00 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -549,8 +719,8 @@ BHC.f01 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -590,8 +760,8 @@ BHC.f02 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -629,8 +799,8 @@ BHC.f03 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -669,8 +839,8 @@ BHC.f04 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -746,8 +916,8 @@ BHC.f05 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -784,8 +954,8 @@ BHC.f06 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -823,8 +993,8 @@ BHC.f07 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -861,8 +1031,8 @@ BHC.f08 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -900,8 +1070,8 @@ BHC.f09 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -962,8 +1132,8 @@ BHC.f10 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -1002,8 +1172,8 @@ BHC.f11 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -1048,8 +1218,8 @@ BHC.f12 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -1093,8 +1263,8 @@ BHC.f13 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -1130,8 +1300,8 @@ BHC.f14 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }
@@ -1170,8 +1340,8 @@ BHC.f15 = {
             gain.matosShard = Decimal.pow(2, player.bh.combo).div(32)
         } else if (random < 0.5 && player.bh.combo.gte(10)) {
             gain.matosFragment = Decimal.pow(2, player.bh.combo).div(1024)
-        } else if (random < 0.6 && player.bh.combo.gte(15)) {
-            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(32768)
+        } else if (random < 0.6 && player.bh.combo.gte(20)) {
+            gain.matosEssence = Decimal.pow(2, player.bh.combo).div(1048576)
         } else {
             gain.matosDust = Decimal.pow(2, player.bh.combo)
         }

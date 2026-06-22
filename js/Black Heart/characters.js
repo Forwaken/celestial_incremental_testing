@@ -35,8 +35,8 @@ BHP.kres = {
     damage() {return new Decimal(6).mul(buyableEffect("sp", 12)).mul(player.bh.baseMult)},
     defense: new Decimal(0),
     regen() {
-        if (hasUpgrade("sp", 11)) return new Decimal(0.25).mul(buyableEffect("sp", 12)).mul(player.bh.baseMult)
-        if (hasUpgrade("depth2", 101)) return new Decimal(0.1).mul(buyableEffect("sp", 12)).mul(player.bh.baseMult)
+        if (hasUpgrade("sp", 11)) return new Decimal(0.3).mul(buyableEffect("sp", 12)).mul(player.bh.baseMult)
+        if (hasUpgrade("laboratory", 22)) return new Decimal(0.15).mul(buyableEffect("sp", 12)).mul(player.bh.baseMult)
         return new Decimal(0)
     },
     agility() {return new Decimal(5).mul(buyableEffect("sp", 12)).mul(player.bh.baseMult)},
@@ -51,7 +51,7 @@ BHP.nav = {
     health() {return new Decimal(50).mul(buyableEffect("sp", 22)).mul(player.bh.baseMult)},
     damage() {return new Decimal(8).mul(buyableEffect("sp", 22)).mul(player.bh.baseMult)},
     defense() {return hasUpgrade("sp", 21) ? new Decimal(10).mul(buyableEffect("sp", 22)).mul(player.bh.baseMult) : new Decimal(0)},
-    regen() {return hasUpgrade("depth2", 101) ? new Decimal(0.1).mul(buyableEffect("sp", 22)).mul(player.bh.baseMult) : new Decimal(0)},
+    regen() {return hasUpgrade("laboratory", 22) ? new Decimal(0.15).mul(buyableEffect("sp", 22)).mul(player.bh.baseMult) : new Decimal(0)},
     agility() {return new Decimal(5).mul(buyableEffect("sp", 22)).mul(player.bh.baseMult)},
     luck: new Decimal(0),
     mending() {return new Decimal(10).mul(buyableEffect("sp", 22)).mul(player.bh.baseMult)},
@@ -64,7 +64,7 @@ BHP.sel = {
     health() {return new Decimal(65).mul(buyableEffect("sp", 32)).mul(player.bh.baseMult)},
     damage() {return new Decimal(4).mul(buyableEffect("sp", 32)).mul(player.bh.baseMult)},
     defense: new Decimal(0),
-    regen() {return hasUpgrade("depth2", 101) ? new Decimal(0.1).mul(buyableEffect("sp", 32)).mul(player.bh.baseMult) : new Decimal(0)},
+    regen() {return hasUpgrade("laboratory", 22) ? new Decimal(0.15).mul(buyableEffect("sp", 32)).mul(player.bh.baseMult) : new Decimal(0)},
     agility() {return new Decimal(8).mul(buyableEffect("sp", 32)).mul(player.bh.baseMult)},
     luck() {return hasUpgrade("sp", 31) ? new Decimal(10).mul(buyableEffect("sp", 32)).mul(player.bh.baseMult) : new Decimal(0)},
     mending: new Decimal(0),
@@ -77,7 +77,7 @@ BHP.eclipse = {
     health() {return hasUpgrade("sma", 225) ? new Decimal(100).mul(player.bh.baseMult) : new Decimal(80).mul(player.bh.baseMult)},
     damage() {return hasUpgrade("sma", 226) ? new Decimal(12).mul(player.bh.baseMult) : new Decimal(10).mul(player.bh.baseMult)},
     defense() {return hasUpgrade("sma", 225) ? new Decimal(10).mul(player.bh.baseMult) : new Decimal(5).mul(player.bh.baseMult)},
-    regen() {return hasUpgrade("depth2", 101) ? new Decimal(0.1).mul(player.bh.baseMult) : new Decimal(0)},
+    regen() {return hasUpgrade("laboratory", 22) ? new Decimal(0.15).mul(player.bh.baseMult) : new Decimal(0)},
     agility() {return hasUpgrade("sma", 226) ? new Decimal(5).mul(player.bh.baseMult) : new Decimal(0)},
     luck: new Decimal(0),
     mending() {return new Decimal(5).mul(player.bh.baseMult)},
@@ -118,12 +118,12 @@ BHP.creation = {
     name: "The Creation",
     color: "#8a76b0", //linear-gradient(90deg, #7a97b9, #8a76b0)
     icon: "resources/player.png",
-    health: new Decimal(125),
-    damage: new Decimal(5),
-    defense: new Decimal(15),
-    regen: new Decimal(0.4),
-    agility: new Decimal(5),
-    luck: new Decimal(2.5),
+    health() {return new Decimal(125).mul(player.bh.baseMult)},
+    damage() {return new Decimal(5).mul(player.bh.baseMult)},
+    defense() {return new Decimal(15).mul(player.bh.baseMult)},
+    regen() {return new Decimal(0.4).mul(player.bh.baseMult)},
+    agility() {return new Decimal(5).mul(player.bh.baseMult)},
+    luck() {return new Decimal(2.5).mul(player.bh.baseMult)},
     mending() {return new Decimal(5).mul(player.bh.baseMult)},
     potency() {return new Decimal(5).mul(player.bh.baseMult)},
 }
@@ -131,14 +131,12 @@ BHP.diceFive = {
     name() {return player.zarDungeon.zarDefeated ? "Dice Five's Husk" : "Dice Five"},
     color: "#a3a3a3", 
     icon() {return player.zarDungeon.zarDefeated ? "resources/diceFiveFHusk.png" : "resources/diceFiveF.png"},
-    health: new Decimal(75),
-    damage: new Decimal(3),
-    defense: new Decimal(5),
-    regen: new Decimal(0),
-    agility: new Decimal(5),
-    luck: new Decimal(50),
-    mending: new Decimal(5),
-    potency: new Decimal(5),
+    health() {return new Decimal(75).mul(player.bh.baseMult)},
+    damage() {return new Decimal(3).mul(player.bh.baseMult)},
+    defense() {return new Decimal(5).mul(player.bh.baseMult)},
+    regen() {return hasUpgrade("laboratory", 22) ? new Decimal(0.15).mul(player.bh.baseMult) : new Decimal(0)},
+    agility() {return new Decimal(5).mul(player.bh.baseMult)},
+    luck() {return new Decimal(50).mul(player.bh.baseMult)},
     mending() {return new Decimal(5).mul(player.bh.baseMult)},
     potency() {return new Decimal(5).mul(player.bh.baseMult)},
 }

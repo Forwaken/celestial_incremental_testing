@@ -393,6 +393,32 @@ function loadVue() {
 		`
 	})
 
+	// data = id
+	Vue.component('ex-challenge', {
+		props: ['layer', 'data'],
+		template: `
+		<div v-if="tmp[layer].challenges && tmp[layer].challenges[data]!== undefined && tmp[layer].challenges[data].unlocked && !(options.hideChallenges && maxedChallenge(layer, [data]) && !inChallenge(layer, [data]))"
+			v-bind:class="['exChallenge', player[layer].activeChallenge === data ? 'resetNotify' : '']" v-bind:style="[{'background-color': tmp[layer].color}, run(layers[layer].challenges[data].style, layers[layer].challenges[data])]">
+			<div v-bind:class="['exChallengeHeader', challengeStyle(layer, data)]" v-bind:style="layers[layer].challenges[data].headerStyle ? run(layers[layer].challenges[data].headerStyle, layers[layer].challenges[data]) : {}">
+				<h3 v-html="tmp[layer].challenges[data].name"></h3>
+			</div>
+			<div v-bind:class="['exChallengeContent']">
+				<span v-if="layers[layer].challenges[data].fullDisplay" v-html="run(layers[layer].challenges[data].fullDisplay, layers[layer].challenges[data])"></span>
+				<span v-else>
+					<span v-html="run(layers[layer].challenges[data].challengeDescription, layers[layer].challenges[data])"></span><br><br>
+					Goal:  <span v-if="layers[layer].challenges[data].goalDescription" v-html="run(layers[layer].challenges[data].goalDescription, layers[layer].challenges[data])"></span><span v-else>{{format(tmp[layer].challenges[data].goal)}} {{tmp[layer].challenges[data].currencyDisplayName ? tmp[layer].challenges[data].currencyDisplayName : modInfo.pointsName}}</span><br><br>
+					Reward: <span v-html="run(layers[layer].challenges[data].rewardDescription, layers[layer].challenges[data])"></span><br>
+					<span v-if="layers[layer].challenges[data].rewardDisplay!==undefined">Currently: <span v-html="(tmp[layer].challenges[data].rewardDisplay) ? (run(layers[layer].challenges[data].rewardDisplay, layers[layer].challenges[data])) : format(tmp[layer].challenges[data].rewardEffect)"></span></span>
+				</span>
+				<node-mark :layer='layer' :data='tmp[layer].challenges[data].marked' :offset="20" :scale="1.5"></node-mark></span>
+				<button v-bind:class="{exChallengeButton: true, can: tmp[layer].challenges[data].canClick, locked: !tmp[layer].challenges[data].canClick, [layer]: true }" 
+					v-bind:style="[tmp[layer].challenges[data].buttonStyle]" 
+					v-on:click="startChallenge(layer, data)">{{challengeButtonText(layer, data)}}</button><br>
+			</div>
+		</div>
+		`
+	})
+
 	Vue.component('upgrades', {
 		props: ['layer', 'data'],
 		template: `

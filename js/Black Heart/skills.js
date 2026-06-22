@@ -982,6 +982,7 @@ BHA.vespasian_overdrive = {
     description(char) {
         let effect = new Decimal(new Decimal(50).add(player.bh.skillData["vespasian_overdrive"].level.mul(10)))
         if (player.alephsChamber.milestone[25] >= 2) effect = effect.mul(Decimal.div(char.potency.add(100), 100))
+        if (hasUpgrade("laboratory", 22)) return "Buff Vespasians damage and agility by " + formatSimple(effect) + "%, reduce defense by " + formatSimple(new Decimal(25).add(player.bh.skillData["vespasian_overdrive"].level.mul(5))) + ", and reduce regen by 90% for 8 seconds"
         return "Buff Vespasians damage and agility by " + formatSimple(effect) + "%, reduce defense by " + formatSimple(new Decimal(25).add(player.bh.skillData["vespasian_overdrive"].level.mul(5))) + ", and nullify regen for 8 seconds"
     },
     passiveText() {return "+" + formatSimple(player.bh.skillData["vespasian_overdrive"].maxLevel.div(2)) + " DEF"},
@@ -999,7 +1000,10 @@ BHA.vespasian_overdrive = {
         "damageMult"() {return new Decimal(1.5).add(player.bh.skillData["vespasian_overdrive"].level.div(10))},
         "agilityMult"() {return new Decimal(1.5).add(player.bh.skillData["vespasian_overdrive"].level.div(10))},
         "defenseAdd"() {return new Decimal(-25).sub(player.bh.skillData["vespasian_overdrive"].level.mul(5))},
-        "regenMult"(char) {return char.regen.gt(0) ? new Decimal(0) : new Decimal(1)},
+        "regenMult"(char) {
+            if (hasUpgrade("laboratory", 22)) return char.regen.gt(0) ? new Decimal(0.1) : new Decimal(1)
+            return char.regen.gt(0) ? new Decimal(0) : new Decimal(1)
+        },
     },
     duration: new Decimal(8),
     cooldown: new Decimal(20),

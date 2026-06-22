@@ -1096,13 +1096,16 @@ addLayer("co", {
         player.hcu.buyables[110] = new Decimal(0)
         player.hcu.buyables[111] = new Decimal(0)
         if (!hasMilestone("s", 20)) player.hcu.buyables[112] = new Decimal(0)
+        for (let i = 113; i < 115; i++) {
+            player.hcu.buyables[i] = new Decimal(0)
+        }
 
         //     <----     HEX OF VEXES LAYER     ---->
         player.hve.vex = new Decimal(0)
         player.hve.vexTotal = new Decimal(0)
         player.hve.vexGain = new Decimal(0)
-        player.hve.rowCurrent = [0, 0, 0, 0, 0, 0]
-        player.hve.rowSpent = [0, 0, 0, 0, 0, 0]
+        player.hve.rowCurrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        player.hve.rowSpent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         player.hve.upgrades.splice(0, player.hve.upgrades.length)
     
@@ -1136,8 +1139,8 @@ addLayer("co", {
         //     <----     HEX OF REFINEMENT LAYER     ---->
         player.hre.refinement = new Decimal(0)
         player.hre.refinementGain = new Decimal(0)
-        player.hre.refinementEffect = [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], 
-            [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]]
+        player.hre.refinementEffect = [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)],
+            [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]]
 
         //     <----     HEX OF PROVENANCE LAYER     ---->
         for (let i = 0; i < 6; i++) {

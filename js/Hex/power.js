@@ -115,8 +115,8 @@ addLayer("hpw", {
             player.hve.vex = new Decimal(0)
             player.hve.vexTotal = new Decimal(0)
             player.hve.vexGain = new Decimal(0)
-            player.hve.rowCurrent = [0, 0, 0, 0, 0, 0]
-            player.hve.rowSpent = [0, 0, 0, 0, 0, 0]
+            player.hve.rowCurrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            player.hve.rowSpent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             for (let i = 0; i < player.hve.upgrades.length; i++) {
                 player.hve.upgrades.splice(i, 1);
                 i--;
@@ -361,6 +361,10 @@ addLayer("hpw", {
             title: "Might 3:2",
             unlocked: true,
             description: "Boost curse gain based on refinement.",
+            tooltip() {
+                if (hasUpgrade("hpw", 45)) return formatSimple(Decimal.div(30, player.h.stage).add(1)) + "^(Refinement/" + formatWhole(player.h.stage) + ")"
+                return formatSimple(Decimal.div(30, player.h.stage).add(1)) + "^((Refinement/" + formatWhole(player.h.stage) + ")^" + formatSimple(Decimal.div(3.96, player.h.stage.max(4))) + ")"
+            },
             branches: [12],
             cost() {return new Decimal(player.h.stage.div(2).pow(2)).pow(player.hpw.upgScale[2]).floor()},
             canAfford() { return hasUpgrade("hpw", 12)},
@@ -369,6 +373,7 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
+                if (hasUpgrade("hpw", 45)) return Decimal.pow(Decimal.div(30, player.h.stage).add(1), player.hre.refinement.div(player.h.stage))
                 return Decimal.pow(Decimal.div(30, player.h.stage).add(1), player.hre.refinement.div(player.h.stage).pow(Decimal.div(3.96, player.h.stage.max(4))))
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" }, // Add formatting to the effect
@@ -405,6 +410,9 @@ addLayer("hpw", {
             title: "Might 4:3",
             unlocked: true,
             description: "Boost jinx cap based on jinx score.",
+            tooltip() {
+                return "Floor(log" + formatWhole(player.h.stage.max(2)) + "((Jinx Total^" + formatSimple(Decimal.div(3.6, player.h.stage).add(1)) + ")+1))"
+            },
             branches: [22],
             cost() {return new Decimal(player.h.stage.div(2).pow(3)).pow(player.hpw.upgScale[3]).floor()},
             canAfford() { return hasUpgrade("hpw", 22)},
@@ -517,10 +525,73 @@ addLayer("hpw", {
             currencyInternalName: "power",
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
-        // Boost curses based on potential power gains
-        // Reduce Vex requirement based on jinx score
-        // Improve Might 3:2
-        // Multiply Jinx cap based on boons
+        43: {
+            title: "Might γ:1",
+            unlocked() {return player.h.stage.neq(6)},
+            description: "Reduce jinx cost based on potential power gains.",
+            tooltip() {
+                return "1.5^(log" + formatWhole(player.h.stage) + "(Power Gain+1))"
+            },
+            branches: [42],
+            cost() {return player.h.stage.pow(8).floor()},
+            canAfford() { return hasUpgrade("hpw", 42)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {
+                return Decimal.pow(1.5, player.hpw.powerGain.add(1).log(player.h.stage))
+            },
+            effectDisplay() { return "/" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        44: {
+            title: "Might γ:2",
+            unlocked() {return player.h.stage.neq(6)},
+            description: "Reduce Vex requirement based on jinx score.",
+            branches: [43],
+            cost() {return player.h.stage.pow(20).floor()},
+            canAfford() { return hasUpgrade("hpw", 43)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {
+                return player.hcu.jinxTotal
+            },
+            effectDisplay() { return "/" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        45: {
+            title: "Might γ:3",
+            unlocked() {return player.h.stage.neq(6)},
+            description: "Improve Might 3:2's effect.",
+            tooltip() { return formatSimple(Decimal.div(30, player.h.stage).add(1)) + "^((Refinement/" + formatWhole(player.h.stage) + ")^" + formatSimple(Decimal.div(3.96, player.h.stage.max(4))) + ")<br>↓<br>" + formatSimple(Decimal.div(30, player.h.stage).add(1)) + "^(Refinement/" + formatWhole(player.h.stage) + ")"},
+            branches: [44],
+            cost() {return player.h.stage.pow(36).floor()},
+            canAfford() { return hasUpgrade("hpw", 44)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px", borderRadius: "15px"},
+        },
+        46: {
+            title: "Might γ:4",
+            unlocked() {return player.h.stage.neq(6)},
+            description: "Boost Jinx cap based on boons.",
+            tooltip() {
+                return "((log" + formatWhole(player.h.stage.pow(2)) + "(Boons+1))/100)+1"
+            },
+            branches: [45],
+            cost() {return player.h.stage.pow(56).floor()},
+            canAfford() { return hasUpgrade("hpw", 45)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {
+                return player.hbl.boons.add(1).log(player.h.stage.pow(2)).div(100).add(1)
+            },
+            effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
         51: {
             title: "Might 6:1",
             unlocked: true,
@@ -620,6 +691,10 @@ addLayer("hpw", {
             currencyInternalName: "power",
             style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px", borderRadius: "15px"},
         },
+        // Increase base of Hept Point Booster by x1.2
+        // Improve the formula for provenances past ζ (When below 6, change to a basic provenance buff)
+        // Unlock Hept of Sacrifice
+        // Improve provenance efficiency based on curses
         81: {
             title: "Might 9:1",
             unlocked: true,
@@ -1330,8 +1405,8 @@ addLayer("hpw", {
             style: {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "10px"},
         },
         7: {
-            costBase() { return new Decimal(1e49) },
-            costGrowth() { return new Decimal(1e7) },
+            costBase() { return new Decimal(1e60) },
+            costGrowth() { return new Decimal("1e600") },
             purchaseLimit() { return new Decimal(1) },
             currency() { return player.hpw.power},
             effect(x) { return getBuyableAmount(this.layer, this.id) },
@@ -1341,9 +1416,8 @@ addLayer("hpw", {
             branches: [6],
             display() {
                 return "<h3>Might 目</h3>\n\
-                    Gain access to the seal.\n\ \n\
-                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power\n\
-                    [COMING SOON]"
+                    Access the seal.\n\ \n\
+                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
             },
             buy(mult) {
                 if (mult != true) {
@@ -1438,30 +1512,30 @@ addLayer("hpw", {
                     ["row", [
                         ["blank", ["140px", "140px"]],
                         ["upgrade", 21],
-                        ["upgrade", 22],
+                        ["bt-upgrade", 22],
                         ["style-row", [["upgrade", 1013], ["bt-upgrade", 16]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 1021], ["bt-upgrade", 37]], {width: "140px", height: "140px"}],
                         ["upgrade", 31],
                         ["bt-upgrade", 32],
-                        ["upgrade", 33],
-                        ["style-row", [["upgrade", 1031]], {width: "140px", height: "140px"}],
+                        ["bt-upgrade", 33],
+                        ["style-row", [["upgrade", 1031], ["upgrade", 44]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 1022], ["upgrade", 36]], {width: "140px", height: "140px"}],
                         ["style-row", [["upgrade", 1002], ["bt-upgrade", 34]], {width: "140px", height: "140px"}],
                         ["upgrade", 41],
                         ["upgrade", 42],
-                        ["style-row", [["upgrade", 1003]], {width: "140px", height: "140px"}],
-                        ["style-row", [["upgrade", 1032]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1003], ["bt-upgrade", 43]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1032], ["bt-upgrade", 45]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 1023], ["bt-upgrade", 35]], {width: "140px", height: "140px"}],
                         ["upgrade", 51],
                         ["upgrade", 52],
                         ["upgrade", 53],
-                        ["style-row", [["upgrade", 1033]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1033], ["bt-upgrade", 46]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 1041]], {width: "140px", height: "140px"}],

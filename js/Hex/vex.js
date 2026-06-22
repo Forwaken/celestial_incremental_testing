@@ -1,4 +1,5 @@
 const VEXROW = [1, 2, 1, 3, 2, 1, 4, 3, 2, 4, 5, 3, 6, 4, 5, 6, 5, 6]
+const VEXROW2 = [1, 2, 1, 3, 2, 1, 4, 3, 2, 4, 5, 3, 6, 4, 5, 7, 6, 5, 7, 6, 7]
 addLayer("hve", {
     name: () => {return player.h.stageName[0] + " of Vexes"},
     symbol: "Ve", // Decides what text appears on the node.
@@ -15,12 +16,13 @@ addLayer("hve", {
         vexDiv: new Decimal(1),
         vexEffects: [new Decimal(0), new Decimal(1), new Decimal(1)],
 
-        rowCurrent: [0, 0, 0, 0, 0, 0],
-        rowSpent: [0, 0, 0, 0, 0, 0],
+        rowCurrent: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        rowSpent: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     }},
     update(delta) {
         player.hve.vexDiv = new Decimal(1)
         if (hasUpgrade("hpw", 112)) player.hve.vexDiv = player.hve.vexDiv.mul(Decimal.pow10(player.h.stage))
+        if (hasUpgrade("hpw", 44)) player.hve.vexDiv = player.hve.vexDiv.mul(upgradeEffect("hpw", 44))
 
         let connect = Decimal.pow10(player.h.stage.mul(2))
 
@@ -48,10 +50,11 @@ addLayer("hve", {
                 player.hve.vexTotal = player.hve.vexTotal.add(player.hve.vexGain)
                 player.hve.vex = player.hve.vex.add(player.hve.vexGain)
 
-                let rowTot = [0, 0, 0, 0, 0, 0]
+                let rowTot = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 let rowVal = VEXROW.slice(0, player.hve.vexTotal)
+                if (player.h.stage.eq(7)) rowVal = VEXROW2.slice(0, player.hve.vexTotal)
                 rowVal.forEach((x) => {rowTot[x-1] = rowTot[x-1]+1})
-                for (i = 0; i < 6; i++) {
+                for (i = 0; i < 12; i++) {
                     player.hve.rowCurrent[i] = rowTot[i] - player.hve.rowSpent[i]
                 }
 
@@ -79,7 +82,7 @@ addLayer("hve", {
             onClick() {
                 if (confirm("Are you sure you want to reset pre-power content??")) {
                     player.hve.vex = player.hve.vexTotal
-                    for (i = 0; i < 6; i++) {
+                    for (i = 0; i < 12; i++) {
                         player.hve.rowCurrent[i] = player.hve.rowCurrent[i] + player.hve.rowSpent[i]
                         player.hve.rowSpent[i] = 0
                     }
@@ -103,7 +106,7 @@ addLayer("hve", {
             unlocked: true,
             onClick() {
                 let count = player.hve.rowCurrent
-                for (let j = 1; j < 7; j++) {
+                for (let j = 1; j < 13; j++) {
                     for (let i = 1+(j*10); i < 4+(j*10); i++) {
                         if (!hasUpgrade("hve", i) && count[j-1] > 0) {buyUpgrade("hve", i)}
                     }
@@ -398,6 +401,60 @@ addLayer("hve", {
             currencyInternalName: "vex",
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },
+        71: {
+            fullDisplay() { return "Pre-power resources are multiplied by<br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with " + player.h.stageName[0] + " Points)"},
+            unlocked: true,
+            cost() {return new Decimal(1)},
+            canAfford() { return player.hve.rowCurrent[6] > 0},
+            onPurchase() {
+                player.hve.rowSpent[6] = player.hve.rowSpent[6] + 1
+                player.hve.rowCurrent[6] = player.hve.rowCurrent[6] - 1
+            },
+            currencyLocation() { return player.hve },
+            currencyDisplayName: "Vex",
+            currencyInternalName: "vex",
+            effect() {
+                let eff = player.h.hexPoint.add(1).log(Decimal.pow10(player.h.stage)).pow(Decimal.div(3.5, player.h.stage)).div(2).add(1)
+                return eff
+            },
+            style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
+        },
+        72: {
+            fullDisplay() { return "Power is multiplied by<br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with " + player.h.stageName[0] + " Points)"},
+            unlocked: true,
+            cost() {return new Decimal(1)},
+            canAfford() { return player.hve.rowCurrent[6] > 0},
+            onPurchase() {
+                player.hve.rowSpent[6] = player.hve.rowSpent[6] + 1
+                player.hve.rowCurrent[6] = player.hve.rowCurrent[6] - 1
+            },
+            currencyLocation() { return player.hve },
+            currencyDisplayName: "Vex",
+            currencyInternalName: "vex",
+            effect() {
+                let eff = player.h.hexPoint.add(1).log(Decimal.pow10(player.h.stage)).pow(Decimal.div(2.1, player.h.stage)).div(player.h.stage).add(1)
+                return eff
+            },
+            style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
+        },
+        73: {
+            fullDisplay() { return "Uni-Alpha tickspeed is multiplied by<br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with " + player.h.stageName[0] + " Points)"},
+            unlocked: true,
+            cost() {return new Decimal(1)},
+            canAfford() { return player.hve.rowCurrent[6] > 0},
+            onPurchase() {
+                player.hve.rowSpent[6] = player.hve.rowSpent[6] + 1
+                player.hve.rowCurrent[6] = player.hve.rowCurrent[6] - 1
+            },
+            currencyLocation() { return player.hve },
+            currencyDisplayName: "Vex",
+            currencyInternalName: "vex",
+            effect() {
+                let eff = player.h.hexPoint.add(1).log(Decimal.pow10(player.h.stage)).pow(Decimal.div(2.8, player.h.stage)).div(3).add(1)
+                return eff
+            },
+            style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
+        },
     },
     tabFormat: [
         ["row", [
@@ -459,6 +516,13 @@ addLayer("hve", {
                     ], {width: "90px", height: "120px"}],
                     ["id-upgrade", 61], ["id-upgrade", 62], ["id-upgrade", 63]
                 ]],
+                ["style-row", [
+                    ["style-column", [
+                        ["raw-html", "Row 7", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return formatWhole(player.hve.rowCurrent[6]) + " Available"}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
+                    ], {width: "90px", height: "120px"}],
+                    ["id-upgrade", 71], ["id-upgrade", 72], ["id-upgrade", 73]
+                ], () => {return player.h.stage.lt(7) ? {display: "none !important"} : {}}],
             ], {width: "472px", height: "600px", backgroundColor: "#160016", borderRight: "3px solid white", borderRadius: "15px 0 0 15px"}],
             ["column", [
                 ["top-column", [
@@ -471,7 +535,10 @@ addLayer("hve", {
                                 return look
                             }],
                         ]],
-                        ["raw-html", () => {return player.hve.vexTotal.lt(18) ? "The next Vex will go in Row " + VEXROW[player.hve.vexTotal.toNumber()] + "." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {
+                            if (player.h.stage.eq(7)) return player.hve.vexTotal.lt(21) ? "The next Vex will go in Row " + VEXROW2[player.hve.vexTotal.toNumber()] + "." : ""
+                            return player.hve.vexTotal.lt(18) ? "The next Vex will go in Row " + VEXROW[player.hve.vexTotal.toNumber()] + "." : ""
+                        }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ], {width: "325px", height: "70px"}],
                     ["clickable", 1],
                     ["blank", "10px"],

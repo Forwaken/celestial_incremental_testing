@@ -482,7 +482,7 @@
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.zd.zarChips},
             pay(amt) { player.zd.zarChips = this.currency().sub(amt) },
-            effect(x) {return getBuyableAmount(this.layer, this.id).add(1)},
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(2).add(1)},
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},

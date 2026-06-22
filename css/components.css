@@ -94,6 +94,76 @@
 	margin-bottom: 10px;
 }
 
+.exChallenge {
+	background-color: #bf8f8f;
+	position: relative;
+	border: 4px solid;
+	border-color: rgba(0, 0, 0, 0.5);
+	color: rgba(0, 0, 0, 0.5);
+	width: 350px;
+	height: 265px;
+	box-sizing: border-box;
+	border-radius: 15px;
+}
+
+.exChallengeHeader {
+	background-color: #bf8f8f;
+	display: flex;
+	align-items: center; /* Vertically centers the text */
+	position: relative;
+	color: rgba(0,0,0,0.5);
+	width: 100%;
+	height: 32px;
+	font-size: 16px;
+	box-sizing: border-box;
+	border-radius: 11px 11px 0 0;
+}
+
+.exChallengeHeader.done {
+	background-color: #77bf5f;
+}
+
+.exChallengeHeader.canComplete {
+	background-color: #ffbf00;
+}
+
+.exChallengeContent {
+	position: relative;
+	display: flex;
+	align-items: center; /* Vertically centers the text */
+	border-top: 4px solid;
+	border-color: rgba(0, 0, 0, 0.5);
+	color: rgba(0, 0, 0, 0.5);
+	width: 100%;
+	height: calc(100% - 32px);
+	font-size: 14px;
+	padding: 3%;
+	padding-bottom: 55px;
+	box-sizing: border-box;
+	line-height: 1.2 !important;	
+}
+
+.exChallengeButton {
+	position: absolute;
+	bottom: 10px;
+	left: calc(50% - 60px);
+	height: 40px;
+	width: 120px;
+	background: #ffffff;
+	border-radius: 25px;
+	border: 4px solid;
+	border-color: rgba(0, 0, 0, 0.5);
+	font-size: 10px;
+}
+
+.exChallengeButton.done {
+	border-color: #77bf5f;
+}
+
+.exChallengeButton.canComplete {
+	border-color: #ffbf00;
+}
+
 /* Infoboxes */
 .story {
     width: 600px;

@@ -1318,10 +1318,12 @@ addLayer("bh", {
         player.bh.timeSpeed = player.bh.timeSpeed.add(bhTemp.timeAdd)
         player.bh.timeSpeed = player.bh.timeSpeed.mul(bhTemp.timeMult)
         if (player.bh.respawnTimer.gt(0)) player.bh.timeSpeed = player.bh.timeSpeed.mul(player.stagnantSynestia.milestoneEffect)
+        if (hasUpgrade("laboratory", 24) && player.bh.currentStage == "laboratory") player.bh.timeSpeed = player.bh.timeSpeed.mul(upgradeEffect("laboratory", 24))
         
         player.bh.baseMult = new Decimal(1)
         if (hasUpgrade("depth1", 101)) player.bh.baseMult = player.bh.baseMult.mul(1.05)
         player.bh.baseMult = player.bh.baseMult.mul(buyableEffect("darkTemple", 1011))
+        player.bh.baseMult = player.bh.baseMult.mul(buyableEffect("laboratory", 21))
 
 
         // =-- HEALTH STUFF --= //
