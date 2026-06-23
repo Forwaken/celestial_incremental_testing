@@ -88,11 +88,12 @@ addLayer("hsa", {
             player.hsa.dimensionAmounts[i] = player.hsa.dimensionAmounts[i].add(player.hsa.dimensionsPerSecond[i].mul(delta))
         }
 
-        player.hsa.sacredEffect = player.hsa.sacredEnergy.add(1).log(player.h.stage).div(10).add(1).min(6)
-        if (player.hsa.sacredEffect.gt(2)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(2).div(2).add(2).min(6)
-        if (player.hsa.sacredEffect.gt(3)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(3).div(2).add(3).min(6)
-        if (player.hsa.sacredEffect.gt(4)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(4).div(2).add(4).min(6)
-        if (player.hsa.sacredEffect.gt(5)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(5).div(2).add(5).min(6)
+        player.hsa.sacredEffect = player.hsa.sacredEnergy.add(1).log(player.h.stage).div(10).add(1)
+        if (player.hsa.sacredEffect.gt(2)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(2).div(2).add(2)
+        if (player.hsa.sacredEffect.gt(3)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(3).div(2).add(3)
+        if (player.hsa.sacredEffect.gt(4)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(4).div(2).add(4)
+        if (player.hsa.sacredEffect.gt(5)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(5).div(2).add(5)
+        player.hsa.sacredEffect = player.hsa.sacredEffect.min(6)
 
         player.hsa.sacredEffect2 = Decimal.pow(1.5, player.hsa.sacredEnergy.add(1).log(player.h.stage))
 

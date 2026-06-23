@@ -147,7 +147,6 @@ addLayer("hpw", {
             }
         }
         for (let i = 0; i < player.hbl.milestones.length; i++) {
-            console.log(+player.hbl.milestones[i] > player.hpw.vigor)
             if (+player.hbl.milestones[i] > getBuyableAmount("hrm", 2) && !(hasMilestone("hpw", 7) && +player.hbl.milestones[i] <= player.hpw.vigor)) {
                 player.hbl.milestones.splice(i, 1);
                 i--;
@@ -1412,9 +1411,14 @@ addLayer("hpw", {
             effect(x) { return getBuyableAmount(this.layer, this.id) },
             unlocked() { return layers.hrm.layerShown() },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
-            canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 6).gte(1) && false},
+            canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 6).gte(1)},
             branches: [6],
             display() {
+                if (getBuyableAmount("hpw", 7).gt(0)){
+                    return "<h3>Might 目</h3>\n\
+                    Access the seal.\n\ \n\
+                    Req: " + formatWhole(1e60) + " Power"
+                }
                 return "<h3>Might 目</h3>\n\
                     Access the seal.\n\ \n\
                     Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"

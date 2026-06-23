@@ -128,7 +128,7 @@ BHP.creation = {
     potency() {return new Decimal(5).mul(player.bh.baseMult)},
 }
 BHP.diceFive = {
-    name() {return player.zarDungeon.zarDefeated ? "Dice Five's Husk" : "Dice Five"},
+    name() {return player.zarDungeon.zarDefeated ? "<small>Dice Five's Husk</small>" : "Dice Five"},
     color: "#a3a3a3", 
     icon() {return player.zarDungeon.zarDefeated ? "resources/diceFiveFHusk.png" : "resources/diceFiveF.png"},
     health() {return new Decimal(75).mul(player.bh.baseMult)},

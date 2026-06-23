@@ -4196,7 +4196,7 @@ addLayer("bh", {
                         ["style-row", [
                             ["style-column", [
                                 ["style-column", [
-                                    ["raw-html", () => {return run(BHP[player.bh.characterSelection].name, BHP[player.bh.characterSelection])}, {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
+                                    ["raw-html", () => {return run(BHP[player.bh.characterSelection].name, BHP[player.bh.characterSelection])}, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                                 ], {width: "145px", height: "30px", background: "var(--miscButtonDisable)", borderRadius: "10px"}],
                                 ["blank", "6px"],
                                 ["raw-html", () => {return "<img src='" + run(BHP[player.bh.characterSelection].icon, BHP[player.bh.characterSelection]) + "'style='width:140px;height:140px;margin-bottom:-3px;border:3px solid black'></img>"}],
@@ -4313,7 +4313,7 @@ addLayer("bh", {
                             ["style-column", [
                                 ["style-column", [
                                     ["raw-html", () => {return "Selecting:<br><small>" + run(BHP[player.bh.characters[Math.floor(player.bh.inputSkillSelection/4)].id].name, BHP[player.bh.characters[Math.floor(player.bh.inputSkillSelection/4)].id]) + " S" + (player.bh.inputSkillSelection%4+1)}, {color: "var(--textColor)", fontSize: "14px", fontFamily: "monospace"}],
-                                ], {width: "100px", height: "40px", background: "var(--layerBackground)", borderRadius: "10px"}],
+                                ], {width: "100px", minHeight: "40px", background: "var(--layerBackground)", borderRadius: "10px", lineHeight: "0.9"}],
                                 ["blank", "5px"],
                                 ["raw-html", () => {return "<img src='" + run(BHP[player.bh.characters[Math.floor(player.bh.inputSkillSelection/4)].id].icon, BHP[player.bh.characters[Math.floor(player.bh.inputSkillSelection/4)].id]) + "'style='width:85px;height:85px;margin-bottom:-3px;border:3px solid black'></img>"}],
                                 ["blank", "5px"],
@@ -4458,7 +4458,7 @@ addLayer("bh", {
                                 ], {width: "106px", height: "218px", marginRight: "10px"}],
                                 ["style-column", [
                                     ["style-column", [
-                                        ["raw-html", () => {return run(BHP[player.bh.characters[0].id].name, BHP[player.bh.characters[0].id])}, {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
+                                        ["raw-html", () => {return run(BHP[player.bh.characters[0].id].name, BHP[player.bh.characters[0].id])}, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                                     ], {width: "148px", height: "26px", background: "var(--miscButton)", borderRadius: "10px"}],
                                     ["blank", "4px"],
                                     ["row", [
@@ -4545,7 +4545,7 @@ addLayer("bh", {
                                 ], {width: "106px", height: "218px", marginRight: "10px"}],
                                 ["style-column", [
                                     ["style-column", [
-                                        ["raw-html", () => {return run(BHP[player.bh.characters[1].id].name, BHP[player.bh.characters[1].id])}, {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
+                                        ["raw-html", () => {return run(BHP[player.bh.characters[1].id].name, BHP[player.bh.characters[1].id])}, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                                     ], {width: "148px", height: "26px", background: "var(--miscButton)", borderRadius: "10px"}],
                                     ["blank", "4px"],
                                     ["row", [
@@ -4632,7 +4632,7 @@ addLayer("bh", {
                                 ], {width: "106px", height: "218px", marginRight: "10px"}],
                                 ["style-column", [
                                     ["style-column", [
-                                        ["raw-html", () => {return run(BHP[player.bh.characters[2].id].name, BHP[player.bh.characters[2].id])}, {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
+                                        ["raw-html", () => {return run(BHP[player.bh.characters[2].id].name, BHP[player.bh.characters[2].id])}, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                                     ], {width: "148px", height: "26px", background: "var(--miscButton)", borderRadius: "10px"}],
                                     ["blank", "4px"],
                                     ["row", [
