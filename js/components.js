@@ -824,7 +824,7 @@ function loadVue() {
 				<div class="levelableTop">
 					<img v-bind:src="run(layers[layer].levelables[data].image, layers[layer].levelables[data])" class="levelableImg"></img>
 					<div v-bind:class="{levelableText: true, hide: player[layer].levelables[data][0].eq(0)&&player[layer].levelables[data][1].eq(0)&&!(player[layer].levelables[data][2].gt(0) && tmp[layer].levelables[data].levelLimit.neq(Infinity))}">
-						<span v-html="tmp[layer].levelables[data].levelLimit.eq(Infinity) ? 'Lv ' + formatShortestWhole(player[layer].levelables[data][0]) : 'Lv ' + formatShortestWhole(player[layer].levelables[data][0])+'/'+formatShortestWhole(tmp[layer].levelables[data].levelLimit)"></span>
+						<span v-bind:class="{levelableSmall: tmp[layer].levelables[data].levelLimit.gt(99) && tmp[layer].levelables[data].levelLimit.neq(Infinity)}" v-html="tmp[layer].levelables[data].levelLimit.eq(Infinity) ? 'Lv ' + formatShortestWhole(player[layer].levelables[data][0]) : 'Lv ' + formatShortestWhole(player[layer].levelables[data][0])+'/'+formatShortestWhole(tmp[layer].levelables[data].levelLimit)"></span>
 						<span style='color:#a0b2c6' v-if="tmp[layer].levelables[data].levelLimit.gt(10) && layers[layer].levelableAscend && player[layer].levelables[data][2].gt(0)" v-html="'<br>★ ' + formatShortestWhole(player[layer].levelables[data][2])"></span>
 					</div>
 				</div>
@@ -852,7 +852,7 @@ function loadVue() {
 					<div class="levelableDisplayImgHolder">
 						<img v-bind:src="run(layers[layer].levelables[layers[layer].levelables.index].image, layers[layer].levelables[layers[layer].levelables.index])" class="levelableImg"></img>
 						<div v-bind:class="{levelableText: true, hide: layers[layer].levelables.index==0}">
-							<span v-html="tmp[layer].levelables[layers[layer].levelables.index].levelLimit.eq(Infinity) ? 'Lv ' + formatShortestWhole(player[layer].levelables[layers[layer].levelables.index][0]) : 'Lv ' + formatShortestWhole(player[layer].levelables[layers[layer].levelables.index][0])+'/'+formatShortestWhole(tmp[layer].levelables[layers[layer].levelables.index].levelLimit)"></span>
+							<span v-bind:class="{levelableSmall: tmp[layer].levelables[layers[layer].levelables.index].levelLimit.gt(99) && tmp[layer].levelables[layers[layer].levelables.index].levelLimit.neq(Infinity)}" v-html="tmp[layer].levelables[layers[layer].levelables.index].levelLimit.eq(Infinity) ? 'Lv ' + formatShortestWhole(player[layer].levelables[layers[layer].levelables.index][0]) : 'Lv ' + formatShortestWhole(player[layer].levelables[layers[layer].levelables.index][0])+'/'+formatShortestWhole(tmp[layer].levelables[layers[layer].levelables.index].levelLimit)"></span>
 							<span style='color:#a0b2c6' v-if="tmp[layer].levelables[layers[layer].levelables.index].levelLimit.gt(10) && layers[layer].levelableAscend && player[layer].levelables[layers[layer].levelables.index][2].gt(0)" v-html="'<br>★ ' + formatShortestWhole(player[layer].levelables[layers[layer].levelables.index][2])"></span>
 						</div>
 					</div>

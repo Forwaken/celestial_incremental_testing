@@ -367,6 +367,32 @@ addLayer("tera", {
                 return look
             },
         },
+        "trueTiers": {
+            title: "True Tiers",
+            canClick() {return player.subtabs["tera"]["tabs"] != "trueTiers"},
+            unlocked: true,
+            onClick() {
+                player.subtabs["tera"]["tabs"] = "trueTiers"
+            },
+            style() {
+                let look = {width: "400px", minHeight: "50px", fontSize: "16px", color: "rgba(0,0,0,0.7)", background: "linear-gradient(135deg, #85ADE6, #5085D8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "17px 0 0 0"}
+                if (!this.canClick()) {look.border = "3px solid rgba(255,255,255,0.5)";look.cursor = "default"}
+                return look
+            },
+        },
+        "upgrades": {
+            title: "Upgrades",
+            canClick() {return player.subtabs["tera"]["tabs"] != "upgrades"},
+            unlocked: true,
+            onClick() {
+                player.subtabs["tera"]["tabs"] = "upgrades"
+            },
+            style() {
+                let look = {width: "400px", minHeight: "50px", fontSize: "16px", color: "rgba(0,0,0,0.7)", background: "linear-gradient(135deg, #85ADE6, #5085D8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0 17px 0 0"}
+                if (!this.canClick()) {look.border = "3px solid rgba(255,255,255,0.5)";look.cursor = "default"}
+                return look
+            },
+        },
         1: {
             title() {return false ? "<h3>True Base</h3>" : "<h3>???</h3>"},
             canClick() {return false},
@@ -1363,7 +1389,7 @@ addLayer("tera", {
                         Third is Hex (spell), which are active abilities to boost both hex essence gain and uni-alpha resource gain.
                         */
                         // Three increasing resources (in the style of neutrons from matter dimensions). All named hex with paranthesis with the 3 meanings of hex (color, number, spell)
-                    ], {width: "597px", height: "800px", background: "#273345"}],
+                    ], {width: "597px", height: "720px", background: "#273345"}],
                 ],
             },
             "hept": {
@@ -1397,7 +1423,7 @@ addLayer("tera", {
                         ["blank", "10px"],
                         ["clickable", "heptReset"],
                         ["blank", "5px"],
-                    ], {width: "597px", height: "800px", background: "#2c3142"}],
+                    ], {width: "597px", height: "720px", background: "#2c3142"}],
                 ],
             },
             // Upgrade grid of 5x5 for pent perhaps? (in the vein of tree game rewritten)
@@ -1405,6 +1431,41 @@ addLayer("tera", {
             // Absolute button simulator for hept+ maybe?
             // Circular 9 grid of buyables should be used
             // Keep kaizo incremental in mind as a simple minigame here
+        },
+        "tabs": {
+            "trueTiers": {
+                unlocked: true,
+                content: [
+                    ["style-row", [
+                        ["style-column", [
+                            ["clickable", 1], ["clickable", 2], ["clickable", 3], ["clickable", 4], ["clickable", 5], ["clickable", 6],
+                            ["clickable", 7], ["clickable", 8], ["clickable", 9], ["clickable", 10], ["clickable", 11], ["clickable", 12],
+                        ], {width: "200px", height: "720px"}],
+                        ["style-column", [
+                            ["buttonless-microtabs", "stuff", {borderWidth: "0"}],
+                        ], {width: "597px", height: "720px", borderLeft: "3px solid #5085d8"}],
+                    ], {width: "800px", height: "720px", border: "3px solid #5085D8"}],
+                ],
+            },
+            "upgrades": {
+                unlocked: true,
+                content: [
+                    ["always-scroll-column", [
+                        ["style-column", [
+                            ["raw-html", "Uni-Alpha: Hex", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "800px", height: "40px", background: "#85ADE6", borderTop: "3px solid #273345", borderBottom: "3px solid #273345"}],
+                        ["style-row", [
+
+                        ], {width: "800px", height: "120px", background: "repeating-linear-gradient(135deg, #5d79a1 0px, #5d79a1 20px, #425673 20px, #425673 40px)"}],
+                        ["style-column", [
+                            ["raw-html", "Uni-Alpha: Hept", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "800px", height: "40px", background: "#95A6DD", borderTop: "3px solid #2c3142", borderBottom: "3px solid #2c3142"}],
+                        ["style-row", [
+
+                        ], {width: "800px", height: "120px", background: "repeating-linear-gradient(135deg, #68749a 0px, #68749a 20px, #4a536e 20px, #4a536e 40px)"}],
+                    ], {width: "800px", height: "720px", background: "linear-gradient(135deg, #1a222e, #0d1117)", border: "3px solid #5085D8"}],
+                ],
+            },
         },
     },
     tabFormat: [
@@ -1416,19 +1477,13 @@ addLayer("tera", {
         ["style-row", [["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}]], {lineHeight: "1"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "25px"],
-        ["style-row", [
-            ["style-column", [
-                ["style-row", [], {width: "200px", height: "37px", background: "#28426c", borderBottom: "3px solid #5085d8", borderRadius: "17px 0 0 0"}],
-                ["style-column", [
-                    ["clickable", 1], ["clickable", 2], ["clickable", 3], ["clickable", 4], ["clickable", 5], ["clickable", 6],
-                    ["clickable", 7], ["clickable", 8], ["clickable", 9], ["clickable", 10], ["clickable", 11], ["clickable", 12],
-                ], {width: "200px", height: "720px"}],
-                ["style-row", [], {width: "200px", height: "37px", background: "#28426c", borderTop: "3px solid #5085d8", borderRadius: "0 0 0 17px"}],
-            ], () => {return player.tera.unsealed ? {width: "200px", height: "800px"} : {width: "200px", height: "800px", filter: "brightness(25%)"}}],
-            ["style-column", [
-                ["buttonless-microtabs", "stuff", {borderWidth: "0"}],
-            ], {width: "597px", height: "800px", borderLeft: "3px solid #5085d8"}],
-        ], () => {return player.tera.unsealed ? {width: "800px", height: "800px", border: "3px solid #5085D8", borderRadius: "20px 0 0 20px"} : {display: "none !important"}}],
+        ["style-column", [
+            ["style-row", [
+                ["clickable", "trueTiers"], ["clickable", "upgrades"],
+            ], {width: "800px", height: "50px", background: "#28426c", border: "3px solid #5085D8", borderRadius: "20px 20px 0 0", marginBottom: "-3px"}],
+            ["buttonless-microtabs", "tabs", {borderWidth: "0"}],
+            ["style-row", [], {width: "800px", height: "20px", background: "#28426c", border: "3px solid #5085D8", borderRadius: "0 0 20px 20px", marginTop: "-3px"}],
+        ], () => {return player.tera.unsealed ? {} : {display: "none !important"}}],
         ["style-column", [
             ["row", [["clickable", "seal1"], ["blank", ["200px", "10px"]], ["clickable", "seal2"]]],
             ["style-row", [["clickable", "seal3"], ["blank", ["50px", "10px"]], ["clickable", "sealCenter"], ["blank", ["50px", "10px"]], ["clickable", "seal4"]], {height: "200px"}],

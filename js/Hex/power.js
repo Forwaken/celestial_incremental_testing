@@ -41,6 +41,7 @@ addLayer("hpw", {
         externalPow = externalPow.mul(levelableEffect("pu", 210)[1])
         externalPow = externalPow.mul(player.n.pylonPassiveEffect)
         externalPow = externalPow.mul(levelableEffect("car", 305)[0])
+        externalPow = externalPow.mul(buyableEffect("zd", 22))
 
         externalPow = externalPow.pow(player.h.externalRaise)
         player.hpw.powerGain = player.hpw.powerGain.pow(externalPow)

@@ -370,6 +370,8 @@ Attributes are used to give a character/celestialite a non-action specific effec
 
 - Negative — - When attacked, the attack has a chance to turn into a heal, which is effected by the character/celestialites luck.
 
+- Haze ⚯ - Incoming actions have a chance to miss, decided by the attribute value and the character/celestialites luck.
+
 Below is an example of an object that gives attributes:
 
 ```js

@@ -90,7 +90,7 @@
         player.dgr.grassValue = player.dgr.grassValue.mul(levelableEffect("car", 406)[0])
 
         // GRASS VALUE SOFTCAP
-        if (player.dgr.grassValue.gte(1e100)) player.dgr.grassValue = player.dgr.grassValue.div(1e100).pow(0.2).mul(1e100)
+        if (player.dgr.grassValue.gte(1e100)) player.dgr.grassValue = player.dgr.grassValue.div(1e100).pow(Decimal.add(0.2, buyableEffect("rp", 14).sub(1))).mul(1e100)
 
         //post softcap
         player.dgr.grassValue = player.dgr.grassValue.mul(buyableEffect("ds", 103))

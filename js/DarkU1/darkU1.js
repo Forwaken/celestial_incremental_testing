@@ -67,6 +67,7 @@
         player.du.pointSoftcap2 = player.du.pointSoftcap2.div(player.du.pointGain.div(player.du.secondSoftcapStart).add(1).log(player.du.secondSoftcapStart).add(1))
 
         if (getLevelableTier("pu", 306, true)) player.du.pointSoftcap2 = player.du.pointSoftcap2.pow(levelableEffect("pu", 306)[0])
+        player.du.pointSoftcap2 = player.du.pointSoftcap2.pow(buyableEffect("rp", 15))
 
         // SOFTCAP 2 STARTING VARIABLE
         player.du.secondSoftcapStart = new Decimal(1.79e308)

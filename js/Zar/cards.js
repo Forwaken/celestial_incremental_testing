@@ -63,6 +63,10 @@
         player.car.cardsToGet = player.car.cardsToGet.add(buyableEffect("car", 24))
         player.car.cardsToGet = player.car.cardsToGet.add(buyableEffect("car", 34))
         player.car.cardsToGet = player.car.cardsToGet.add(buyableEffect("car", 44))
+        player.car.cardsToGet = player.car.cardsToGet.add(levelableEffect("car", 114)[1].sub(1))
+        player.car.cardsToGet = player.car.cardsToGet.add(levelableEffect("car", 214)[1].sub(1))
+        player.car.cardsToGet = player.car.cardsToGet.add(levelableEffect("car", 314)[1].sub(1))
+        player.car.cardsToGet = player.car.cardsToGet.add(levelableEffect("car", 414)[1].sub(1))
 
         if (player.car.cardGenerators.gte(1)) {
             player.car.cardPointsPerSecond = [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)] 
@@ -260,6 +264,7 @@
     {
         let suit = getRandomInt(4) + 1
         let rank = getRandomInt(13) + 1
+        if (hasUpgrade("zd", 26) && Math.random() < 0.01) rank = 14
         let imgSuit = ""
         let imgRank = ""
         if (suit == 1) imgSuit = "Spade"
@@ -271,6 +276,7 @@
         if (rank == 11) imgRank = "J"
         if (rank == 12) imgRank = "Q"
         if (rank == 13) imgRank = "K"
+        if (rank == 14) imgRank = "Joker"
 
         let xOffset = getRandomInt(300)
         if (!player.car.autoDraw.toggle) makeParticles(BIG_COOKIE_NUMBER, 1, `normal`, {x: 1100 + xOffset, y: 350, text: "<img src='resources/cards/" + imgSuit + imgRank + ".png'style='width:75px;height:125px;margin:-35px;'></img>"})
@@ -303,7 +309,7 @@
             title() {
                 return "Ace of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0]) + " to all character HP.<br>", //not implemented
@@ -341,7 +347,7 @@
             title() {
                 return "2 of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0].mul(100)) + "% to base HP mult.<br>", //not implemented
@@ -379,7 +385,7 @@
             title() {
                 return "3 of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0]) + " to all character DMG.<br>", //not implemented
@@ -417,7 +423,7 @@
             title() {
                 return "4 of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0].mul(100)) + "% to base DMG mult.<br>", //not implemented
@@ -455,7 +461,7 @@
             title() {
                 return "5 of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0]) + " to all character RGN.<br>", //not implemented
@@ -493,7 +499,7 @@
             title() {
                 return "6 of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0]) + " to all character AGI.<br>", //not implemented
@@ -531,7 +537,7 @@
             title() {
                 return "7 of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0].mul(100)) + "% to base AGI mult.<br>", //not implemented
@@ -569,7 +575,7 @@
             title() {
                 return "8 of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0]) + " to all character DEF.<br>", //not implemented
@@ -607,7 +613,7 @@
             title() {
                 return "9 of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0]) + " to all character LUCK.<br>", //not implemented
@@ -645,7 +651,7 @@
             title() {
                 return "10 of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0]) + " to all character MND.<br>", //not implemented
@@ -683,7 +689,7 @@
             title() {
                 return "Jack of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + format(this.effect()[0]) + " to all character POT.<br>", //not implemented
@@ -721,7 +727,7 @@
             title() {
                 return "Queen of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "+" + formatWhole(this.effect()[0]) + " to max skill points. [FLOORED]<br>", //not implemented
@@ -759,7 +765,7 @@
             title() {
                 return "King of Spades"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 114)[0].sub(1)) },
             description() {
                 let str = [
                     "-" + format(this.effect()[0].mul(100)) + "% to combo scaling.<br>", //not implemented
@@ -792,13 +798,51 @@
                 return look
             }
         },
+        114: {
+            image() {return this.canClick() ? "resources/cards/SpadeJoker.png" : "resources/Punchcards/lockedPunchcard.png"},
+            title() {
+                return "Joker of Spades"
+            },
+            levelLimit() { return new Decimal(50) },
+            description() {
+                let str = [
+                    "+" + format(this.effect()[0].sub(1)) + " to spade card level caps. (Ignoring this card)<br>",
+                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount. [Next at Lv" + formatWhole(Decimal.sumArithmeticSeries(this.effect()[1], new Decimal(1), new Decimal(1), new Decimal(0))) + "]",
+                ]
+                return str.join("")
+            },
+            effect() {
+                let eff = [new Decimal(1), new Decimal(1)]
+                eff[0] = getLevelableAmount(this.layer, this.id).add(1)
+                eff[1] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
+                return eff
+            },
+            // CLICK CODE
+            unlocked() {return hasUpgrade("zd", 26)},
+            canSelect: true,
+            canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
+            onClick() {return layers[this.layer].levelables.index = this.id},
+            // LEVEL CODE
+            xpReq() {
+                return getLevelableAmount(this.layer, this.id).add(1).pow(5).floor()
+            },
+            currency() { return getLevelableXP(this.layer, this.id) },
+            // STYLE CODE
+            barStyle() { return {backgroundColor: "#1a3b0f"}},
+            style() {
+                let look = {width: "80px", height: "152px", borderColor: "black"}
+                !this.canClick() ? look.backgroundColor = "#222222" : getLevelableTier(this.layer, this.id, true) ? look.backgroundColor = "#7f7f7f" : look.backgroundColor = "#3f3f3f"
+                layers[this.layer].levelables.index == this.id ? look.outline = "2px solid #aaa" : look.outline = "0px solid #aaa"
+                return look
+            }
+        },
         //clubs
         201: {
             image() {return this.canClick() ? "resources/cards/Club1.png" : "resources/Punchcards/lockedPunchcard.png"},
             title() {
                 return "Ace of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to chance points.<br>", //not implemented
@@ -836,7 +880,7 @@
             title() {
                 return "2 of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to chance point softcap start.<br>", //not implemented
@@ -874,7 +918,7 @@
             title() {
                 return "3 of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to chance point softcap effect.<br>", //not implemented
@@ -912,7 +956,7 @@
             title() {
                 return "4 of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to heads.<br>", //not implemented
@@ -950,7 +994,7 @@
             title() {
                 return "5 of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to heads softcap effect.<br>", //not implemented
@@ -988,7 +1032,7 @@
             title() {
                 return "6 of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to tails.<br>", //not implemented
@@ -1026,7 +1070,7 @@
             title() {
                 return "7 of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to tails softcap effect.<br>", //not implemented
@@ -1064,7 +1108,7 @@
             title() {
                 return "8 of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to wheel points.<br>", //not implemented
@@ -1102,7 +1146,7 @@
             title() {
                 return "9 of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to wheel spin effectiveness.<br>", //not implemented
@@ -1140,7 +1184,7 @@
             title() {
                 return "10 of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to slot spin effectiveness.<br>", //not implemented
@@ -1178,7 +1222,7 @@
             title() {
                 return "Jack of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to red chips.<br>", //not implemented
@@ -1216,7 +1260,7 @@
             title() {
                 return "Queen of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to blue chips.<br>", //not implemented
@@ -1254,7 +1298,7 @@
             title() {
                 return "King of Clubs"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 214)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to yellow chips.<br>", //not implemented
@@ -1287,13 +1331,51 @@
                 return look
             }
         },
+        214: {
+            image() {return this.canClick() ? "resources/cards/ClubJoker.png" : "resources/Punchcards/lockedPunchcard.png"},
+            title() {
+                return "Joker of Clubs"
+            },
+            levelLimit() { return new Decimal(50) },
+            description() {
+                let str = [
+                    "+" + format(this.effect()[0].sub(1)) + " to club card level caps. (Ignoring this card)<br>",
+                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount. [Next at Lv" + formatWhole(Decimal.sumArithmeticSeries(this.effect()[1], new Decimal(1), new Decimal(1), new Decimal(0))) + "]",
+                ]
+                return str.join("")
+            },
+            effect() {
+                let eff = [new Decimal(1), new Decimal(1)]
+                eff[0] = getLevelableAmount(this.layer, this.id).add(1)
+                eff[1] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
+                return eff
+            },
+            // CLICK CODE
+            unlocked() {return hasUpgrade("zd", 26)},
+            canSelect: true,
+            canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
+            onClick() {return layers[this.layer].levelables.index = this.id},
+            // LEVEL CODE
+            xpReq() {
+                return getLevelableAmount(this.layer, this.id).add(1).pow(5).floor()
+            },
+            currency() { return getLevelableXP(this.layer, this.id) },
+            // STYLE CODE
+            barStyle() { return {backgroundColor: "#1a3b0f"}},
+            style() {
+                let look = {width: "80px", height: "152px", borderColor: "black"}
+                !this.canClick() ? look.backgroundColor = "#222222" : getLevelableTier(this.layer, this.id, true) ? look.backgroundColor = "#7f7f7f" : look.backgroundColor = "#3f3f3f"
+                layers[this.layer].levelables.index == this.id ? look.outline = "2px solid #aaa" : look.outline = "0px solid #aaa"
+                return look
+            }
+        },
         //diamonds
         301: {
             image() {return this.canClick() ? "resources/cards/Diamond1.png" : "resources/Punchcards/lockedPunchcard.png"},
             title() {
                 return "Ace of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to pre-otf multiplier.<br>", //not implemented
@@ -1331,7 +1413,7 @@
             title() {
                 return "2 of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to post-otf multiplier.<br>", //not implemented
@@ -1369,7 +1451,7 @@
             title() {
                 return "3 of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to all pollinator effects.<br>", //not implemented
@@ -1407,7 +1489,7 @@
             title() {
                 return "4 of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0], 3) + " to " + player.h.stageName[1] + " points.<br>", //not implemented
@@ -1445,7 +1527,7 @@
             title() {
                 return "5 of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0], 3) + " to " + player.h.stageName[1] + " power.<br>", //not implemented
@@ -1483,7 +1565,7 @@
             title() {
                 return "6 of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to antimatter effect.<br>", //not implemented
@@ -1521,7 +1603,7 @@
             title() {
                 return "7 of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + formatSimple(this.effect()[0], 3) + " to infinities.<br>", //not implemented
@@ -1559,7 +1641,7 @@
             title() {
                 return "8 of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to replicanti point hardcap.<br>", //not implemented
@@ -1597,7 +1679,7 @@
             title() {
                 return "9 of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + format(this.effect()[0]) + " to singularity points.<br>", //not implemented
@@ -1635,7 +1717,7 @@
             title() {
                 return "10 of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to first three emotions.<br>", //not implemented
@@ -1673,7 +1755,7 @@
             title() {
                 return "Jack of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + formatSimple(this.effect()[0], 3) + " to stars.<br>", //not implemented
@@ -1711,7 +1793,7 @@
             title() {
                 return "Queen of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "^" + formatSimple(this.effect()[0], 3) + " to bees.<br>", //not implemented
@@ -1749,7 +1831,7 @@
             title() {
                 return "King of Diamonds"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 314)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to doom softcap start.<br>", //not implemented
@@ -1782,6 +1864,44 @@
                 return look
             }
         },
+        314: {
+            image() {return this.canClick() ? "resources/cards/DiamondJoker.png" : "resources/Punchcards/lockedPunchcard.png"},
+            title() {
+                return "Joker of Diamonds"
+            },
+            levelLimit() { return new Decimal(50) },
+            description() {
+                let str = [
+                    "+" + format(this.effect()[0].sub(1)) + " to diamond card level caps. (Ignoring this card)<br>",
+                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount. [Next at Lv" + formatWhole(Decimal.sumArithmeticSeries(this.effect()[1], new Decimal(1), new Decimal(1), new Decimal(0))) + "]",
+                ]
+                return str.join("")
+            },
+            effect() {
+                let eff = [new Decimal(1), new Decimal(1)]
+                eff[0] = getLevelableAmount(this.layer, this.id).add(1)
+                eff[1] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
+                return eff
+            },
+            // CLICK CODE
+            unlocked() {return hasUpgrade("zd", 26)},
+            canSelect: true,
+            canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
+            onClick() {return layers[this.layer].levelables.index = this.id},
+            // LEVEL CODE
+            xpReq() {
+                return getLevelableAmount(this.layer, this.id).add(1).pow(5).floor()
+            },
+            currency() { return getLevelableXP(this.layer, this.id) },
+            // STYLE CODE
+            barStyle() { return {backgroundColor: "#1a3b0f"}},
+            style() {
+                let look = {width: "80px", height: "152px", borderColor: "black"}
+                !this.canClick() ? look.backgroundColor = "#222222" : getLevelableTier(this.layer, this.id, true) ? look.backgroundColor = "#7f7f7f" : look.backgroundColor = "#3f3f3f"
+                layers[this.layer].levelables.index == this.id ? look.outline = "2px solid #aaa" : look.outline = "0px solid #aaa"
+                return look
+            }
+        },
 
         //heart
         401: {
@@ -1789,7 +1909,7 @@
             title() {
                 return "Ace of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to dark celestial points.<br>", //not implemented
@@ -1827,7 +1947,7 @@
             title() {
                 return "2 of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to dark rank, tier, and tetr points.<br>", //not implemented
@@ -1865,7 +1985,7 @@
             title() {
                 return "3 of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to dark prestige points.<br>", //not implemented
@@ -1898,12 +2018,12 @@
                 return look
             }
         },
-                        404: {
+        404: {
             image() {return this.canClick() ? "resources/cards/Heart4.png" : "resources/Punchcards/lockedPunchcard.png"},
             title() {
                 return "4 of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to generators.<br>", //not implemented
@@ -1941,7 +2061,7 @@
             title() {
                 return "5 of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "/" + format(this.effect()[0]) + " to booster requirement.<br>", //not implemented
@@ -1979,7 +2099,7 @@
             title() {
                 return "6 of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to dark grass value and capacity.<br>", //not implemented
@@ -2017,7 +2137,7 @@
             title() {
                 return "7 of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to normality.<br>", //not implemented
@@ -2055,7 +2175,7 @@
             title() {
                 return "8 of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to space energy.<br>", //not implemented
@@ -2093,7 +2213,7 @@
             title() {
                 return "9 of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to clouds.<br>", //not implemented
@@ -2131,7 +2251,7 @@
             title() {
                 return "10 of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to SMA.<br>", //not implemented
@@ -2169,7 +2289,7 @@
             title() {
                 return "Jack of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to eclipse shards.<br>", //not implemented
@@ -2207,7 +2327,7 @@
             title() {
                 return "Queen of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to blood.<br>", //not implemented
@@ -2245,7 +2365,7 @@
             title() {
                 return "King of Hearts"
             },
-            levelLimit() { return new Decimal(99) },
+            levelLimit() { return new Decimal(99).add(levelableEffect("car", 414)[0].sub(1)) },
             description() {
                 let str = [
                     "x" + format(this.effect()[0]) + " to space pet XP gain.<br>", //not implemented
@@ -2267,6 +2387,44 @@
             // LEVEL CODE
             xpReq() {
                 return getLevelableAmount(this.layer, this.id).add(1).pow(3.2).floor()
+            },
+            currency() { return getLevelableXP(this.layer, this.id) },
+            // STYLE CODE
+            barStyle() { return {backgroundColor: "#1a3b0f"}},
+            style() {
+                let look = {width: "80px", height: "152px", borderColor: "black"}
+                !this.canClick() ? look.backgroundColor = "#222222" : getLevelableTier(this.layer, this.id, true) ? look.backgroundColor = "#7f7f7f" : look.backgroundColor = "#3f3f3f"
+                layers[this.layer].levelables.index == this.id ? look.outline = "2px solid #aaa" : look.outline = "0px solid #aaa"
+                return look
+            }
+        },
+        414: {
+            image() {return this.canClick() ? "resources/cards/HeartJoker.png" : "resources/Punchcards/lockedPunchcard.png"},
+            title() {
+                return "Joker of Hearts"
+            },
+            levelLimit() { return new Decimal(50) },
+            description() {
+                let str = [
+                    "+" + format(this.effect()[0].sub(1)) + " to heart card level caps. (Ignoring this card)<br>",
+                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount. [Next at Lv" + formatWhole(Decimal.sumArithmeticSeries(this.effect()[1], new Decimal(1), new Decimal(1), new Decimal(0))) + "]",
+                ]
+                return str.join("")
+            },
+            effect() {
+                let eff = [new Decimal(1), new Decimal(1)]
+                eff[0] = getLevelableAmount(this.layer, this.id).add(1)
+                eff[1] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
+                return eff
+            },
+            // CLICK CODE
+            unlocked() {return hasUpgrade("zd", 26)},
+            canSelect: true,
+            canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
+            onClick() {return layers[this.layer].levelables.index = this.id},
+            // LEVEL CODE
+            xpReq() {
+                return getLevelableAmount(this.layer, this.id).add(1).pow(5).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -2980,41 +3138,41 @@
                         ["always-scroll-column", [
                             ["style-column", [
                                 ["raw-html", () => {return "♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠ ♠"}, {color: "#1f1f1f", fontSize: "50px", fontFamily: "monospace"}],
-                            ], {width: "1185px", height: "50px", backgroundColor: "#dadada", borderTop: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}],
+                            ], {width: "1205px", height: "50px", backgroundColor: "#dadada", borderTop: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}],
                             ["style-row", [
                                 ["levelable", 101], ["levelable", 102], ["levelable", 103], ["levelable", 104], ["levelable", 105],
                                 ["levelable", 106], ["levelable", 107], ["levelable", 108], ["levelable", 109], ["levelable", 110],
-                                ["levelable", 111], ["levelable", 112], ["levelable", 113],
+                                ["levelable", 111], ["levelable", 112], ["levelable", 113], ["levelable", 114],
 
-                            ], {width: "1175px", height: "152px", backgroundColor: "#303030", padding: "5px"}],
+                            ], {width: "1190px", height: "152px", backgroundColor: "#303030", padding: "5px"}],
 
                             ["style-column", [
                                 ["raw-html", "♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣ ♣", {color: "#1f1f1f", fontSize: "50px", fontFamily: "monospace"}],
-                            ], {width: "1185px", height: "50px", backgroundColor: "#dadada", borderTop: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}],
+                            ], {width: "1205px", height: "50px", backgroundColor: "#dadada", borderTop: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}],
                             ["style-row", [
                                 ["levelable", 201], ["levelable", 202], ["levelable", 203], ["levelable", 204], ["levelable", 205],
                                 ["levelable", 206], ["levelable", 207], ["levelable", 208], ["levelable", 209], ["levelable", 210],
-                                ["levelable", 211], ["levelable", 212], ["levelable", 213],
-                            ], () => {return {width: "1175px", height: "152px", backgroundColor: "#303030", padding: "5px"}}],
+                                ["levelable", 211], ["levelable", 212], ["levelable", 213], ["levelable", 214],
+                            ], () => {return {width: "1190px", height: "152px", backgroundColor: "#303030", padding: "5px"}}],
 
                             ["style-column", [
                                 ["raw-html", "♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦ ♦", {color: "#ff3333", fontSize: "50px", fontFamily: "monospace"}],
-                            ], () => {return {width: "1185px", height: "50px", backgroundColor: "#dadada", borderTop: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}}],
+                            ], () => {return {width: "1205px", height: "50px", backgroundColor: "#dadada", borderTop: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}}],
                             ["style-row", [
                                 ["levelable", 301], ["levelable", 302], ["levelable", 303], ["levelable", 304], ["levelable", 305],
                                 ["levelable", 306], ["levelable", 307], ["levelable", 308], ["levelable", 309], ["levelable", 310],
-                                ["levelable", 311], ["levelable", 312], ["levelable", 313],
-                            ], () => {return {width: "1175px", height: "152px", backgroundColor: "#490c0c", padding: "5px"}}],
+                                ["levelable", 311], ["levelable", 312], ["levelable", 313], ["levelable", 314],
+                            ], () => {return {width: "1190px", height: "152px", backgroundColor: "#490c0c", padding: "5px"}}],
                             ["style-column", [
                                 ["raw-html", "♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥", {color: "#ff3333", fontSize: "50px", fontFamily: "monospace"}],
-                            ], () => {return {width: "1185px", height: "50px", backgroundColor: "#dadada", borderTop: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}}],
+                            ], () => {return {width: "1205px", height: "50px", backgroundColor: "#dadada", borderTop: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}}],
                             ["style-row", [
                                 ["levelable", 401], ["levelable", 402], ["levelable", 403], ["levelable", 404], ["levelable", 405],
                                 ["levelable", 406], ["levelable", 407], ["levelable", 408], ["levelable", 409], ["levelable", 410],
-                                ["levelable", 411], ["levelable", 412], ["levelable", 413],
-                            ], () => {return{width: "1175px", height: "152px", backgroundColor: "#490c0c", padding: "5px"}}],
-                        ], {width: "1200px", height: "522px", borderTop: "3px solid white"}],
-                    ], {width: "1200px", height: "700px", border: "3px solid white", backgroundColor: "#1c2033"}],
+                                ["levelable", 411], ["levelable", 412], ["levelable", 413], ["levelable", 414],
+                            ], () => {return{width: "1190px", height: "152px", backgroundColor: "#490c0c", padding: "5px"}}],
+                        ], {width: "1220px", height: "522px", borderTop: "3px solid white"}],
+                    ], {width: "1220px", height: "700px", border: "3px solid white", backgroundColor: "#1c2033"}],
                 ]
             },
             "Suit Points": {

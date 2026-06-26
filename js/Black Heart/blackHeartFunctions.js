@@ -242,6 +242,9 @@ function bhAction(index, slot, interval = false, magnitude = 1, delay = false) {
 
                     // Reset all other skill cooldowns
                     for (let receive of arr) {
+                        let skip = bhAttributes(index, slot, receive)
+                        if (skip) continue
+                        
                         let avoid = 0
                         if (receive == index) avoid = slot+1
                         if (receive != 3) {
@@ -289,6 +292,9 @@ function bhAction(index, slot, interval = false, magnitude = 1, delay = false) {
 
                     // Reduce cooldowns of target
                     for (let receive of tar) {
+                        let skip = bhAttributes(index, slot, receive)
+                        if (skip) continue
+
                         let avoid = 0
                         if (receive == index) avoid = slot+1
                         if (receive != 3) {
@@ -339,6 +345,9 @@ function bhAction(index, slot, interval = false, magnitude = 1, delay = false) {
 
                     // Add shield to target(s)
                     for (let receive of targ) {
+                        let skip = bhAttributes(index, slot, receive)
+                        if (skip) continue
+
                         if (receive == 3) {
                             player.bh.celestialite.shield = player.bh.celestialite.shield.add(num)
                         } else {
@@ -488,6 +497,28 @@ function bhEffectText(type, val, index, slot, target, percentage = 0, str) {
     }
 }
 
+function bhAttributes(index, slot, receive) {
+    let attribute
+    if (receive == 3) {
+        attribute = player.bh.celestialite.attributes
+    } else {
+        attribute = player.bh.characters[receive].attributes
+    }
+    if (attribute == undefined) attribute = {}
+
+    if (typeof attribute["haze"] !== "undefined" && Decimal.gte(action.properties["haze"].div(2), Math.random())) {
+        let attStr = "<span style='color:#C4BDC9'>[HAZE] </span>"
+        if (index == 3) {
+            bhLog(attStr + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " missed.")
+        } else {
+            bhLog(attStr + "<span style='color: " + BHP[player.bh.characters[index].id].color + "'>" + run(BHP[player.bh.characters[index].id].name, BHP[player.bh.characters[index].id]) + " missed.")
+        }
+        return true
+    }
+
+    return false
+}
+
 function bhAttack(damage, index, slot, target, str = "", method = "none", attr = false) {
     let arr = calcTarget(index, slot, target, "damage")
     if (typeof target == "number") arr = [target]
@@ -501,6 +532,16 @@ function bhAttack(damage, index, slot, target, str = "", method = "none", attr =
             attribute = player.bh.characters[receive].attributes
         }
         if (attribute == undefined) attribute = {}
+
+        if (typeof attribute["haze"] !== "undefined" && Decimal.gte(action.properties["haze"], Math.random())) {
+            let attStr = "<span style='color:#C4BDC9'>[HAZE] </span>"
+            if (index == 3) {
+                bhLog(attStr + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " missed.")
+            } else {
+                bhLog(attStr + "<span style='color: " + BHP[player.bh.characters[index].id].color + "'>" + run(BHP[player.bh.characters[index].id].name, BHP[player.bh.characters[index].id]) + " missed.")
+            }
+            return
+        }
 
         if (typeof attribute["negative"] !== "undefined" && !attr) {
             let luck = new Decimal(0)
@@ -578,6 +619,25 @@ function bhHeal(heal, index, slot, target, str = "") {
     }
     let arr = calcTarget(index, slot, target, "heal")
     for (let receive of arr) {
+        // =-- Target Attributes --=
+        let attribute
+        if (receive == 3) {
+            attribute = player.bh.celestialite.attributes
+        } else {
+            attribute = player.bh.characters[receive].attributes
+        }
+        if (attribute == undefined) attribute = {}
+
+        if (typeof attribute["haze"] !== "undefined" && Decimal.gte(action.properties["haze"].div(2), Math.random())) {
+            let attStr = "<span style='color:#C4BDC9'>[HAZE] </span>"
+            if (index == 3) {
+                bhLog(attStr + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " missed.")
+            } else {
+                bhLog(attStr + "<span style='color: " + BHP[player.bh.characters[index].id].color + "'>" + run(BHP[player.bh.characters[index].id].name, BHP[player.bh.characters[index].id]) + " missed.")
+            }
+            return
+        }
+
         if (index == 3) {
             if (receive == undefined) {
                 bhLog(str + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " was unable to find someone to heal.")
@@ -617,97 +677,98 @@ function celestialiteReward(gain) {
     let str = ""
     if (generalMult.gt(1)) str = "[x" + formatWhole(generalMult) + "] "
     if (gain.gloomingUmbrite) {
-        gain.gloomingUmbrite = gain.gloomingUmbrite.mul(player.depth1.depth1Mult).mul(generalMult).floor()
+        gain.gloomingUmbrite = chanceRemainder(gain.gloomingUmbrite.mul(player.depth1.depth1Mult).mul(generalMult))
         player.depth1.gloomingUmbrite = player.depth1.gloomingUmbrite.add(gain.gloomingUmbrite)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.gloomingUmbrite) + " glooming umbrite! (You have " + formatWhole(player.depth1.gloomingUmbrite) + ")")
     }
     if (gain.dimUmbrite) {
-        gain.dimUmbrite = gain.dimUmbrite.mul(player.depth1.depth1Mult).mul(generalMult).floor()
+        gain.dimUmbrite = chanceRemainder(gain.dimUmbrite.mul(player.depth1.depth1Mult).mul(generalMult))
         player.depth1.dimUmbrite = player.depth1.dimUmbrite.add(gain.dimUmbrite)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.dimUmbrite) + " dim umbrite! (You have " + formatWhole(player.depth1.dimUmbrite) + ")")
     }
     if (gain.murkyUmbrite) {
-        gain.murkyUmbrite = gain.murkyUmbrite.mul(player.depth1.depth1Mult).mul(generalMult).floor()
+        gain.murkyUmbrite = chanceRemainder(gain.murkyUmbrite.mul(player.depth1.depth1Mult).mul(generalMult))
         player.depth1.murkyUmbrite = player.depth1.murkyUmbrite.add(gain.murkyUmbrite)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.murkyUmbrite) + " murky umbrite! (You have " + formatWhole(player.depth1.murkyUmbrite) + ")")
     }
     if (gain.faintUmbrite) {
-        gain.faintUmbrite = gain.faintUmbrite.mul(player.depth2.depth2Mult).mul(generalMult).floor()
+        gain.faintUmbrite = chanceRemainder(gain.faintUmbrite.mul(player.depth2.depth2Mult).mul(generalMult))
         player.depth2.faintUmbrite = player.depth2.faintUmbrite.add(gain.faintUmbrite)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.faintUmbrite) + " faint umbrite! (You have " + formatWhole(player.depth2.faintUmbrite) + ")")
     }
     if (gain.clearUmbrite) {
-        gain.clearUmbrite = gain.clearUmbrite.mul(player.depth2.depth2Mult).mul(generalMult).floor()
+        gain.clearUmbrite = chanceRemainder(gain.clearUmbrite.mul(player.depth2.depth2Mult).mul(generalMult))
         player.depth2.clearUmbrite = player.depth2.clearUmbrite.add(gain.clearUmbrite)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.clearUmbrite) + " clear umbrite! (You have " + formatWhole(player.depth2.clearUmbrite) + ")")
     }
     if (gain.hazyUmbrite) {
-        gain.hazyUmbrite = gain.hazyUmbrite.mul(player.depth2.depth2Mult).mul(generalMult).floor()
+        gain.hazyUmbrite = chanceRemainder(gain.hazyUmbrite.mul(player.depth2.depth2Mult).mul(generalMult))
         player.depth2.hazyUmbrite = player.depth2.hazyUmbrite.add(gain.hazyUmbrite)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.hazyUmbrite) + " hazy umbrite! (You have " + formatWhole(player.depth2.hazyUmbrite) + ")")
     }
     if (gain.vividUmbrite) {
-        gain.vividUmbrite = gain.vividUmbrite.mul(player.depth3.depth3Mult).mul(generalMult).floor()
+        gain.vividUmbrite = chanceRemainder(gain.vividUmbrite.mul(player.depth3.depth3Mult).mul(generalMult))
         player.depth3.vividUmbrite = player.depth3.vividUmbrite.add(gain.vividUmbrite)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.vividUmbrite) + " vivid umbrite! (You have " + formatWhole(player.depth3.vividUmbrite) + ")")
     }
     if (gain.lustrousUmbrite) {
-        gain.lustrousUmbrite = gain.lustrousUmbrite.mul(player.depth3.depth3Mult).mul(generalMult).floor()
+        gain.lustrousUmbrite = chanceRemainder(gain.lustrousUmbrite.mul(player.depth3.depth3Mult).mul(generalMult))
         player.depth3.lustrousUmbrite = player.depth3.lustrousUmbrite.add(gain.lustrousUmbrite)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.lustrousUmbrite) + " lustrous umbrite! (You have " + formatWhole(player.depth3.lustrousUmbrite) + ")")
     }
     if (gain.darkEssence) {
-        gain.darkEssence = gain.darkEssence.mul(buyableEffect("darkTemple", 1005)).mul(generalMult).floor()
+        gain.darkEssence = chanceRemainder(gain.darkEssence.mul(buyableEffect("darkTemple", 1005)).mul(generalMult))
         player.bh.darkEssence = player.bh.darkEssence.add(gain.darkEssence)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.darkEssence) + " dark essence! (You have " + formatWhole(player.bh.darkEssence) + ")")
     }
     if (gain.darkEther) {
-        gain.darkEther = gain.darkEther.mul(buyableEffect("darkTemple", 1017)).mul(generalMult).floor()
+        gain.darkEther = chanceRemainder(gain.darkEther.mul(buyableEffect("darkTemple", 1017)).mul(generalMult))
         player.bh.darkEther = player.bh.darkEther.add(gain.darkEther)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.darkEther) + " dark ether! (You have " + formatWhole(player.bh.darkEther) + ")")
     }
     if (gain.temporalDust) {
-        gain.temporalDust = gain.temporalDust.mul(player.stagnantSynestia.temporalMult).mul(generalMult).floor()
+        gain.temporalDust = chanceRemainder(gain.temporalDust.mul(player.stagnantSynestia.temporalMult).mul(generalMult))
         player.stagnantSynestia.temporalDust = player.stagnantSynestia.temporalDust.add(gain.temporalDust)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.temporalDust) + " temporal dust! (You have " + formatWhole(player.stagnantSynestia.temporalDust) + ")")
     }
     if (gain.temporalShard) {
-        gain.temporalShard = gain.temporalShard.mul(player.stagnantSynestia.temporalMult).mul(generalMult).floor()
+        gain.temporalShard = chanceRemainder(gain.temporalShard.mul(player.stagnantSynestia.temporalMult).mul(generalMult))
         player.stagnantSynestia.temporalShard = player.stagnantSynestia.temporalShard.add(gain.temporalShard)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.temporalShard) + " temporal shards! (You have " + formatWhole(player.stagnantSynestia.temporalShard) + ")")
     }
     if (gain.gloomingNocturnium) {
-        gain.gloomingNocturnium = gain.gloomingNocturnium.mul(player.depth4.depth4Mult).mul(generalMult).floor()
+        gain.gloomingNocturnium = chanceRemainder(gain.gloomingNocturnium.mul(player.depth4.depth4Mult).mul(generalMult))
         player.depth4.gloomingNocturnium = player.depth4.gloomingNocturnium.add(gain.gloomingNocturnium)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.gloomingNocturnium) + " glooming nocturnium! (You have " + formatWhole(player.depth4.gloomingNocturnium) + ")")
     }
     if (gain.dimNocturnium) {
-        gain.dimNocturnium = gain.dimNocturnium.mul(player.depth4.depth4Mult).mul(generalMult).floor()
+        gain.dimNocturnium = chanceRemainder(gain.dimNocturnium.mul(player.depth4.depth4Mult).mul(generalMult))
         player.depth4.dimNocturnium = player.depth4.dimNocturnium.add(gain.dimNocturnium)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.dimNocturnium) + " dim nocturnium! (You have " + formatWhole(player.depth4.dimNocturnium) + ")")
     }
     if (gain.matosDust) {
-        gain.matosDust = gain.matosDust.mul(player.laboratory.matosMult).mul(generalMult).mul(player.laboratory.matosFragment.add(1).log(10).add(1)).floor()
+        gain.matosDust = chanceRemainder(gain.matosDust.mul(player.laboratory.matosMult).mul(generalMult).mul(player.laboratory.matosFragment.add(1).log(10).add(1)))
         player.laboratory.matosDust = player.laboratory.matosDust.add(gain.matosDust)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.matosDust) + " matos dust! (You have " + formatWhole(player.laboratory.matosDust) + ")")
     }
     if (gain.matosShard) {
-        gain.matosShard = gain.matosShard.mul(player.laboratory.matosMult).mul(generalMult).mul(player.laboratory.matosEssence.add(1).log(10).add(1)).floor()
+        gain.matosShard = chanceRemainder(gain.matosShard.mul(player.laboratory.matosMult).mul(generalMult).mul(player.laboratory.matosEssence.add(1).log(10).add(1)))
         player.laboratory.matosShard = player.laboratory.matosShard.add(gain.matosShard)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.matosShard) + " matos shards! (You have " + formatWhole(player.laboratory.matosShard) + ")")
     }
     if (gain.matosFragment) {
-        gain.matosFragment = gain.matosFragment.mul(player.laboratory.matosMult).mul(generalMult).floor()
+        gain.matosFragment = chanceRemainder(gain.matosFragment.mul(player.laboratory.matosMult).mul(generalMult))
         player.laboratory.matosFragment = player.laboratory.matosFragment.add(gain.matosFragment)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.matosFragment) + " matos fragments! (You have " + formatWhole(player.laboratory.matosFragment) + ")")
     }
     if (gain.matosEssence) {
-        gain.matosEssence = gain.matosEssence.mul(player.laboratory.matosMult).mul(generalMult).floor()
+        gain.matosEssence = chanceRemainder(gain.matosEssence.mul(player.laboratory.matosMult).mul(generalMult))
         player.laboratory.matosEssence = player.laboratory.matosEssence.add(gain.matosEssence)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.matosEssence) + " matos essence! (You have " + formatWhole(player.laboratory.matosEssence) + ")")
     }
     if (gain.pips) {
-        gain.pips = gain.pips.mul(generalMult).floor()
+        let pipMult = hasUpgrade("zd", 24) ? upgradeEffect("zd", 24) : new Decimal(1)
+        gain.pips = chanceRemainder(gain.pips.mul(player.darkTemple.celStageCurMult).mul(generalMult))
         player.zd.pips = player.zd.pips.add(gain.pips)
         bhLog("<span style='color: #a3a3a3'>" + str + "You gained " + formatWhole(gain.pips) + " dice pips! (You have " + formatWhole(player.zd.pips) + ")")
     }
@@ -1401,3 +1462,11 @@ function navHealEffect(x, y)
     }, 1, 'normal', {x: x, y: y});
 }
 
+function chanceRemainder(val) {
+    let chance = new Decimal(val)
+    let remain = Decimal.floor(chance)
+    chance = chance.sub(remain)
+    
+    if (Decimal.gte(chance, Math.random())) remain = remain.add(1)
+    return remain
+}

@@ -584,6 +584,10 @@ h1, h2, h3, b, input {
 	position: relative;
 }
 
+.levelableSmall {
+	font-size: 12px !important;
+}
+
 @keyframes dimFlash {
 	0% {box-shadow: inset 0 0 10px 5px rgba(255,255,150,0);}
 	50% {box-shadow: inset 0 0 10px 5px rgba(255,255,150,0.25);}

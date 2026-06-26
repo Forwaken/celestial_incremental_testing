@@ -70,6 +70,7 @@ addLayer("pu", {
         player.pu.epicRaise = player.pu.epicRaise.mul(player.bl.bloodEffect)
 
         player.pu.legendaryRaise = new Decimal(1)
+        player.pu.legendaryRaise = player.pu.legendaryRaise.mul(buyableEffect("rp", 16))
         player.pu.legendaryRaise = player.pu.legendaryRaise.mul(player.bl.bloodEffect)
     },
     generateSelection() {
@@ -1913,8 +1914,9 @@ addLayer("pu", {
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
-                if (player.sma.starmetalAlloy.lt(100000)) eff[0] = player.sma.starmetalAlloy.add(1).pow(0.8).pow(this.effectScale()).pow(player.pu.epicRaise)
-                if (player.sma.starmetalAlloy.gte(100000)) eff[0] = player.sma.starmetalAlloy.div(100000).pow(0.2).mul(10000).pow(this.effectScale()).pow(player.pu.epicRaise)
+                let softcap = new Decimal(100000).mul(buyableEffect("zd", 21))
+                if (player.sma.starmetalAlloy.lt(softcap)) eff[0] = player.sma.starmetalAlloy.add(1).pow(0.8).pow(this.effectScale()).pow(player.pu.epicRaise)
+                if (player.sma.starmetalAlloy.gte(softcap)) eff[0] = player.sma.starmetalAlloy.div(softcap).pow(0.2).mul(softcap.pow(0.8)).pow(this.effectScale()).pow(player.pu.epicRaise)
                 if (getLevelableAmount(this.layer, this.id).lt(10)) eff[1] = Decimal.pow(10, getLevelableAmount(this.layer, this.id))
                 if (getLevelableAmount(this.layer, this.id).gte(10)) eff[1] = Decimal.pow(3, getLevelableAmount(this.layer, this.id).sub(10)).mul(1e10)
                 return eff

@@ -53,7 +53,7 @@ addLayer("laboratory", {
         player.laboratory.unlocked = getLevelableAmount("pet", 503).gt(0) || getLevelableTier("pet", 503).gt(0)
 
         player.laboratory.matosMult = new Decimal(1)
-        player.laboratory.matosMult = player.laboratory.matosMult.mul(player.darkTemple.laboratoryCurMult)
+        player.laboratory.matosMult = player.laboratory.matosMult.mul(player.darkTemple.celStageCurMult)
 
         player.laboratory.cooldown = player.laboratory.cooldown.sub(delta)
 

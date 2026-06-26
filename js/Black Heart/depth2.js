@@ -215,7 +215,7 @@ addLayer("depth2", {
         101: {
             title: "sffuB derettacS",
             unlocked() {return player.depth2.lowestCombo.lt(0)},
-            description: "Unlock a new upgrade for each character.",
+            description: "Unlock new upgrades for characters.",
             cost: new Decimal(30000),
             currencyLocation() { return player.depth2 },
             currencyDisplayName: "Faint Umbrite",

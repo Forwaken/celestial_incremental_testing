@@ -36,6 +36,7 @@ addLayer("hcu", {
         externalCur = externalCur.mul(buyableEffect("ta", 49))
         externalCur = externalCur.mul(buyableEffect("g", 27))
         if (hasUpgrade("ep2", 17)) externalCur = externalCur.mul(upgradeEffect("ep2", 17))
+        if (hasUpgrade("zd", 23)) externalCur = externalCur.mul(upgradeEffect("zd", 23))
 
         externalCur = externalCur.pow(player.h.externalRaise)
         player.hcu.cursesGain = player.hcu.cursesGain.mul(externalCur)

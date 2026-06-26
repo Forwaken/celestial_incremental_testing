@@ -686,6 +686,9 @@
         player.rp.buyables[11] = new Decimal(0)
         player.rp.buyables[12] = new Decimal(0)
         player.rp.buyables[13] = new Decimal(0)
+        player.rp.buyables[14] = new Decimal(0)
+        player.rp.buyables[15] = new Decimal(0)
+        player.rp.buyables[16] = new Decimal(0)
 
         player.pu.rerolls = new Decimal(0)
         player.funify.funify = new Decimal(0)

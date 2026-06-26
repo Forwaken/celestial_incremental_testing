@@ -24,7 +24,8 @@
     update(delta) {
         let onepersec = new Decimal(1)
 
-        player.rp.rerollPointsToGet = player.du.points.plus(1).log10().pow(1.25).div(50).add(1).div(player.rp.rerollPoints.pow(0.75).add(1))
+        player.rp.rerollPointsToGet = player.du.points.plus(1).log10().pow(1.25).div(50).add(1)
+        player.rp.rerollPointsToGet = player.rp.rerollPointsToGet.div(player.rp.rerollPoints.pow(0.75).add(1))
         player.rp.rerollPointsToGet = player.rp.rerollPointsToGet.mul(levelableEffect("pu", 402)[0])
 
         if (player.rp.rerollPoints.lt(0)) {
@@ -48,9 +49,6 @@
                 return look
             }
         },
-    },
-    upgrades: {
-
     },
     buyables: {
         11: {
@@ -100,7 +98,7 @@
                 return "Avoiding the Unavoidable"
             },
             display() {
-                return "which are raising unavoidable softcap effect by ^" + format(tmp[this.layer].buyables[this.id].effect) + "\n\Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Reroll Points"
+                return "which are raising unavoidable softcap effect by ^" + format(tmp[this.layer].buyables[this.id].effect, 3) + "\n\Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Reroll Points"
             },
             buy(mult) {
                 if (mult != true) {
@@ -152,6 +150,105 @@
             },
             style: { width: '275px', height: '150px', color: "black", background: "linear-gradient(120deg, #abbfc0 0%, #758691 50%, #52555e 100%)", borderColor: "#d4ddff" }
         },
+        14: {
+            costBase() { return new Decimal(25) },
+            costGrowth() { return new Decimal(5) },
+            purchaseLimit() { return new Decimal(20) },
+            currency() { return player.rp.rerollPoints},
+            pay(amt) { player.rp.rerollPoints = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(200).add(1) },
+            unlocked() { return hasUpgrade("zd", 25)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Drowning in Grass"
+            },
+            display() {
+                return "which are increasing dark grass's softcap exponent by +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1), 3) + "\n\Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Reroll Points"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', color: "black", background: "linear-gradient(120deg, #abbfc0 0%, #758691 50%, #52555e 100%)", borderColor: "#d4ddff" }
+        },
+        15: {
+            costBase() { return new Decimal(50) },
+            costGrowth() { return new Decimal(5) },
+            purchaseLimit() { return new Decimal(20) },
+            currency() { return player.rp.rerollPoints},
+            pay(amt) { player.rp.rerollPoints = this.currency().sub(amt) },
+            effect(x) { return Decimal.div(1, getBuyableAmount(this.layer, this.id).div(100).add(1)) },
+            unlocked() { return hasUpgrade("zd", 25)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Avoiding the Unavoidable<sup>2</sup>"
+            },
+            display() {
+                return "which are raising unavoidable softcap<sup>2</sup> effect by ^" + format(tmp[this.layer].buyables[this.id].effect, 3) + "\n\Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Reroll Points"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', color: "black", background: "linear-gradient(120deg, #abbfc0 0%, #758691 50%, #52555e 100%)", borderColor: "#d4ddff" }
+        },
+        16: {
+            costBase() { return new Decimal(100) },
+            costGrowth() { return new Decimal(10) },
+            purchaseLimit() { return new Decimal(10) },
+            currency() { return player.rp.rerollPoints},
+            pay(amt) { player.rp.rerollPoints = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
+            unlocked() { return hasUpgrade("zd", 25)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Exponentially Legendary"
+            },
+            display() {
+                return "which raises legendary punchcard effects by ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Reroll Points"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', color: "black", background: "linear-gradient(120deg, #abbfc0 0%, #758691 50%, #52555e 100%)", borderColor: "#d4ddff" }
+        },
     },
     milestones: {},
     challenges: {},
@@ -177,6 +274,7 @@
                     ["row", [["clickable", 11]]],
                     ["blank", "25px"],
                     ["row", [["ex-buyable", 11], ["ex-buyable", 12], ["ex-buyable", 13]]],
+                    ["row", [["ex-buyable", 14], ["ex-buyable", 15], ["ex-buyable", 16]]],
                 ]
             },
         },

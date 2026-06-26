@@ -608,6 +608,8 @@ addLayer("bh", {
             "diceFive_diceSlice": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
             "diceFive_luckyLift": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
             "diceFive_coinToss": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
+            "diceFive_fickleFavor": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
+            "diceFive_fortunesMalace": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
             "diceFive_snakeEyes": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
         },
 
@@ -1428,6 +1430,7 @@ addLayer("bh", {
         luckAdd = luckAdd.add(player.bh.skillData["diceFive_diceSlice"].maxLevel.div(2))
         luckAdd = luckAdd.add(player.bh.skillData["diceFive_luckyLift"].maxLevel.div(2))
         luckAdd = luckAdd.add(player.bh.skillData["diceFive_coinToss"].maxLevel.div(2))
+        luckAdd = luckAdd.add(player.bh.skillData["diceFive_fortunesMalace"].maxLevel.div(2))
         luckAdd = luckAdd.add(player.bh.skillData["diceFive_snakeEyes"].maxLevel.div(2))
         if (hasUpgrade("ep2", 9105)) luckAdd = luckAdd.add(upgradeEffect("ep2", 9105))
         luckAdd = luckAdd.add(levelableEffect("car", 109)[0])
@@ -1440,6 +1443,7 @@ addLayer("bh", {
         if (hasAchievement("achievements", 923)) mendingAdd = mendingAdd.add(1)
         if (player.alephsChamber.milestone[25] > 0) mendingAdd = mendingAdd.add(10)
         mendingAdd = mendingAdd.add(levelableEffect("car", 110)[0])
+        mendingAdd = mendingAdd.add(player.bh.skillData["diceFive_fickleFavor"].maxLevel.div(2))
         mendingAdd = mendingAdd.add(player.bh.skillData["nav_violetResonance"].maxLevel)
 
         // =-- POTENCY STUFF --= //
@@ -3022,7 +3026,7 @@ addLayer("bh", {
         "Char-DiceFive": {
             title() {return "<img src='" + run(BHP["diceFive"].icon, BHP["diceFive"]) + "'style='width:90px;height:90px;margin-left:-2px;margin-bottom:-4px'></img>"},
             canClick: true,
-            unlocked() {return hasUpgrade("zd", 11)}, //change eventually
+            unlocked() {return player.zd.buyables[14].gte(1)}, //change eventually
             onClick() {
                 player.bh.characterSelection = "diceFive"
             },
@@ -4749,6 +4753,7 @@ addLayer("bh", {
                                         ["tooltip-row", [["raw-html", () => {return player.bh.characters[0].attributes.daze ? "꩜<div class='bottomTooltip' style='margin-top:0px'>Dazed<hr>All actions have a<br>" + formatSimple(Decimal.div(player.bh.characters[0].attributes.daze, Decimal.div(Decimal.add(100, player.bh.characters[0].luck), 100)).mul(100)) + "% chance to miss.</div>" : ""}, {color: "#c44c5b", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                         ["tooltip-row", [["raw-html", () => {return player.bh.characters[0].attributes.anima ? "⚜︎<div class='bottomTooltip' style='margin-top:0px'>Anima<hr>Has " + formatSimple(Decimal.sub(1, player.bh.characters[0].attributes.anima).mul(100)) + "% resistance to<br>spirit attacks.</div>" : ""}, {color: "#6FF9F4", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                         ["tooltip-row", [["raw-html", () => {return player.bh.characters[0].attributes.negative ? "—<div class='bottomTooltip' style='margin-top:0px'>Negative<hr>Incoming attacks have a <br>" + formatSimple(Decimal.mul(player.bh.characters[0].attributes.negative, Decimal.div(Decimal.add(100, player.bh.characters[0].luck), 100)).mul(100)) + "% chance to be turned<br>into heals.</div>" : ""}, {color: "#44b", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black", marginLeft: "2px"}]]],
+                                        ["tooltip-row", [["raw-html", () => {return player.bh.characters[0].attributes.haze ? "⚯<div class='bottomTooltip' style='margin-top:0px'>Haze<hr>Incoming actions have a<br>" + formatSimple(player.bh.characters[0].attributes.haze.mul(100)) + "% chance to miss.</div>" : ""}, {color: "#C4BDC9", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                     ], {width: "150px", height: "30px", marginTop: "-35px"}],
                                     ["blank", ["25px", "5px"]],
                                     ["row", [["raw-html", () => {return player.bh.creationUsed ? "You have <h3>" + format(player.creation.incrementalEnergy) + "</h3> incremental energy." : ""}, {color: "#c9acff", fontSize: "18px", fontFamily: "monospace"}]]],
@@ -4766,6 +4771,7 @@ addLayer("bh", {
                                         ["tooltip-row", [["raw-html", () => {return player.bh.characters[1].attributes.daze ? "꩜<div class='bottomTooltip' style='margin-top:0px'>Dazed<hr>All actions have a<br>" + formatSimple(Decimal.div(player.bh.characters[1].attributes.daze, Decimal.div(Decimal.add(100, player.bh.characters[1].luck), 100)).mul(100)) + "% chance to miss.</div>" : ""}, {color: "#c44c5b", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                         ["tooltip-row", [["raw-html", () => {return player.bh.characters[1].attributes.anima ? "⚜︎<div class='bottomTooltip' style='margin-top:0px'>Anima<hr>Has " + formatSimple(Decimal.sub(1, player.bh.characters[1].attributes.anima).mul(100)) + "% resistance to<br>spirit attacks.</div>" : ""}, {color: "#6FF9F4", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                         ["tooltip-row", [["raw-html", () => {return player.bh.characters[1].attributes.negative ? "—<div class='bottomTooltip' style='margin-top:0px'>Negative<hr>Incoming attacks have a <br>" + formatSimple(Decimal.mul(player.bh.characters[1].attributes.negative, Decimal.div(Decimal.add(100, player.bh.characters[1].luck), 100)).mul(100)) + "% chance to be turned<br>into heals.</div>" : ""}, {color: "#44b", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black", marginLeft: "2px"}]]],
+                                        ["tooltip-row", [["raw-html", () => {return player.bh.characters[1].attributes.haze ? "⚯<div class='bottomTooltip' style='margin-top:0px'>Haze<hr>Incoming actions have a<br>" + formatSimple(player.bh.characters[1].attributes.haze.mul(100)) + "% chance to miss.</div>" : ""}, {color: "#C4BDC9", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                     ], {width: "150px", height: "30px", marginTop: "-35px"}],
                                 ], {margin: "5px"}],
                             ]],
@@ -4782,6 +4788,7 @@ addLayer("bh", {
                                     ["tooltip-row", [["raw-html", () => {return player.bh.characters[2].attributes.daze ? "꩜<div class='bottomTooltip' style='margin-top:0px'>Dazed<hr>All actions have a<br>" + formatSimple(Decimal.div(player.bh.characters[2].attributes.daze, Decimal.div(Decimal.add(100, player.bh.characters[2].luck), 100)).mul(100)) + "% chance to miss.</div>" : ""}, {color: "#c44c5b", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                     ["tooltip-row", [["raw-html", () => {return player.bh.characters[2].attributes.anima ? "⚜︎<div class='bottomTooltip' style='margin-top:0px'>Anima<hr>Has " + formatSimple(Decimal.sub(1, player.bh.characters[2].attributes.anima).mul(100)) + "% resistance to<br>spirit attacks.</div>" : ""}, {color: "#6FF9F4", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                     ["tooltip-row", [["raw-html", () => {return player.bh.characters[2].attributes.negative ? "—<div class='bottomTooltip' style='margin-top:0px'>Negative<hr>Incoming attacks have a <br>" + formatSimple(Decimal.mul(player.bh.characters[2].attributes.negative, Decimal.div(Decimal.add(100, player.bh.characters[2].luck), 100)).mul(100)) + "% chance to be turned<br>into heals.</div>" : ""}, {color: "#44b", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black", marginLeft: "2px"}]]],
+                                    ["tooltip-row", [["raw-html", () => {return player.bh.characters[2].attributes.haze ? "⚯<div class='bottomTooltip' style='margin-top:0px'>Haze<hr>Incoming actions have a<br>" + formatSimple(player.bh.characters[2].attributes.haze.mul(100)) + "% chance to miss.</div>" : ""}, {color: "#C4BDC9", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                 ], {width: "150px", height: "30px", marginTop: "-35px"}],
                             ], {margin: "5px"}],
                         ]],
@@ -4800,6 +4807,7 @@ addLayer("bh", {
                                 ["tooltip-row", [["raw-html", () => {return player.bh.celestialite.attributes.daze ? "꩜<div class='bottomTooltip' style='margin-top:0px'>Dazed<hr>All actions have a<br>" + formatSimple(Decimal.div(player.bh.celestialite.attributes.daze, Decimal.div(Decimal.add(100, player.bh.celestialite.luck), 100)).mul(100)) + "% chance to miss.</div>" : ""}, {color: "#c44c5b", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                 ["tooltip-row", [["raw-html", () => {return player.bh.celestialite.attributes.anima ? "⚜︎<div class='bottomTooltip' style='margin-top:0px'>Anima<hr>Has " + formatSimple(Decimal.sub(1, player.bh.celestialite.attributes.anima).mul(100)) + "% resistance to<br>spirit attacks.</div>" : ""}, {color: "#6FF9F4", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                                 ["tooltip-row", [["raw-html", () => {return player.bh.celestialite.attributes.negative ? "—<div class='bottomTooltip' style='margin-top:0px'>Negative<hr>Incoming attacks have a <br>" + formatSimple(Decimal.mul(player.bh.celestialite.attributes.negative, Decimal.div(Decimal.add(100, player.bh.celestialite.luck), 100)).mul(100)) + "% chance to be turned<br>into heals.</div>" : ""}, {color: "#44b", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black", marginLeft: "2px"}]]],
+                                ["tooltip-row", [["raw-html", () => {return player.bh.celestialite.attributes.haze ? "⚯<div class='bottomTooltip' style='margin-top:0px'>Haze<hr>Incoming actions have a<br>" + formatSimple(player.bh.celestialite.attributes.haze.mul(100)) + "% chance to miss.</div>" : ""}, {color: "#C4BDC9", fontSize: "30px", fontFamily: "monospace", textShadow: "1px 1px 1px black, -1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black"}]]],
                             ], {width: "150px", height: "30px", marginTop: "-35px"}],
                             ["style-column", [
                                 ["blank", "20px"],

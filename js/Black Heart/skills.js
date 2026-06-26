@@ -1089,7 +1089,7 @@ BHA.diceFive_diceSlice = {
     curCostBase: new Decimal(10),
     curCostScale: new Decimal(5),
     currency: "pips", //change to pips later
-    unlocked() {return hasUpgrade("zd", 11)},
+    unlocked() {return player.zd.buyables[14].gte(1)},
 
     instant: true,
     type: "function",
@@ -1117,21 +1117,26 @@ BHA.diceFive_diceSlice = {
 BHA.diceFive_luckyLift = {
     name: "Lucky Lift",
     description(char) {
-         let effect = new Decimal(80).add(player.bh.skillData["diceFive_luckyLift"].level.mul(10))
-         if (player.alephsChamber.milestone[25] >= 2) effect = effect.mul(Decimal.div(char.potency.add(100), 100))
-         return "Boosts the entire team's luck by +" + formatWhole(effect) + "% for 10 seconds."},
+        let effect = new Decimal(80).add(player.bh.skillData["diceFive_luckyLift"].level.mul(10))
+        if (player.alephsChamber.milestone[25] >= 2) effect = effect.mul(Decimal.div(char.potency.add(100), 100))
+        if (hasUpgrade("zd", 16)) return "Grants the Haze<small>[10%]</small> attribute and buffs luck by +" + formatWhole(effect) + "% for the entire team for 10 seconds."
+        return "Boosts the entire team's luck by +" + formatWhole(effect) + "% for 10 seconds."},
     passiveText() {return "+" + formatSimple(player.bh.skillData["diceFive_luckyLift"].maxLevel.div(2)) + " LUCK"},
     char: "diceFive",
-    spCost: new Decimal(14),
+    spCost: new Decimal(10),
     curCostBase: new Decimal(15),
     curCostScale: new Decimal(6),
     currency: "pips", //change to pips later
-    unlocked() {return hasUpgrade("zd", 12)},
+    unlocked() {return hasUpgrade("zd", 11)},
     active: true,
     constantType: "effect",
     constantTarget: "allPlayer",
     effects: {
         "luckMult"() {return new Decimal(1.8).add(player.bh.skillData["diceFive_luckyLift"].level.mul(0.1))}, // Multiplicative Effect
+        "attributes"() {
+            if (hasUpgrade("zd", 16)) return {"hazy": new Decimal(0.1)}
+            return {}
+        },
     },
     cooldown: new Decimal(35),
     duration: new Decimal(10),
@@ -1143,11 +1148,11 @@ BHA.diceFive_coinToss = {
         return "Either deals " + formatWhole(new Decimal(1500).add(player.bh.skillData["diceFive_coinToss"].level.mul(300))) + "% ranged damage or soft-stuns Dice Five for 5 seconds. (Unaffected by luck)"},
     passiveText() {return "+" + formatSimple(player.bh.skillData["diceFive_coinToss"].maxLevel.div(2)) + " LUCK"},
     char: "diceFive",
-    spCost: new Decimal(14),
+    spCost: new Decimal(15),
     curCostBase: new Decimal(25),
-    curCostScale: new Decimal(9),
+    curCostScale: new Decimal(5),
     currency: "pips", //change to pips later
-    unlocked() {return hasUpgrade("zd", 13)},
+    unlocked() {return hasUpgrade("zd", 12)},
 
     instant: true,
     type: "function",
@@ -1168,6 +1173,56 @@ BHA.diceFive_coinToss = {
             player.bh.characters[index].stun = ["soft", new Decimal(5)]
         }
     },
+}
+BHA.diceFive_fickleFavor = {
+    name: "Fickle Favor",
+    description(char) {
+        let heal = new Decimal(5).add(player.bh.skillData["diceFive_fickleFavor"].level.mul(1))
+        if (player.matosLair.milestone[25] >= 2) heal = heal.mul(char.mending.div(10).add(1))
+        return "Attempt 3 randomly targeted heals for " + formatWhole(heal) + " health. Each heal has a " + formatSimple(Decimal.div(50, Decimal.div(Decimal.add(100, char.luck), 100))) + "% chance to fail."
+    },
+    passiveText() {return "+" + formatSimple(player.bh.skillData["diceFive_fickleFavor"].maxLevel.div(2)) + " MND"},
+    char: "diceFive",
+    spCost: new Decimal(20),
+    curCostBase: new Decimal(60),
+    curCostScale: new Decimal(6),
+    currency: "pips",
+    unlocked() {return hasUpgrade("zd", 13)},
+
+    instant: true,
+    type: "heal",
+    target: "randomPlayer",
+    properties: {
+        "multi-hit": [3, 200],
+        "miss": 0.5,
+    },
+    value() {return new Decimal(5).add(player.bh.skillData["diceFive_fickleFavor"].level.mul(1))},
+    cooldown: new Decimal(15),
+    cooldownCap: new Decimal(5),
+}
+BHA.diceFive_fortunesMalace = {
+    name: "Fortunes Malace",
+    description(char) {
+        let effect = new Decimal(10).add(player.bh.skillData["diceFive_fortunesMalace"].level.mul(2))
+        if (player.alephsChamber.milestone[25] >= 2) effect = effect.mul(Decimal.div(char.potency.add(100), 100))
+        return "Boost team damage and agility based on luck.<br.Currently: " + formatSimple(char.luck.pow(0.5).div(10).mul(effect)) + "%"
+    },
+    passiveText() {return "+" + formatSimple(player.bh.skillData["diceFive_fortunesMalace"].maxLevel.div(2)) + " LUCK"},
+    char: "diceFive",
+    spCost: new Decimal(25),
+    curCostBase: new Decimal(100),
+    curCostScale: new Decimal(10),
+    currency: "pips",
+    unlocked() {return hasUpgrade("zd", 14)},
+
+    passive: true,
+    constantType: "effect",
+    constantTarget: "allPlayer",
+    effects: {
+        "damageMult"(char) {return char.luck.pow(0.5).div(10).mul(Decimal.add(0.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
+        "agilityMult"(char) {return char.luck.pow(0.5).div(10).mul(Decimal.add(0.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
+    },
+    cooldown: new Decimal(Infinity),
 }
 BHA.diceFive_snakeEyes = {
     name: "Snake Eyes",

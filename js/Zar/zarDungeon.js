@@ -47,27 +47,20 @@
         // keep scores in sync each tick
         layers.zd.calculateScore();
 
-
         // match up to images
         player.zd.dealerHandImages = player.zd.dealerHand.map(c => `<img src='resources/cards/${c}.png'style='width:70px;height:125px;margin:-20px;'></img>`)
         player.zd.playerHandImages = player.zd.playerHand.map(c => `<img src='resources/cards/${c}.png'style='width:70px;height:125px;margin:-20px;'></img>`)
 
-        if (player.zd.playerScore.gt(21))
-        {
+        if (player.zd.playerScore.gt(21)) {
             layers.zd.endGame('dealer')
-        } else if (player.zd.dealerScore.eq(player.zd.playerScore))
-        {
+        } else if (player.zd.dealerScore.eq(player.zd.playerScore)) {
            // layers.zd.endGame('push')
-        } else if (player.zd.playerScore.eq(21))
-        {
+        } else if (player.zd.playerScore.eq(21)) {
             layers.zd.endGame('player')
         }
-
-        if (player.zd.dealerScore.gt(21))
-        {
+        if (player.zd.dealerScore.gt(21)) {
             layers.zd.endGame('player')
-        } else if (player.zd.dealerScore.eq(21))
-        {
+        } else if (player.zd.dealerScore.eq(21)) {
             layers.zd.endGame('dealer')
         }
 
@@ -78,11 +71,13 @@
         player.zd.zarChipsToGet = new Decimal(1)
         player.zd.zarChipsToGet = player.zd.zarChipsToGet.add(buyableEffect("zd", 15))
         player.zd.zarChipsToGet = player.zd.zarChipsToGet.mul(levelableEffect("pu", 402)[1])
+        player.zd.zarChipsToGet = player.zd.zarChipsToGet.mul(buyableEffect("zd", 24))
 
         player.zd.zarChipsToGet = player.zd.zarChipsToGet.mul(buyableEffect("zd", 17)).floor()
 
-        if (player.bh.currentStage == "zarDungeon" && player.tab == "zd")
-        {
+        if (getBuyableAmount("zd", 23).gt(0)) player.zd.zarChips = player.zd.zarChips.add(player.zd.zarChipsToGet.mul(buyableEffect("zd", 23).sub(1)).mul(delta))
+
+        if (player.bh.currentStage == "zarDungeon" && player.tab == "zd") {
             player.tab = "bh"
         }
     },
@@ -157,7 +152,7 @@
         if (!player.zd.gameOver)
         {
             if (winner == 'dealer') {
-                makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 1000, y: 450, text: "You lost..."})
+                makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 940, y: 580, text: "You lost..."})
             } else if (winner == 'player') {
                 player.cb.evolutionShards = player.cb.evolutionShards.add(player.zd.gameCost)
 
@@ -165,22 +160,21 @@
                 if (random < buyableEffect("zd", 16)) 
                 {
                     player.zd.zarChips = player.zd.zarChips.add(player.zd.zarChipsToGet.mul(3))
-                    makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 1000, y: 450, text: "[TRIPLE] You win!<br><h5>Evolution shards returned."})
+                    makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 940, y: 580, text: "[TRIPLE] You win!<br><h5>Evolution shards returned."})
                 }
                 else 
                 {
                     player.zd.zarChips = player.zd.zarChips.add(player.zd.zarChipsToGet)
-                    makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 1000, y: 450, text: "You win!<br><h5>Evolution shards returned."})
+                    makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 940, y: 580, text: "You win!<br><h5>Evolution shards returned."})
                 }
             } else if (winner == 'push') {
-                makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 1000, y: 450, text: "It's a tie!<br><h5>Evolution shards returned."})
+                makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 940, y: 580, text: "It's a tie!<br><h5>Evolution shards returned."})
                 player.cb.evolutionShards = player.cb.evolutionShards.add(player.zd.gameCost)
             }
         }
 
         player.zd.gameOver = true
     },
-    
     clickables: {
         11: {
             title() { return "<h3>Hit" },
@@ -386,23 +380,8 @@
             style: { width: '70px', "min-height": '120px', color: "black", border: "3px solid rgba(0,0,0,0.5)", },
         },
     },
-    bars: {},
     upgrades: {
         11: {
-            title: "New Ally",
-            unlocked: true,
-            description: "Unlocks Dice Five as a party member.",
-            cost: new Decimal(20),
-            currencyLocation() { return player.zd },
-            currencyDisplayName: "Pips",
-            currencyInternalName: "pips",
-            style() {
-                let look = {minHeight: "140px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
-                return look
-            },
-        },
-        12: {
             title: "Four-Leaf Clover",
             unlocked: true,
             description: "Unlocks Dice Five's \"Lucky Lift\" skill.",
@@ -411,30 +390,104 @@
             currencyDisplayName: "Pips",
             currencyInternalName: "pips",
             style() {
-                let look = {minHeight: "140px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
+                return look
+            },
+        },
+        12: {
+            title: "Not an Ultrakill Reference",
+            unlocked: true,
+            description: "Unlocks Dice Five's \"Coin Toss\" skill.",
+            cost: new Decimal(100),
+            currencyLocation() { return player.zd },
+            currencyDisplayName: "Pips",
+            currencyInternalName: "pips",
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
                 return look
             },
         },
         13: {
-            title: "Not an Ultrakill Reference",
+            title: "Lucks Grace",
             unlocked: true,
-            description: "Unlocks Dice Five's \"Coin Toss\" skill.",
-            cost: new Decimal(150),
+            description: "Unlocks Dice Five's \"Fickle Favor\" skill.",
+            cost: new Decimal(250),
             currencyLocation() { return player.zd },
             currencyDisplayName: "Pips",
             currencyInternalName: "pips",
             style() {
-                let look = {minHeight: "140px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
                 return look
             },
         },
         14: {
+            title: "Lucks Hate",
+            unlocked: true,
+            description: "Unlocks Dice Five's \"Fortunes Malace\" skill.",
+            cost: new Decimal(500),
+            currencyLocation() { return player.zd },
+            currencyDisplayName: "Pips",
+            currencyInternalName: "pips",
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
+                return look
+            },
+        },
+        15: {
+            title: "Fatal Fortunes",
+            unlocked: true,
+            description: "Increases Dice Five's base damage by +2.",
+            cost: new Decimal(1000),
+            currencyLocation() { return player.zd },
+            currencyDisplayName: "Pips",
+            currencyInternalName: "pips",
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
+                return look
+            },
+        },
+        16: {
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires another sides upgrade.</h3>"
+                return "<h3>Confusing Luck</h3><br>\"Lucky Lift\" now also gives the Haze<small>[10%]</small> attribute to teammates.<br><br>Cost: 2,500 Pips"
+            },
+            unlocked: true,
+            cost: new Decimal(2500),
+            canAfford() { return hasUpgrade("depth2", 101)},
+            currencyLocation() { return player.zd },
+            currencyDisplayName: "Pips",
+            currencyInternalName: "pips",
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
+                if (!this.canAfford()) {look.background = "black";look.borderColor = "#888"}
+                return look
+            },
+        },
+        21: {
+            title: "Pipped Chips",
+            unlocked: true,
+            description: "Unlock more zar chip upgrades.",
+            cost: new Decimal(50),
+            currencyLocation() { return player.zd },
+            currencyDisplayName: "Pips",
+            currencyInternalName: "pips",
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
+                return look
+            },
+        },
+        22: {
             title: "Pip Power",
             unlocked: true,
             description: "Pips boost chance point gain",
-            cost: new Decimal(300),
+            cost: new Decimal(100),
             currencyLocation() { return player.zd },
             currencyDisplayName: "Pips",
             currencyInternalName: "pips",
@@ -443,7 +496,76 @@
             },
             effectDisplay() { return "x" + format(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             style() {
-                let look = {minHeight: "140px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
+                return look
+            },
+        },
+        23: {
+            title: "Pip Peril",
+            unlocked: true,
+            description() {return "Pips boost " + player.h.stageName[1] + " curse gain"},
+            cost: new Decimal(250),
+            currencyLocation() { return player.zd },
+            currencyDisplayName: "Pips",
+            currencyInternalName: "pips",
+            effect() {
+                let eff = player.zd.pips.add(1)
+                if (player.zd.pips.gt(1000)) eff = player.zd.pips.add(1).div(1000).pow(0.5).mul(1000)
+                return eff
+            },
+            effectDisplay() {
+                if (player.zd.pips.gt(1000)) return "x" + format(upgradeEffect(this.layer, this.id)) + " <small style='color:red'>[SOFTCAPPED]</small>"
+                return "x" + format(upgradeEffect(this.layer, this.id))
+            }, // Add formatting to the effect
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
+                return look
+            },
+        },
+        24: {
+            title: "Piperator",
+            unlocked: true,
+            description() {return "Card generators boost pips gain"},
+            cost: new Decimal(500),
+            currencyLocation() { return player.zd },
+            currencyDisplayName: "Pips",
+            currencyInternalName: "pips",
+            effect() {
+                return player.car.cardGenerators.pow(0.5).add(1).log(10).div(20).add(1)
+            },
+            effectDisplay() {return "x" + format(upgradeEffect(this.layer, this.id))},
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
+                return look
+            },
+        },
+        25: {
+            title: "6-Pip",
+            unlocked: true,
+            description() {return "Unlock 3 more reroll point buyables"},
+            cost: new Decimal(1000),
+            currencyLocation() { return player.zd },
+            currencyDisplayName: "Pips",
+            currencyInternalName: "pips",
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
+                return look
+            },
+        },
+        26: {
+            title: "Playful Pips",
+            unlocked: true,
+            description() {return "Unlock joker cards"},
+            cost: new Decimal(2500),
+            currencyLocation() { return player.zd },
+            currencyDisplayName: "Pips",
+            currencyInternalName: "pips",
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
                 return look
             },
@@ -461,7 +583,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
-                return "<h3>ZC-1</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/100)\n\
+                return "<h3>ZC-A1</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/100)\n\
                     Quadruple chance point gain\n\
                     Currently: x" + formatWhole(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
@@ -487,7 +609,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
-                return "<h3>ZC-2</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                return "<h3>ZC-A2</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
                     Raise dice score\n\
                     Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
@@ -513,7 +635,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
-                return "<h3>ZC-3</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/100)\n\
+                return "<h3>ZC-A3</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/100)\n\
                     Multiply ESC\n\
                     Currently: x" + format(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
@@ -539,7 +661,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
-                return "<h3>ZC-4</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/1)\n\
+                return "<h3>ZC-A4</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/1)\n\
                     Open the door to Zar's Dungeon\n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
             },
@@ -565,7 +687,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
-                return "<h3>ZC-5</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/100)\n\
+                return "<h3>ZC-B1</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/100)\n\
                     Adds to base Zar Chip gain\n\
                     Currently: +" + formatWhole(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
@@ -591,7 +713,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
-                return "<h3>ZC-6</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/20)\n\
+                return "<h3>ZC-B2</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/20)\n\
                     Chance to win triple zar chips on win.\n\
                     Currently: " + format(tmp[this.layer].buyables[this.id].effect.mul(100)) + "%\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
@@ -617,7 +739,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
-                return "<h3>ZC-7</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                return "<h3>ZC-B3</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
                     Multiplies Zar Chip gain\n\
                     Currently: x" + format(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
@@ -643,7 +765,7 @@
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() {return this.currency().gte(this.cost())},
             display() {
-                return "<h3>ZC-8</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                return "<h3>ZC-B4</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
                     Divides Evo Shard requirement\n\
                     Currently: /" + format(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
@@ -658,10 +780,111 @@
                 return look
             },
         },
-    },
-    milestones: {},
-    challenges: {},
-    infoboxes: {
+
+        21: {
+            costBase() { return new Decimal(100) },
+            costGrowth() { return new Decimal(5) },
+            purchaseLimit() { return new Decimal(20) },
+            currency() { return player.zd.zarChips},
+            pay(amt) { player.zd.zarChips = this.currency().sub(amt) },
+            effect(x) {return Decimal.pow(10, getBuyableAmount(this.layer, this.id))},
+            unlocked() {return hasUpgrade("zd", 21)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() {return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>ZC-A5</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/20)\n\
+                    Extend the start of \"Multipurpose I\"'s effect softcap\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#dadada"
+                return look
+            },
+        },
+        22: {
+            costBase() { return new Decimal(1000) },
+            costGrowth() { return new Decimal(100) },
+            purchaseLimit() { return new Decimal(5) },
+            currency() { return player.zd.zarChips},
+            pay(amt) { player.zd.zarChips = this.currency().sub(amt) },
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(100).add(1)},
+            unlocked() {return hasUpgrade("zd", 21)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() {return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>ZC-A6</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/5)\n\
+                    Raise " + player.h.stageName[1] + " power\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#dadada"
+                return look
+            },
+        },
+        23: {
+            costBase() { return new Decimal(100) },
+            costGrowth() { return new Decimal(10) },
+            purchaseLimit() { return new Decimal(10) },
+            currency() { return player.zd.zarChips},
+            pay(amt) { player.zd.zarChips = this.currency().sub(amt) },
+            effect(x) {return player.zd.pips.add(1).log(10).div(1000).add(1).pow(getBuyableAmount(this.layer, this.id))},
+            unlocked() {return hasUpgrade("zd", 21)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() {return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>ZC-B5</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/10)\n\
+                    Generates Zar Chips based on Pips\n\
+                    Currently: +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100)) + "% of gain per second\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#dadada"
+                return look
+            },
+        },
+        24: {
+            costBase() { return new Decimal(1000) },
+            costGrowth() { return new Decimal(100) },
+            purchaseLimit() { return new Decimal(5) },
+            currency() { return player.zd.zarChips},
+            pay(amt) { player.zd.zarChips = this.currency().sub(amt) },
+            effect(x) {return player.zd.zarChips.add(1).log(3).div(10).add(1).pow(getBuyableAmount(this.layer, this.id))},
+            unlocked() {return hasUpgrade("zd", 21)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() {return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>ZC-B6</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/5)\n\
+                    Multiplies Zar Chip gain based on Zar Chips\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#dadada"
+                return look
+            },
+        },
     },
     microtabs: {
         stages: {
@@ -675,39 +898,35 @@
                 buttonStyle() { return { color: "white", borderRadius: "5px" } },
                 unlocked() { return player.za.zarUnlocked },
                 content: [
-                    ["blank", "50px"],
-                    ["style-row", [
-                    ["column", [
-                    ["raw-html", function () { return "You have <h3>" + formatWhole(player.zd.zarChips) + "</h3> zar chips. (+" + formatWhole(player.zd.zarChipsToGet) + ")"}, { "color": "white", "font-size": "24px", "font-family": "monospace" }], 
-                    ["blank", "15px"],
-                    ]]
-                    ], {width: "1277px", height: "75px", backgroundColor: "#303030", border: "3px solid #7f7f7f", padding: "5px"}],
-                    ["style-row", [
+                    ["blank", "25px"],
                     ["style-column", [
-                    ["style-column", [
-                    ["raw-html", () => {return "Your Hand"}, {color: "#1f1f1f", fontSize: "20px", fontFamily: "monospace"}],
-                    ], {width: "785px", height: "40px", backgroundColor: "#dadada", border: "3px solid #7f7f7f", userSelect: "none"}],
-                    ["style-row", [
-                    ["row", [["clickable", 101], ["clickable", 102], ["clickable", 103], ["clickable", 104], ["clickable", 105], ["clickable", 106], ["clickable", 107], ["clickable", 108]]], 
-                    ["raw-html", function () { return "&nbsp&nbsp&nbsp" }, { "color": "white", "font-size": "12.5px", "font-family": "monospace" }], ["raw-html", () => {return "Hand Value: " + formatWhole(player.zd.playerScore)}, {color: "#dadada", fontSize: "20px", fontFamily: "monospace"}],
-                    ], {width: "775px", height: "135px", backgroundColor: "#303030", border: "3px solid #7f7f7f", borderTop: "0px", borderBottom: "0px", padding: "5px"}],
-                    ["style-column", [
-                    ["raw-html", () => {return "Zar's Hand"}, {color: "#1f1f1f", fontSize: "20px", fontFamily: "monospace"}],
-                    ], {width: "785px", height: "40px", backgroundColor: "#dadada", border: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}],
-                    ["style-row", [
-                    ["row", [["clickable", 201], ["clickable", 202], ["clickable", 203], ["clickable", 204], ["clickable", 205], ["clickable", 206], ["clickable", 207], ["clickable", 208]]],
-                                        ["raw-html", function () { return "&nbsp&nbsp&nbsp" }, { "color": "white", "font-size": "12.5px", "font-family": "monospace" }], ["raw-html", () => {return "Hand Value: " + formatWhole(player.zd.dealerScore)}, {color: "#dadada", fontSize: "20px", fontFamily: "monospace"}],
-                    ], {width: "775px", height: "135px", backgroundColor: "#303030", border: "3px solid #7f7f7f", borderTop: "0px", borderBottom: "0px", padding: "5px"}],
-                    ["style-row", [
-                    ["row", [["clickable", 11], ["clickable", 12], ["clickable", 13],]],
-                    ], {width: "775px", height: "135px", backgroundColor: "#7f7f7f", border: "3px solid #dadada", borderTop: "0px", padding: "5px"}],
-                    ], {width: "775px", height: "485px",}],
-                    ["style-column", [
-                    ["style-row", [["buyable", 11],["buyable", 12],["buyable", 13],["buyable", 14],], {width: "502px", height: "130px",}],
-                    ["style-row", [["buyable", 15],["buyable", 16],["buyable", 17],["buyable", 18],], {width: "502px", height: "130px",}],
-                    ["style-row", [], {width: "502px", height: "260px",}],
-                    ], {width: "502px", height: "515px", backgroundColor: "#7f7f7f", border: "3px solid #dadada", padding: "5px"}],
-                    ], {width: "1295px", height: "485px",}],
+                        ["style-column", [
+                            ["raw-html", function () { return "You have <h3>" + formatWhole(player.zd.zarChips) + "</h3> zar chips. (+" + formatWhole(player.zd.zarChipsToGet) + ")"}, { "color": "white", "font-size": "24px", "font-family": "monospace" }], 
+                        ], {width: "800px", height: "40px", background: "#303030", borderBottom: "3px solid black", borderRadius: "27px 27px 0 0"}],
+                        ["style-column", [
+                            ["style-column", [
+                                ["raw-html", () => {return "Your Hand"}, {color: "#1f1f1f", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "800px", height: "40px", backgroundColor: "#dadada", borderBottom: "3px solid #7f7f7f", userSelect: "none"}],
+                            ["style-row", [
+                                ["row", [["clickable", 101], ["clickable", 102], ["clickable", 103], ["clickable", 104], ["clickable", 105], ["clickable", 106], ["clickable", 107], ["clickable", 108]]], 
+                                ["raw-html", function () { return "&nbsp&nbsp&nbsp" }, { "color": "white", "font-size": "12.5px", "font-family": "monospace" }], ["raw-html", () => {return "Hand Value: " + formatWhole(player.zd.playerScore)}, {color: "#dadada", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "790px", height: "135px", backgroundColor: "#303030", padding: "5px"}],
+                            ["style-column", [
+                                ["raw-html", () => {return "Zar's Hand"}, {color: "#1f1f1f", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "800px", height: "40px", backgroundColor: "#dadada", borderTop: "3px solid #7f7f7f", borderBottom: "3px solid #7f7f7f", userSelect: "none"}],
+                            ["style-row", [
+                                ["row", [["clickable", 201], ["clickable", 202], ["clickable", 203], ["clickable", 204], ["clickable", 205], ["clickable", 206], ["clickable", 207], ["clickable", 208]]],
+                                ["raw-html", function () { return "&nbsp&nbsp&nbsp" }, { "color": "white", "font-size": "12.5px", "font-family": "monospace" }], ["raw-html", () => {return "Hand Value: " + formatWhole(player.zd.dealerScore)}, {color: "#dadada", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "790px", height: "135px", backgroundColor: "#303030", padding: "5px"}],
+                            ["style-row", [
+                                ["row", [["clickable", 11], ["clickable", 12], ["clickable", 13],]],
+                            ], {width: "800px", height: "135px", backgroundColor: "#7f7f7f", borderTop: "3px solid black"}],
+                        ], {width: "800px", height: "517px",}],
+                        ["style-column", [
+                            ["style-row", [["buyable", 11],["buyable", 12],["buyable", 13],["buyable", 14], ["buyable", 21], ["buyable", 22]], {height: "130px"}],
+                            ["style-row", [["buyable", 15],["buyable", 16],["buyable", 17],["buyable", 18], ["buyable", 23], ["buyable", 24]], {height: "130px"}],
+                        ], {width: "800px", height: "266px", background: "repeating-linear-gradient(45deg, #444, #444 20px, #555 20px, #555 40px)", borderTop: "3px solid black", borderRadius: "0 0 27px 27px"}],
+                    ], {width: "800px", height: "829px", border: "3px solid black", borderRadius: "30px"}],
                 ]
             },
             "Dungeon": {
@@ -716,16 +935,28 @@
                 content: [
                     ["blank", "25px"],
                     ["style-column", [
-                    ["raw-html", function () { return "You have <h3>" + formatWhole(player.zd.pips) + "</h3> dice pips."}, { "color": "white", "font-size": "24px", "font-family": "monospace" }], 
-                    ["style-row", [["upgrade", 11],["upgrade", 12],["upgrade", 13],["upgrade", 14],], {width: "502px", height: "200px",}],
-                    ], {width: "1184px", height: "260px", backgroundColor: "#4e4e4e", border: "3px solid #dadada", borderRadius: "25px 25px 0px 0px", padding: "5px"}],
-                    ["buttonless-microtabs", "stages", {borderWidth: "0"}],
+                        ["style-column", [
+                            ["style-column", [
+                                ["raw-html", () => { return "You have <h3>" + formatWhole(player.zd.pips) + "</h3> dice pips."}, { "color": "white", "font-size": "24px", "font-family": "monospace" }], 
+                            ], {width: "794px", height: "40px", background: "#666", borderBottom: "3px solid #dadada", borderRadius: "22px 22px 0 0"}],
+                            ["style-row", [
+                                ["style-column", [
+                                    ["row", [["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15], ["upgrade", 16]]],
+                                ], {width: "396px", height: "251px", borderRight: "3px solid #dadada"}],
+                                ["style-column", [
+                                    ["row", [["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 24], ["upgrade", 25], ["upgrade", 26]]],
+                                ], {width: "395px", height: "351px"}],
+                            ], {width: "794px", height: "251px"}],
+                        ], {width: "794px", height: "294px", background: "repeating-linear-gradient(45deg, #444, #444 20px, #555 20px, #555 40px)", border: "3px solid #dadada", borderRadius: "25px 25px 0px 0px"}],
+                        ["style-row", [], {width: "800px", height: "3px", background: "#222"}],
+                        ["buttonless-microtabs", "stages", {borderWidth: "0"}],
+                    ], {width: "800px", height: "743px", border: "3px solid #222", borderRadius: "30px"}],
                 ]
             },
         },
     },
     tabFormat: [
-                ["raw-html", function () { return "You have <h3>" + format(player.za.chancePoints) + "</h3> chance points. (+" + format(player.za.chancePointsPerSecond) + "/s)" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
+        ["raw-html", function () { return "You have <h3>" + format(player.za.chancePoints) + "</h3> chance points. (+" + format(player.za.chancePointsPerSecond) + "/s)" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
         ["raw-html", () => { return player.za.chancePoints.gte(player.za.chancePointsSoftcapStart) ? "After " + format(player.za.chancePointsSoftcapStart) + " chance points, gain is divided by /" + format(player.za.chancePointsSoftcapEffect) + "." : "Softcap start: " + format(player.za.chancePointsSoftcapStart) + "." }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
         ["microtabs", "stuff", { 'border-width': '0px' }],
     ],
@@ -978,7 +1209,7 @@ addLayer("zarDungeon", {
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Perks for defeating Zar", {color: "var(--textColor)", fontSize: "24px", fontFamily: "monospace"}],
-                    ], {width: "500px", height: "35px", borderBottom: "2px solid var(--regBorder)", marginBottom: "5px"}],
+                    ], {width: "500px", height: "35px", borderBottom: "2px solid #222", marginBottom: "5px"}],
                     ["raw-html", "<u>Unlocks</u>", {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
                     ["raw-html", "+1 OTF Slot", {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                     ["raw-html", "Zar Punchcard", {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
@@ -993,7 +1224,7 @@ addLayer("zarDungeon", {
 
                     // Zar punchcard 
                 ], () => {
-                    let look = {width: "691px", height: "412px", background: "linear-gradient(180deg, #4e4e4e 0%, #868686 100%)", borderRadius: "0 0 0 27px", border: "3px solid #000"}
+                    let look = {width: "547px", height: "367px", background: "linear-gradient(180deg, #444 0%, #777 100%)"}
                     if (!player.zarDungeon.zarDefeated) {look.filter = "brightness(25%) blur(10px)"; look.userSelect = "none"}
                     return look
                 }],
@@ -1002,24 +1233,24 @@ addLayer("zarDungeon", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Zar's Dungeon", {color: "var(--textColor)", fontSize: "24px", fontFamily: "monospace"}],
-                        ["raw-html", "All celestialite's damage is based on luck.", {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
-                    ], {width: "400px", height: "35px", marginBottom: "10px"}],
+                        ["raw-html", "All celestialite's damage<br>is based on luck.", {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
+                    ], {width: "250px", height: "60px", marginBottom: "10px"}],
                     ["clickable", "enter"],
-                ], {width: "500px", height: "147px", background: "var(--miscButtonDisable)", borderBottom: "3px solid var(--regBorder)"}],
+                ], {width: "250px", height: "167px", background: "var(--miscButtonDisable)", borderBottom: "3px solid #222"}],
                 ["top-column", [
                     ["style-column", [
-                        ["raw-html", "20 Combo with only Nav", {color: "rgba(0,0,0,0.5)", fontSize: "16px", fontFamily: "monospace"}],
-                        ["raw-html", "Unlocks Nav's ultimate ability: Violet Resonance", {color: "rgba(0,0,0,0.5)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "Defeat Zar with only Nav", {color: "rgba(0,0,0,0.5)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "Unlocks Nav's ultimate ability: Violet Resonance", {color: "rgba(0,0,0,0.5)", fontSize: "12px", fontFamily: "monospace"}],
                     ], () => {
-                        let look = {width: "482px", height: "58px", padding: "0 5px", background: "#bf8f8f", border: "4px solid rgba(0, 0, 0, 0.125)", cursor: "default", userSelect: "none"}
+                        let look = {width: "232px", height: "58px", padding: "0 5px", background: "#bf8f8f", border: "4px solid rgba(0, 0, 0, 0.125)", cursor: "default", userSelect: "none"}
                         if (player.zarDungeon.navMilestone) look.background = "#77bf5f"
                         return look
                     }],
                     ["style-column", [
-                        ["raw-html", "20 Combo with only Dice Five", {color: "rgba(0,0,0,0.5)", fontSize: "16px", fontFamily: "monospace"}],
-                        ["raw-html", "Unlocks Dice Five's ultimate ability: Snake Eyes", {color: "rgba(0,0,0,0.5)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "Defeat Zar with only Dice Five", {color: "rgba(0,0,0,0.5)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "Unlocks Dice Five's ultimate ability: Snake Eyes", {color: "rgba(0,0,0,0.5)", fontSize: "12px", fontFamily: "monospace"}],
                     ], () => {
-                        let look = {width: "482px", height: "57px", padding: "0 5px", background: "#bf8f8f", border: "4px solid rgba(0, 0, 0, 0.125)", cursor: "default", userSelect: "none"}
+                        let look = {width: "232px", height: "57px", padding: "0 5px", background: "#bf8f8f", border: "4px solid rgba(0, 0, 0, 0.125)", cursor: "default", userSelect: "none"}
                         if (player.zarDungeon.diceFiveMilestone) look.background = "#77bf5f"
                         return look
                     }],
@@ -1027,16 +1258,19 @@ addLayer("zarDungeon", {
                         ["raw-html", "Defeat Zar", {color: "rgba(0,0,0,0.5)", fontSize: "16px", fontFamily: "monospace"}],
                         ["raw-html", "Unlocks Zar's Perks", {color: "rgba(0,0,0,0.5)", fontSize: "14px", fontFamily: "monospace"}],
                     ], () => {
-                        let look = {width: "482px", height: "58px", padding: "0 5px", background: "#bf8f8f", border: "4px solid rgba(0, 0, 0, 0.125)", cursor: "default", userSelect: "none"}
+                        let look = {width: "232px", height: "58px", padding: "0 5px", background: "#bf8f8f", border: "4px solid rgba(0, 0, 0, 0.125)", cursor: "default", userSelect: "none"}
                         if (player.zarDungeon.zarDefeated) look.background = "#77bf5f"
                         return look
                     }],
-                ], {width: "500px", height: "197px", background: "var(--layerBackground)"}],
-                ["style-row", [
-                    ["clickable", "Auto-Enter"], ["blank", ["10px", "10px"]], ["clickable", "Auto-Exit"], ["blank", ["10px", "10px"]], ["clickable", "Nav-Toggle"], ["blank", ["10px", "10px"]], ["clickable", "DiceFive-Toggle"],
-                ], {width: "500px", height: "70px", background: "var(--miscButtonDisable)", borderTop: "3px solid var(--regBorder)", borderRadius: "0 0 27px 0"}],
-            ], {width: "500px", height: "420px", borderLeft: "3px solid var(--regBorder)"}],
-        ], {width: "1200px", height: "420px"}],
+                ], {width: "250px", height: "197px", background: "var(--layerBackground)"}],
+            ], {width: "250px", height: "367px", borderLeft: "3px solid #222"}],
+        ], {width: "800px", height: "367px"}],
+        ["style-row", [
+            ["clickable", "Auto-Enter"], ["blank", ["10px", "10px"]],
+            ["clickable", "Auto-Exit"], ["blank", ["10px", "10px"]],
+            ["clickable", "Nav-Toggle"], ["blank", ["10px", "10px"]],
+            ["clickable", "DiceFive-Toggle"],
+        ], {width: "800px", height: "70px", background: "var(--miscButtonDisable)", borderTop: "3px solid #222", borderRadius: "0 0 27px 27px"}],
     ],
     layerShown() {return player.startedGame && player.zd.buyables[14].gte(1)},
 })
