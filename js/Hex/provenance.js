@@ -32,6 +32,10 @@ addLayer("hpr", {
     update(delta) {
         player.hpr.divider = player.hre.refinementEffect[1][0]
         if (hasUpgrade("hpw", 132)) player.hpr.divider = player.hpr.divider.mul(1.5)
+        let ext = new Decimal(1)
+        if (hasUpgrade("tera", "hex7")) ext = ext.mul(upgradeEffect("tera", "hex7"))
+        ext = ext.pow(player.h.externalRaise)
+        player.hpr.divider = player.hpr.divider.mul(ext)
 
         player.hpr.rankReq = {0: new Decimal(36), 1: new Decimal(6), 2: new Decimal(36), 3: new Decimal(216), 4: new Decimal(1296), 5: new Decimal(7776),
             6: new Decimal(7), 7: new Decimal(64), 8: new Decimal(729), 9: new Decimal(10000), 10: new Decimal(161051), 11: new Decimal(2985984)}

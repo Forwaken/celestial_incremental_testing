@@ -81,7 +81,7 @@ addLayer("hre", {
         }
         if (player.hre.refinement.gte(player.h.stage.mul(1.5).floor())) player.hre.refinementEffect[2][1] = Decimal.pow(player.h.stage.div(2.4), player.hre.refinement.sub(player.h.stage.mul(0.75).floor()))
 
-        if (player.hre.refinement.gte(player.h.stage.mul(4))) player.hre.refinementEffect[3][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1), player.hre.refinement.sub(player.h.stage.mul(4).sub(1)).pow(Decimal.div(3.6, player.h.stage.max(4))))
+        if (player.hre.refinement.gte(player.h.stage.mul(4))) player.hre.refinementEffect[3][0] = Decimal.pow(Decimal.div(3.6, player.h.stage).add(1).mul(hasUpgrade("tera", "hex9") ? Decimal.pow(1.3, player.h.externalRaise) : 1), player.hre.refinement.sub(player.h.stage.mul(4).sub(1)).pow(Decimal.div(3.6, player.h.stage.max(4))))
         if (player.hre.refinement.gte(player.h.stage.mul(4))) player.hre.refinementEffect[3][1] = Decimal.pow(player.h.stage.div(2.65), player.hre.refinement.sub(player.h.stage.mul(2)))
 
         if (player.hre.refinement.gte(player.h.stage.mul(8)) && !hasUpgrade("hpw", 91)) player.hre.refinementEffect[4][0] = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1), player.hre.refinement.sub(player.h.stage.mul(8).sub(1)).pow(Decimal.div(3.6, player.h.stage.max(4))))

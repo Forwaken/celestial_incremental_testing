@@ -30,9 +30,13 @@ addLayer("hrm", {
         player.hrm.realmEffect = Decimal.pow(1.5, player.hrm.realmCompletions)
 
         player.hrm.realmEssenceGain = Decimal.pow(1.35, player.hrm.realmCompletions).sub(1)
-        player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(levelableEffect("pet", 1106)[2])
         player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(buyableEffect("hrm", 6))
-        if (hasUpgrade("depth3", 6)) player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(upgradeEffect("depth3", 6).pow(player.h.externalRaise))
+        let ext = new Decimal(1)
+        ext = ext.mul(levelableEffect("pet", 1106)[2])
+        if (hasUpgrade("depth3", 6)) ext = ext.mul(upgradeEffect("depth3", 6))
+        if (hasUpgrade("tera", "hex5")) ext = ext.mul(upgradeEffect("tera", "hex5"))
+        ext = ext.pow(player.h.externalRaise)
+        player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(ext)
 
         player.hrm.realmEssenceEffects = [new Decimal(1), new Decimal(1)]
         player.hrm.realmEssenceEffects[0] = Decimal.pow(2.5, player.hrm.realmEssence.add(1).log(player.h.stage)).min(1e10)
@@ -253,7 +257,7 @@ addLayer("hrm", {
     challenges: {
         11: {
             name() { return "Creator Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 1).add(player.h.stage.div(2).floor())},
+            completionLimit() {return buyableEffect("hpw", 1).add(player.h.stage.div(2).floor()).add(hasUpgrade("tera", "hex3") ? player.tera.trueHex.pow(player.h.externalRaise).floor() : 0)},
             marked: false,
             goal() {return Decimal.pow(Decimal.pow10(player.h.stage.div(6)), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage.div(1.5)))},
             fullDisplay() {
@@ -285,7 +289,7 @@ addLayer("hrm", {
         },
         12: {
             name() { return "Higher Plane (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 2).add(player.h.stage.div(2).floor())},
+            completionLimit() {return buyableEffect("hpw", 2).add(player.h.stage.div(2).floor()).add(hasUpgrade("tera", "hex3") ? player.tera.trueHex.pow(player.h.externalRaise).floor() : 0)},
             marked: false,
             goal() {return Decimal.pow(player.h.stage.mul(5), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage))},
             fullDisplay() {
@@ -317,7 +321,7 @@ addLayer("hrm", {
         },
         13: {
             name() { return "Death Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 3).add(player.h.stage.div(2).floor())},
+            completionLimit() {return buyableEffect("hpw", 3).add(player.h.stage.div(2).floor()).add(hasUpgrade("tera", "hex3") ? player.tera.trueHex.pow(player.h.externalRaise).floor() : 0)},
             marked: false,
             goal() {return Decimal.pow(Decimal.pow10(player.h.stage.mul(3)), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage.mul(12)))},
             fullDisplay() {
@@ -349,7 +353,7 @@ addLayer("hrm", {
         },
         14: {
             name() { return "Dimensional Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 4).add(player.h.stage.div(2).floor())},
+            completionLimit() {return buyableEffect("hpw", 4).add(player.h.stage.div(2).floor()).add(hasUpgrade("tera", "hex3") ? player.tera.trueHex.pow(player.h.externalRaise).floor() : 0)},
             marked: false,
             goal() {return Decimal.pow(1e5, challengeCompletions(this.layer, this.id)).mul(1e10)},
             fullDisplay() {
@@ -381,7 +385,7 @@ addLayer("hrm", {
         },
         15: {
             name() { return "Dream Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 5).add(player.h.stage.div(2).floor())},
+            completionLimit() {return buyableEffect("hpw", 5).add(player.h.stage.div(2).floor()).add(hasUpgrade("tera", "hex3") ? player.tera.trueHex.pow(player.h.externalRaise).floor() : 0)},
             marked: false,
             goal() {return Decimal.pow(Decimal.pow10(player.h.stage.div(6)), challengeCompletions(this.layer, this.id)).mul(Decimal.pow10(player.h.stage).mul(player.h.stage))},
             fullDisplay() {
@@ -414,7 +418,7 @@ addLayer("hrm", {
         },
         16: {
             name() { return "Void Realm (" + challengeCompletions(this.layer, this.id) + "/" + this.completionLimit() + ")"},
-            completionLimit() {return buyableEffect("hpw", 6).add(player.h.stage.div(2).floor())},
+            completionLimit() {return buyableEffect("hpw", 6).add(player.h.stage.div(2).floor()).add(hasUpgrade("tera", "hex3") ? player.tera.trueHex.pow(player.h.externalRaise).floor() : 0)},
             marked: false,
             goal() {return Decimal.mul(player.h.stage.div(2), challengeCompletions(this.layer, this.id)).add(player.h.stage.mul(12.5))},
             fullDisplay() {

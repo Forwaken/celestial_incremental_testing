@@ -60,6 +60,7 @@ addLayer("h", {
         // GLOBAL NERFS
         player.h.tickspeed = new Decimal(1)
         if (player.tera.chronotachysisSpell[0].gt(0)) player.h.tickspeed = player.h.tickspeed.mul(player.tera.chronotachysisSpell[1])
+        player.h.tickspeed = player.h.tickspeed.mul(player.tera.trueHexEffect)
 
         player.h.externalRaise = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.externalRaise = Decimal.pow(0.5, player.h.stage.sub(6).abs())
