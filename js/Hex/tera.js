@@ -1323,12 +1323,41 @@ addLayer("tera", {
                 return look
             }
         },
-
+        "hex10": {
+            fullDisplay() {return "<h3>???</h3><br>???.<br><br>Cost: 6e7 Hex Essence"},
+            unlocked: true,
+            canAfford() { return player.tera.hexEssence.gte(6e7)},
+            pay() {player.tera.hexEssence = player.tera.hexEssence.sub(6e7)},
+            style() {
+                let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
+                return look
+            }
+        },
+        "hex11": {
+            fullDisplay() {return "<h3>Hexed Curses</h3><br>Boost curses based on hex essence.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 4.7e11 Hex Essence"},
+            unlocked: true,
+            canAfford() { return player.tera.hexEssence.gte(4.7e11)},
+            pay() {player.tera.hexEssence = player.tera.hexEssence.sub(4.7e11)},
+            effect() {return Decimal.pow(1.5, player.tera.hexEssence.add(1).log(6))},
+            style() {
+                let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
+                return look
+            }
+        },
+        "hex12": {
+            fullDisplay() {return "<h3>???</h3><br>???.<br><br>Cost: 2.2e16 Hex Essence"},
+            unlocked: true,
+            canAfford() { return player.tera.hexEssence.gte(2.2e16)},
+            pay() {player.tera.hexEssence = player.tera.hexEssence.sub(2.2e16)},
+            style() {
+                let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
+                return look
+            }
+        },
         // ADD A HIVE BUFF
-
-        // Raise refiner 4's first effect by ^1.2
-        // Boost curses based on hex essence
-        // EXTERNAL UNLOCK/BUFF x2
 
         // HEPT UPGRADES
         //
@@ -1646,7 +1675,7 @@ addLayer("tera", {
                         ], {width: "800px", height: "40px", background: "#95A6DD", borderTop: "3px solid #2c3142", borderBottom: "3px solid #2c3142"}],
                         ["style-row", [
 
-                        ], {width: "800px", height: "120px", background: "repeating-linear-gradient(135deg, #68749a 0px, #68749a 20px, #4a536e 20px, #4a536e 40px)"}],
+                        ], {width: "785px", height: "250px", background: "repeating-linear-gradient(135deg, #68749a 0px, #68749a 20px, #4a536e 20px, #4a536e 40px)", paddingRight: "15px"}],
                     ], {width: "800px", height: "720px", background: "linear-gradient(135deg, #1a222e, #0d1117)", border: "3px solid #5085D8"}],
                 ],
             },
