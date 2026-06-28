@@ -1675,8 +1675,8 @@ addLayer("tera", {
                         ], {width: "800px", height: "40px", background: "#95A6DD", borderTop: "3px solid #2c3142", borderBottom: "3px solid #2c3142"}],
                         ["style-row", [
 
-                        ], {width: "785px", height: "250px", background: "repeating-linear-gradient(135deg, #68749a 0px, #68749a 20px, #4a536e 20px, #4a536e 40px)", paddingRight: "15px"}],
-                    ], {width: "800px", height: "720px", background: "linear-gradient(135deg, #1a222e, #0d1117)", border: "3px solid #5085D8"}],
+                        ], {width: "785px", height: "250px", background: "repeating-linear-gradient(135deg, #68749a 0px, #68749a 20px, #4a536e 20px, #4a536e 40px)", paddingRight: "15px", borderBottom: "3px solid #2c3142"}],
+                    ], {width: "800px", height: "720px", background: "repeating-linear-gradient(135deg, #141b24 0px, #141b24 20px, #0d1117 20px, #0d1117 40px)", border: "3px solid #5085D8"}],
                 ],
             },
         },
