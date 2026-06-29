@@ -271,7 +271,8 @@ addLayer("tera", {
         for (let i = 0; i < 12; i++) {
             player.hpr.rank[i] = new Decimal(0)
             player.hpr.rankGain[i] = new Decimal(0)
-            player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+            if (i < 6) player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+            else player.hpr.rankEffect[i] = [new Decimal(0), new Decimal(0)]
         }
 
         // HEX POINTS
@@ -633,7 +634,13 @@ addLayer("tera", {
             },
         },
         "heptReset": {
-            title() {return player.h.stage.eq(7) ? "<h2>Reset ALL previous content for true hepts</h2><br><h3>Req: " + formatWhole(player.tera.trueHeptReq) + " Power</h3>" : "<h2>Reset ALL previous content for true hepts</h2><br>[ONLY POSSIBLE WHEN Uni-α IS HEPT]"},
+            title() {
+                let str = "<h2>Reset ALL previous content for true hepts</h2><br>"
+                if (player.h.stage.eq(7)) str = str.concat("<h3>Req: " + formatWhole(player.tera.trueHeptReq) + " Power</h3>")
+                else str = str.concat("<h3>[ONLY POSSIBLE WHEN Uni-α IS HEPT]</h3>")
+                if (player.tera.trueHept.eq(0)) str = str.concat("<br>At true hept 1, unlock true hept content.")
+                return str
+            },
             canClick() {return player.h.stage.eq(7) && player.hpw.power.gte(player.tera.trueHeptReq)},
             unlocked: true,
             onClick() {
@@ -642,7 +649,7 @@ addLayer("tera", {
                 layers.tera.teraReset()
             },
             style() {
-                let look = {width: "400px", minHeight: "100px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                let look = {width: "400px", minHeight: "120px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
                 this.canClick() ? look.background = "#85ADE6" : look.background = "#bf8f8f"
                 return look
             },
@@ -1358,18 +1365,19 @@ addLayer("tera", {
             }
         },
         // ADD A HIVE BUFF
+        // Refined fragments no longer cost lesser or greater fragments
 
         // HEPT UPGRADES
-        //
-        //
-        //
-        // EXTERNAL UNLOCK/BUFF x3
-
-        //
+        // Reduce external penalty based on equipped sins
         //
         //
         // Unlock dark OTFs
         // EXTERNAL UNLOCK/BUFF x2
+
+        // Slightly reduce T2 provenance cost scaling
+        // 
+        //
+        // EXTERNAL UNLOCK/BUFF x3
     },
     microtabs: {
         "hex": {

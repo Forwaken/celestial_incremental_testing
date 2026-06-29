@@ -165,7 +165,8 @@ addLayer("hpu", {
                 for (let i = 0; i < 12; i++) {
                     player.hpr.rank[i] = new Decimal(0)
                     player.hpr.rankGain[i] = new Decimal(0)
-                    player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+                    if (i < 6) player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+                    else player.hpr.rankEffect[i] = [new Decimal(0), new Decimal(0)]
                 }
                 player.h.hexPointGain = new Decimal(0)
                 player.h.hexPoint = new Decimal(0)

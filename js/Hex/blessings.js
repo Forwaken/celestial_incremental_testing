@@ -141,8 +141,12 @@ addLayer("hbl", {
             }
         }
 
-        player.hbl.boosters[0].effect = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1), player.hbl.boosters[0].level)
-        if (hasMilestone("hre", 4)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.mul(player.hbl.boosters[0].xp.div(player.hbl.boosters[0].req).mul(Decimal.div(0.9, player.h.stage)).add(1))
+        if (!hasUpgrade("hpw", 73)) player.hbl.boosters[0].effect = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1), player.hbl.boosters[0].level)
+        if (hasUpgrade("hpw", 73)) player.hbl.boosters[0].effect = Decimal.pow(Decimal.div(1.8, player.h.stage).add(1).mul(1.2), player.hbl.boosters[0].level)
+        if (hasMilestone("hre", 4)) {
+            if (!hasUpgrade("hpw", 73)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.mul(player.hbl.boosters[0].xp.div(player.hbl.boosters[0].req).mul(Decimal.div(0.9, player.h.stage)).add(1))
+            if (hasUpgrade("hpw", 73)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.mul(player.hbl.boosters[0].xp.div(player.hbl.boosters[0].req).mul(Decimal.div(Decimal.mul(0.9, 1.2), player.h.stage)).add(1))
+        }
         if (player.hbl.boosters[0].effect.gte(Decimal.pow10(player.h.stage.mul(1.5)))) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.div(Decimal.pow10(player.h.stage.mul(1.5))).pow(Decimal.div(1.8, player.h.stage.max(2))).mul(Decimal.pow10(player.h.stage.mul(1.5)))
         if (!inChallenge("hrm", 12)) player.hbl.boosters[0].effect = player.hbl.boosters[0].effect.pow(player.hpu.purifiers[3].effect)
         
@@ -213,7 +217,8 @@ addLayer("hbl", {
                 for (let i = 0; i < 12; i++) {
                     player.hpr.rank[i] = new Decimal(0)
                     player.hpr.rankGain[i] = new Decimal(0)
-                    player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+                    if (i < 6) player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+                    else player.hpr.rankEffect[i] = [new Decimal(0), new Decimal(0)]
                 }
                 player.h.hexPointGain = new Decimal(0)
                 player.h.hexPoint = new Decimal(0)

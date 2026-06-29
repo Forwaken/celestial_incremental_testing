@@ -7,21 +7,53 @@ addLayer("sins", {
     nodeStyle: {background: "radial-gradient(#628B62, #395537)", borderColor: "#1D2B1B", color: "#1D2B1B"}, // Decides the nodes style, in CSS format.
     branches: ["hpw"], // Decides the nodes branches.
     startData() { return {
+        envy: [new Decimal(1), new Decimal(1), new Decimal(1)],
         wrath: [new Decimal(1), new Decimal(1), new Decimal(1)],
         lust: [new Decimal(1), new Decimal(1), new Decimal(1)],
     }},
     update (delta) {
-        player.sins.wrath[0] = Decimal.pow(Decimal.div(13, player.h.stage), player.hcu.curses.add(1).log(666).pow(0.5))
+        if (hasUpgrade("hpw", 2003)) player.sins.envy[0] = Decimal.pow(Decimal.div(2.5, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
+        else player.sins.envy[0] = Decimal.pow(Decimal.div(2, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
+        player.sins.envy[1] = player.hpr.rank[0].add(1).log(player.h.stage).div(8).add(1)
+        player.sins.envy[2] = player.hpr.rank[0].add(1).log(player.h.stage).div(4).add(1)
+        if (hasUpgrade("hpw", 2003)) player.sins.wrath[0] = Decimal.pow(Decimal.div(2.1, player.h.stage).add(1), player.hcu.curses.add(1).log(666))
+        else player.sins.wrath[0] = Decimal.pow(Decimal.div(1.7, player.h.stage).add(1), player.hcu.curses.add(1).log(666))
         player.sins.wrath[1] = player.hcu.curses.add(1).log(666).div(10).add(1)
         player.sins.wrath[2] = player.hcu.curses.add(1).log(666).div(5).add(1)
-        player.sins.lust[0] = Decimal.pow(Decimal.div(13, player.h.stage), player.hpu.totalPurity.pow(0.7))
+        if (hasUpgrade("hpw", 2006)) player.sins.lust[0] = Decimal.pow(Decimal.div(7, player.h.stage).add(1), player.hpu.totalPurity)
+        else player.sins.lust[0] = Decimal.pow(Decimal.div(7, player.h.stage).add(1), player.hpu.totalPurity.pow(0.85))
         player.sins.lust[1] = player.hpu.totalPurity.pow(1.3).div(10).add(1)
         player.sins.lust[2] = player.hpu.totalPurity.pow(1.3).div(5).add(1)
     },
     clickables: {
+        "envy": {
+            title() {return player.sins.clickables["envy"] ? "Disable" : "Enable"},
+            canClick() {return player.hpw.upgTotal.gte(7) || player.sins.clickables["envy"]},
+            unlocked: true,
+            onClick() {
+                if (player.sins.clickables["envy"]) {
+                    player.sins.clickables["envy"] = false
+                } else {
+                    if (confirm("Are you sure you want to do a power reset?")) {
+                        if (player.hbl.blessings.gte(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage))) {
+                            player.hpw.power = player.hpw.power.add(player.hpw.powerGain)
+                            player.hpw.totalPower = player.hpw.totalPower.add(player.hpw.powerGain)
+                        }
+
+                        layers.hpw.powerReset(0)
+                    }
+                    player.sins.clickables["envy"] = true
+                }
+            },
+            style() {
+                let look = {width: "212px", minHeight: "53px", fontSize: "16px", color: "rgba(0,0,0,0.6)", borderTop: "6px solid #314531", borderLeft: "6px solid #314531", borderRight: "6px solid #314531", borderRadius: "20px 20px 100px 100px"}
+                !this.canClick() ? "#bf8f8f" : !player.sins.clickables["envy"] ? look.background = "#ccc" : look.background = "gray"
+                return look
+            },
+        },
         "wrath": {
             title() {return player.sins.clickables["wrath"] ? "Disable" : "Enable"},
-            canClick() {return player.hpw.upgTotal.gte(7) || player.sins.clickables["wrath"]},
+            canClick() {return player.hpw.upgTotal.gte(14) || player.sins.clickables["wrath"]},
             unlocked: true,
             onClick() {
                 if (player.sins.clickables["wrath"]) {
@@ -46,7 +78,7 @@ addLayer("sins", {
         },
         "lust": {
             title() {return player.sins.clickables["lust"] ? "Disable" : "Enable"},
-            canClick() {return player.hpw.upgTotal.gte(14) || player.sins.clickables["lust"]},
+            canClick() {return player.hpw.upgTotal.gte(21) || player.sins.clickables["lust"]},
             unlocked: true,
             onClick() {
                 if (player.sins.clickables["lust"]) {
@@ -66,31 +98,6 @@ addLayer("sins", {
             style() {
                 let look = {width: "212px", minHeight: "53px", fontSize: "16px", color: "rgba(0,0,0,0.6)", borderTop: "6px solid #5f474b", borderLeft: "6px solid #5f474b", borderRight: "6px solid #5f474b", borderRadius: "20px 20px 100px 100px"}
                 !this.canClick() ? "#bf8f8f" : !player.sins.clickables["lust"] ? look.background = "#ccc" : look.background = "gray"
-                return look
-            },
-        },
-        "envy": {
-            title() {return player.sins.clickables["envy"] ? "Disable" : "Enable"},
-            canClick() {return player.hpw.upgTotal.gte(21) || player.sins.clickables["envy"]},
-            unlocked: true,
-            onClick() {
-                if (player.sins.clickables["envy"]) {
-                    player.sins.clickables["envy"] = false
-                } else {
-                    if (confirm("Are you sure you want to do a power reset?")) {
-                        if (player.hbl.blessings.gte(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage))) {
-                            player.hpw.power = player.hpw.power.add(player.hpw.powerGain)
-                            player.hpw.totalPower = player.hpw.totalPower.add(player.hpw.powerGain)
-                        }
-
-                        layers.hpw.powerReset(0)
-                    }
-                    player.sins.clickables["envy"] = true
-                }
-            },
-            style() {
-                let look = {width: "212px", minHeight: "53px", fontSize: "16px", color: "rgba(0,0,0,0.6)", borderTop: "6px solid #314531", borderLeft: "6px solid #314531", borderRight: "6px solid #314531", borderRadius: "20px 20px 100px 100px"}
-                !this.canClick() ? "#bf8f8f" : !player.sins.clickables["envy"] ? look.background = "#ccc" : look.background = "gray"
                 return look
             },
         },
@@ -211,12 +218,40 @@ addLayer("sins", {
         ["row", [
             ["style-column", [
                 ["style-row", [
+                    ["raw-html", "ENVY", {color: "rgba(0,0,0,0.6)", fontSize: "30px", fontFamily: "monospace"}],
+                ], {width: "200px", height: "47px", background: "#446144", borderLeft: "6px solid #314531", borderRight: "6px solid #314531", borderBottom: "6px solid #314531", borderRadius: "100px 100px 20px 20px"}],
+                ["style-column", [
+                    ["style-column", [
+                        ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(6, hasUpgrade("hpw", 2001) ? upgradeEffect("hpw", 2001) : 1)) + " Provenance Effectiveness"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                    ], {width: "225px", height: "45px", background: "#4e6f4e", borderRadius: "10px"}],
+                    ["blank", "5px"],
+                    ["style-column", [
+                        ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.envy[0]) + " Power Gain"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.envy[1]) + " Paradox Fragment Score"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.envy[2]) + " Paradox Pylon Energy"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "(Based on Provenances)", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                    ], {width: "225px", height: "90px", background: "#4e6f4e", borderRadius: "10px"}],
+                ], () => {return player.hpw.upgTotal.gte(7) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],
+                ["style-column", [
+                    ["raw-html", () => {return Decimal.sub(7, player.hpw.upgTotal).eq(1) ? "Unlocked in 1 Power Upgrade" : "Unlocked in " + formatWhole(Decimal.sub(7, player.hpw.upgTotal)) + " Power Upgrades"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
+                ], () => {return player.hpw.upgTotal.lt(7) ? {width: "250px", height: "150px"} : {display: "none !important"}}],
+                ["hoverless-clickable", "envy"],
+            ], () => {
+                let look = {width: "250px", height: "250px", background: "#628B62", border: "6px solid #314531", borderRadius: "125px 125px 125px 125px / 50px 50px 50px 50px", overflow: "hidden"}
+                if (player.hpw.upgTotal.lt(7)) {look.filter = "brightness(50%)", look.userSelect = "none"}
+                return look
+            }],
+            ["blank", ["10px", "10px"]],
+            ["style-column", [
+                ["style-row", [
                     ["raw-html", "WRATH", {color: "rgba(0,0,0,0.6)", fontSize: "30px", fontFamily: "monospace"}],
                 ], {width: "200px", height: "47px", background: "#693e3e", borderLeft: "6px solid #4b2d2d", borderRight: "6px solid #4b2d2d", borderBottom: "6px solid #4b2d2d", borderRadius: "100px 100px 20px 20px"}],
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "/6 Jinx Cap", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(6, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1)) + " Jinx Cap"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#784848", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
@@ -226,17 +261,18 @@ addLayer("sins", {
                         ["raw-html", () => {return "x" + formatSimple(player.sins.wrath[2]) + " Radioactive Pylon Energy"}, {color: "rgba(0,0,0,0.6)", fontSize: "12px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on Curses)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "90px", background: "#784848", borderRadius: "10px"}],
-                ], () => {return player.hpw.upgTotal.gte(7) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],
+                ], () => {return player.hpw.upgTotal.gte(14) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],
                 ["style-column", [
-                    ["raw-html", () => {return Decimal.sub(7, player.hpw.upgTotal).eq(1) ? "Unlocked in 1 Power Upgrade" : "Unlocked in " + formatWhole(Decimal.sub(7, player.hpw.upgTotal)) + " Power Upgrades"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
-                ], () => {return player.hpw.upgTotal.lt(7) ? {width: "250px", height: "150px"} : {display: "none !important"}}],
+                    ["raw-html", () => {return Decimal.sub(14, player.hpw.upgTotal).eq(1) ? "Unlocked in 1 Power Upgrade" : "Unlocked in " + formatWhole(Decimal.sub(14, player.hpw.upgTotal)) + " Power Upgrades"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
+                ], () => {return player.hpw.upgTotal.lt(14) ? {width: "250px", height: "150px"} : {display: "none !important"}}],
                 ["hoverless-clickable", "wrath"],
             ], () => {
                 let look = {width: "250px", height: "250px", background: "#965A5A", border: "6px solid #4b2d2d", borderRadius: "125px 125px 125px 125px / 50px 50px 50px 50px", overflow: "hidden"}
-                if (player.hpw.upgTotal.lt(7)) {look.filter = "brightness(50%)", look.userSelect = "none"}
+                if (player.hpw.upgTotal.lt(14)) {look.filter = "brightness(50%)", look.userSelect = "none"}
                 return look
             }],
-            ["blank", ["10px", "10px"]],
+        ]],
+        ["row", [
             ["style-column", [
                 ["style-row", [
                     ["raw-html", "LUST", {color: "rgba(0,0,0,0.6)", fontSize: "30px", fontFamily: "monospace"}],
@@ -244,7 +280,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "/6 Purifier Effectiveness", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(6, hasUpgrade("hpw", 2004) ? upgradeEffect("hpw", 2004) : 1)) + " Purifier Effectiveness"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#987278", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
@@ -254,42 +290,13 @@ addLayer("sins", {
                         ["raw-html", () => {return "x" + formatSimple(player.sins.lust[2]) + " Natural Pylon Energy"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on Purity)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "90px", background: "#987278", borderRadius: "10px"}],
-                ], () => {return player.hpw.upgTotal.gte(14) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],
-                ["style-column", [
-                    ["raw-html", () => {return Decimal.sub(14, player.hpw.upgTotal).eq(1) ? "Unlocked in 1 Power Upgrade" : "Unlocked in " + formatWhole(Decimal.sub(14, player.hpw.upgTotal)) + " Power Upgrades"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
-                ], () => {return player.hpw.upgTotal.lt(14) ? {width: "250px", height: "150px"} : {display: "none !important"}}],
-                ["hoverless-clickable", "lust"],
-            ], () => {
-                let look = {width: "250px", height: "250px", background: "#BF8F97", border: "6px solid #5f474b", borderRadius: "125px 125px 125px 125px / 50px 50px 50px 50px", overflow: "hidden"}
-                if (player.hpw.upgTotal.lt(14)) {look.filter = "brightness(50%)", look.userSelect = "none"}
-                return look
-            }],
-        ]],
-        ["row", [
-            ["style-column", [
-                ["style-row", [
-                    ["raw-html", "ENVY", {color: "rgba(0,0,0,0.6)", fontSize: "30px", fontFamily: "monospace"}],
-                ], {width: "200px", height: "47px", background: "#446144", borderLeft: "6px solid #314531", borderRight: "6px solid #314531", borderBottom: "6px solid #314531", borderRadius: "100px 100px 20px 20px"}],
-                ["style-column", [
-                    ["style-column", [
-                        ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "/6 Provenance Effectiveness", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                    ], {width: "225px", height: "45px", background: "#4e6f4e", borderRadius: "10px"}],
-                    ["blank", "5px"],
-                    ["style-column", [
-                        ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "^1.05 Base Power Formula", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "x1 Cosmic Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "x1 Cosmic Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "(Based on Provenances)", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                    ], {width: "225px", height: "90px", background: "#4e6f4e", borderRadius: "10px"}],
                 ], () => {return player.hpw.upgTotal.gte(21) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],
                 ["style-column", [
                     ["raw-html", () => {return Decimal.sub(21, player.hpw.upgTotal).eq(1) ? "Unlocked in 1 Power Upgrade" : "Unlocked in " + formatWhole(Decimal.sub(21, player.hpw.upgTotal)) + " Power Upgrades"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
                 ], () => {return player.hpw.upgTotal.lt(21) ? {width: "250px", height: "150px"} : {display: "none !important"}}],
-                ["hoverless-clickable", "envy"],
+                ["hoverless-clickable", "lust"],
             ], () => {
-                let look = {width: "250px", height: "250px", background: "#628B62", border: "6px solid #314531", borderRadius: "125px 125px 125px 125px / 50px 50px 50px 50px", overflow: "hidden"}
+                let look = {width: "250px", height: "250px", background: "#BF8F97", border: "6px solid #5f474b", borderRadius: "125px 125px 125px 125px / 50px 50px 50px 50px", overflow: "hidden"}
                 if (player.hpw.upgTotal.lt(21)) {look.filter = "brightness(50%)", look.userSelect = "none"}
                 return look
             }],
@@ -307,8 +314,8 @@ addLayer("sins", {
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
                         ["raw-html", "^1.05 Base Power Formula", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "x1 Paradox Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "^1 Paradox Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "x1 Cosmic Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "^1 Cosmic Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on Refinements)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "90px", background: "#98745b", borderRadius: "10px"}],
                 ], () => {return player.hpw.upgTotal.gte(28) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],

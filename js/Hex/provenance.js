@@ -88,26 +88,26 @@ addLayer("hpr", {
         // Disable effects
         if (inChallenge("hrm", 16)) player.hpr.effectMult = new Decimal(0)
 
-        player.hpr.rankEffect[0][0] = player.hpr.rank[0].pow(player.h.stage.div(2.5)).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[0][1] = player.hpr.rank[0].pow(Decimal.add(1, Decimal.div(1, player.h.stage))).mul(Decimal.div(3, player.h.stage)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[0][0] = player.hpr.rank[0].div(player.h.provenanceDiv).pow(player.h.stage.div(2.5)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[0][1] = player.hpr.rank[0].div(player.h.provenanceDiv).pow(Decimal.add(1, Decimal.div(1, player.h.stage))).mul(Decimal.div(3, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[1][0] = player.hpr.rank[1].pow(player.h.stage.div(2)).mul(player.h.stage.div(2)).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[1][1] = player.hpr.rank[1].pow(Decimal.add(1, Decimal.div(2, player.h.stage))).mul(Decimal.div(9, player.h.stage)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[1][0] = player.hpr.rank[1].div(player.h.provenanceDiv).pow(player.h.stage.div(2)).mul(player.h.stage.div(2)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[1][1] = player.hpr.rank[1].div(player.h.provenanceDiv).pow(Decimal.add(1, Decimal.div(2, player.h.stage))).mul(Decimal.div(9, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[2][0] = player.hpr.rank[2].pow(player.h.stage.div(1.75)).mul(player.h.stage).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[2][1] = player.hpr.rank[2].pow(Decimal.add(1, Decimal.div(4, player.h.stage))).mul(Decimal.div(12, player.h.stage)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[2][0] = player.hpr.rank[2].div(player.h.provenanceDiv).pow(player.h.stage.div(1.75)).mul(player.h.stage).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[2][1] = player.hpr.rank[2].div(player.h.provenanceDiv).pow(Decimal.add(1, Decimal.div(4, player.h.stage))).mul(Decimal.div(12, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[3][0] = player.hpr.rank[3].pow(player.h.stage.div(1.5)).mul(player.h.stage.mul(2)).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[3][1] = player.hpr.rank[3].pow(Decimal.add(1, Decimal.div(6, player.h.stage))).mul(Decimal.div(18, player.h.stage)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[3][0] = player.hpr.rank[3].div(player.h.provenanceDiv).pow(player.h.stage.div(1.5)).mul(player.h.stage.mul(2)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[3][1] = player.hpr.rank[3].div(player.h.provenanceDiv).pow(Decimal.add(1, Decimal.div(6, player.h.stage))).mul(Decimal.div(18, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[4][0] = player.hpr.rank[4].pow(player.h.stage.div(1.25)).mul(player.h.stage.mul(4)).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[4][1] = player.hpr.rank[4].pow(Decimal.add(1, Decimal.div(9, player.h.stage))).mul(Decimal.div(24, player.h.stage)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[4][0] = player.hpr.rank[4].div(player.h.provenanceDiv).pow(player.h.stage.div(1.25)).mul(player.h.stage.mul(4)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[4][1] = player.hpr.rank[4].div(player.h.provenanceDiv).pow(Decimal.add(1, Decimal.div(9, player.h.stage))).mul(Decimal.div(24, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[5][0] = player.hpr.rank[5].pow(player.h.stage).mul(player.h.stage.mul(8)).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[5][1] = player.hpr.rank[5].pow(Decimal.add(1, Decimal.div(12, player.h.stage))).mul(Decimal.div(30, player.h.stage)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[5][0] = player.hpr.rank[5].div(player.h.provenanceDiv).pow(player.h.stage).mul(player.h.stage.mul(8)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[5][1] = player.hpr.rank[5].div(player.h.provenanceDiv).pow(Decimal.add(1, Decimal.div(12, player.h.stage))).mul(Decimal.div(30, player.h.stage)).mul(player.hpr.effectMult).add(1)
 
-        player.hpr.rankEffect[6][0] = player.hpr.rank[6].pow(player.h.stage.pow(2)).mul(player.h.stage.pow10()).mul(player.hpr.effectMult).add(1)
-        player.hpr.rankEffect[6][1] = player.hpr.rank[6].pow(Decimal.add(1, Decimal.div(3, player.h.stage))).div(player.h.stage.div(2)).mul(player.hpr.effectMult).add(1)
+        player.hpr.rankEffect[6][0] = player.hpr.rank[6].div(player.h.provenanceDiv).mul(player.hpr.effectMult).add(1).log(player.h.stage).div(150)
+        player.hpr.rankEffect[6][1] = player.hpr.rank[6].div(player.h.provenanceDiv).mul(player.hpr.effectMult).add(1).log(player.h.stage).div(100)
 
         if (hasUpgrade("tad", 1001)) {
             for (let i = 0; i < 6; i++) {
@@ -379,7 +379,7 @@ addLayer("hpr", {
                     }],
                 ], {width: "250px", height: "50px", borderBottom: "2px solid white"}],
                 ["style-column", [
-                   ["raw-html", () => {return "x" + format(player.hpr.rankEffect[6][0]) + " celestial points<br>x" + format(player.hpr.rankEffect[6][1]) + " " + player.h.stageName[1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                   ["raw-html", () => {return "+^" + formatSimple(player.hpr.rankEffect[6][0], 3) + " celestial points<br>+^" + formatSimple(player.hpr.rankEffect[6][1], 3) + " " + player.h.stageName[1] + " points"}, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
                 ], {width: "250px", height: "76px", borderBottom: "2px solid white"}],
                 ["clickable", 7],
             ], () => {return player.h.stage.gte(7) ? {width: "250px", height: "205px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"} : {display: "none !important"}}],
@@ -402,6 +402,24 @@ addLayer("hpr", {
                 ], {width: "178px", height: "40px"}],
             ], {width: "380px", height: "40px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
         ]],
+        ["style-row", [
+            ["style-row", [
+                ["style-row", [
+                    ["raw-html", "Total Celestial Point Exponent", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                ], {width: "200px", height: "40px", borderRight: "2px solid white"}],
+                ["style-row", [
+                    ["raw-html", () => {return "^" + formatSimple(player.hpr.rankEffect[6][0].add(1), 3)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                ], {width: "183px", height: "40px"}],
+            ], {width: "385px", height: "40px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
+            ["style-row", [
+                ["style-row", [
+                    ["raw-html", () => {return "Total " + player.h.stageName[0] + " Point Exponent"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                ], {width: "200px", height: "40px", borderRight: "2px solid white"}],
+                ["style-row", [
+                    ["raw-html", () => {return "^" + formatSimple(player.hpr.rankEffect[6][1].add(1), 3)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                ], {width: "178px", height: "40px"}],
+            ], {width: "380px", height: "40px", backgroundColor: "#001333", border: "2px solid white", margin: "5px", borderRadius: "10px"}],
+        ], () => {return player.h.stage.gte(7) ? {} : {display: "none !important"}}],
         ["blank", "25px"],
     ],
     layerShown() { return !inChallenge("hrm", 16) }, // Decides if this node is shown or not.

@@ -22,6 +22,7 @@ addLayer("hpw", {
         if (hasUpgrade("hpw", 72)) player.hpw.powerGain = player.hpw.powerGain.mul(2)
         if (hasUpgrade("hpw", 131)) player.hpw.powerGain = player.hpw.powerGain.mul(2)
         player.hpw.powerGain = player.hpw.powerGain.div(player.h.powNerf)
+        if (player.sins.clickables["envy"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.envy[0])
         if (player.sins.clickables["wrath"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.wrath[0])
         if (player.sins.clickables["lust"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.lust[0])
 
@@ -165,7 +166,8 @@ addLayer("hpw", {
         for (let i = 0; i < 12; i++) {
             player.hpr.rank[i] = new Decimal(0)
             player.hpr.rankGain[i] = new Decimal(0)
-            player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+            if (i < 6) player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+            else player.hpr.rankEffect[i] = [new Decimal(0), new Decimal(0)]
         }
 
         // HEX POINTS
@@ -305,7 +307,7 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hbl.blessings.add(1).log(player.h.stage)
+                return player.hbl.blessings.add(1).log(player.h.stage).mul(player.h.tickspeed)
             },
             effectDisplay() { return "+" + formatSimple(upgradeEffect(this.layer, this.id)) + "/s" }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -691,8 +693,19 @@ addLayer("hpw", {
             currencyInternalName: "power",
             style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px", borderRadius: "15px"},
         },
-        // Increase base of Hept Point Booster by x1.2
-        // Improve the formula for provenances past ζ (When below 6, change to a basic provenance buff)
+        73: {
+            title: "Might δ:1",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Increase base of " + player.h.stageName[1] + " point booster by x1.2."},
+            branches: [71],
+            cost() {return player.h.stage.pow(10).floor()},
+            canAfford() { return hasUpgrade("hpw", 71)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        // Improve the req formula for provenances past ζ (When below 6, change to a basic provenance buff)
         // Unlock Hept of Sacrifice
         // Improve provenance efficiency based on curses
         81: {
@@ -782,6 +795,7 @@ addLayer("hpw", {
             },
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
+        // Boost Uni-Alpha tickspeed based on time spent in this power reset
         111: {
             title: "Might 12:1",
             unlocked: true,
@@ -1268,6 +1282,70 @@ addLayer("hpw", {
             currencyInternalName: "power",
             style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "0 10px 40px 30px", borderRadius: "15px"},
         },
+        2001: {
+            title: "Might S:1",
+            unlocked() {return player.h.stage.eq(7)},
+            description() {return "Reduce envy's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            branches: [11],
+            cost() {return new Decimal(35000)},
+            canAfford() { return hasUpgrade("hpw", 11)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {return new Decimal(1.5)},
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        2002: {
+            title: "Might S:2",
+            unlocked() {return player.h.stage.eq(7)},
+            description() {return "Reduce wrath's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            branches: [11],
+            cost() {return new Decimal(1.4e7)},
+            canAfford() { return hasUpgrade("hpw", 11)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {return new Decimal(1.5)},
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        2003: {
+            title: "Might S:(",
+            unlocked() {return player.h.stage.eq(7)},
+            description: "Improve wrath and lust's power effect formulas.",
+            branches: [2001, 2002],
+            cost() {return new Decimal(1e30)},
+            canAfford() { return hasUpgrade("hpw", 2001) && hasUpgrade("hpw", 2002)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        2004: {
+            title: "Might S:3",
+            unlocked() {return player.h.stage.eq(7)},
+            description() {return "Reduce lust's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            branches: [72],
+            cost() {return new Decimal(7e11)},
+            canAfford() { return hasUpgrade("hpw", 72)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {return new Decimal(1.5)},
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        2005: {
+            title: "Might S:4",
+            unlocked() {return player.h.stage.eq(7)},
+            description() {return "Reduce gluttony's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            branches: [72],
+            cost() {return new Decimal(3.5e14)},
+            canAfford() { return hasUpgrade("hpw", 72)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {return new Decimal(1.5)},
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
     },
     buyables: {
         0: {
@@ -1502,20 +1580,20 @@ addLayer("hpw", {
                     ["blank", "5px"],
                     ["clickable", 2],
                     ["row", [
-                        ["blank", ["140px", "140px"]],
+                        ["style-row", [["upgrade", 2001]], {width: "140px", height: "140px"}],
                         ["bt-upgrade", 1],
                         ["bt-upgrade", 2],
                         ["style-row", [["upgrade", 1011], ["bt-upgrade", 14]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["blank", ["140px", "140px"]],
+                        ["style-row", [["upgrade", 2003]], {width: "140px", height: "140px"}],
                         ["upgrade", 11],
                         ["upgrade", 12],
                         ["style-row", [["upgrade", 1001], ["bt-upgrade", 13]], {width: "140px", height: "140px"}],
                         ["style-row", [["upgrade", 1012], ["bt-upgrade", 15]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["blank", ["140px", "140px"]],
+                        ["style-row", [["upgrade", 2002]], {width: "140px", height: "140px"}],
                         ["upgrade", 21],
                         ["bt-upgrade", 22],
                         ["style-row", [["upgrade", 1013], ["bt-upgrade", 16]], {width: "140px", height: "140px"}],
@@ -1546,11 +1624,11 @@ addLayer("hpw", {
                         ["style-row", [["upgrade", 1041]], {width: "140px", height: "140px"}],
                         ["upgrade", 61],
                         ["upgrade", 62],
-                        ["blank", ["140px", "140px"]],
+                        ["style-row", [["upgrade", 2004]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 1042]], {width: "140px", height: "140px"}],
-                        ["style-row", [["upgrade", 1004]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1004], ["upgrade", 73]], {width: "140px", height: "140px"}],
                         ["upgrade", 71],
                         ["upgrade", 72],
                         ["blank", ["140px", "140px"]],
@@ -1559,7 +1637,8 @@ addLayer("hpw", {
                         ["style-row", [["upgrade", 1043]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
                         ["upgrade", 81],
-                        ["blank", ["210px", "140px"]],
+                        ["style-row", [["upgrade", 2005]], {width: "140px", height: "140px", marginLeft: "70px"}],
+
                     ]],
                     ["row", [
                         ["upgrade", 1104],

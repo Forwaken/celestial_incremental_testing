@@ -40,6 +40,7 @@ addLayer("h", {
         powNerf: new Decimal(1),
         jinxDiv: new Decimal(1),
         purifierDiv: new Decimal(1),
+        provenanceDiv: new Decimal(1),
     }},
     nodeStyle() { return {color: "white", backgroundColor: "black", borderColor: "#0061ff"}},
     glowColor: "rgba(0, 0, 0, 0)",
@@ -73,12 +74,15 @@ addLayer("h", {
         player.h.powNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.powNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
 
+        player.h.provenanceDiv = new Decimal(1)
+        if (player.sins.clickables["envy"]) player.h.provenanceDiv = player.h.provenanceDiv.mul(6)
+
         player.h.jinxDiv = new Decimal(1)
-        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(6)
+        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(Decimal.div(6, hasUpgrade("hpw", 2001) ? upgradeEffect("hpw", 2001) : 1))
         if (hasUpgrade("hpw", 46)) player.h.jinxDiv = player.h.jinxDiv.div(upgradeEffect("hpw", 46))
 
         player.h.purifierDiv = new Decimal(1)
-        if (player.sins.clickables["lust"]) player.h.purifierDiv = player.h.purifierDiv.mul(6)
+        if (player.sins.clickables["lust"]) player.h.purifierDiv = player.h.purifierDiv.mul(Decimal.div(6, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1))
         if (hasUpgrade("hpw", 37)) player.h.purifierDiv = player.h.purifierDiv.div(upgradeEffect("hpw", 37))
 
         // START OF HEX POINT GAIN
@@ -91,7 +95,7 @@ addLayer("h", {
                 player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(4)))
             }
         }
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 6; i++) {
             player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[i][1])
         }
         player.h.hexPointGain = player.h.hexPointGain.mul(player.hre.refinementEffect[0][0])
@@ -118,6 +122,11 @@ addLayer("h", {
 
         // POWER
         if (hasUpgrade("hve", 61)) player.h.hexPointGain = player.h.hexPointGain.pow(1.03)
+        let exp = new Decimal(1)
+        for (let i = 6; i < 7; i++) {
+            exp = exp.add(player.hpr.rankEffect[i][1])
+        }
+        player.h.hexPointGain = player.h.hexPointGain.pow(exp)
 
         // EXTERNAL POWER
         let externalPow = new Decimal(1)
@@ -168,10 +177,12 @@ addLayer("h", {
         if (player.h.tickspeed.gt(1)) str = str.concat("<span style='color:#8f8'>Tickspeed is multiplied by x" + formatSimple(player.h.tickspeed) + "</span><br>")
         if (player.h.externalRaise.lt(1)) str = str.concat("External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "<br>")
         if (player.h.externalRaise.gt(1)) str = str.concat("<span style='color:#8f8'>External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "</span><br>")
+        if (player.h.provenanceDiv.gt(1)) str = str.concat("Provenance Efficiency is divided by /" + formatSimple(player.h.provenanceDiv) + "<br>")
+        if (player.h.provenanceDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Provenance Efficiency is multiplied by x" + formatSimple(player.h.provenanceDiv) + "</span><br>")
         if (player.h.jinxDiv.gt(1)) str = str.concat("Jinx caps are divided by /" + formatSimple(player.h.jinxDiv) + "<br>")
         if (player.h.jinxDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Jinx caps are multiplied by x" + formatSimple(player.h.jinxDiv) + "</span><br>")
-        if (player.h.purifierDiv.gt(1)) str = str.concat("Purifier Efficiency are divided by /" + formatSimple(player.h.purifierDiv) + "<br>")
-        if (player.h.purifierDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Purifier Efficiency are multiplied by x" + formatSimple(player.h.purifierDiv) + "</span><br>")
+        if (player.h.purifierDiv.gt(1)) str = str.concat("Purifier Efficiency is divided by /" + formatSimple(player.h.purifierDiv) + "<br>")
+        if (player.h.purifierDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Purifier Efficiency is multiplied by x" + formatSimple(player.h.purifierDiv) + "</span><br>")
         if (player.h.preNerf.neq(1)) str = str.concat("Pre-power resources are divided by /" + formatSimple(player.h.preNerf) + "<br>")
         if (player.h.powNerf.neq(1)) str = str.concat("Power is divided by /" + formatSimple(player.h.powNerf) + "<br>")
         return str

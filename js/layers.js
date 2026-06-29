@@ -180,6 +180,11 @@
         player.gain = player.gain.pow(player.cof.coreFragmentEffects[0])
         player.gain = player.gain.pow(buyableEffect("cof", 12))
         player.gain = player.gain.pow(buyableEffect("gwaTemple", 22))
+        let exp = new Decimal(1)
+        for (let i = 6; i < 7; i++) {
+            exp = exp.add(player.hpr.rankEffect[i][0])
+        }
+        player.gain = player.gain.pow(exp)
 
         // SOFTCAP OF DOOM
         player.i.doomSoftcap = new Decimal(0.5)
