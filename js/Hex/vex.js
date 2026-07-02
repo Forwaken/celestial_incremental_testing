@@ -554,8 +554,13 @@ addLayer("hve", {
                             ["raw-html", () => {return "Jinx Cap: +" + formatWhole(player.hve.vexEffects[0])}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return hasUpgrade("hpw", 62) ? "Jinx Score: x" + format(player.hve.vexEffects[1]) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return hasUpgrade("hpw", 92) ? "Blessings: x" + format(player.hve.vexEffects[2]) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ], {width: "300px", height: "330px"}],
-                    ], {width: "300px", height: "380px", backgroundColor: "#160016", border: "2px solid #808", borderRadius: "15px"}],
+                            ["raw-html", () => {return hasUpgrade("hpw", 136) ? "Refinement Scaling: /" + format(upgradeEffect("hpw", 136)) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "300px", height: "110px"}],
+                    ], {width: "300px", height: "160px", backgroundColor: "#160016", border: "2px solid #808", borderRadius: "15px"}],
+                    ["blank", "10px"],
+                    ["style-column", [
+
+                    ], {width: "300px", height: "200px", background: "#160016", border: "2px solid #808", borderRadius: "15px"}],
                 ], {width: "300px", height: "400px"}],
             ], {width: "325px", height: "600px"}],
         ], {backgroundColor: "#202", border: "3px solid white", borderRadius: "15px"}],

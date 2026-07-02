@@ -10,9 +10,10 @@ addLayer("hpw", {
         power: new Decimal(0),
         totalPower: new Decimal(0),
         powerGain: new Decimal(0),
-        upgScale: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        upgScale: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         upgTotal: new Decimal(0),
         vigor: 0,
+        sincePower: new Decimal(0),
     }},
     update(delta) {
         player.hpw.powerGain = Decimal.pow(2, player.hbl.blessings.add(1).div(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).log(player.h.stage)).div(Decimal.pow(2, player.h.stage.sub(6).abs()))
@@ -25,6 +26,8 @@ addLayer("hpw", {
         if (player.sins.clickables["envy"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.envy[0])
         if (player.sins.clickables["wrath"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.wrath[0])
         if (player.sins.clickables["lust"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.lust[0])
+        if (player.sins.clickables["gluttony"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.gluttony[0])
+        if (player.sins.clickables["sloth"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.sloth[0])
 
         let external = new Decimal(1)
         if (hasUpgrade("cs", 202)) external = external.mul(2)
@@ -47,12 +50,17 @@ addLayer("hpw", {
         externalPow = externalPow.pow(player.h.externalRaise)
         player.hpw.powerGain = player.hpw.powerGain.pow(externalPow)
 
+        if (hasUpgrade("hpw", 106)) player.hpw.power = player.hpw.power.add(player.hpw.powerGain.div(100).mul(player.h.tickspeed).mul(delta))
         player.hpw.powerGain = player.hpw.powerGain.floor().max(1) // To keep power to whole numbers
 
         player.hpw.upgTotal = new Decimal(0).add(player.hpw.upgrades.length)
         for (let i = 1; i < 7; i++) {
             player.hpw.upgTotal = player.hpw.upgTotal.add(getBuyableAmount("hpw", i))
         }
+
+        let sinceGain = new Decimal(1)
+        if (hasUpgrade("hpw", 104)) sinceGain = sinceGain.mul(upgradeEffect("hpw", 104))
+        player.hpw.sincePower = player.hpw.sincePower.add(Decimal.mul(delta, sinceGain.mul(player.h.tickspeed)))
     },
     powerReset(type) {
         // SACRIFICE
@@ -62,8 +70,10 @@ addLayer("hpw", {
         player.hsa.sacredEnergyPerSecond = new Decimal(0)
         player.hsa.sacredEffect = new Decimal(0)
         player.hsa.sacredEffect2 = new Decimal(1)
-        player.hsa.dimensionAmounts = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)]
-        player.hsa.dimensionsPerSecond = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)]
+        player.hsa.dimensionAmounts = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),
+            new Decimal(0),new Decimal(0)]
+        player.hsa.dimensionsPerSecond = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),
+            new Decimal(0),new Decimal(0)]
         player.hsa.prayerTime = new Decimal(0)
         player.hsa.prayerMult = new Decimal(1)
         player.hsa.prayTimeCheck = new Decimal(0)
@@ -82,6 +92,9 @@ addLayer("hpw", {
         // TEMP REALM
         player.hrm.blessLimit = new Decimal(0)
         player.hrm.dreamTimer = new Decimal(60)
+        
+        // TEMP POWER
+        player.hpw.sincePower = new Decimal(0)
 
         // PURITY
         player.hpu.purity = player.hpu.keptPurity
@@ -161,6 +174,11 @@ addLayer("hpw", {
         for (let i = 0; i < 12; i++) {
             player.hre.refinementEffect[i] = [new Decimal(1), new Decimal(1)]
         }
+        player.hre.temperer = new Decimal(0)
+        player.hre.tempererPerSec = new Decimal(0)
+        for (let i in player.hre.buyables) {
+            player.hre.buyables[i] = new Decimal(0)
+        }
         
         // RANK
         for (let i = 0; i < 12; i++) {
@@ -216,13 +234,17 @@ addLayer("hpw", {
             title: "Might 1:1",
             unlocked: true,
             description: "Boost blessings based on power.",
-            tooltip() {return "(log" + formatWhole(player.h.stage.max(2)) + "(Power+1)+1)*2"},
+            tooltip() {
+                if (hasUpgrade("hpw", 105)) return "(log" + formatSimple(player.h.stage.div(2).max(1.5)) + "(Power+1)+1)*((log" + formatWhole(player.h.stage.max(2)) + "(Time in Power+1)/10)+2)"
+                return "(log" + formatWhole(player.h.stage.max(2)) + "(Power+1)+1)*2"
+            },
             cost() {return new Decimal(1).pow(player.hpw.upgScale[0]).floor()},
             onPurchase() {player.hpw.upgScale[0] = player.hpw.upgScale[0] + 1},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
+                if (hasUpgrade("hpw", 105)) return player.hpw.power.add(1).log(player.h.stage.div(2).max(1.5)).add(1).mul(player.hpw.sincePower.add(1).log(player.h.stage).div(10).add(2))
                 return player.hpw.power.add(1).log(player.h.stage.max(2)).add(1).mul(2)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" }, // Add formatting to the effect
@@ -705,9 +727,46 @@ addLayer("hpw", {
             currencyInternalName: "power",
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
-        // Improve the req formula for provenances past ζ (When below 6, change to a basic provenance buff)
-        // Unlock Hept of Sacrifice
-        // Improve provenance efficiency based on curses
+        74: {
+            title: "Might δ:2",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Reduce the cost scaling of provenances past ζ by 20%."}, // MAKE IT CHANGE TO JUST REDUCING PROVENANCE SCALING WHEN BELOW HEX
+            branches: [73],
+            cost() {return player.h.stage.pow(25).floor()},
+            canAfford() { return hasUpgrade("hpw", 73)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        75: {
+            title: "Might δ:3",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Unlock " + player.h.stageName[1] + " of sacrifice."},
+            branches: [74],
+            cost() {return player.h.stage.pow(45).floor()},
+            canAfford() { return hasUpgrade("hpw", 74)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px", borderRadius: "15px"},
+        },
+        76: {
+            title: "Might δ:4",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Boost provenance efficiency based on curses."},
+            branches: [75],
+            cost() {return player.h.stage.pow(70).floor()},
+            canAfford() { return hasUpgrade("hpw", 75)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {
+                return player.hcu.curses.add(1).log(player.h.stage.pow(3)).div(100).add(1)
+            },
+            effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
         81: {
             title: "Might 9:1",
             unlocked: true,
@@ -795,7 +854,63 @@ addLayer("hpw", {
             },
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
-        // Boost Uni-Alpha tickspeed based on time spent in this power reset
+        103: {
+            title: "Might ε:1",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Boost Uni-Alpha tickspeed based on time spent in this power reset."},
+            branches: [102],
+            cost() {return player.h.stage.pow(15).floor()},
+            canAfford() { return hasUpgrade("hpw", 102)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {
+                return player.hpw.sincePower.pow(0.3).div(player.h.stage.div(2)).add(1)
+            },
+            effectDisplay() { return "x" + format(upgradeEffect(this.layer, this.id), 1) }, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        104: {
+            title: "Might ε:2",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Boost time spent in this power reset. (decays based on time in this power reset)"},
+            branches: [103],
+            cost() {return player.h.stage.pow(30).floor()},
+            canAfford() { return hasUpgrade("hpw", 103)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {
+                return Decimal.div(9, player.hpw.sincePower.add(1).log(player.h.stage).div(10).add(1)).add(1)
+            },
+            effectDisplay() { return "x" + format(upgradeEffect(this.layer, this.id), 1) }, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        105: {
+            title: "Might ε:3",
+            unlocked() {return player.h.stage.neq(6)},
+            description: "Improve Might 1:1's effect.",
+            tooltip() {return "(log" + formatWhole(player.h.stage.max(2)) + "(Power+1)+1)*2<br>↓<br>(log" + formatSimple(player.h.stage.div(2).max(1.5)) + "(Power+1)+1)*((log" + formatWhole(player.h.stage.max(2)) + "(Time in Power+1)/10)+2)"},
+            branches: [104],
+            cost() {return player.h.stage.pow(50).floor()},
+            canAfford() { return hasUpgrade("hpw", 104)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px", borderRadius: "15px"},
+        },
+        106: {
+            title: "Might ε:4",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Gain 1% of power gain per second."},
+            branches: [105],
+            cost() {return player.h.stage.pow(75).floor()},
+            canAfford() { return hasUpgrade("hpw", 105)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
         111: {
             title: "Might 12:1",
             unlocked: true,
@@ -868,6 +983,65 @@ addLayer("hpw", {
             currencyInternalName: "power",
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
+        133: {
+            title: "Might ζ:1",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Boost refiner 1's first effect based on boons."},
+            branches: [132],
+            cost() {return player.h.stage.pow(14).floor()},
+            canAfford() { return hasUpgrade("hpw", 132)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {
+                return player.hbl.boons.add(1).log(Decimal.pow10(player.h.stage)).div(20).add(1)
+            },
+            effectDisplay() { return "^" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        134: {
+            title: "Might ζ:2",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Divide refinement requirements based on purities."},
+            branches: [133],
+            cost() {return player.h.stage.pow(35).floor()},
+            canAfford() { return hasUpgrade("hpw", 133)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {
+                return Decimal.pow(player.h.stage.div(2), player.hpu.totalPurity)
+            },
+            effectDisplay() { return "/" + formatSimple(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        135: {
+            title: "Might ζ:3",
+            unlocked() {return player.h.stage.neq(6)},
+            description: "Improve refiner 6's first effect.",
+            branches: [134],
+            cost() {return player.h.stage.pow(63).floor()},
+            canAfford() { return hasUpgrade("hpw", 134)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px", borderRadius: "15px"},
+        },
+        136: {
+            title: "Might ζ:4",
+            unlocked() {return player.h.stage.neq(6)},
+            description: "Unlock a vex effect that reduces refinement scaling.",
+            branches: [135],
+            cost() {return player.h.stage.pow(98).floor()},
+            canAfford() { return hasUpgrade("hpw", 135)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {
+                return player.hve.vexTotal.div(100).add(1)
+            },
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
         141: {
             title: "Might 15:1",
             unlocked: true,
@@ -885,6 +1059,77 @@ addLayer("hpw", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id), 1) + "x" }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
+        151: {
+            title: "Might 16:1",
+            unlocked: true,
+            description: "Unlock tempering in refinement.",
+            branches: [141],
+            cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
+            canAfford() { return hasUpgrade("hpw", 141)},
+            onPurchase() {player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        152: {
+            title: "Might 16:2",
+            unlocked: true,
+            description: "???",
+            branches: [141],
+            cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
+            canAfford() { return hasUpgrade("hpw", 141)},
+            onPurchase() {player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        153: {
+            title: "Might 16:3",
+            unlocked: true,
+            description: "???",
+            branches: [141],
+            cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
+            canAfford() { return hasUpgrade("hpw", 141)},
+            onPurchase() {player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        154: {
+            title: "Might 16:4",
+            unlocked: true,
+            description: "???",
+            branches: [141],
+            cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
+            canAfford() { return hasUpgrade("hpw", 141)},
+            onPurchase() {player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        // Path 1 (Provenance/Refinement)
+        // Unlock the distill tab in refinement, which will produce a resource to that can refine other currencies.
+        // Slightly divide provenance req based on hept points
+        // Boost refiner 3's first effect
+
+        // Path 2 (Blessings/Purity)
+        //
+        // Unlock T2 graces (Expensive but useful, shown as Grace EX1,EX2,etc)
+        //
+
+        // Path 3 (Curses/Vexes)
+        // 
+        // 
+        // Vex Buyables
+
+        // Path 4 (Pre-Power Mult/Debuff Mitigation)
+        // 
+        // 
+        // 
 
         1001: {
             title: "Might A:0",
@@ -1225,14 +1470,14 @@ addLayer("hpw", {
         1102: {
             title: "Might 𝕡:2",
             unlocked: true,
-            description: "Automate Multiplied Miracles, but nerf effect.",
+            description: "Automate Multiplied Miracles, but nerf Amended Automation.",
             branches: [101],
             cost() {return new Decimal(player.h.stage.pow(25)).floor()},
             canAfford() { return hasUpgrade("hpw", 101)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px 5px 20px 35px", borderRadius: "15px"},
+            style: {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px 10px 20px 0", borderRadius: "15px"},
         },
         1103: {
             title: "Might 𝕡:3",
@@ -1282,6 +1527,18 @@ addLayer("hpw", {
             currencyInternalName: "power",
             style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "0 10px 40px 30px", borderRadius: "15px"},
         },
+        1107: {
+            title: "Might 𝕡:7",
+            unlocked: true,
+            description: "Automate External Expansion.",
+            branches: [1104],
+            cost() {return new Decimal(player.h.stage.pow(40)).floor()},
+            canAfford() { return hasUpgrade("hpw", 1104)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "40px 20px 0 20px", borderRadius: "15px"},
+        },
         2001: {
             title: "Might S:1",
             unlocked() {return player.h.stage.eq(7)},
@@ -1292,7 +1549,10 @@ addLayer("hpw", {
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            effect() {return new Decimal(1.5)},
+            effect() {
+                if (hasUpgrade("hpw", 2009)) return new Decimal(2)
+                return new Decimal(1.5)
+            },
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         2002: {
@@ -1305,7 +1565,10 @@ addLayer("hpw", {
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            effect() {return new Decimal(1.5)},
+            effect() {
+                if (hasUpgrade("hpw", 2009)) return new Decimal(2)
+                return new Decimal(1.5)
+            },
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         2003: {
@@ -1344,6 +1607,56 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {return new Decimal(1.5)},
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        2006: {
+            title: "Might S:{",
+            unlocked() {return player.h.stage.eq(7)},
+            description: "Improve lust and gluttony's power effect formulas.",
+            branches: [2004, 2005],
+            cost() {return new Decimal(1e40)},
+            canAfford() { return hasUpgrade("hpw", 2004) && hasUpgrade("hpw", 2005)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        2007: {
+            title: "Might S:5",
+            unlocked() {return player.h.stage.eq(7)},
+            description() {return "Reduce sloth's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            branches: [131],
+            cost() {return new Decimal(7e17)},
+            canAfford() { return hasUpgrade("hpw", 131)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {return new Decimal(2)},
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        2008: {
+            title: "Might S:6",
+            unlocked() {return player.h.stage.eq(7)},
+            description() {return "Reduce greed's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            branches: [131],
+            cost() {return new Decimal(1.4e21)},
+            canAfford() { return hasUpgrade("hpw", 131)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            effect() {return new Decimal(2)},
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        2009: {
+            title: "Might S:[",
+            unlocked() {return player.h.stage.eq(7)},
+            description: "Improve sloth's power effect formula and boost S:1 and S:2.",
+            branches: [2007, 2008],
+            cost() {return new Decimal(1e50)},
+            canAfford() { return hasUpgrade("hpw", 2007) && hasUpgrade("hpw", 2008)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
     },
@@ -1621,23 +1934,25 @@ addLayer("hpw", {
                         ["style-row", [["upgrade", 1033], ["bt-upgrade", 46]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["style-row", [["upgrade", 1041]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1041], ["upgrade", 76]], {width: "140px", height: "140px"}],
                         ["upgrade", 61],
                         ["upgrade", 62],
                         ["style-row", [["upgrade", 2004]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["style-row", [["upgrade", 1042]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1042], ["upgrade", 75]], {width: "140px", height: "140px"}],
                         ["style-row", [["upgrade", 1004], ["upgrade", 73]], {width: "140px", height: "140px"}],
                         ["upgrade", 71],
                         ["upgrade", 72],
-                        ["blank", ["140px", "140px"]],
+                        ["style-row", [["upgrade", 2006]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["style-row", [["upgrade", 1043]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1107]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1043], ["upgrade", 74]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
                         ["upgrade", 81],
                         ["style-row", [["upgrade", 2005]], {width: "140px", height: "140px", marginLeft: "70px"}],
+                        ["blank", ["140px", "140px"]],
 
                     ]],
                     ["row", [
@@ -1646,7 +1961,7 @@ addLayer("hpw", {
                         ["upgrade", 91],
                         ["upgrade", 92],
                         ["blank", ["70px", "140px"]],
-                        ["style-row", [["upgrade", 1051]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1051], ["upgrade", 104]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
                     ]],
                     ["row", [
@@ -1654,8 +1969,8 @@ addLayer("hpw", {
                         ["upgrade", 1102],
                         ["upgrade", 101],
                         ["upgrade", 102],
-                        ["style-row", [["upgrade", 1005]], {width: "140px", height: "140px"}],
-                        ["style-row", [["upgrade", 1052]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1005], ["upgrade", 103]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1052], ["bt-upgrade", 105]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["upgrade", 1106],
@@ -1663,48 +1978,55 @@ addLayer("hpw", {
                         ["upgrade", 111],
                         ["upgrade", 112],
                         ["blank", ["70px", "140px"]],
-                        ["style-row", [["upgrade", 1053]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1053], ["upgrade", 106]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
                     ]],
                     ["row", [
-                        ["blank", ["210px", "140px"]],
+                        ["style-row", [["upgrade", 2007]], {width: "140px", height: "140px", marginRight: "70px"}],
                         ["upgrade", 121],
                         ["blank", ["70px", "140px"]],
-                        ["style-row", [["upgrade", 1061]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1061], ["upgrade", 136]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["blank", ["140px", "140px"]],
+                        ["style-row", [["upgrade", 2009]], {width: "140px", height: "140px"}],
                         ["upgrade", 131],
                         ["upgrade", 132],
-                        ["style-row", [["upgrade", 1006]], {width: "140px", height: "140px"}],
-                        ["style-row", [["upgrade", 1062]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1006], ["upgrade", 133]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1062], ["upgrade", 135]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["blank", ["210px", "140px"]],
+                        ["style-row", [["upgrade", 2008]], {width: "140px", height: "140px", marginRight: "70px"}],
                         ["style-row", [["upgrade", 141], ["buyable", 0]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
-                        ["style-row", [["upgrade", 1063]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1063], ["upgrade", 134]], {width: "140px", height: "140px"}],
                     ]],
-                    ["row", [
-                        ["blank", ["210px", "140px"]],
-                        ["style-row", [["buyable", 6]], {width: "140px", height: "140px"}],
-                        ["style-row", [["buyable", 1]], {width: "140px", height: "140px"}],
-                        ["style-column", [
-                            ["raw-html", "Kept on singularity<br>First purchase keeps the respective realm challenge on singularity", {color: "rgba(0,0,0,0.6)", userSelect: "none", fontSize: "14px", fontFamily: "monospace"}],
-                        ], () => {
-                            if (layers.hrm.layerShown()) return {width: "180px", height: "110px", backgroundColor: "#933", border: "5px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "25px"}
-                            return {width: "210px", height: "140px", visibility: "hidden"}
-                        }],
-                    ]],
-                    ["row", [
-                        ["style-row", [["buyable", 5]], {width: "140px", height: "140px"}],
-                        ["style-row", [["buyable", 7]], {width: "140px", height: "140px"}],
-                        ["style-row", [["buyable", 2]], {width: "140px", height: "140px"}],
-                    ]],
-                    ["row", [
-                        ["style-row", [["buyable", 4]], {width: "140px", height: "140px"}],
-                        ["style-row", [["buyable", 3]], {width: "140px", height: "140px"}],
-                    ]],
+                    ["style-column", [
+                        ["row", [
+                            ["upgrade", 151],
+                            ["upgrade", 152],
+                            ["upgrade", 153],
+                            ["upgrade", 154],
+                        ]],
+                    ], () => {return player.h.stage.gte(7) ? {} : {display: "none !important"}}],
+                    ["style-column", [
+                        ["row", [
+                            ["blank", ["210px", "140px"]],
+                            ["style-row", [["buyable", 6]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 1]], {width: "140px", height: "140px"}],
+                            ["style-column", [
+                                ["raw-html", "Kept on singularity<br>First purchase keeps the respective realm challenge on singularity", {color: "rgba(0,0,0,0.6)", userSelect: "none", fontSize: "14px", fontFamily: "monospace"}],
+                            ], {width: "180px", height: "110px", backgroundColor: "#933", border: "5px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "25px"}],
+                        ]],
+                        ["row", [
+                            ["style-row", [["buyable", 5]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 7]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 2]], {width: "140px", height: "140px"}],
+                        ]],
+                        ["row", [
+                            ["style-row", [["buyable", 4]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 3]], {width: "140px", height: "140px"}],
+                        ]],
+                    ], () => {return player.h.stage.eq(6) && layers.hrm.layerShown() ? {} : {display: "none !important"}}],
                 ],
             },
             "Vigors": {

@@ -183,7 +183,7 @@ addLayer("tw", {
         11: {
             costBase() { return new Decimal(5) },
             costGrowth() { return new Decimal(1.2) },
-            purchaseLimit() { return new Decimal(245) },
+            purchaseLimit() { return new Decimal(250) },
             currency() { return player.tw.twigs },
             pay(amt) { player.tw.twigs = this.currency().sub(amt) },
             effect(x) { return Decimal.sumArithmeticSeries(getBuyableAmount(this.layer, this.id), 0.2, buyableEffect("tw", 62).sub(1), 0).add(1)},
@@ -191,9 +191,9 @@ addLayer("tw", {
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>More Bark</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>More Bark</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase base twig gain<br>" + // MIDDLE
                 "Currently: +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1)) +
                 "<br>Next: +" + formatSimple(Decimal.sumArithmeticSeries(getBuyableAmount(this.layer, this.id).add(1).min(245), 0.2, buyableEffect("tw", 62).sub(1), 0)) +
@@ -206,7 +206,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
                 return look
             },
         },
@@ -222,9 +222,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 22).gt(0)},
             branches: [22],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Powerful Picking</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Powerful Picking</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase picking power<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) +
                 "<br>Next: x" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).min(5).div(5).add(1)) +
@@ -237,7 +237,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -253,9 +253,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 23).gt(0)},
             branches: [23],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Nested Seeds</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Nested Seeds</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase golden seeds based on nests<br>" + // MIDDLE
                 "Currently: +" + formatWhole(tmp[this.layer].buyables[this.id].effect.sub(1)) +
                 "<br>Next: +" + formatWhole(player.n.nest.add(1).log(10).mul(getBuyableAmount(this.layer, this.id).add(1).min(5)).add(getBuyableAmount(this.layer, this.id).add(1).min(5)).floor()) +
@@ -268,7 +268,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
                 return look
             },
         },
@@ -284,9 +284,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 13).gt(0) && getBuyableAmount("tw", 24).gt(0)},
             branches: [13, 24],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>True Purpose</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>True Purpose</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase nests based on twigs<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(player.tw.twigs.add(1).log(10).div(50).mul(getBuyableAmount(this.layer, this.id).add(1).min(10)).add(1), 2) +
@@ -299,7 +299,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
                 return look
             },
         },
@@ -315,9 +315,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 11).gt(0)},
             branches: [11],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>T1 Woodcutting</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>T1 Woodcutting</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase tree damage<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) +
                 "<br>Next: x" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).min(10).div(5).add(1)) +
@@ -330,7 +330,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
                 return look
             },
         },
@@ -346,9 +346,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 21).gt(0)},
             branches: [21],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>More Mulch</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>More Mulch</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase flower gain<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(Decimal.pow(1.1, getBuyableAmount(this.layer, this.id).add(1).min(50)), 2) +
@@ -361,7 +361,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -377,9 +377,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 21).gt(0)},
             branches: [21],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Buzzy Synergy</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Buzzy Synergy</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase bee gain based on twigs<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(player.tw.twigs.add(1).log(10).div(10).add(1).pow(getBuyableAmount(this.layer, this.id).add(1).min(10)), 2) +
@@ -392,7 +392,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
                 return look
             },
         },
@@ -408,9 +408,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 23).gt(0)},
             branches: [23],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Flower Clearing</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Flower Clearing</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Reduce flower cooldowns based on trees chopped<br>" + // MIDDLE
                 "Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: /" + formatSimple(player.tw.treesBroken.add(1).log(10).div(20).mul(getBuyableAmount(this.layer, this.id).add(1).min(5)).add(1), 2) +
@@ -439,9 +439,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 21).gt(0)},
             branches: [21],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Trees are Trees</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Trees are Trees</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase twig gain based on trees<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(player.t.trees.add(1).log("1e1000000").div(25).add(1).pow(getBuyableAmount(this.layer, this.id).add(1).min(10)), 2) +
@@ -454,7 +454,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
                 return look
             },
         },
@@ -470,9 +470,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 22).gt(0)},
             branches: [22],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Finest Framing</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Finest Framing</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase glossary base effect<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).min(5).div(50).add(1), 2) +
@@ -485,7 +485,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -501,9 +501,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 31).gt(0)},
             branches: [31],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Dustier Pollen</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Dustier Pollen</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase pollen gain<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(Decimal.pow(1.5, getBuyableAmount(this.layer, this.id).add(1).min(25)), 2) +
@@ -516,7 +516,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
                 return look
             },
         },
@@ -532,9 +532,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 33).gt(0)},
             branches: [33],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Sweeter Nectar</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Sweeter Nectar</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase nectar gain<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(Decimal.pow(1.2, getBuyableAmount(this.layer, this.id).add(1).min(25)), 2) +
@@ -547,7 +547,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
                 return look
             },
         },
@@ -563,9 +563,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 31).gt(0)},
             branches: [31],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Thicker Logs</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Thicker Logs</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase max tree mult<br>" + // MIDDLE
                 "Currently: x" + formatWhole(Decimal.pow(2, tmp[this.layer].buyables[this.id].effect.sub(1))) +
                 "<br>Next: x" + formatWhole(Decimal.pow(2, getBuyableAmount(this.layer, this.id).add(1).min(5))) +
@@ -578,7 +578,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -594,9 +594,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 31).gt(0)},
             branches: [31],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Branching Branches</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Branching Branches</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase twig gain based on twigs<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(player.tw.twigs.add(1).log(10).div(20).add(1).pow(getBuyableAmount(this.layer, this.id).add(1).min(10)), 2) +
@@ -609,7 +609,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
                 return look
             },
         },
@@ -625,9 +625,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 33).gt(0)},
             branches: [33],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Tastier Bee Bread</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Tastier Bee Bread</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase bee bread gain<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(Decimal.pow(1.2, getBuyableAmount(this.layer, this.id).add(1).min(25)), 2) +
@@ -640,7 +640,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
                 return look
             },
         },
@@ -656,9 +656,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 34).gt(0)},
             branches: [34],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Stickier Honey</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Stickier Honey</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase honey-cell gain<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(Decimal.pow(1.2, getBuyableAmount(this.layer, this.id).add(1).min(25)), 2) +
@@ -671,7 +671,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginLeft: "25px"}
                 return look
             },
         },
@@ -687,9 +687,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 52).gt(0)},
             branches: [52],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Brush Collectors</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Brush Collectors</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Passively gain twigs based on tree cooldown<br>" + // MIDDLE
                 "Currently: +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100), 2) + "%/s" +
                 "<br>Next: +" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).min(10).div(player.tw.twigsReq), 2) + "%/s" +
@@ -702,7 +702,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -718,9 +718,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 42).gt(0)},
             branches: [42],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Improved Soil</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Improved Soil</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Reduce tree cooldown<br>" + // MIDDLE
                 "Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect) +
                 "<br>Next: /" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).min(5).div(10).add(1)) +
@@ -733,7 +733,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
                 return look
             },
         },
@@ -752,9 +752,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 43).gt(0)},
             branches: [43],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Protected Pollen</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Protected Pollen</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Keep pollen path automation upgrades on nest resets<br>" + // MIDDLE
                 "Currently: +" + formatWhole(tmp[this.layer].buyables[this.id].effect.sub(1)) +
                 "<br>Next: +" + formatWhole(getBuyableAmount(this.layer, this.id).add(1).min(this.purchaseLimit())) +
@@ -786,9 +786,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 44).gt(0)},
             branches: [44],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Nurtured Nectar</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Nurtured Nectar</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Keep nectar path automation upgrades on nest resets<br>" + // MIDDLE
                 "Currently: +" + formatWhole(tmp[this.layer].buyables[this.id].effect.sub(1)) +
                 "<br>Next: +" + formatWhole(getBuyableAmount(this.layer, this.id).add(1).min(this.purchaseLimit())) +
@@ -817,9 +817,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 62).gt(0)},
             branches: [62],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Super Saplings</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Super Saplings</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase min tree mult<br>" + // MIDDLE
                 "Currently: x" + formatSimple(Decimal.pow(2, tmp[this.layer].buyables[this.id].effect.sub(1))) +
                 "<br>Next: x" + formatSimple(Decimal.pow(2, getBuyableAmount(this.layer, this.id).add(1).min(5))) +
@@ -832,7 +832,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -848,9 +848,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 52).gt(0)},
             branches: [52],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Denser Bark</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Denser Bark</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Improve \"More Bark\" based on purchases<br>" + // MIDDLE
                 "Currently: +" + formatShortSimple(tmp[this.layer].buyables[this.id].effect.sub(1), 2) +
                 "<br>Next: +" + formatShortSimple(getBuyableAmount(this.layer, this.id).add(1).min(10).div(100), 2) +
@@ -863,7 +863,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -879,9 +879,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 53).gt(0)},
             branches: [53],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Stronger Workers</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Stronger Workers</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase pre-aleph resource gain<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(Decimal.pow(1.5, getBuyableAmount(this.layer, this.id).add(1).min(10)), 2) +
@@ -894,7 +894,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -910,9 +910,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 54).gt(0)},
             branches: [54],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Purer Resources</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Purer Resources</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase aleph resource gain<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(Decimal.pow(1.5, getBuyableAmount(this.layer, this.id).add(1).min(10)), 2) +
@@ -925,7 +925,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
                 return look
             },
         },
@@ -941,9 +941,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 72).gt(0)},
             branches: [72],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Root Branches</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Root Branches</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase twig gain based on trees chopped<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) +
                 "<br>Next: x" + formatSimple(Decimal.pow(player.tw.treesBroken.add(1).log(2).div(50).add(1), getBuyableAmount(this.layer, this.id).add(1).min(25)), 2) +
@@ -972,9 +972,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 62).gt(0)},
             branches: [62],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>T2 Woodcutting</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>T2 Woodcutting</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase tree damage<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) +
                 "<br>Next: x" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).min(10).div(5).add(1)) +
@@ -987,7 +987,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -1003,12 +1003,10 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 72).gt(0)},
             branches: [72],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
                 "<h3>Tree Mutation</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
-                "Increase min and max tree mult<br>" + // MIDDLE
-                "Currently: x" + formatSimple(Decimal.pow(2, tmp[this.layer].buyables[this.id].effect.sub(1))) +
-                "<br>Next: x" + formatSimple(Decimal.pow(2, getBuyableAmount(this.layer, this.id).add(1).min(1))) +
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
+                "Double min and max tree mult" + // MIDDLE
                 "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='height:25px;display:flex;align-items:center'><div>" + 
                 formatSimple(tmp[this.layer].buyables[this.id].cost) + " Twigs" + // BOTTOM
                 "</div></div>"
@@ -1018,7 +1016,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px", marginRight: "25px"}
                 return look
             },
         },
@@ -1034,9 +1032,9 @@ addLayer("tw", {
             canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("tw", 63).gt(0) && getBuyableAmount("tw", 64).gt(0)},
             branches: [63, 64],
             display() {
-                return "<div style='height:25px;display:flex;align-items:center'><div>" +
-                "<h3>Nurtured Nests</h3>" + // TOP
-                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:69px;display:flex;align-items:center'><div>" + 
+                return "<div style='height:30px;display:flex;align-items:center'><div>" +
+                "<h3>Nurtured Nests</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:64px;display:flex;align-items:center'><div>" + 
                 "Increase nest gain<br>" + // MIDDLE
                 "Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) +
                 "<br>Next: x" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).div(10).add(1)) +
@@ -1049,7 +1047,7 @@ addLayer("tw", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "14px", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
+                let look = {color: "#000000bf", borderColor: "#0000007f", fontSize: "13px", lineHeight: "1", borderWidth: "2px", borderRadius: "10px", padding: "0px", width: "175px", height: "125px"}
                 return look
             },
         },

@@ -740,7 +740,9 @@
                 if (hasUpgrade("bi", 28) && challengeCompletions(this.layer, this.id) >= 1) return player.points.gte("1e2400")
                 return player.hre.refinement.gte(2)
             },
-            rewardDescription() {return "Permanently unlock " + player.h.stageName[1] + " as an otherworldly feature, and change base " + player.h.stageName[1] + " point formula to:<br><small>(log<sub>" + formatWhole(player.h.stage.max(2)) + "</sub>(Celestial Points+1)*" + formatWhole(player.h.stage.max(1)) + ")<sup>" + formatSimple(Decimal.div(3.6, player.h.stage.max(3.6)), 2) + "</sup></small>"},
+            rewardDescription() {
+                return "Permanently unlock " + player.h.stageName[1] + " as an otherworldly feature, and change base " + player.h.stageName[1] + " point formula to:<br><small>(log<sub>" + formatWhole(player.h.stage.max(2).sub(buyableEffect("hre", 11).sub(1))) + "</sub>(Celestial Points+1)*" + formatWhole(player.h.stage.max(1).mul(buyableEffect("hre", 12))) + ")<sup>" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)), 2) + "</sup></small>"
+            },
             unlocked() { return hasChallenge("ip", 12) },
             onEnter() {
                 //OTF is reset here and not in crunch to prevent a bug

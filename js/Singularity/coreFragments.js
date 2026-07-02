@@ -91,6 +91,7 @@
         player.cof.fragmentScore[3] = player.in.infinityPoints.plus(1).log10().pow(0.52).div(4).mul(1.25)
         player.cof.fragmentScore[3] = player.cof.fragmentScore[3].mul(player.in.infinities.plus(1).log(10).pow(0.6))
         player.cof.fragmentScore[3] = player.cof.fragmentScore[3].mul(player.ta.negativeInfinityPoints.plus(1).log10().pow(0.45).div(2.25))
+        if (player.sins.clickables["envy"]) player.cof.fragmentScore[3] = player.cof.fragmentScore[3].mul(player.sins.envy[1])
 
         //radioactive
         player.cof.fragmentScore[4] = player.s.singularityPoints.plus(1).log10().pow(0.65).div(3).mul(2.5)
@@ -102,11 +103,13 @@
         player.cof.fragmentScore[5] = player.ad.antimatter.plus(1).log10().pow(0.5).div(3).mul(2)
         player.cof.fragmentScore[5] = player.cof.fragmentScore[5].mul(player.au2.stars.plus(1).log10().pow(1.6).div(6))
         player.cof.fragmentScore[5] = player.cof.fragmentScore[5].mul(player.ca.replicanti.plus(1).log10().pow(0.55).div(12))
+        if (player.sins.clickables["gluttony"]) player.cof.fragmentScore[5] = player.cof.fragmentScore[5].mul(player.sins.gluttony[1])
 
         //temporal
         player.cof.fragmentScore[6] = player.cb.level.plus(1).log10().pow(1.25)
         player.cof.fragmentScore[6] = player.cof.fragmentScore[6].mul(player.cb.XPBoost.plus(1).log10().pow(1.25))
         player.cof.fragmentScore[6] = player.cof.fragmentScore[6].mul(player.cb.petPoints.plus(1).log10().pow(1.25))
+        if (player.sins.clickables["sloth"]) player.cof.fragmentScore[6] = player.cof.fragmentScore[6].mul(player.sins.sloth[1])
 
         let maxIndex = 0
         for (let i = 1; i < player.cof.fragmentScore.length; i++) {

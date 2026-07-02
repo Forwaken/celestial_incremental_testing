@@ -41,6 +41,7 @@ addLayer("h", {
         jinxDiv: new Decimal(1),
         purifierDiv: new Decimal(1),
         provenanceDiv: new Decimal(1),
+        refinementScale: new Decimal(1),
     }},
     nodeStyle() { return {color: "white", backgroundColor: "black", borderColor: "#0061ff"}},
     glowColor: "rgba(0, 0, 0, 0)",
@@ -60,8 +61,10 @@ addLayer("h", {
 
         // GLOBAL NERFS
         player.h.tickspeed = new Decimal(1)
+        if (player.sins.clickables["sloth"]) player.h.tickspeed = player.h.tickspeed.div(Decimal.div(77, hasUpgrade("hpw", 2007) ? upgradeEffect("hpw", 2007) : 1))
         if (player.tera.chronotachysisSpell[0].gt(0)) player.h.tickspeed = player.h.tickspeed.mul(player.tera.chronotachysisSpell[1])
         player.h.tickspeed = player.h.tickspeed.mul(player.tera.trueHexEffect)
+        if (hasUpgrade("hpw", 103)) player.h.tickspeed = player.h.tickspeed.mul(upgradeEffect("hpw", 103))
 
         player.h.externalRaise = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.externalRaise = Decimal.pow(0.5, player.h.stage.sub(6).abs())
@@ -75,24 +78,29 @@ addLayer("h", {
         if (player.h.stage.neq(6)) player.h.powNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
 
         player.h.provenanceDiv = new Decimal(1)
-        if (player.sins.clickables["envy"]) player.h.provenanceDiv = player.h.provenanceDiv.mul(6)
+        if (player.sins.clickables["envy"]) player.h.provenanceDiv = player.h.provenanceDiv.mul(Decimal.div(6, hasUpgrade("hpw", 2001) ? upgradeEffect("hpw", 2001) : 1))
+        if (hasUpgrade("hpw", 76)) player.h.provenanceDiv = player.h.provenanceDiv.div(upgradeEffect("hpw", 76))
 
         player.h.jinxDiv = new Decimal(1)
-        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(Decimal.div(6, hasUpgrade("hpw", 2001) ? upgradeEffect("hpw", 2001) : 1))
+        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(Decimal.div(6, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1))
         if (hasUpgrade("hpw", 46)) player.h.jinxDiv = player.h.jinxDiv.div(upgradeEffect("hpw", 46))
 
         player.h.purifierDiv = new Decimal(1)
-        if (player.sins.clickables["lust"]) player.h.purifierDiv = player.h.purifierDiv.mul(Decimal.div(6, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1))
+        if (player.sins.clickables["lust"]) player.h.purifierDiv = player.h.purifierDiv.mul(Decimal.div(6, hasUpgrade("hpw", 2004) ? upgradeEffect("hpw", 2004) : 1))
         if (hasUpgrade("hpw", 37)) player.h.purifierDiv = player.h.purifierDiv.div(upgradeEffect("hpw", 37))
+
+        player.h.refinementScale = new Decimal(1)
+        if (player.sins.clickables["gluttony"]) player.h.refinementScale = player.h.refinementScale.mul(Decimal.div(1.6, hasUpgrade("hpw", 2005) ? upgradeEffect("hpw", 2005) : 1))
+        if (hasUpgrade("hpw", 136)) player.h.refinementScale = player.h.refinementScale.div(upgradeEffect("hpw", 136))
 
         // START OF HEX POINT GAIN
         player.h.hexPointGain = new Decimal(0)
         if (!hasChallenge("ip", 13) && layerShown("h")) player.h.hexPointGain = Decimal.mul(2, player.h.stage)
         if (hasChallenge("ip", 13)) {
             if (!hasMilestone("hre", 2)) {
-                player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(4)))
+                player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 11).sub(1))).mul(player.h.stage.max(1).mul(buyableEffect("hre", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)))
             } else {
-                player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2)).mul(player.h.stage.max(1)).pow(Decimal.div(3.6, player.h.stage.max(4)))
+                player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 11).sub(1))).mul(player.h.stage.max(1).mul(buyableEffect("hre", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)))
             }
         }
         for (let i = 0; i < 6; i++) {
@@ -173,12 +181,14 @@ addLayer("h", {
     },
     effects() {
         let str = ""
-        if (player.h.tickspeed.lt(1)) str = str.concat("Tickspeed is divided by /" + formatSimple(player.h.tickspeed) + "<br>")
+        if (player.h.tickspeed.lt(1)) str = str.concat("Tickspeed is divided by /" + formatSimple(Decimal.div(1, player.h.tickspeed)) + "<br>")
         if (player.h.tickspeed.gt(1)) str = str.concat("<span style='color:#8f8'>Tickspeed is multiplied by x" + formatSimple(player.h.tickspeed) + "</span><br>")
         if (player.h.externalRaise.lt(1)) str = str.concat("External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "<br>")
         if (player.h.externalRaise.gt(1)) str = str.concat("<span style='color:#8f8'>External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "</span><br>")
         if (player.h.provenanceDiv.gt(1)) str = str.concat("Provenance Efficiency is divided by /" + formatSimple(player.h.provenanceDiv) + "<br>")
         if (player.h.provenanceDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Provenance Efficiency is multiplied by x" + formatSimple(player.h.provenanceDiv) + "</span><br>")
+        if (player.h.refinementScale.gt(1)) str = str.concat("Refinement Scaling is multiplied by x" + formatSimple(player.h.refinementScale) + "<br>")
+        if (player.h.refinementScale.lt(1)) str = str.concat("<span style='color:#8f8'>Refinement Scaling is divided by /" + formatSimple(Decimal.div(1, player.h.refinementScale)) + "</span><br>")
         if (player.h.jinxDiv.gt(1)) str = str.concat("Jinx caps are divided by /" + formatSimple(player.h.jinxDiv) + "<br>")
         if (player.h.jinxDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Jinx caps are multiplied by x" + formatSimple(player.h.jinxDiv) + "</span><br>")
         if (player.h.purifierDiv.gt(1)) str = str.concat("Purifier Efficiency is divided by /" + formatSimple(player.h.purifierDiv) + "<br>")

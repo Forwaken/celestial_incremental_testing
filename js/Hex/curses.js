@@ -22,8 +22,8 @@ addLayer("hcu", {
     },
     update(delta) {
         player.hcu.cursesGain = new Decimal(0)
-        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(player.h.stage.max(2))
-        if (hasUpgrade("ta", 16) && inChallenge("hrm", 13)) player.hcu.cursesGain = Decimal.pow(player.hve.vexTotal.mul(0.2).add(player.h.stage.mul(3)), player.hbl.blessings.add(1).log(player.h.stage.max(2))).sub(1).min(Decimal.pow10(player.h.stage.mul(5)))
+        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1))).mul(buyableEffect("hre", 52))
+        if (hasUpgrade("ta", 16) && inChallenge("hrm", 13)) player.hcu.cursesGain = Decimal.pow(player.hve.vexTotal.mul(0.2).add(player.h.stage.mul(3).div(10)), player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1)))).sub(1).mul(buyableEffect("hre", 52)).min(Decimal.pow10(player.h.stage.mul(5)))
         if (hasUpgrade("ta", 16) && hasMilestone("hre", 10)) player.hcu.cursesGain = player.hcu.cursesGain.add(player.h.stage.div(10))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 101))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 103))
@@ -912,7 +912,12 @@ addLayer("hcu", {
             }],
             ["raw-html", () => {return (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2))) && inChallenge("hrm", 12)) || player.hcu.cursesGain.gte(Decimal.pow(1e100, player.h.stage.mul(2))) ? "<small>[SOFTCAPPED<sup>2</sup>]</small>" :
                 player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2))) || inChallenge("hrm", 12) ? "<small>[SOFTCAPPED]</small>" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
-            ["raw-html", () => {return "<div class='bottomTooltip'>Base Formula<hr><small>log" + formatWhole(player.h.stage.max(2)) + "(Blessings)</small></div>"}],
+            ["raw-html", () => {
+                let str = "<div class='bottomTooltip'>Base Formula<hr><small>log" + formatWhole(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1))) + "(Blessings)"
+                if (buyableEffect("hre", 52).gt(1)) str = str.concat("x" + formatSimple(buyableEffect("hre", 52)))
+                if (hasMilestone("hre", 10)) str = str.concat("+" + formatSimple(player.h.stage.div(10)))
+                return str + "</small></div>"
+            }],
         ]],
         ["blank", "10px"],
         ["clickable", 1],

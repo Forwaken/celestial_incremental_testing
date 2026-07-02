@@ -169,6 +169,7 @@ addLayer("tera", {
         for (let i in player.hpw.buyables) {
             player.hpw.buyables[i] = new Decimal(0)
         }
+        player.hpw.sincePower = new Decimal(0)
 
         // SACRIFICE
         player.hsa.holyPower = new Decimal(0)
@@ -177,8 +178,10 @@ addLayer("tera", {
         player.hsa.sacredEnergyPerSecond = new Decimal(0)
         player.hsa.sacredEffect = new Decimal(0)
         player.hsa.sacredEffect2 = new Decimal(1)
-        player.hsa.dimensionAmounts = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)]
-        player.hsa.dimensionsPerSecond = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)]
+        player.hsa.dimensionAmounts = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),
+            new Decimal(0),new Decimal(0)]
+        player.hsa.dimensionsPerSecond = [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),
+            new Decimal(0),new Decimal(0)]
         player.hsa.prayerTime = new Decimal(0)
         player.hsa.prayerMult = new Decimal(1)
         player.hsa.prayTimeCheck = new Decimal(0)
@@ -265,6 +268,11 @@ addLayer("tera", {
         for (let i = 0; i < player.hre.milestones.length; i++) {
             player.hre.milestones.splice(i, 1);
             i--;
+        }
+        player.hre.temperer = new Decimal(0)
+        player.hre.tempererPerSec = new Decimal(0)
+        for (let i in player.hre.buyables) {
+            player.hre.buyables[i] = new Decimal(0)
         }
         
         // RANK

@@ -10,8 +10,10 @@ addLayer("hsa", {
         autoSac: -1,
         holyPower: new Decimal(0),
         holyPowerGain: new Decimal(0),
-        dimensionAmounts: [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)],
-        dimensionsPerSecond: [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)],
+        dimensionAmounts: [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),
+            new Decimal(0),new Decimal(0)],
+        dimensionsPerSecond: [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),
+            new Decimal(0),new Decimal(0)],
 
         sacredEnergy: new Decimal(0),
         sacredEnergyPerSecond: new Decimal(0),
@@ -21,6 +23,7 @@ addLayer("hsa", {
         prayerTime: new Decimal(0),
         prayerMult: new Decimal(1),
         prayerDecay: new Decimal(0),
+        prayerSpeed: new Decimal(1),
         praying: false,
         prayTimeCheck: new Decimal(0),
         prayPercent: new Decimal(0),
@@ -30,13 +33,17 @@ addLayer("hsa", {
     update(delta) {
         let step = Decimal.div(1, player.h.stage.pow(2))
         player.hsa.holyPowerGain = new Decimal(0)
-        if (player.hpr.rank[0].gt(0)) player.hsa.holyPowerGain = player.hpr.rank[0].pow(0.5).div(10)
-        if (player.hpr.rank[1].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[1].pow(Decimal.add(0.5, step)).div(5).add(1))
-        if (player.hpr.rank[2].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[2].pow(Decimal.add(0.5, step.mul(2))).div(2).add(1))
-        if (player.hpr.rank[3].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[3].pow(Decimal.add(0.5, step.mul(3))).add(1))
-        if (player.hpr.rank[4].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[4].pow(Decimal.add(0.5, step.mul(4))).mul(2).add(1))
-        if (player.hpr.rank[5].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[5].pow(Decimal.add(0.5, step.mul(5))).mul(4).add(1))
-        if (player.hpr.rank[6].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[6].pow(Decimal.sub(0.5, step)).div(10).add(1))
+        if (player.h.stage.lte(6)) {
+            if (player.hpr.rank[0].gt(0)) player.hsa.holyPowerGain = player.hpr.rank[0].pow(0.5).div(10)
+            if (player.hpr.rank[1].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[1].pow(Decimal.add(0.5, step)).div(5).add(1))
+            if (player.hpr.rank[2].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[2].pow(Decimal.add(0.5, step.mul(2))).div(2).add(1))
+            if (player.hpr.rank[3].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[3].pow(Decimal.add(0.5, step.mul(3))).add(1))
+            if (player.hpr.rank[4].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[4].pow(Decimal.add(0.5, step.mul(4))).mul(2).add(1))
+            if (player.hpr.rank[5].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[5].pow(Decimal.add(0.5, step.mul(5))).mul(4).add(1))
+            if (player.hpr.rank[6].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[6].pow(Decimal.sub(0.5, step)).div(10).add(1))
+        } else {
+            if (player.hpr.rank[5].gt(0)) player.hsa.holyPowerGain = player.hpr.rank[5].pow(0.5).div(10)
+        }
         if (hasUpgrade("hsa", 11)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(2)
         if (hasUpgrade("hsa", 16)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(upgradeEffect("hsa", 16))
 
@@ -44,7 +51,7 @@ addLayer("hsa", {
 
         player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(player.h.tickspeed).mul(delta))
 
-        if (player.hsa.autoSac == true) {
+        if (player.hsa.autoSac == true && ((player.h.stage.lte(6) && player.hpr.rank[1].gte(1)) || player.hpr.rank[5].gte(1))) {
             player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
 
             // RESET CODE
@@ -82,6 +89,7 @@ addLayer("hsa", {
         if (hasUpgrade("hsa", 24)) player.hsa.dimensionsPerSecond[2] = player.hsa.dimensionsPerSecond[2].mul(upgradeEffect("hsa", 24))
         if (hasUpgrade("hsa", 25)) player.hsa.dimensionsPerSecond[3] = player.hsa.dimensionsPerSecond[3].mul(upgradeEffect("hsa", 25))
         if (hasUpgrade("hsa", 26)) player.hsa.dimensionsPerSecond[4] = player.hsa.dimensionsPerSecond[4].mul(upgradeEffect("hsa", 26))
+        if (hasUpgrade("hsa", 27)) player.hsa.dimensionsPerSecond[5] = player.hsa.dimensionsPerSecond[5].mul(upgradeEffect("hsa", 27))
 
         // Dimension Per Second Calc
         for (let i = 0; i < player.hsa.dimensionAmounts.length; i++) {
@@ -105,11 +113,14 @@ addLayer("hsa", {
             player.hsa.praying = false
         }
 
-        player.hsa.prayerTime = player.hsa.prayerTime.add(buyableEffect("hsa", 1).sub(1).mul(delta))
+        player.hsa.prayerSpeed = new Decimal(1)
+        if (hasUpgrade("hsa", 17)) player.hsa.prayerSpeed.mul(upgradeEffect("hsa", 17))
+
+        player.hsa.prayerTime = player.hsa.prayerTime.add(buyableEffect("hsa", 1).sub(1).mul(player.hsa.prayerSpeed).mul(player.h.tickspeed).mul(delta))
         if (player.hsa.praying) {
-            player.hsa.prayerTime = player.hsa.prayerTime.add(Decimal.mul(delta, player.h.tickspeed))
+            player.hsa.prayerTime = player.hsa.prayerTime.add(Decimal.mul(delta, player.hsa.prayerSpeed.mul(player.h.tickspeed)))
         } else if (player.hsa.prayerTime.gt(0)) {
-            player.hsa.prayerTime = player.hsa.prayerTime.sub(player.hsa.prayerDecay.mul(delta)).max(0)
+            player.hsa.prayerTime = player.hsa.prayerTime.sub(player.hsa.prayerDecay.mul(player.h.tickspeed).mul(delta)).max(0)
         }
 
         let prayDist = player.h.stage
@@ -121,8 +132,11 @@ addLayer("hsa", {
     },
     clickables: {
         1: {
-            title: "<h2>Sacrifice your provenances for holy power.</h2><br><h3>Req: 1 β-Provenance</h3>",
-            canClick() { return player.hpr.rank[1].gte(1)},
+            title() {
+                if (player.h.stage.gt(6)) return "<h2>Sacrifice your provenances for holy power.</h2><br><h3>Req: 1 ζ-Provenance</h3>"
+                return "<h2>Sacrifice your provenances for holy power.</h2><br><h3>Req: 1 β-Provenance</h3>"
+            },
+            canClick() { return (player.h.stage.lte(6) && player.hpr.rank[1].gte(1)) || player.hpr.rank[5].gte(1)},
             unlocked: true,
             onClick() {
                 player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
@@ -195,9 +209,9 @@ addLayer("hsa", {
         },
         100: {
             title() {
-                let curTime = buyableEffect("hsa", 1).sub(1).mul(player.h.tickspeed)
-                if (player.hsa.praying) curTime = curTime.add(Decimal.mul(1, player.h.tickspeed))
-                if (!player.hsa.praying && player.hsa.prayerTime.gt(0)) curTime = curTime.sub(player.hsa.prayerDecay)
+                let curTime = buyableEffect("hsa", 1).sub(1).mul(player.hsa.prayerSpeed).mul(player.h.tickspeed)
+                if (player.hsa.praying) curTime = curTime.add(Decimal.mul(1, player.hsa.prayerSpeed.mul(player.h.tickspeed)))
+                if (!player.hsa.praying && player.hsa.prayerTime.gt(0)) curTime = curTime.sub(player.hsa.prayerDecay.mul(player.h.tickspeed))
                 let str = "<h3>Pray to speed up holy dimensions</h3><br>x" + formatSimple(player.hsa.prayerMult) + " holy dimension tickspeed<br>Prayer Time: " + formatTime(player.hsa.prayerTime)
                 if (curTime.gt(0.01)) str = str.concat("<small style='color:rgba(0,100,0,0.6)'> (+" + formatTime(curTime) + ")</small>")
                 if (curTime.lt(-0.01)) str = str.concat("<small style='color:rgba(100,0,0,0.6)'> (-" + formatTime(curTime.mul(-1)) + ")</small>")
@@ -284,7 +298,22 @@ addLayer("hsa", {
             currencyDisplayName: "Holy Power",
             currencyInternalName: "holyPower",
             effect() {
+                if (player.h.stage.gt(6)) return player.hpw.power.add(1).log(player.h.stage).div(10).add(1)
                 return player.hpw.power.add(1).pow(0.03)
+            },
+            effectDisplay() {return "x" + formatSimple(upgradeEffect(this.layer, this.id)) },
+            style: {color: "rgba(0,0,0,0.6)", borderColor: "rgba(0,0,0,0.6)", borderRadius: "15px", margin: "2px"},
+        },
+        17: {
+            title: "Limpidity",
+            unlocked: true,
+            description() {return "Multiply prayer speed based on time in this power reset"},
+            cost() {return player.h.stage.div(2).pow(40)},
+            currencyLocation() { return player.hsa },
+            currencyDisplayName: "Holy Power",
+            currencyInternalName: "holyPower",
+            effect() {
+                return Decimal.pow(Decimal.div(1, player.h.stage.div(2)).add(1), player.hpw.sincePower.add(1).log(player.h.stage))
             },
             effectDisplay() {return "x" + formatSimple(upgradeEffect(this.layer, this.id)) },
             style: {color: "rgba(0,0,0,0.6)", borderColor: "rgba(0,0,0,0.6)", borderRadius: "15px", margin: "2px"},
@@ -369,6 +398,20 @@ addLayer("hsa", {
             currencyInternalName: "holyPower",
             effect() {
                 return Decimal.sub(player.hpw.upgTotal.max(player.h.stage.mul(10)), player.h.stage.mul(10)).div(10).add(1)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" },
+            style: {color: "rgba(0,0,0,0.6)", borderColor: "rgba(0,0,0,0.6)", borderRadius: "15px", margin: "2px"},
+        },
+        27: {
+            title: "Vigilant",
+            unlocked: true,
+            description() {return "Vexes boosts the 7th holy dimension."},
+            cost() {return player.h.stage.pow(36)},
+            currencyLocation() { return player.hsa },
+            currencyDisplayName: "Holy Power",
+            currencyInternalName: "holyPower",
+            effect() {
+                return player.hve.vexTotal.div(player.h.stage).add(1)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" },
             style: {color: "rgba(0,0,0,0.6)", borderColor: "rgba(0,0,0,0.6)", borderRadius: "15px", margin: "2px"},
@@ -481,7 +524,7 @@ addLayer("hsa", {
             currency() { return player.hsa.holyPower},
             pay(amt) { player.hsa.holyPower = this.currency().sub(amt) },
             effect(x) { return new Decimal(2).pow(getBuyableAmount(this.layer, this.id)) },
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(2)},
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
@@ -511,7 +554,7 @@ addLayer("hsa", {
             currency() { return player.hsa.holyPower},
             pay(amt) { player.hsa.holyPower = this.currency().sub(amt) },
             effect(x) { return new Decimal(2).pow(getBuyableAmount(this.layer, this.id)) },
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(3)},
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
@@ -541,7 +584,7 @@ addLayer("hsa", {
             currency() { return player.hsa.holyPower},
             pay(amt) { player.hsa.holyPower = this.currency().sub(amt) },
             effect(x) { return new Decimal(2).pow(getBuyableAmount(this.layer, this.id)) },
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(4)},
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
@@ -571,7 +614,7 @@ addLayer("hsa", {
             currency() { return player.hsa.holyPower},
             pay(amt) { player.hsa.holyPower = this.currency().sub(amt) },
             effect(x) { return new Decimal(2).pow(getBuyableAmount(this.layer, this.id)) },
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(5)},
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
@@ -601,7 +644,7 @@ addLayer("hsa", {
             currency() { return player.hsa.holyPower},
             pay(amt) { player.hsa.holyPower = this.currency().sub(amt) },
             effect(x) { return new Decimal(2).pow(getBuyableAmount(this.layer, this.id)) },
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(6)},
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
@@ -621,6 +664,66 @@ addLayer("hsa", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                     player.hsa.dimensionAmounts[5] = player.hsa.dimensionAmounts[5].add(max)
+                }
+            },
+            style: {width: "175px", height: "50px", color: "rgba(0,0,0,0.6)", borderRadius: "10px"},
+        },
+        17: {
+            costBase() { return player.h.stage.pow(21) },
+            costGrowth() { return player.h.stage.div(2).pow(7) },
+            currency() { return player.hsa.holyPower},
+            pay(amt) { player.hsa.holyPower = this.currency().sub(amt) },
+            effect(x) { return new Decimal(2).pow(getBuyableAmount(this.layer, this.id)) },
+            unlocked() {return player.h.stage.gte(7)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " HP"
+            },
+            buy() {
+                if (player.hsa.dimMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                    player.hsa.dimensionAmounts[6] = player.hsa.dimensionAmounts[6].add(1)
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                    player.hsa.dimensionAmounts[6] = player.hsa.dimensionAmounts[6].add(max)
+                }
+            },
+            style: {width: "175px", height: "50px", color: "rgba(0,0,0,0.6)", borderRadius: "10px"},
+        },
+        18: {
+            costBase() { return player.h.stage.pow(28) },
+            costGrowth() { return player.h.stage.div(2).pow(8) },
+            currency() { return player.hsa.holyPower},
+            pay(amt) { player.hsa.holyPower = this.currency().sub(amt) },
+            effect(x) { return new Decimal(2).pow(getBuyableAmount(this.layer, this.id)) },
+            unlocked() {return player.h.stage.gte(8)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " HP"
+            },
+            buy() {
+                if (player.hsa.dimMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                    player.hsa.dimensionAmounts[7] = player.hsa.dimensionAmounts[7].add(1)
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                    player.hsa.dimensionAmounts[7] = player.hsa.dimensionAmounts[7].add(max)
                 }
             },
             style: {width: "175px", height: "50px", color: "rgba(0,0,0,0.6)", borderRadius: "10px"},
@@ -667,36 +770,48 @@ addLayer("hsa", {
                         ], {width: "700px"}], 
                         ["buyable", 11],
                     ]],
-                    ["row", [
+                    ["style-row", [
                         ["style-row", [
                             ["raw-html", () => {return "2nd dimension (" + format(buyableEffect("hsa", 12)) + "x): " + format(player.hsa.dimensionAmounts[1]) + " (+" + format(player.hsa.dimensionsPerSecond[1]) + "/s)"}, { color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace" }]
                         ], {width: "700px"}], 
                         ["buyable", 12],
-                    ]],
-                    ["row", [
+                    ], () => {return player.h.stage.gte(2) ? {} : {display: "none !important"}}],
+                    ["style-row", [
                         ["style-row", [
                             ["raw-html", () => {return "3rd dimension (" + format(buyableEffect("hsa", 13)) + "x): " + format(player.hsa.dimensionAmounts[2]) + " (+" + format(player.hsa.dimensionsPerSecond[2]) + "/s)"}, { color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace" }]
                         ], {width: "700px"}], 
                         ["buyable", 13],
-                    ]],
-                    ["row", [
+                    ], () => {return player.h.stage.gte(3) ? {} : {display: "none !important"}}],
+                    ["style-row", [
                         ["style-row", [
                             ["raw-html", () => {return "4th dimension (" + format(buyableEffect("hsa", 14)) + "x): " + format(player.hsa.dimensionAmounts[3]) + " (+" + format(player.hsa.dimensionsPerSecond[3]) + "/s)"}, { color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace" }]
                         ], {width: "700px"}], 
                         ["buyable", 14],
-                    ]],
-                    ["row", [
+                    ], () => {return player.h.stage.gte(4) ? {} : {display: "none !important"}}],
+                    ["style-row", [
                         ["style-row", [
                             ["raw-html", () => {return "5th dimension (" + format(buyableEffect("hsa", 15)) + "x): " + format(player.hsa.dimensionAmounts[4]) + " (+" + format(player.hsa.dimensionsPerSecond[4]) + "/s)"}, { color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace" }]
                         ], {width: "700px"}], 
                         ["buyable", 15],
-                    ]],
-                    ["row", [
+                    ], () => {return player.h.stage.gte(5) ? {} : {display: "none !important"}}],
+                    ["style-row", [
                         ["style-row", [
                             ["raw-html", () => {return "6th dimension (" + format(buyableEffect("hsa", 16)) + "x): " + format(player.hsa.dimensionAmounts[5]) + " (+" + format(player.hsa.dimensionsPerSecond[5]) + "/s)"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace" }]
                         ], {width: "700px"}], 
                         ["buyable", 16],
-                    ]],
+                    ], () => {return player.h.stage.gte(6) ? {} : {display: "none !important"}}],
+                    ["style-row", [
+                        ["style-row", [
+                            ["raw-html", () => {return "7th dimension (" + format(buyableEffect("hsa", 17)) + "x): " + format(player.hsa.dimensionAmounts[6]) + " (+" + format(player.hsa.dimensionsPerSecond[6]) + "/s)"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace" }]
+                        ], {width: "700px"}], 
+                        ["buyable", 17],
+                    ], () => {return player.h.stage.gte(7) ? {} : {display: "none !important"}}],
+                    ["style-row", [
+                        ["style-row", [
+                            ["raw-html", () => {return "8th dimension (" + format(buyableEffect("hsa", 18)) + "x): " + format(player.hsa.dimensionAmounts[7]) + " (+" + format(player.hsa.dimensionsPerSecond[7]) + "/s)"}, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace" }]
+                        ], {width: "700px"}], 
+                        ["buyable", 18],
+                    ], () => {return player.h.stage.gte(8) ? {} : {display: "none !important"}}],
                 ],
             },
             "Holy Upgrades": {
@@ -704,10 +819,17 @@ addLayer("hsa", {
                 unlocked: true,
                 content: [
                     ["blank", "10px"],
-                    ["style-row", [
-                        ["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15], ["upgrade", 16],
-                        ["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 24], ["upgrade", 25], ["upgrade", 26],
-                    ], {maxWidth: "800px"}],
+                    ["row", [
+                        ["style-row", [
+                            ["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14],
+                            ["upgrade", 15], ["upgrade", 16], ["upgrade", 17],
+                        ], {maxWidth: "395px"}],
+                        ["blank", ["10px", "10px"]],
+                        ["style-row", [
+                            ["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 24],
+                            ["upgrade", 25], ["upgrade", 26], ["upgrade", 27],
+                        ], {maxWidth: "395px"}],
+                    ]],
                 ],
             },
             "Automation": {
@@ -743,7 +865,7 @@ addLayer("hsa", {
             ["raw-html", () => {return "You have <h3>" + format(player.hsa.holyPower) + "</h3> holy power." }, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return "(+" + format(player.hsa.holyPowerGain) + ")" }, () => {
                 let look = {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
-                player.hpr.rank[1].gt(0) ? look.color = "rgba(0,0,0,0.6)" : look.color = "rgba(100,100,100,0.6)"
+                (player.h.stage.lte(6) && player.hpr.rank[1].gt(0)) || player.hpr.rank[5].gt(0) ? look.color = "rgba(0,0,0,0.6)" : look.color = "rgba(100,100,100,0.6)"
                 return look
             }],
         ]],
@@ -753,5 +875,5 @@ addLayer("hsa", {
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],
-    layerShown() { return inChallenge("hrm", 14)}, // Decides if this node is shown or not.
+    layerShown() { return inChallenge("hrm", 14) || hasUpgrade("hpw", 75)}, // Decides if this node is shown or not.
 });

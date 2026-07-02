@@ -10,20 +10,31 @@ addLayer("sins", {
         envy: [new Decimal(1), new Decimal(1), new Decimal(1)],
         wrath: [new Decimal(1), new Decimal(1), new Decimal(1)],
         lust: [new Decimal(1), new Decimal(1), new Decimal(1)],
+        gluttony: [new Decimal(1), new Decimal(1), new Decimal(1)],
+        sloth: [new Decimal(1), new Decimal(1), new Decimal(1)],
     }},
     update (delta) {
         if (hasUpgrade("hpw", 2003)) player.sins.envy[0] = Decimal.pow(Decimal.div(2.5, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
         else player.sins.envy[0] = Decimal.pow(Decimal.div(2, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
-        player.sins.envy[1] = player.hpr.rank[0].add(1).log(player.h.stage).div(8).add(1)
-        player.sins.envy[2] = player.hpr.rank[0].add(1).log(player.h.stage).div(4).add(1)
+        player.sins.envy[1] = player.hpr.rank[0].add(1).log(7).div(8).add(1)
+        player.sins.envy[2] = player.hpr.rank[0].add(1).log(7).div(4).add(1)
         if (hasUpgrade("hpw", 2003)) player.sins.wrath[0] = Decimal.pow(Decimal.div(2.1, player.h.stage).add(1), player.hcu.curses.add(1).log(666))
         else player.sins.wrath[0] = Decimal.pow(Decimal.div(1.7, player.h.stage).add(1), player.hcu.curses.add(1).log(666))
         player.sins.wrath[1] = player.hcu.curses.add(1).log(666).div(10).add(1)
         player.sins.wrath[2] = player.hcu.curses.add(1).log(666).div(5).add(1)
-        if (hasUpgrade("hpw", 2006)) player.sins.lust[0] = Decimal.pow(Decimal.div(7, player.h.stage).add(1), player.hpu.totalPurity)
-        else player.sins.lust[0] = Decimal.pow(Decimal.div(7, player.h.stage).add(1), player.hpu.totalPurity.pow(0.85))
+        if (hasUpgrade("hpw", 2006)) player.sins.lust[0] = Decimal.pow(Decimal.div(8, player.h.stage).add(1), player.hpu.totalPurity.pow(0.85))
+        else player.sins.lust[0] = Decimal.pow(Decimal.div(8, player.h.stage).add(1), player.hpu.totalPurity.pow(0.7))
         player.sins.lust[1] = player.hpu.totalPurity.pow(1.3).div(10).add(1)
         player.sins.lust[2] = player.hpu.totalPurity.pow(1.3).div(5).add(1)
+        let refWeight = player.hre.refinement.gte(70) ? player.hre.refinement.sub(35) : player.hre.refinement.div(2)
+        if (hasUpgrade("hpw", 2006)) player.sins.gluttony[0] = Decimal.pow(Decimal.div(1, player.h.stage).add(1), refWeight.pow(0.9))
+        else player.sins.gluttony[0] = Decimal.pow(Decimal.div(1, player.h.stage).add(1), refWeight.pow(0.75))
+        player.sins.gluttony[1] = refWeight.pow(1.3).div(100).add(1)
+        player.sins.gluttony[2] = refWeight.pow(1.3).div(50).add(1)
+        if (hasUpgrade("hpw", 2009)) player.sins.sloth[0] = Decimal.pow(Decimal.div(2.1, player.h.stage).add(1), player.h.hexPoint.add(1).log(1e6))
+        else player.sins.sloth[0] = Decimal.pow(Decimal.div(1.7, player.h.stage).add(1), player.h.hexPoint.add(1).log(1e6))
+        player.sins.sloth[1] = player.h.hexPoint.add(1).log(1e6).div(10).add(1)
+        player.sins.sloth[2] = player.h.hexPoint.add(1).log(1e6).div(5).add(1)
     },
     clickables: {
         "envy": {
@@ -308,14 +319,14 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "x1.6 Refinement Scaling", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(Decimal.div(1.6, hasUpgrade("hpw", 2005) ? upgradeEffect("hpw", 2005) : 1)) + " Refinement Scaling"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#98745b", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "^1.05 Base Power Formula", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "x1 Cosmic Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "^1 Cosmic Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.gluttony[0]) + " Power Gain"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.gluttony[1]) + " Cosmic Fragment Score"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "<s>x" + formatSimple(player.sins.gluttony[2]) + " Cosmic Pylon Energy</s>"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on Refinements)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "90px", background: "#98745b", borderRadius: "10px"}],
                 ], () => {return player.hpw.upgTotal.gte(28) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],
@@ -336,14 +347,14 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "/666 Uni-Alpha Tickspeed", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(77, hasUpgrade("hpw", 2007) ? upgradeEffect("hpw", 2007) : 1)) + " Uni-Alpha Tickspeed"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#4e6f6f", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "^1.05 Base Power Formula", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "x1 Temporal Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "x1 Temporal Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.sloth[0]) + " Power Gain"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.sloth[1]) + " Temporal Fragment Score"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.sloth[2]) + " Temporal Pylon Energy"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on " + player.h.stageName[0] + " Points)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "90px", background: "#4e6f6f", borderRadius: "10px"}],
                 ], () => {return player.hpw.upgTotal.gte(35) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],
@@ -365,7 +376,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "/666 Blessings", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "/77 Blessings", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#988f5b", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
@@ -393,7 +404,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "/666 Pre-Power Resources", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", "/77 Pre-Power Resources", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#594f7a", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
