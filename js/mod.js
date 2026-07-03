@@ -42,7 +42,7 @@
 
 // Set your version in num and name
 let VERSION = {
-	num: 190.26, // CHANGED TO NUMBER TO MAKE EASIER IN FUTURE (EX. 150 = v1.5.0)
+	num: 190.27, // CHANGED TO NUMBER TO MAKE EASIER IN FUTURE (EX. 150 = v1.5.0)
 	name: "Battle Bonanza",
 }
 
@@ -2260,6 +2260,15 @@ function fixOldSave(oldVersion){
 	if (oldVersion < 190.25) {
 		if (player.sme.buyables[135]) player.darkTemple.buyables[1005] = new Decimal(player.sme.buyables[135])
 		if (player.sme.buyables[136]) player.darkTemple.buyables[1007] = new Decimal(player.sme.buyables[136])
+	}
+	if (oldVersion < 190.27 && player.stagnantSynestia) {
+		if (player.stagnantSynestia.milestone[25] > 0) player.stagnantSynestia.milestone[10] = player.stagnantSynestia.milestone[25]
+		if (player.stagnantSynestia.milestone[50] > 0) player.stagnantSynestia.milestone[20] = player.stagnantSynestia.milestone[50]
+		if (player.stagnantSynestia.milestone[75] > 0) player.stagnantSynestia.milestone[30] = player.stagnantSynestia.milestone[75]
+		if (player.stagnantSynestia.milestone[100] > 0) {
+			player.stagnantSynestia.milestone[40] = player.stagnantSynestia.milestone[100]
+			player.stagnantSynestia.milestone[50] = player.stagnantSynestia.milestone[100]
+		}
 	}
 }
 

@@ -88,9 +88,9 @@ const fragShopBase = {
     },
     5: {
         name: "Refined Fragment",
-        0: new Decimal(3),
+        0() {return hasUpgrade("tera", "hex2") ? new Decimal(0) : new Decimal(3)},
         1: new Decimal(9),
-        2: new Decimal(3),
+        2() {return hasUpgrade("tera", "hex2") ? new Decimal(0) : new Decimal(3)},
     },
     6: {
         name: "Evolution Fragment",
@@ -619,9 +619,9 @@ addLayer("pet", {
         if (player.pet.fragShopInput.gte(1)) player.pet.fragShopBulk = player.pet.fragShopInput.floor()
 
         let fragMul = player.pet.fragShopBulk.mul(Decimal.sub(0.05, buyableEffect("pet", 3))).add(Decimal.add(0.95, buyableEffect("pet", 3)))
-        player.pet.fragShopCost1 = fragShopBase[player.pet.fragShopIndex][0].mul(fragMul).mul(player.pet.fragShopBulk).mul(10).floor().div(10)
-        player.pet.fragShopCost2 = fragShopBase[player.pet.fragShopIndex][1].mul(fragMul).mul(player.pet.fragShopBulk).mul(10).floor().div(10)
-        player.pet.fragShopCost3 = fragShopBase[player.pet.fragShopIndex][2].mul(fragMul).mul(player.pet.fragShopBulk).mul(10).floor().div(10)
+        player.pet.fragShopCost1 = run(fragShopBase[player.pet.fragShopIndex][0], fragShopBase[player.pet.fragShopIndex]).mul(fragMul).mul(player.pet.fragShopBulk).mul(10).floor().div(10)
+        player.pet.fragShopCost2 = run(fragShopBase[player.pet.fragShopIndex][1], fragShopBase[player.pet.fragShopIndex]).mul(fragMul).mul(player.pet.fragShopBulk).mul(10).floor().div(10)
+        player.pet.fragShopCost3 = run(fragShopBase[player.pet.fragShopIndex][2], fragShopBase[player.pet.fragShopIndex]).mul(fragMul).mul(player.pet.fragShopBulk).mul(10).floor().div(10)
 
         for (let i in player.pet.fragShop) {
             player.pet.fragShop[i].current = player.pet.fragShop[i].current.sub(onepersec.mul(delta))

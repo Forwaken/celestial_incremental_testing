@@ -22,9 +22,10 @@ addLayer("hcu", {
     },
     update(delta) {
         player.hcu.cursesGain = new Decimal(0)
-        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1))).mul(buyableEffect("hre", 52))
-        if (hasUpgrade("ta", 16) && inChallenge("hrm", 13)) player.hcu.cursesGain = Decimal.pow(player.hve.vexTotal.mul(0.2).add(player.h.stage.mul(3).div(10)), player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1)))).sub(1).mul(buyableEffect("hre", 52)).min(Decimal.pow10(player.h.stage.mul(5)))
+        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1))).mul(buyableEffect("hre", 52)).pow(buyableEffect("hre", 53))
+        if (hasUpgrade("ta", 16) && inChallenge("hrm", 13)) player.hcu.cursesGain = Decimal.pow(player.hve.vexTotal.mul(0.2).add(player.h.stage.mul(3).div(10)), player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1)))).sub(1).mul(buyableEffect("hre", 52)).pow(buyableEffect("hre", 53))
         if (hasUpgrade("ta", 16) && hasMilestone("hre", 10)) player.hcu.cursesGain = player.hcu.cursesGain.add(player.h.stage.div(10))
+        if (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(5)))) player.hcu.cursesGain = player.hcu.cursesGain.div(Decimal.pow10(player.h.stage.mul(5))).pow(0.3).mul(Decimal.pow10(player.h.stage.mul(5)))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 101))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 103))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 105))
@@ -372,9 +373,7 @@ addLayer("hcu", {
             },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
-            effect(x) {
-                if (getBuyableAmount(this.layer, this.id).gte(100)) return getBuyableAmount(this.layer, this.id).mul(0.01).add(1.7)
-                return Decimal.pow(1.01, getBuyableAmount(this.layer, this.id)) },
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(100).add(1) },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
                 if (x.lt(player.h.stage)) {
@@ -387,11 +386,7 @@ addLayer("hcu", {
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Ζ-Jinx" },
-            display() {
-                let str = "Curses are raised to the power of 1.01"
-                if (getBuyableAmount(this.layer, this.id).gte(100)) str = str.concat("<br><small style='color:red'>[SOFTCAPPED]</small>")
-                return str
-            },
+            display() {return "Curses are raised to the power of 1.01"},
             total() { return "(Total: ^" + format(tmp[this.layer].buyables[this.id].effect) + ")"},
             buy(mult) {
                 if (mult != true) {
@@ -915,6 +910,7 @@ addLayer("hcu", {
             ["raw-html", () => {
                 let str = "<div class='bottomTooltip'>Base Formula<hr><small>log" + formatWhole(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1))) + "(Blessings)"
                 if (buyableEffect("hre", 52).gt(1)) str = str.concat("x" + formatSimple(buyableEffect("hre", 52)))
+                if (buyableEffect("hre", 53).gt(1)) str = str.concat("^" + formatSimple(buyableEffect("hre", 53), 2))
                 if (hasMilestone("hre", 10)) str = str.concat("+" + formatSimple(player.h.stage.div(10)))
                 return str + "</small></div>"
             }],

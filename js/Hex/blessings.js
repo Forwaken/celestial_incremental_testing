@@ -115,11 +115,9 @@ addLayer("hbl", {
         player.hbl.boonsGain = player.hbl.boonsGain.mul(player.h.tickspeed)
         if (player.hbl.boons.add(player.hbl.boonsGain.mul(delta)).gt(0)) player.hbl.boons = player.hbl.boons.add(player.hbl.boonsGain.mul(delta))
         if (!inChallenge("hrm", 15)) {
-            let val = 0
-            if (hasUpgrade("hpw", 52)) val += 0.1
-            if (hasUpgrade("hpw", 51)) val *= 10
-            if (hasUpgrade("hpw", 53)) val *= 10
-            if (hasMilestone("s", 20)) val += 0.06
+            let val = new Decimal(0)
+            if (hasUpgrade("hpw", 52)) val = upgradeEffect("hpw", 52)
+            if (hasMilestone("s", 20)) val = val.add(0.06)
             val = val * player.h.tickspeed.toNumber()
             for (let i in player.hbl.boosters) {
                 if (Decimal.lte(i, player.h.stage.sub(1))) player.hbl.boosters[i].xp = player.hbl.boosters[i].xp.add(player.hbl.boons.mul(val).mul(delta))

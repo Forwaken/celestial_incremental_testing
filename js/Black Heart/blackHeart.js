@@ -1595,9 +1595,9 @@ addLayer("bh", {
         if (player.bh.currentStage != "none" && !player.bh.bulletHell) {
             player.bh.stagnantTimer = player.bh.stagnantTimer.sub(delta)
             if (BHS[player.bh.currentStage].timeStagnation && player.bh.stagnantAuto) {
-                if (player.bh.stagnantTimer.gte(Decimal.mul(player.bh.stagnantTimer, 2))) {
+                if (player.bh.stagnantTimer.lte(0)) {
                     stagnantUpdate(5)
-                    player.bh.stagnantTimer = new Decimal(10)
+                    player.bh.stagnantTimer = new Decimal(5)
                 }
             }
         }
@@ -1790,7 +1790,7 @@ addLayer("bh", {
             unlocked() {return BHS[player.bh.currentStage].timeStagnation},
             onClick() {
                 stagnantUpdate(5)
-                player.bh.stagnantTimer = new Decimal(10)
+                player.bh.stagnantTimer = new Decimal(5)
             },
             style() {
                 let look = {width: "196px", minHeight: "46px", fontSize: "9px", borderRadius: "10px", border: "4px solid #021124"}

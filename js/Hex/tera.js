@@ -83,6 +83,8 @@ addLayer("tera", {
     }, // Decides the nodes style, in CSS format.
     branches: [], // Decides the nodes branches.
     startData() { return {
+        sinceTera: new Decimal(0),
+
         trueHex: new Decimal(0),
         trueHexReq: new Decimal(1e60),
         trueHexGain: new Decimal(0),
@@ -110,6 +112,9 @@ addLayer("tera", {
         seal: false,
     }},
     update (delta) {
+        let sinceGain = new Decimal(1)
+        player.tera.sinceTera = player.tera.sinceTera.add(Decimal.mul(delta, sinceGain.mul(player.h.tickspeed)))
+        
         for (let i = 101; i < 113; i++) {
             if (player.tera.clickables[i] && Decimal.gt(player.tera.clickables[i], 0)) player.tera.clickables[i] = Decimal.sub(player.tera.clickables[i], delta)
         }
@@ -148,6 +153,7 @@ addLayer("tera", {
     },
     teraReset(type) {
         // TERA
+        player.tera.sinceTera = new Decimal(0)
         player.tera.piositySpell = new Decimal(1)
 
         // SIN
@@ -1233,12 +1239,12 @@ addLayer("tera", {
             }
         },
         "hex2": {
-            fullDisplay() {return "<h3>???</h3><br>???.<br><br>Cost: 180 Refinements<br><small>[REQ BEING IN HEX]</small>"},
+            fullDisplay() {return "<h3>Cheaper Refining</h3><br>Refined fragments no longer cost lesser or greater fragments.<br><br>Cost: 180 Refinements<br><small>[REQ BEING IN HEX]</small>"},
             unlocked: true,
             canAfford() { return player.h.stage.eq(6) && player.hre.refinement.gte(180)},
             pay() {player.hre.refinement = player.hre.refinement.sub(180)},
             style() {
-                let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "125px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
                 return look
             }
@@ -1253,7 +1259,7 @@ addLayer("tera", {
             },
             pay() {},
             style() {
-                let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "125px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
                 return look
             }
@@ -1287,7 +1293,7 @@ addLayer("tera", {
             pay() {player.hrm.realmEssence = player.hrm.realmEssence.sub("1e18")},
             effect() {return Decimal.pow(1.1, player.tera.hexEssence.add(1).log(6))},
             style() {
-                let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
                 return look
             }

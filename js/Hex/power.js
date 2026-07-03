@@ -633,9 +633,7 @@ addLayer("hpw", {
             title: "Might 6:2",
             unlocked: true,
             description() {
-                if (hasUpgrade("hpw", 51) && hasUpgrade("hpw", 53)) return "Deposit 1,000% of boons per second."
-                if (hasUpgrade("hpw", 51) || hasUpgrade("hpw", 53)) return "Deposit 100% of boons per second."
-                return "Deposit 10% of boons per second."
+                return "Deposit " + formatSimple(upgradeEffect(this.layer, this.id).sub(1).mul(100)) + "% of boons per second."
             },
             branches: [41, 42],
             cost() {return new Decimal(player.h.stage.div(2).pow(7)).pow(player.hpw.upgScale[5]).floor()},
@@ -644,6 +642,12 @@ addLayer("hpw", {
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
+            effect() {
+                let eff = new Decimal(0.1).mul(buyableEffect("hre", 43))
+                if (hasUpgrade("hpw", 51)) eff = eff.mul(10)
+                if (hasUpgrade("hpw", 53)) eff = eff.mul(10)
+                return eff.add(1)
+            },
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         53: {
@@ -1117,13 +1121,13 @@ addLayer("hpw", {
         // Boost refiner 3's first effect
 
         // Path 2 (Blessings/Purity)
-        //
+        // Gain free purities based on blessings
         // Unlock T2 graces (Expensive but useful, shown as Grace EX1,EX2,etc)
-        //
+        // Boost blessings based on time in this tera reset
 
         // Path 3 (Curses/Vexes)
-        // 
-        // 
+        // Raise effective vexes by ^1.2
+        // Slightly improve Γ-Jinx formula
         // Vex Buyables
 
         // Path 4 (Pre-Power Mult/Debuff Mitigation)

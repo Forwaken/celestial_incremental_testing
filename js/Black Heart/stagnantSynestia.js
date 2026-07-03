@@ -20,14 +20,16 @@ addLayer("stagnantSynestia", {
         comboStart: 0,
 
         milestone: {
-            "-100": 0,
-            "-75": 0,
             "-50": 0,
-            "-25": 0,
-            25: 0,
+            "-40": 0,
+            "-30": 0,
+            "-20": 0,
+            "-10": 0,
+            10: 0,
+            20: 0,
+            30: 0,
+            40: 0,
             50: 0,
-            75: 0,
-            100: 0,
         },
         milestoneEffect: new Decimal(0),
         negToggle: false,
@@ -48,8 +50,8 @@ addLayer("stagnantSynestia", {
     tooltip: "Stagnant Synestia",
     color: "#0091DC",
     update(delta) {
-        player.stagnantSynestia.comboEffect = player.stagnantSynestia.highestCombo.min(100).div(50).add(1).pow(buyableEffect("stagnantSynestia", 2))
-        player.stagnantSynestia.negComboEffect = player.stagnantSynestia.lowestCombo.div(-100).add(1)
+        player.stagnantSynestia.comboEffect = player.stagnantSynestia.highestCombo.min(50).div(25).add(1).pow(buyableEffect("stagnantSynestia", 2))
+        player.stagnantSynestia.negComboEffect = player.stagnantSynestia.lowestCombo.div(-50).add(1)
 
         player.stagnantSynestia.milestoneEffect = new Decimal(1)
         for (let i in player.stagnantSynestia.milestone) {
@@ -321,8 +323,8 @@ addLayer("stagnantSynestia", {
                                 ["style-column", [
                                     ["raw-html", "Properties", {color: "var(--textColor)", fontSize: "24px", fontFamily: "monospace"}],
                                 ], {width: "200px", height: "35px", borderBottom: "2px solid var(--regBorder)", marginBottom: "10px"}],
-                                ["raw-html", () => {return Decimal.sub(1.025, player.bh.comboScalingReduction).gt(1) ? "<u>Combo Scaling" : ""}, {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
-                                ["raw-html", () => {return Decimal.sub(1.025, player.bh.comboScalingReduction).gt(1) ? formatSimple(Decimal.sub(1.025, player.bh.comboScalingReduction).max(1).sub(1).mul(100)) + "% starting at 25" : ""}, {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return Decimal.sub(1.05, player.bh.comboScalingReduction).gt(1) ? "<u>Combo Scaling" : ""}, {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return Decimal.sub(1.05, player.bh.comboScalingReduction).gt(1) ? formatSimple(Decimal.sub(1.05, player.bh.comboScalingReduction).max(1).sub(1).mul(100)) + "% starting at 10" : ""}, {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
                                 ["blank", "5px"],
                                 ["raw-html", "<u>Time Stagnation", {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
                                 ["raw-html", "You have to force time to move forward", {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
@@ -336,7 +338,7 @@ addLayer("stagnantSynestia", {
                         ["style-column", [
                             ["top-column", [
                                 ["style-column", [
-                                    ["raw-html", () => {return "Highest Combo: " + formatWhole(player.stagnantSynestia.highestCombo.min(100)) + "/" + BHS["stagnantSynestia"].comboLimit}, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
+                                    ["raw-html", () => {return "Highest Combo: " + formatWhole(player.stagnantSynestia.highestCombo.min(50)) + "/" + BHS["stagnantSynestia"].comboLimit}, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
                                 ], {width: "225px", height: "35px", borderBottom: "2px solid var(--regBorder)", marginBottom: "2px"}],
                                 ["top-column", [
                                     ["raw-html", () => {return "Boosts check back xp by x" + formatSimple(player.stagnantSynestia.comboEffect, 2)}, {color: "var(--textColor)", fontSize: "12px", fontFamily: "monospace"}],
@@ -347,10 +349,11 @@ addLayer("stagnantSynestia", {
                             ], {width: "272px", height: "114px", background: "var(--miscButtonHover)", borderBottom: "3px solid var(--regBorder)"}],
                             ["theme-scroll-column", [
                                 ["raw-html", () => {return "<button class='bhMilestoneButton  base' style='width:257px;height:50px' onclick='player.stagnantSynestia.comboStart=0'>Starting combo value: " + player.stagnantSynestia.comboStart + "<br>[Click to set to 0]</button>"}],
-                                ["bh-milestone", [25, "stagnantSynestia", ""]],
+                                ["bh-milestone", [10, "stagnantSynestia", ""]],
+                                ["bh-milestone", [20, "stagnantSynestia", ""]],
+                                ["bh-milestone", [30, "stagnantSynestia", ""]],
+                                ["bh-milestone", [40, "stagnantSynestia", ""]],
                                 ["bh-milestone", [50, "stagnantSynestia", ""]],
-                                ["bh-milestone", [75, "stagnantSynestia", ""]],
-                                ["bh-milestone", [100, "stagnantSynestia", ""]],
                             ], {width: "272px", height: "250px", background: "var(--miscButton)", borderBottom: "3px solid var(--regBorder)"}],
                             ["style-column", [
                                 ["raw-html", "<p style='line-height:1'>Clicking on a cleared milestone allows you to start at that milestones combo value.", {color: "var(--textColor)", fontSize: "14px", fontFamily: "monospace"}],
@@ -417,10 +420,11 @@ addLayer("stagnantSynestia", {
                             ], {width: "272px", height: "114px", background: "var(--layerBackground)", borderBottom: "3px solid var(--regBorder)"}],
                             ["theme-scroll-column", [
                                 ["raw-html", () => {return "<button class='bhMilestoneButton base' style='width:257px;height:50px' onclick='player.stagnantSynestia.comboStart=-1'>Starting combo value: " + player.stagnantSynestia.comboStart + "<br>[Click to set to -1]</button>"}],
-                                ["bh-milestone", ["-25", "stagnantSynestia", ""]],
+                                ["bh-milestone", ["-10", "stagnantSynestia", ""]],
+                                ["bh-milestone", ["-20", "stagnantSynestia", ""]],
+                                ["bh-milestone", ["-30", "stagnantSynestia", ""]],
+                                ["bh-milestone", ["-40", "stagnantSynestia", ""]],
                                 ["bh-milestone", ["-50", "stagnantSynestia", ""]],
-                                ["bh-milestone", ["-75", "stagnantSynestia", ""]],
-                                ["bh-milestone", ["-100", "stagnantSynestia", ""]],
                             ], {width: "272px", height: "250px", background: "var(--miscButtonDisable)", borderBottom: "3px solid var(--regBorder)"}],
                             ["style-column", [
                                 ["raw-html", "<p style='line-height:1'>Clicking on a cleared milestone allows you to start at that milestones combo value.", {color: "var(--textColor)", fontSize: "14px", fontFamily: "monospace"}],
@@ -441,27 +445,27 @@ BHS.stagnantSynestia = {
     nameCap: "Stagnant Synestia",
     nameLow: "stagnant synestia",
     music: "music/stagnant.mp3",
-    comboLimit: 100,
-    comboScaling: 1.025,
-    comboScalingStart: 25,
+    comboLimit: 50,
+    comboScaling: 1.05,
+    comboScalingStart: 10,
     timeStagnation: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
-            case 24:
+            case 9: case 29:
                 return "staticEnas"
-            case 49:
+            case 19:
                 return "staticPente"
-            case 74:
+            case 39:
                 return "staticDeka"
-            case 99:
+            case 49:
                 return "staticHekaton"
             default:
                 let random = Math.random()
                 let cel = ["staticAlpha", "staticBeta", "staticGamma", "staticDelta", "staticEpsilon", "staticZeta"]
-                if (combo >= 25) cel.push("staticEta")
-                if (combo >= 50) cel.push("staticTheta")
-                if (combo >= 75) cel.push("staticIota")
+                if (combo >= 10) cel.push("staticEta")
+                if (combo >= 20) cel.push("staticTheta")
+                if (combo >= 40) cel.push("staticIota")
                 if (combo < 0) cel = ["staticEnas", "staticPente", "staticDeka", "staticHekaton"]
                 return cel[Math.floor(Math.random()*cel.length)]
         }
@@ -508,12 +512,8 @@ BHC.staticAlpha = {
     },
     reward() {
         let gain = {}
-        let random = Math.random()
-        if (random < 0.7) {
-            gain.temporalDust = Decimal.add(4, getRandomInt(2))
-        } else {
-            gain.temporalShard = new Decimal(1)
-        }
+        gain.temporalDust = Decimal.add(6, getRandomInt(4))
+        gain.temporalShard = new Decimal(0.6)
         return gain
     },
 }
@@ -558,12 +558,8 @@ BHC.staticBeta = {
     },
     reward() {
         let gain = {}
-        let random = Math.random()
-        if (random < 0.7) {
-            gain.temporalDust = Decimal.add(4, getRandomInt(3))
-        } else {
-            gain.temporalShard = new Decimal(1)
-        }
+        gain.temporalDust = Decimal.add(8, getRandomInt(5))
+        gain.temporalShard = new Decimal(0.8)
         return gain
     },
 }
@@ -608,12 +604,8 @@ BHC.staticGamma = {
     },
     reward() {
         let gain = {}
-        let random = Math.random()
-        if (random < 0.7) {
-            gain.temporalDust = Decimal.add(5, getRandomInt(5))
-        } else {
-            gain.temporalShard = Decimal.add(1, getRandomInt(1))
-        }
+        gain.temporalDust = Decimal.add(10, getRandomInt(8))
+        gain.temporalShard = new Decimal(1)
         return gain
     },
 }
@@ -654,12 +646,8 @@ BHC.staticDelta = {
     },
     reward() {
         let gain = {}
-        let random = Math.random()
-        if (random < 0.7) {
-            gain.temporalDust = Decimal.add(7, getRandomInt(5))
-        } else {
-            gain.temporalShard = Decimal.add(1, getRandomInt(2))
-        }
+        gain.temporalDust = Decimal.add(12, getRandomInt(10))
+        gain.temporalShard = new Decimal(1.2)
         return gain
     },
 }
@@ -704,12 +692,8 @@ BHC.staticEpsilon = {
     },
     reward() {
         let gain = {}
-        let random = Math.random()
-        if (random < 0.7) {
-            gain.temporalDust = Decimal.add(8, getRandomInt(6))
-        } else {
-            gain.temporalShard = Decimal.add(1, getRandomInt(2))
-        }
+        gain.temporalDust = Decimal.add(12, getRandomInt(6))
+        gain.temporalShard = new Decimal(1.5)
         return gain
     },
 }
@@ -750,12 +734,8 @@ BHC.staticZeta = {
     },
     reward() {
         let gain = {}
-        let random = Math.random()
-        if (random < 0.7) {
-            gain.temporalDust = Decimal.add(10, getRandomInt(5))
-        } else {
-            gain.temporalShard = Decimal.add(2, getRandomInt(2))
-        }
+        gain.temporalDust = Decimal.add(16, getRandomInt(10))
+        gain.temporalShard = new Decimal(1.8)
         return gain
     },
 }
@@ -800,12 +780,8 @@ BHC.staticEta = {
     },
     reward() {
         let gain = {}
-        let random = Math.random()
-        if (random < 0.7) {
-            gain.temporalDust = Decimal.add(12, getRandomInt(5))
-        } else {
-            gain.temporalShard = Decimal.add(2, getRandomInt(3))
-        }
+        gain.temporalDust = Decimal.add(20, getRandomInt(10))
+        gain.temporalShard = new Decimal(2.2)
         return gain
     },
 }
@@ -850,12 +826,8 @@ BHC.staticTheta = {
     },
     reward() {
         let gain = {}
-        let random = Math.random()
-        if (random < 0.7) {
-            gain.temporalDust = Decimal.add(15, getRandomInt(5))
-        } else {
-            gain.temporalShard = Decimal.add(3, getRandomInt(3))
-        }
+        gain.temporalDust = Decimal.add(25, getRandomInt(10))
+        gain.temporalShard = new Decimal(2.6)
         return gain
     },
 }
@@ -900,12 +872,8 @@ BHC.staticIota = {
     },
     reward() {
         let gain = {}
-        let random = Math.random()
-        if (random < 0.7) {
-            gain.temporalDust = Decimal.add(20, getRandomInt(5))
-        } else {
-            gain.temporalShard = Decimal.add(4, getRandomInt(3))
-        }
+        gain.temporalDust = Decimal.add(25, getRandomInt(10))
+        gain.temporalShard = new Decimal(3)
         return gain
     },
 }
@@ -962,8 +930,8 @@ BHC.staticEnas = {
     },
     reward() {
         let gain = {}
-        gain.temporalDust = new Decimal(50)
-        gain.temporalShard = new Decimal(8)
+        gain.temporalDust = new Decimal(100)
+        gain.temporalShard = new Decimal(15)
         return gain
     },
 }
@@ -1020,8 +988,8 @@ BHC.staticPente = {
     },
     reward() {
         let gain = {}
-        gain.temporalDust = new Decimal(100)
-        gain.temporalShard = new Decimal(15)
+        gain.temporalDust = new Decimal(200)
+        gain.temporalShard = new Decimal(30)
         return gain
     },
 }
@@ -1083,8 +1051,8 @@ BHC.staticDeka = {
     },
     reward() {
         let gain = {}
-        gain.temporalDust = new Decimal(175)
-        gain.temporalShard = new Decimal(25)
+        gain.temporalDust = new Decimal(350)
+        gain.temporalShard = new Decimal(50)
         return gain
     },
 }
@@ -1148,8 +1116,8 @@ BHC.staticHekaton = {
     },
     reward() {
         let gain = {}
-        gain.temporalDust = new Decimal(250)
-        gain.temporalShard = new Decimal(40)
+        gain.temporalDust = new Decimal(500)
+        gain.temporalShard = new Decimal(75)
         return gain
     },
 }

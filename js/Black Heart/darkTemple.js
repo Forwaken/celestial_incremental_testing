@@ -408,8 +408,8 @@ addLayer("darkTemple", {
         }
         if (player.darkTemple.byproduct[4]) {
             let eff4 = getBuyableAmount("darkTemple", 4)
-            player.stagnantSynestia.temporalDust = player.stagnantSynestia.temporalDust.add(new Decimal(4).mul(eff4).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.stagnantSynestia.temporalShard = player.stagnantSynestia.temporalShard.add(new Decimal(0.5).mul(eff4).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
+            player.stagnantSynestia.temporalDust = player.stagnantSynestia.temporalDust.add(new Decimal(8).mul(eff4).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
+            player.stagnantSynestia.temporalShard = player.stagnantSynestia.temporalShard.add(new Decimal(1).mul(eff4).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
         }
         if (player.darkTemple.byproduct[5]) {
             let eff5 = getBuyableAmount("darkTemple", 5)
@@ -1714,8 +1714,8 @@ addLayer("darkTemple", {
                                                     case 4:
                                                         let eff4 = getBuyableAmount("darkTemple", 4)
                                                         return "<div style='line-height:1.2'><h3>Eff. Rune Level: " + formatSimple(eff4) + "</h3><br><small><i>[Rune by-products work offline]</i></small><br><br>\n\
-                                                        +" + formatSimple(new Decimal(4).mul(eff4).mul(player.darkTemple.byproductMult)) + "/h Temporal Dust<br>\n\
-                                                        +" + formatSimple(new Decimal(0.5).mul(eff4).mul(player.darkTemple.byproductMult)) + "/h Temporal Shards</div>"
+                                                        +" + formatSimple(new Decimal(8).mul(eff4).mul(player.darkTemple.byproductMult)) + "/h Temporal Dust<br>\n\
+                                                        +" + formatSimple(new Decimal(1).mul(eff4).mul(player.darkTemple.byproductMult)) + "/h Temporal Shards</div>"
                                                     case 5:
                                                         let eff5 = getBuyableAmount("darkTemple", 5)
                                                         return "<div style='line-height:1.2'><h3>Eff. Rune Level: " + formatSimple(eff5) + "</h3><br><small><i>[Rune by-products work offline]</i></small><br><br>\n\

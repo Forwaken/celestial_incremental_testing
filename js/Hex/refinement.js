@@ -396,12 +396,37 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(150) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
                 return "<h3>Increase Mult.</h3>\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
+                return look
+            },
+        },
+        43: {
+            costBase() { return new Decimal(80) },
+            costGrowth() { return new Decimal(80) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.hre.temperer},
+            pay(amt) { player.hre.temperer = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id)) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Improve Deposit</h3>\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
@@ -453,6 +478,31 @@ addLayer("hre", {
             display() {
                 return "<h3>Increase Mult.</h3>\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
+                return look
+            },
+        },
+        53: {
+            costBase() { return new Decimal(160) },
+            costGrowth() { return new Decimal(160) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.hre.temperer},
+            pay(amt) { player.hre.temperer = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Increase Exp.</h3>\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
@@ -864,7 +914,14 @@ addLayer("hre", {
                                 ["buyable", 42],
                             ], {width: "147px", height: "80px"}],
                         ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
-                        ["style-column", [["buyable", 43]], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                        ["style-column", [
+                            ["style-row", [
+                                ["raw-html", () => {return formatSimple(upgradeEffect("hpw", 52).sub(1).mul(100)) + "% Deposited/s"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ["style-row", [
+                                ["buyable", 43],
+                            ], {width: "147px", height: "80px"}],
+                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
                     ], {width: "650px", height: "120px", background: "#1e1600", border: "3px solid white", marginTop: "-3px"}],
                     ["style-row", [
                         ["style-column", [
@@ -887,7 +944,14 @@ addLayer("hre", {
                                 ["buyable", 52],
                             ], {width: "147px", height: "80px"}],
                         ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
-                        ["style-column", [["buyable", 53]], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                        ["style-column", [
+                            ["style-row", [
+                                ["raw-html", () => {return "^" + formatSimple(buyableEffect("hre", 53))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ["style-row", [
+                                ["buyable", 53],
+                            ], {width: "147px", height: "80px"}],
+                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
                     ], {width: "650px", height: "120px", background: "#232b2b", border: "3px solid white", marginTop: "-3px"}],
                     ["style-column", [
                         ["raw-html", "<i>Buyables are in the same order as formula operators</i>", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
