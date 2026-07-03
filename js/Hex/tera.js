@@ -221,6 +221,8 @@ addLayer("tera", {
         player.hpu.purity = new Decimal(0)
         player.hpu.totalPurity = new Decimal(0)
         player.hpu.purityGain = new Decimal(0)
+        player.hpu.keptPurity = new Decimal(0)
+        player.hpu.puritySpent = new Decimal(0)
         for (let i in player.hpu.purifiers) {
             player.hpu.purifiers[i].amount = new Decimal(0)
             if (i != "2" || i != "5") player.hpu.purifiers[i].effect = new Decimal(1)

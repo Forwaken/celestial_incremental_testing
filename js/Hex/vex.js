@@ -335,8 +335,6 @@ addLayer("hve", {
             cost() {return new Decimal(1)},
             canAfford() { return player.hve.rowCurrent[4] > 0},
             onPurchase() {
-                player.hpu.purity = player.hpu.purity.add(2)
-                player.hpu.totalPurity = player.hpu.totalPurity.add(2)
                 player.hve.rowSpent[4] = player.hve.rowSpent[4] + 1
                 player.hve.rowCurrent[4] = player.hve.rowCurrent[4] - 1
             },

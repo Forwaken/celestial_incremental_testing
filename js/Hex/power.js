@@ -97,9 +97,11 @@ addLayer("hpw", {
         player.hpw.sincePower = new Decimal(0)
 
         // PURITY
-        player.hpu.purity = player.hpu.keptPurity
-        player.hpu.totalPurity = player.hpu.keptPurity
+        player.hpu.purity = new Decimal(0)
+        player.hpu.totalPurity = new Decimal(0)
         player.hpu.purityGain = new Decimal(0)
+        player.hpu.keptPurity = new Decimal(0)
+        player.hpu.puritySpent = new Decimal(0)
         for (let i in player.hpu.purifiers) {
             player.hpu.purifiers[i].amount = new Decimal(0)
             if (i != "2" || i != "5") player.hpu.purifiers[i].effect = new Decimal(1)
@@ -371,11 +373,7 @@ addLayer("hpw", {
             branches: [12],
             cost() {return new Decimal(player.h.stage.div(2).pow(2)).pow(player.hpw.upgScale[2]).floor()},
             canAfford() { return hasUpgrade("hpw", 12)},
-            onPurchase() {
-                player.hpu.purity = player.hpu.purity.add(1)
-                player.hpu.totalPurity = player.hpu.totalPurity.add(1)
-                player.hpw.upgScale[2] = player.hpw.upgScale[2] + 1
-            },
+            onPurchase() {player.hpw.upgScale[2] = player.hpw.upgScale[2] + 1},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
@@ -922,11 +920,7 @@ addLayer("hpw", {
             branches: [101],
             cost() {return new Decimal(player.h.stage.div(2).pow(16)).pow(player.hpw.upgScale[11]).floor()},
             canAfford() { return hasUpgrade("hpw", 101)},
-            onPurchase() {
-                player.hpu.purity = player.hpu.purity.add(3)
-                player.hpu.totalPurity = player.hpu.totalPurity.add(3)
-                player.hpw.upgScale[11] = player.hpw.upgScale[11] + 1
-            },
+            onPurchase() {player.hpw.upgScale[11] = player.hpw.upgScale[11] + 1},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
@@ -1065,7 +1059,7 @@ addLayer("hpw", {
         },
         151: {
             title: "Might 16:1",
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(7)},
             description: "Unlock tempering in refinement.",
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
@@ -1078,8 +1072,8 @@ addLayer("hpw", {
         },
         152: {
             title: "Might 16:2",
-            unlocked: true,
-            description: "???",
+            unlocked() {return player.h.stage.gte(7)},
+            description: "Gain free purities based on blessings",
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
@@ -1087,11 +1081,15 @@ addLayer("hpw", {
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
+            effect() {
+                return player.hbl.blessings.add(1).log(Decimal.pow10(player.h.stage)).pow(0.5).floor()
+            },
+            effectDisplay() { return "+" + formatWhole(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         153: {
             title: "Might 16:3",
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(7)},
             description: "???",
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
@@ -1104,12 +1102,116 @@ addLayer("hpw", {
         },
         154: {
             title: "Might 16:4",
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(7)},
             description: "???",
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
             onPurchase() {player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        161: {
+            title: "Might 17:1",
+            unlocked() {return player.h.stage.gte(7)},
+            description: "???",
+            branches: [151],
+            cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
+            canAfford() { return hasUpgrade("hpw", 151)},
+            onPurchase() {player.hpw.upgScale[16] = player.hpw.upgScale[16] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        162: {
+            title: "Might 17:2",
+            unlocked() {return player.h.stage.gte(7)},
+            description: "???",
+            branches: [152],
+            cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
+            canAfford() { return hasUpgrade("hpw", 152)},
+            onPurchase() {player.hpw.upgScale[16] = player.hpw.upgScale[16] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        163: {
+            title: "Might 17:3",
+            unlocked() {return player.h.stage.gte(7)},
+            description: "???",
+            branches: [153],
+            cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
+            canAfford() { return hasUpgrade("hpw", 153)},
+            onPurchase() {player.hpw.upgScale[16] = player.hpw.upgScale[16] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        164: {
+            title: "Might 17:4",
+            unlocked() {return player.h.stage.gte(7)},
+            description: "???",
+            branches: [154],
+            cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
+            canAfford() { return hasUpgrade("hpw", 154)},
+            onPurchase() {player.hpw.upgScale[16] = player.hpw.upgScale[16] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        171: {
+            title: "Might 18:1",
+            unlocked() {return player.h.stage.gte(7)},
+            description: "???",
+            branches: [161],
+            cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
+            canAfford() { return hasUpgrade("hpw", 161)},
+            onPurchase() {player.hpw.upgScale[17] = player.hpw.upgScale[17] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        172: {
+            title: "Might 18:2",
+            unlocked() {return player.h.stage.gte(7)},
+            description: "???",
+            branches: [162],
+            cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
+            canAfford() { return hasUpgrade("hpw", 162)},
+            onPurchase() {player.hpw.upgScale[17] = player.hpw.upgScale[17] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        173: {
+            title: "Might 18:3",
+            unlocked() {return player.h.stage.gte(7)},
+            description: "???",
+            branches: [163],
+            cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
+            canAfford() { return hasUpgrade("hpw", 163)},
+            onPurchase() {player.hpw.upgScale[17] = player.hpw.upgScale[17] + 1},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        174: {
+            title: "Might 18:4",
+            unlocked() {return player.h.stage.gte(7)},
+            description: "???",
+            branches: [164],
+            cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
+            canAfford() { return hasUpgrade("hpw", 164)},
+            onPurchase() {player.hpw.upgScale[17] = player.hpw.upgScale[17] + 1},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
@@ -1131,7 +1233,7 @@ addLayer("hpw", {
         // Vex Buyables
 
         // Path 4 (Pre-Power Mult/Debuff Mitigation)
-        // 
+        // Boost external effects based on provenance alpha (smol buff, something like ^1.1 since it is OP)
         // 
         // 
 
@@ -2010,6 +2112,18 @@ addLayer("hpw", {
                             ["upgrade", 152],
                             ["upgrade", 153],
                             ["upgrade", 154],
+                        ]],
+                        ["row", [
+                            ["upgrade", 161],
+                            ["upgrade", 162],
+                            ["upgrade", 163],
+                            ["upgrade", 164],
+                        ]],
+                        ["row", [
+                            ["upgrade", 171],
+                            ["upgrade", 172],
+                            ["upgrade", 173],
+                            ["upgrade", 174],
                         ]],
                     ], () => {return player.h.stage.gte(7) ? {} : {display: "none !important"}}],
                     ["style-column", [

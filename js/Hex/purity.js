@@ -9,6 +9,7 @@ addLayer("hpu", {
     startData() { return {
         purity: new Decimal(0),
         totalPurity: new Decimal(0),
+        puritySpent: new Decimal(0),
         purityReq: new Decimal(42),
         purityGain: new Decimal(0),
         purifierSoftcap: new Decimal(5),
@@ -66,25 +67,27 @@ addLayer("hpu", {
         purifierAssign: 1,
     }},
     update(delta) {
+        player.hpu.totalPurity = player.hpu.purity.add(player.hpu.puritySpent)
+        let purityMade = player.hpu.totalPurity.sub(player.hpu.keptPurity)
+
         let requirementSub = new Decimal(0)
         requirementSub = requirementSub.add(buyableEffect("hcu", 114).sub(1))
         if (hasUpgrade("hpw", 35)) requirementSub = requirementSub.add(upgradeEffect("hpw", 35).sub(1))
-        player.hpu.purityReq = player.hpu.totalPurity.mul(player.h.stage).add(player.h.stage.mul(7)).sub(player.hpu.keptPurity.mul(player.h.stage)).sub(requirementSub).ceil()
-        player.hpu.purityGain = player.hre.refinement.add(requirementSub).add(player.hpu.keptPurity.mul(player.h.stage)).sub(player.h.stage.mul(7)).div(player.h.stage).add(1).sub(player.hpu.totalPurity).floor()
+        player.hpu.purityReq = purityMade.mul(player.h.stage).add(player.h.stage.mul(7)).sub(requirementSub).ceil()
+        player.hpu.purityGain = player.hre.refinement.add(requirementSub).sub(player.h.stage.mul(7)).div(player.h.stage).add(1).sub(purityMade).floor()
 
         if (inChallenge("hrm", 12)) {
-            let connect = new Decimal(15).mul(player.h.stage.div(1.5)).sub(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).sub(new Decimal(10).mul(player.h.stage).sub(player.hpu.keptPurity.mul(player.h.stage)))
-            if (player.hpu.totalPurity.lt(10)) player.hpu.purityReq = player.hpu.totalPurity.add(5).mul(player.h.stage.div(1.5)).sub(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).sub(requirementSub).ceil()
-            if (player.hpu.totalPurity.gte(10)) player.hpu.purityReq = player.hpu.totalPurity.mul(player.h.stage).sub(player.hpu.keptPurity.mul(player.h.stage)).sub(requirementSub).add(connect).ceil()
-            if (player.hre.refinement.lt(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.add(requirementSub).add(player.hpu.keptPurity.mul(player.h.stage.div(1.5))).div(player.h.stage.div(1.5)).sub(4).sub(player.hpu.totalPurity).floor()
-            if (player.hre.refinement.gte(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.add(requirementSub).sub(connect).add(player.hpu.keptPurity.mul(player.h.stage)).div(player.h.stage).add(1).sub(player.hpu.totalPurity).floor()
+            let connect = new Decimal(15).mul(player.h.stage.div(1.5)).sub(new Decimal(10).mul(player.h.stage))
+            if (purityMade.lt(10)) player.hpu.purityReq = purityMade.add(5).mul(player.h.stage.div(1.5)).sub(requirementSub).ceil()
+            if (purityMade.gte(10)) player.hpu.purityReq = purityMade.mul(player.h.stage).sub(requirementSub).add(connect).ceil()
+            if (player.hre.refinement.lt(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.add(requirementSub).div(player.h.stage.div(1.5)).sub(4).sub(purityMade).floor()
+            if (player.hre.refinement.gte(player.h.stage.div(1.5).mul(15))) player.hpu.purityGain = player.hre.refinement.add(requirementSub).sub(connect).div(player.h.stage).add(1).sub(purityMade).floor()
         }
 
         if (player.hpu.purityGain.lt(1)) player.hpu.purityGain = new Decimal(0)
 
         if (hasMilestone("hre", 14) && !inChallenge("hrm", 15)) {
             player.hpu.purity = player.hpu.purity.add(player.hpu.purityGain)
-            player.hpu.totalPurity = player.hpu.totalPurity.add(player.hpu.purityGain)
         }
 
         let extra = new Decimal(0)
@@ -138,16 +141,21 @@ addLayer("hpu", {
         player.hpu.purifiers[6].effect = player.hpu.purifiers[6].amount.div(player.h.purifierDiv).div(25).add(1)
         if (player.hpu.purifiers[6].effect.gt(softcap5)) player.hpu.purifiers[6].effect = player.hpu.purifiers[6].effect.div(softcap5).pow(Decimal.div(3.5, player.h.stage.max(4))).mul(softcap5)
 
-        player.hpu.keptPurity = new Decimal(0)
-        if (hasUpgrade("hpw", 21)) player.hpu.keptPurity = player.hpu.keptPurity.add(1)
-        if (hasUpgrade("hve", 52)) player.hpu.keptPurity = player.hpu.keptPurity.add(2)
-        if (hasUpgrade("hpw", 111)) player.hpu.keptPurity = player.hpu.keptPurity.add(3)
+        let addPure = new Decimal(0)
+        if (hasUpgrade("hpw", 21)) addPure = addPure.add(1)
+        if (hasUpgrade("hve", 52)) addPure = addPure.add(2)
+        if (hasUpgrade("hpw", 111)) addPure = addPure.add(3)
+        if (hasUpgrade("hpw", 152)) addPure = addPure.add(upgradeEffect("hpw", 152))
+        if (addPure.gt(player.hpu.keptPurity) && player.hpu.purity.add(player.hpu.puritySpent).lt(player.hpu.totalPurity.sub(player.hpu.keptPurity).add(addPure))) {
+            player.hpu.purity = player.hpu.purity.add(addPure.sub(player.hpu.keptPurity))
+        }
+        player.hpu.keptPurity = addPure
     },
     clickables: {
         1: {
             title() {
                 if (inChallenge("hrm", 16)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
-                if (inChallenge("hrm", 12) && player.hpu.totalPurity.gte(10)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3><br><small style='color:darkred'>[SOFTCAPPED]</small>"
+                if (inChallenge("hrm", 12) && player.hpu.totalPurity.sub(player.hpu.keptPurity).gte(10)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3><br><small style='color:darkred'>[SOFTCAPPED]</small>"
                 return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
             },
             canClick() { return player.hre.refinement.gt(0) && player.hpu.purityGain.gte(1) && (!hasMilestone("hre", 14) || inChallenge("hrm", 15))},
@@ -155,7 +163,6 @@ addLayer("hpu", {
             onClick() {
                 let amt = player.hpu.purityGain
                 player.hpu.purity = player.hpu.purity.add(amt)
-                player.hpu.totalPurity = player.hpu.totalPurity.add(amt)
 
                 // RESET CODE
                 player.hre.refinement = new Decimal(0)
@@ -184,6 +191,7 @@ addLayer("hpu", {
             unlocked: true,
             onClick() {
                 player.hpu.purity = player.hpu.totalPurity
+                player.hpu.puritySpent = new Decimal(0)
                 for (let i in player.hpu.purifiers) {
                     player.hpu.purifiers[i].amount = new Decimal(0)
                 }
@@ -206,6 +214,7 @@ addLayer("hpu", {
             unlocked: true,
             onClick() {
                 let amt = player.hpu.purity.min(player.hpu.purifierAssign)
+                player.hpu.puritySpent = player.hpu.puritySpent.add(amt)
                 player.hpu.purity = player.hpu.purity.sub(amt)
                 player.hpu.purifiers[0].amount = player.hpu.purifiers[0].amount.add(amt)
             },
@@ -233,6 +242,7 @@ addLayer("hpu", {
             unlocked: true,
             onClick() {
                 let amt = player.hpu.purity.min(player.hpu.purifierAssign)
+                player.hpu.puritySpent = player.hpu.puritySpent.add(amt)
                 player.hpu.purity = player.hpu.purity.sub(amt)
                 player.hpu.purifiers[1].amount = player.hpu.purifiers[1].amount.add(amt)
             },
@@ -255,6 +265,7 @@ addLayer("hpu", {
             unlocked: true,
             onClick() {
                 let amt = player.hpu.purity.min(player.hpu.purifierAssign)
+                player.hpu.puritySpent = player.hpu.puritySpent.add(amt)
                 player.hpu.purity = player.hpu.purity.sub(amt)
                 player.hpu.purifiers[2].amount = player.hpu.purifiers[2].amount.add(amt)
             },
@@ -278,6 +289,7 @@ addLayer("hpu", {
             unlocked() { return hasUpgrade("hpw", 31) },
             onClick() {
                 let amt = player.hpu.purity.min(player.hpu.purifierAssign)
+                player.hpu.puritySpent = player.hpu.puritySpent.add(amt)
                 player.hpu.purity = player.hpu.purity.sub(amt)
                 player.hpu.purifiers[3].amount = player.hpu.purifiers[3].amount.add(amt)
             },
@@ -302,6 +314,7 @@ addLayer("hpu", {
             unlocked() { return hasUpgrade("hpw", 31) },
             onClick() {
                 let amt = player.hpu.purity.min(player.hpu.purifierAssign)
+                player.hpu.puritySpent = player.hpu.puritySpent.add(amt)
                 player.hpu.purity = player.hpu.purity.sub(amt)
                 player.hpu.purifiers[4].amount = player.hpu.purifiers[4].amount.add(amt)
             },
@@ -326,6 +339,7 @@ addLayer("hpu", {
             unlocked() { return hasUpgrade("hpw", 31) },
             onClick() {
                 let amt = player.hpu.purity.min(player.hpu.purifierAssign)
+                player.hpu.puritySpent = player.hpu.puritySpent.add(amt)
                 player.hpu.purity = player.hpu.purity.sub(amt)
                 player.hpu.purifiers[5].amount = player.hpu.purifiers[5].amount.add(amt)
             },
@@ -348,6 +362,7 @@ addLayer("hpu", {
             unlocked() { return hasUpgrade("hpw", 36) },
             onClick() {
                 let amt = player.hpu.purity.min(player.hpu.purifierAssign)
+                player.hpu.puritySpent = player.hpu.puritySpent.add(amt)
                 player.hpu.purity = player.hpu.purity.sub(amt)
                 player.hpu.purifiers[6].amount = player.hpu.purifiers[6].amount.add(amt)
             },
@@ -409,7 +424,7 @@ addLayer("hpu", {
                 return look
             }],
         ]],
-        ["raw-html", () => {return "(You have <h3>" + formatWhole(player.hpu.totalPurity) + "</h3> total purity)" }, {color: "#ddd", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return "(You have <h3>" + formatWhole(player.hpu.totalPurity.sub(player.hpu.keptPurity)) + "+" + formatWhole(player.hpu.keptPurity) + "</h3> total purity)" }, {color: "#ddd", fontSize: "16px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["clickable", 1],
         ["blank", "10px"],
