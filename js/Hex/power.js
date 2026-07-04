@@ -134,6 +134,7 @@ addLayer("hpw", {
             player.hve.vexGain = new Decimal(0)
             player.hve.rowCurrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             player.hve.rowSpent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            player.hve.vexEffects = [new Decimal(0), new Decimal(1), new Decimal(1), new Decimal(1)]
             for (let i = 0; i < player.hve.upgrades.length; i++) {
                 player.hve.upgrades.splice(i, 1);
                 i--;
@@ -690,7 +691,10 @@ addLayer("hpw", {
         71: {
             title: "Might 8:1",
             unlocked: true,
-            description: "Boost blessings based on mights.",
+            description() {
+                if (hasUpgrade("hpw", 164)) return "Boost pre-power resources based on mights."
+                return "Boost blessings based on mights."
+            },
             branches: [61, 62],
             cost() {return new Decimal(player.h.stage.div(2).pow(11)).pow(player.hpw.upgScale[7]).floor()},
             canAfford() { return hasUpgrade("hpw", 61) || hasUpgrade("hpw", 62)},
@@ -942,7 +946,7 @@ addLayer("hpw", {
         121: {
             title: "Might 13:1",
             unlocked: true,
-            description: "Triple Pre-Power resources.",
+            description: "Triple pre-power resources.",
             branches: [111, 112],
             cost() {return new Decimal(player.h.stage.div(2).pow(17)).pow(player.hpw.upgScale[12]).floor()},
             canAfford() { return hasUpgrade("hpw", 111) || hasUpgrade("hpw", 112)},
@@ -986,7 +990,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Boost refiner 1's first effect based on boons."},
             branches: [132],
-            cost() {return player.h.stage.pow(14).floor()},
+            cost() {return player.h.stage.pow(20).floor()},
             canAfford() { return hasUpgrade("hpw", 132)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1002,7 +1006,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Divide refinement requirements based on purities."},
             branches: [133],
-            cost() {return player.h.stage.pow(35).floor()},
+            cost() {return player.h.stage.pow(45).floor()},
             canAfford() { return hasUpgrade("hpw", 133)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1018,7 +1022,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description: "Improve refiner 6's first effect.",
             branches: [134],
-            cost() {return player.h.stage.pow(63).floor()},
+            cost() {return player.h.stage.pow(75).floor()},
             canAfford() { return hasUpgrade("hpw", 134)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1030,20 +1034,17 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description: "Unlock a vex effect that reduces refinement scaling.",
             branches: [135],
-            cost() {return player.h.stage.pow(98).floor()},
+            cost() {return player.h.stage.pow(110).floor()},
             canAfford() { return hasUpgrade("hpw", 135)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            effect() {
-                return player.hve.vexTotal.div(100).add(1)
-            },
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         141: {
             title: "Might 15:1",
             unlocked: true,
-            description: "Multiply Pre-Power resources based on power.",
+            description: "Multiply pre-power resources based on power.",
             branches: [132],
             cost() {return new Decimal(player.h.stage.div(2).pow(20)).pow(player.hpw.upgScale[14]).floor()},
             canAfford() { return hasUpgrade("hpw", 132)},
@@ -1073,7 +1074,7 @@ addLayer("hpw", {
         152: {
             title: "Might 16:2",
             unlocked() {return player.h.stage.gte(7)},
-            description: "Gain free purities based on blessings",
+            description: "Gain free purities based on blessings.",
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
@@ -1082,7 +1083,7 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hbl.blessings.add(1).log(Decimal.pow10(player.h.stage)).pow(0.5).floor()
+                return player.hbl.blessings.add(1).log(Decimal.pow10(player.h.stage.div(2))).pow(0.5).floor()
             },
             effectDisplay() { return "+" + formatWhole(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -1090,7 +1091,7 @@ addLayer("hpw", {
         153: {
             title: "Might 16:3",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description: "Increase the effective of vexes on vex effects by ^1.2.",
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
@@ -1103,7 +1104,7 @@ addLayer("hpw", {
         154: {
             title: "Might 16:4",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description: "Raise external effects based on α-provenance.",
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
@@ -1111,12 +1112,16 @@ addLayer("hpw", {
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
+            effect() {
+                return player.hpr.rank[0].add(1).log(player.h.stage).div(100).add(1)
+            },
+            effectDisplay() { return "^" + formatSimple(upgradeEffect(this.layer, this.id), 3) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         161: {
             title: "Might 17:1",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description() {return "Divide provenance req's based on " + player.h.stageName[1] + " points."},
             branches: [151],
             cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
             canAfford() { return hasUpgrade("hpw", 151)},
@@ -1124,12 +1129,16 @@ addLayer("hpw", {
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
+            effect() {
+                return player.h.hexPoint.add(1).log(player.h.stage).pow(0.7).div(100).add(1)
+            },
+            effectDisplay() { return "/" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         162: {
             title: "Might 17:2",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description: "Unlock new graces.<br>[NOT IMPLEMENTED]",
             branches: [152],
             cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
             canAfford() { return hasUpgrade("hpw", 152)},
@@ -1142,7 +1151,7 @@ addLayer("hpw", {
         163: {
             title: "Might 17:3",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description: "Improve Γ-Jinx formula.",
             branches: [153],
             cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
             canAfford() { return hasUpgrade("hpw", 153)},
@@ -1155,7 +1164,7 @@ addLayer("hpw", {
         164: {
             title: "Might 17:4",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description: "Replace 8:1's effect with one that boosts pre-power resources.",
             branches: [154],
             cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
             canAfford() { return hasUpgrade("hpw", 154)},
@@ -1165,10 +1174,58 @@ addLayer("hpw", {
             currencyInternalName: "power",
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
+        165: {
+            title: "Might η:1",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "Raise " + player.h.stageName[1] + " points by ^1.05."},
+            branches: [161],
+            cost() {return player.h.stage.pow(30).floor()},
+            canAfford() { return hasUpgrade("hpw", 161)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px", borderRadius: "15px"},
+        },
+        166: {
+            title: "Might η:2",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "???"},
+            branches: [165],
+            cost() {return player.h.stage.pow(70).floor()},
+            canAfford() { return hasUpgrade("hpw", 165)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
+        167: {
+            title: "Might η:3",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "???"},
+            branches: [166],
+            cost() {return player.h.stage.pow(120).floor()},
+            canAfford() { return hasUpgrade("hpw", 166)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px", borderRadius: "15px"},
+        },
+        168: {
+            title: "Might η:4",
+            unlocked() {return player.h.stage.neq(6)},
+            description() {return "???"},
+            branches: [167],
+            cost() {return player.h.stage.pow(180).floor()},
+            canAfford() { return hasUpgrade("hpw", 167)},
+            currencyLocation() { return player.hpw },
+            currencyDisplayName: "Power",
+            currencyInternalName: "power",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
+        },
         171: {
             title: "Might 18:1",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description: "Boost refiner 3's first effect.",
             branches: [161],
             cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
             canAfford() { return hasUpgrade("hpw", 161)},
@@ -1181,7 +1238,7 @@ addLayer("hpw", {
         172: {
             title: "Might 18:2",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description: "Boost blessings based on time spent in this tera reset.",
             branches: [162],
             cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
             canAfford() { return hasUpgrade("hpw", 162)},
@@ -1189,12 +1246,16 @@ addLayer("hpw", {
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
+            effect() {
+                return player.tera.sinceTera.pow(0.4).div(player.h.stage.div(2)).add(1)
+            },
+            effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         173: {
             title: "Might 18:3",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description: "Unlock vex buyables.<br>[NOT IMPLEMENTED]",
             branches: [163],
             cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
             canAfford() { return hasUpgrade("hpw", 163)},
@@ -1207,7 +1268,7 @@ addLayer("hpw", {
         174: {
             title: "Might 18:4",
             unlocked() {return player.h.stage.gte(7)},
-            description: "???",
+            description: "Triple Uni-Alpha tickspeed.",
             branches: [164],
             cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
             canAfford() { return hasUpgrade("hpw", 164)},
@@ -1217,25 +1278,6 @@ addLayer("hpw", {
             currencyInternalName: "power",
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
-        // Path 1 (Provenance/Refinement)
-        // Unlock the distill tab in refinement, which will produce a resource to that can refine other currencies.
-        // Slightly divide provenance req based on hept points
-        // Boost refiner 3's first effect
-
-        // Path 2 (Blessings/Purity)
-        // Gain free purities based on blessings
-        // Unlock T2 graces (Expensive but useful, shown as Grace EX1,EX2,etc)
-        // Boost blessings based on time in this tera reset
-
-        // Path 3 (Curses/Vexes)
-        // Raise effective vexes by ^1.2
-        // Slightly improve Γ-Jinx formula
-        // Vex Buyables
-
-        // Path 4 (Pre-Power Mult/Debuff Mitigation)
-        // Boost external effects based on provenance alpha (smol buff, something like ^1.1 since it is OP)
-        // 
-        // 
 
         1001: {
             title: "Might A:0",
@@ -1635,7 +1677,7 @@ addLayer("hpw", {
         },
         1107: {
             title: "Might 𝕡:7",
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(7)},
             description: "Automate External Expansion.",
             branches: [1104],
             cost() {return new Decimal(player.h.stage.pow(40)).floor()},
@@ -2108,18 +2150,22 @@ addLayer("hpw", {
                     ]],
                     ["style-column", [
                         ["row", [
+                            ["style-row", [["upgrade", 166]], {width: "140px", height: "140px", marginLeft: "35px", marginRight: "35px"}],
                             ["upgrade", 151],
                             ["upgrade", 152],
                             ["upgrade", 153],
                             ["upgrade", 154],
                         ]],
                         ["row", [
+                            ["style-row", [["upgrade", 167]], {width: "105px", height: "140px"}],
+                            ["style-row", [["upgrade", 165]], {width: "105px", height: "140px"}],
                             ["upgrade", 161],
                             ["upgrade", 162],
                             ["upgrade", 163],
                             ["upgrade", 164],
                         ]],
                         ["row", [
+                            ["style-row", [["upgrade", 168]], {width: "140px", height: "140px", marginLeft: "35px", marginRight: "35px"}],
                             ["upgrade", 171],
                             ["upgrade", 172],
                             ["upgrade", 173],

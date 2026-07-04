@@ -226,7 +226,10 @@ addLayer("hcu", {
                 if (hasUpgrade("hve", 23)) amt = amt.add(4)
                 return amt
             },
-            effect(x) { return Decimal.pow(player.hcu.curses.div(player.h.stage).add(1).log(player.h.stage.min(2)).add(1).pow(Decimal.div(1.8, player.h.stage.max(2))), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
+            effect(x) {
+                if (hasUpgrade("hpw", 163)) return Decimal.pow(player.hcu.curses.div(player.h.stage).add(1).log(2).add(1).pow(Decimal.div(2.4, player.h.stage.max(2))), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))
+                return Decimal.pow(player.hcu.curses.div(player.h.stage).add(1).log(2).add(1).pow(Decimal.div(1.8, player.h.stage.max(2))), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))
+            },
             unlocked() { return true },
             cost(x = getBuyableAmount(this.layer, this.id)) {
                 if (x.lt(player.h.stage.mul(4))) {

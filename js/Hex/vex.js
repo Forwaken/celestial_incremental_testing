@@ -14,7 +14,7 @@ addLayer("hve", {
         vexReq: new Decimal(300),
         vexGain: new Decimal(0),
         vexDiv: new Decimal(1),
-        vexEffects: [new Decimal(0), new Decimal(1), new Decimal(1)],
+        vexEffects: [new Decimal(0), new Decimal(1), new Decimal(1), new Decimal(1)],
 
         rowCurrent: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         rowSpent: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -32,10 +32,14 @@ addLayer("hve", {
         if (player.hcu.curses.gte(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))))) player.hve.vexGain = player.hcu.curses.add(1).mul(connect).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage.mul(2))).ln()).add(1).sub(player.hve.vexTotal).floor()
         if (player.hve.vexGain.lt(1)) player.hve.vexGain = new Decimal(0)
 
-        player.hve.vexEffects = [new Decimal(0), new Decimal(1), new Decimal(1)]
-        player.hve.vexEffects[0] = player.hve.vexTotal.mul(2)
-        if (hasUpgrade("hpw", 62)) player.hve.vexEffects[1] = player.hve.vexTotal.mul(0.05).add(1)
-        if (hasUpgrade("hpw", 92)) player.hve.vexEffects[2] = Decimal.pow(Decimal.div(3.96, player.h.stage).add(1), player.hve.vexTotal.pow(Decimal.div(3.96, player.h.stage)))
+        let effVex = player.hve.vexTotal
+        if (hasUpgrade("hpw", 153)) effVex = effVex.pow(1.2)
+        player.hve.vexEffects = [new Decimal(0), new Decimal(1), new Decimal(1), new Decimal(1)]
+        player.hve.vexEffects[0] = effVex.mul(2)
+        if (hasUpgrade("hpw", 62)) player.hve.vexEffects[1] = effVex.mul(0.05).add(1)
+        if (hasUpgrade("hpw", 92)) player.hve.vexEffects[2] = effVex.pow(Decimal.div(7.2, player.h.stage)).div(2).add(1)
+        //player.hve.vexEffects[2] = Decimal.pow(Decimal.div(3.96, player.h.stage).add(1), effVex.pow(Decimal.div(3.96, player.h.stage)))
+        if (hasUpgrade("hpw", 136)) player.hve.vexEffects[3] = effVex.div(100).add(1)
     },
     clickables: {
         1: {
@@ -552,7 +556,7 @@ addLayer("hve", {
                             ["raw-html", () => {return "Jinx Cap: +" + formatWhole(player.hve.vexEffects[0])}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return hasUpgrade("hpw", 62) ? "Jinx Score: x" + format(player.hve.vexEffects[1]) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return hasUpgrade("hpw", 92) ? "Blessings: x" + format(player.hve.vexEffects[2]) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return hasUpgrade("hpw", 136) ? "Refinement Scaling: /" + format(upgradeEffect("hpw", 136)) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return hasUpgrade("hpw", 136) ? "Refinement Scaling: /" + format(player.hve.vexEffects[3]) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                         ], {width: "300px", height: "110px"}],
                     ], {width: "300px", height: "160px", backgroundColor: "#160016", border: "2px solid #808", borderRadius: "15px"}],
                     ["blank", "10px"],

@@ -32,6 +32,7 @@ addLayer("hpr", {
     update(delta) {
         player.hpr.divider = player.hre.refinementEffect[1][0]
         if (hasUpgrade("hpw", 132)) player.hpr.divider = player.hpr.divider.mul(1.5)
+        if (hasUpgrade("hpw", 161)) player.hpr.divider = player.hpr.divider.mul(upgradeEffect("hpw", 161))
         let ext = new Decimal(1)
         if (hasUpgrade("tera", "hex7")) ext = ext.mul(upgradeEffect("tera", "hex7"))
         ext = ext.pow(player.h.externalRaise)

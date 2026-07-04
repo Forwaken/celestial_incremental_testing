@@ -77,8 +77,9 @@ addLayer("hbl", {
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.hre.refinementEffect[4][0])
         if (hasMilestone("hpw", 3) && player.hbl.blessings.lt(6e5) && !inChallenge("hrm", 13)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(2)
         if (hasMilestone("hpw", 6) && player.hbl.blessings.lt(6e5) && !inChallenge("hrm", 13)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(2)
-        if (hasUpgrade("hpw", 71)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 71))
+        if (hasUpgrade("hpw", 71) && !hasUpgrade("hpw", 164)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 71))
         if (hasUpgrade("hve", 31)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(3)
+        player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.hve.vexEffects[2])
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.h.prePowerMult)
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.tera.piositySpell)
         if (hasUpgrade("hpw", 13)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 13))
@@ -439,7 +440,7 @@ addLayer("hbl", {
     },
     upgrades: {
         1: {
-            title: "Grace I",
+            title: "Grace 1",
             unlocked() {return tmp.hbl.microtabs.blessing.Graces.unlocked},
             description: "Increase jinx cap based on NIP.",
             cost() {return player.h.stage.pow(2).mul(player.h.stage.sub(1)).div(player.h.stage.div(2))},
@@ -460,7 +461,7 @@ addLayer("hbl", {
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
         },
         2: {
-            title: "Grace II",
+            title: "Grace 2",
             unlocked() {return tmp.hbl.microtabs.blessing.Graces.unlocked},
             description() {return "IP boosts " + player.h.stageName[1] + " point gain."},
             cost() {return player.h.stage.pow(2).mul(player.h.stage.sub(1))},
@@ -476,7 +477,7 @@ addLayer("hbl", {
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
         },
         3: {
-            title: "Grace III",
+            title: "Grace 3",
             unlocked() {return tmp.hbl.microtabs.blessing.Graces.unlocked},
             description: "Infinities reduce refinement req.",
             cost() {return player.h.stage.pow(3).mul(player.h.stage.sub(1)).div(player.h.stage.div(2))},
@@ -492,7 +493,7 @@ addLayer("hbl", {
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
         },
         4: {
-            title: "Grace IV",
+            title: "Grace 4",
             unlocked() { return hasUpgrade("bi", 12) },
             description: "Infinitums boost curse gain.",
             cost() {return player.h.stage.pow(3).mul(player.h.stage.sub(1).mul(2)).div(player.h.stage.div(2))},
@@ -510,7 +511,7 @@ addLayer("hbl", {
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
         },
         5: {
-            title: "Grace V",
+            title: "Grace 5",
             unlocked() { return hasUpgrade("bi", 12) },
             description() {return "Highest Rocket fuel boosts " + player.h.stageName[1] + " point gain."},
             cost() {return player.h.stage.pow(4).mul(player.h.stage.sub(1).mul(2)).div(player.h.stage.div(2).pow(2))},
@@ -526,7 +527,7 @@ addLayer("hbl", {
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
         },
         6: {
-            title: "Grace VI",
+            title: "Grace 6",
             unlocked() { return hasUpgrade("bi", 12) },
             description() {
                 if (inChallenge("hrm", 16)) return "Highest Dice Points boosts refiner 1 effects."
@@ -552,7 +553,7 @@ addLayer("hbl", {
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
         },
         7: {
-            title: "Grace VII",
+            title: "Grace 7",
             unlocked() { return player.h.stage.gte(7) },
             description() {
                 return "SMA boosts jinx score."

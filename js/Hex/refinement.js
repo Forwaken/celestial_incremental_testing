@@ -80,8 +80,9 @@ addLayer("hre", {
         if (player.hre.refinement.gte(player.h.stage.div(2).floor())) player.hre.refinementEffect[1][1] = Decimal.pow(player.h.stage.div(2.15), player.hre.refinement.sub(player.h.stage.div(2).floor().sub(1))).pow(player.hpu.purifiers[0].effect)
 
         if (player.hre.refinement.gte(player.h.stage.mul(1.5).floor())) {
-            player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.5, player.h.stage).add(1), player.hre.refinement.sub(player.h.stage.mul(0.75).ceil()).pow(Decimal.div(3.6, player.h.stage.max(4))))
-            if (inChallenge("hrm", 16)) player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.36, player.h.stage).add(1), player.hre.refinement.sub(player.h.stage.mul(0.75).floor()).pow(Decimal.div(3.6, player.h.stage.max(4))))
+            let buff = hasUpgrade("hpw", 181) ? 2 : 1
+            player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.5*buff, player.h.stage).add(1), player.hre.refinement.sub(player.h.stage.mul(0.75).ceil()).pow(Decimal.div(3.6, player.h.stage.max(4))))
+            if (inChallenge("hrm", 16)) player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.36*buff, player.h.stage).add(1), player.hre.refinement.sub(player.h.stage.mul(0.75).floor()).pow(Decimal.div(3.6, player.h.stage.max(4))))
         }
         if (player.hre.refinement.gte(player.h.stage.mul(1.5).floor())) player.hre.refinementEffect[2][1] = Decimal.pow(player.h.stage.div(2.4), player.hre.refinement.sub(player.h.stage.mul(0.75).floor()))
 
@@ -774,7 +775,7 @@ addLayer("hre", {
             },
             "Tempering": {
                 buttonStyle() {return {borderRadius: "5px"}},
-                unlock() {return hasUpgrade("hpw", 151)},
+                unlocked() {return hasUpgrade("hpw", 151)},
                 content: [
                     ["blank", "10px"],
                     ["style-column", [

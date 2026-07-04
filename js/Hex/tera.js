@@ -241,6 +241,7 @@ addLayer("tera", {
         player.hve.vexGain = new Decimal(0)
         player.hve.rowCurrent = [0, 0, 0, 0, 0, 0]
         player.hve.rowSpent = [0, 0, 0, 0, 0, 0]
+        player.hve.vexEffects = [new Decimal(0), new Decimal(1), new Decimal(1), new Decimal(1)]
         for (let i = 0; i < player.hve.upgrades.length; i++) {
             player.hve.upgrades.splice(i, 1);
             i--;
@@ -328,7 +329,7 @@ addLayer("tera", {
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
         "seal2": {
-            title() {return player.tera.clickables["seal2"] ? "" : formatSimple(player.s.pylonEnergy) + "/1e12<br>Radiation Pylon Energy"},
+            title() {return player.tera.clickables["seal2"] ? "" : formatSimple(player.s.pylonEnergy) + "/<br>1e12<br>Radiation Pylon Energy"},
             canClick() {return player.s.pylonEnergy.gte(1e12)},
             unlocked() {return !player.tera.clickables["seal2"]},
             branches: [["sealCenter", "gray", 25]],
@@ -338,7 +339,7 @@ addLayer("tera", {
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
         "seal3": {
-            title() {return player.tera.clickables["seal3"] ? "" : formatSimple(player.tad.infinitum) + "/1e180<br>Infinitum"},
+            title() {return player.tera.clickables["seal3"] ? "" : formatSimple(player.tad.infinitum) + "/<br>1e180<br>Infinitum"},
             canClick() {return player.tad.infinitum.gte(1e180)},
             unlocked() {return !player.tera.clickables["seal3"]},
             branches: [["sealCenter", "gray", 25]],
@@ -348,7 +349,7 @@ addLayer("tera", {
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
         "seal4": {
-            title() {return player.tera.clickables["seal4"] ? "" : formatSimple(player.ca.replicanti) + "/1e2,400<br>Replicanti"},
+            title() {return player.tera.clickables["seal4"] ? "" : formatSimple(player.ca.replicanti) + "/<br>1e2,400<br>Replicanti"},
             canClick() {return player.ca.replicanti.gte("1e2400")},
             unlocked() {return !player.tera.clickables["seal4"]},
             branches: [["sealCenter", "gray", 25]],
@@ -358,7 +359,7 @@ addLayer("tera", {
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
         "seal5": {
-            title() {return player.tera.clickables["seal5"] ? "" : formatSimple(player.ep2.cookies) + "/1e30<br>Cookies"},
+            title() {return player.tera.clickables["seal5"] ? "" : formatSimple(player.ep2.cookies) + "/<br>1e30<br>Cookies"},
             canClick() {return player.ep2.cookies.gte(1e30)},
             unlocked() {return !player.tera.clickables["seal5"]},
             branches: [["sealCenter", "gray", 25]],
@@ -1231,7 +1232,7 @@ addLayer("tera", {
     upgrades: {
         "hex1": {
             fullDisplay() {return "<h3>Realm Infusions</h3><br>Unlock new realm mights at the bottom of the might tree.<br><br>Cost: 1e60 Blessings<br><small>[REQ BEING IN HEX]</small>"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hbl.blessings.gte("1e60")},
             pay() {player.hbl.blessings = player.hbl.blessings.sub("1e60")},
             style() {
@@ -1242,7 +1243,7 @@ addLayer("tera", {
         },
         "hex2": {
             fullDisplay() {return "<h3>Cheaper Refining</h3><br>Refined fragments no longer cost lesser or greater fragments.<br><br>Cost: 180 Refinements<br><small>[REQ BEING IN HEX]</small>"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hre.refinement.gte(180)},
             pay() {player.hre.refinement = player.hre.refinement.sub(180)},
             style() {
@@ -1253,7 +1254,7 @@ addLayer("tera", {
         },
         "hex3": {
             fullDisplay() {return "<h3>Surpassed Limits</h3><br>Increase realm challenge caps based on true hex.<br>Currently: +" + formatWhole(player.tera.trueHex) + "<br><br>Req: 2 Maxed Challenges<br><small>[REQ BEING IN HEX]</small>"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() {
                 let amt = 0
                 for (let i = 11; i < 17; i++) {if (player.hrm.challenges[i] >= 30) amt++}
@@ -1268,7 +1269,7 @@ addLayer("tera", {
         },
         "hex4": {
             fullDisplay() {return "<h3>???</h3><br>???.<br><br>Cost: 60 Vexes<br><small>[REQ BEING IN HEX]</small>"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hve.vexTotal.gte(60)},
             pay() {
                 player.hve.vexTotal = player.hve.vexTotal.sub(60)
@@ -1290,7 +1291,7 @@ addLayer("tera", {
         },
         "hex5": {
             fullDisplay() {return "<h3>Colorful Essences</h3><br>Boost realm essence gain based on hex essence.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 1e18 Realm Essence<br><small>[REQ BEING IN HEX]</small>"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hrm.realmEssence.gte("1e18")},
             pay() {player.hrm.realmEssence = player.hrm.realmEssence.sub("1e18")},
             effect() {return Decimal.pow(1.1, player.tera.hexEssence.add(1).log(6))},
@@ -1302,7 +1303,7 @@ addLayer("tera", {
         },
         "hex6": {
             fullDisplay() {return "<h3>???</h3><br>???.<br><br>Cost: 1e6 ζ-Provenance<br><small>[REQ BEING IN HEX]</small>"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hpr.rank[5].gte(1e6)},
             pay() {player.hpr.rank[5] = player.hpr.rank[5].sub(1e6)},
             style() {
@@ -1313,10 +1314,10 @@ addLayer("tera", {
         },
         "hex7": {
             fullDisplay() {return "<h3>Foundational Ranks</h3><br>Reduce provenance req's based on ranks.<br>Currently: /" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 6 Hex Essence"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(6)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(6)},
-            effect() {return player.r.rank.add(1).log("1e6000").div(36).add(1)},
+            effect() {return player.r.rank.add(1).log("1e1200").pow(0.6).div(36).add(1)},
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -1325,7 +1326,7 @@ addLayer("tera", {
         },
         "hex8": {
             fullDisplay() {return "<h3>Essence Conversion</h3><br>Boost CB-Tickspeed based on hex essence.<br><small>[DOES NOT STACK WITH REALM ESSENCE]</small><br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 216 Hex Essence"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(216)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(216)},
             effect() {return player.tera.hexEssence.add(1).log(6).div(36).add(1)},
@@ -1337,7 +1338,7 @@ addLayer("tera", {
         },
         "hex9": {
             fullDisplay() {return "<h3>Refined Refiner</h3><br>Increase refiner 4's first effect base by x1.3<br><br>Cost: 46,656 Hex Essence"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(46656)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(46656)},
             style() {
@@ -1348,7 +1349,7 @@ addLayer("tera", {
         },
         "hex10": {
             fullDisplay() {return "<h3>???</h3><br>???.<br><br>Cost: 6e7 Hex Essence"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(6e7)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(6e7)},
             style() {
@@ -1359,7 +1360,7 @@ addLayer("tera", {
         },
         "hex11": {
             fullDisplay() {return "<h3>Hexed Curses</h3><br>Boost curses based on hex essence.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 4.7e11 Hex Essence"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(4.7e11)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(4.7e11)},
             effect() {return Decimal.pow(1.5, player.tera.hexEssence.add(1).log(6))},
@@ -1371,7 +1372,7 @@ addLayer("tera", {
         },
         "hex12": {
             fullDisplay() {return "<h3>???</h3><br>???.<br><br>Cost: 2.2e16 Hex Essence"},
-            unlocked: true,
+            unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(2.2e16)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(2.2e16)},
             style() {
@@ -1381,7 +1382,6 @@ addLayer("tera", {
             }
         },
         // ADD A HIVE BUFF
-        // Refined fragments no longer cost lesser or greater fragments
 
         // HEPT UPGRADES
         // Reduce external penalty based on equipped sins
@@ -1394,6 +1394,8 @@ addLayer("tera", {
         // 
         //
         // EXTERNAL UNLOCK/BUFF x3
+
+        // Unlock Rocket Parts (you can equip only one rocket part at a time at first, but there are three potential slots in total. You will start with just one that makes common pets not reset when sent up to space)
     },
     microtabs: {
         "hex": {
@@ -1723,7 +1725,7 @@ addLayer("tera", {
         ], () => {return player.tera.unsealed ? {} : {display: "none !important"}}],
         ["style-column", [
             ["row", [["clickable", "seal1"], ["blank", ["200px", "10px"]], ["clickable", "seal2"]]],
-            ["style-row", [["clickable", "seal3"], ["blank", ["50px", "10px"]], ["clickable", "sealCenter"], ["blank", ["50px", "10px"]], ["clickable", "seal4"]], {height: "200px"}],
+            ["style-row", [["style-row", [["clickable", "seal3"]], {width: "150px", height: "150px"}], ["blank", ["50px", "10px"]], ["clickable", "sealCenter"], ["blank", ["50px", "10px"]], ["style-row", [["clickable", "seal4"]], {width: "150px", height: "150px"}]], {height: "200px"}],
             ["row", [["clickable", "seal5"], ["blank", ["200px", "10px"]], ["clickable", "seal6"]]],
         ], () => {return !player.tera.unsealed ? {width: "700px", height: "700px", background: "radial-gradient(rgba(0,0,0,1), #13192200)", border: "10px solid #28426c88", borderRadius: "35%"} : {display: "none !important"}}],
     ],

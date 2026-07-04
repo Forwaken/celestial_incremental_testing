@@ -65,10 +65,12 @@ addLayer("h", {
         if (player.tera.chronotachysisSpell[0].gt(0)) player.h.tickspeed = player.h.tickspeed.mul(player.tera.chronotachysisSpell[1])
         player.h.tickspeed = player.h.tickspeed.mul(player.tera.trueHexEffect)
         if (hasUpgrade("hpw", 103)) player.h.tickspeed = player.h.tickspeed.mul(upgradeEffect("hpw", 103))
+        if (hasUpgrade("hpw", 174)) player.h.tickspeed = player.h.tickspeed.mul(3)
 
         player.h.externalRaise = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.externalRaise = Decimal.pow(0.5, player.h.stage.sub(6).abs())
         player.h.externalRaise = player.h.externalRaise.mul(player.hpu.purifiers[6].effect)
+        if (hasUpgrade("hpw", 154)) player.h.externalRaise = player.h.externalRaise.mul(upgradeEffect("hpw", 154))
 
         player.h.preNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.preNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
@@ -91,7 +93,7 @@ addLayer("h", {
 
         player.h.refinementScale = new Decimal(1)
         if (player.sins.clickables["gluttony"]) player.h.refinementScale = player.h.refinementScale.mul(Decimal.div(1.6, hasUpgrade("hpw", 2005) ? upgradeEffect("hpw", 2005) : 1))
-        if (hasUpgrade("hpw", 136)) player.h.refinementScale = player.h.refinementScale.div(upgradeEffect("hpw", 136))
+        player.h.refinementScale = player.h.refinementScale.div(player.hve.vexEffects[3])
 
         // START OF HEX POINT GAIN
         player.h.hexPointGain = new Decimal(0)
@@ -130,6 +132,7 @@ addLayer("h", {
 
         // POWER
         if (hasUpgrade("hve", 61)) player.h.hexPointGain = player.h.hexPointGain.pow(1.03)
+        if (hasUpgrade("hpw", 165)) player.h.hexPointGain = player.h.hexPointGain.pow(1.05)
         let exp = new Decimal(1)
         for (let i = 6; i < 7; i++) {
             exp = exp.add(player.hpr.rankEffect[i][1])
@@ -162,6 +165,7 @@ addLayer("h", {
         if (hasUpgrade("hpw", 121)) player.h.prePowerMult = player.h.prePowerMult.mul(3)
         if (hasUpgrade("hpw", 141)) player.h.prePowerMult = player.h.prePowerMult.mul(upgradeEffect("hpw", 141))
         player.h.prePowerMult = player.h.prePowerMult.mul(player.hre.refinementEffect[6][0])
+        if (hasUpgrade("hpw", 71) && hasUpgrade("hpw", 164)) player.h.prePowerMult = player.h.prePowerMult.mul(upgradeEffect("hpw", 71))
         player.h.prePowerMult = player.h.prePowerMult.div(player.hrm.challengeSoftcap)
         player.h.prePowerMult = player.h.prePowerMult.div(player.h.preNerf)
 
