@@ -33,6 +33,19 @@ addLayer("hve", {
         if (player.hcu.curses.gte(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))))) player.hve.vexGain = player.hcu.curses.add(1).mul(connect).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage.mul(2))).ln()).add(1).sub(player.hve.vexTotal).floor()
         if (player.hve.vexGain.lt(1)) player.hve.vexGain = new Decimal(0)
 
+        if (hasMilestone("hre", 16) && !inChallenge("hrm", 15) && player.hve.vexGain.gt(0)) {
+            player.hve.vexTotal = player.hve.vexTotal.add(player.hve.vexGain)
+            player.hve.vex = player.hve.vex.add(player.hve.vexGain)
+
+            let rowTot = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            let rowVal = VEXROW.slice(0, player.hve.vexTotal)
+            if (player.h.stage.eq(7)) rowVal = VEXROW2.slice(0, player.hve.vexTotal)
+            rowVal.forEach((x) => {rowTot[x-1] = rowTot[x-1]+1})
+            for (i = 0; i < 12; i++) {
+                player.hve.rowCurrent[i] = rowTot[i] - player.hve.rowSpent[i]
+            }
+        }
+
         let effVex = player.hve.vexTotal
         if (hasUpgrade("hpw", 153)) effVex = effVex.pow(1.2)
         player.hve.vexEffects = [new Decimal(0), new Decimal(1), new Decimal(1), new Decimal(1)]
@@ -544,7 +557,7 @@ addLayer("hve", {
         ["row", [
             ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
-            ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
+            ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["style-row", [["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}]], {lineHeight: "1"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],

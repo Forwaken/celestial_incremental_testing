@@ -640,6 +640,23 @@ addLayer("hre", {
             unlocked() { return hasMilestone("hre", 14) },
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
+        16: {
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(22)) + " Refinements"},
+            effectDescription: "Automate vex gain.",
+            done() { return player.hre.refinement.gte(player.h.stage.mul(22)) && player.h.stage.gte(7)},
+            unlocked() { return hasMilestone("hre", 15) && player.h.stage.gte(7) },
+            style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
+        },
+        17: {
+            requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(24)) + " Refinements"},
+            effectDescription() {
+                if (inChallenge("hrm", 16)) return "Automate █-██████████ gain."
+                return "Automate η-Provenance gain."
+            },
+            done() { return player.hre.refinement.gte(player.h.stage.mul(24)) && player.h.stage.gte(7)},
+            unlocked() { return hasMilestone("hre", 16) && player.h.stage.gte(7) },
+            style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
+        },
     },
     microtabs: {
         refine: {
@@ -975,6 +992,8 @@ addLayer("hre", {
                     ["milestone", 13],
                     ["milestone", 14],
                     ["milestone", 15],
+                    ["milestone", 16],
+                    ["milestone", 17],
                 ]
             },
         },
@@ -983,7 +1002,7 @@ addLayer("hre", {
         ["row", [
             ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return player.h.hexPointGain.eq(0) ? "" : player.h.hexPointGain.gt(0) ? "(+" + format(player.h.hexPointGain) + "/s)" : "<span style='color:red'>(" + format(player.h.hexPointGain) + "/s)</span>"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
-            ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
+            ["raw-html", () => {return (inChallenge("hrm", 14) || player.h.hexPointGain.gte(1e308)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
         ["style-row", [["raw-html", () => {return layers.h.effects()}, {color: "#f88", fontSize: "16px", fontFamily: "monospace"}]], {lineHeight: "1"}],
         ["raw-html", () => {return inChallenge("hrm", 15) ? "Time Remaining: " + formatTime(player.hrm.dreamTimer) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
