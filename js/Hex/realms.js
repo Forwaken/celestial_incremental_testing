@@ -267,7 +267,7 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                let clear = player.hbl.blessings.div(Decimal.pow10(player.h.stage.div(1.5))).ln().div(Decimal.ln(Decimal.pow10(player.h.stage.div(6)))).add(1).sub(challengeCompletions(this.layer, this.id))
+                let clear = player.hbl.blessings.div(Decimal.pow10(player.h.stage.div(1.5))).add(1).ln().div(Decimal.ln(Decimal.pow10(player.h.stage.div(6)))).add(1).sub(challengeCompletions(this.layer, this.id))
                 return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1001) || challengeCompletions(this.layer, this.id) > 0 },
@@ -299,7 +299,7 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                let clear = player.hbl.blessings.div(Decimal.pow10(player.h.stage)).ln().div(Decimal.ln(player.h.stage.mul(5))).add(1).sub(challengeCompletions(this.layer, this.id))
+                let clear = player.hbl.blessings.div(Decimal.pow10(player.h.stage)).add(1).ln().div(Decimal.ln(player.h.stage.mul(5))).add(1).sub(challengeCompletions(this.layer, this.id))
                 return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1002) || challengeCompletions(this.layer, this.id) > 0 },
@@ -331,7 +331,7 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                let clear = player.hcu.curses.div(Decimal.pow10(player.h.stage.mul(12))).ln().div(Decimal.ln(Decimal.pow10(player.h.stage.mul(3)))).add(1).sub(challengeCompletions(this.layer, this.id))
+                let clear = player.hcu.curses.div(Decimal.pow10(player.h.stage.mul(12))).add(1).ln().div(Decimal.ln(Decimal.pow10(player.h.stage.mul(3)))).add(1).sub(challengeCompletions(this.layer, this.id))
                 return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1003) || challengeCompletions(this.layer, this.id) > 0 },
@@ -363,7 +363,7 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                let clear = player.h.hexPoint.max(1).div(1e10).ln().div(Decimal.ln(1e5)).add(1).sub(challengeCompletions(this.layer, this.id))
+                let clear = player.h.hexPoint.div(1e10).add(1).ln().div(Decimal.ln(1e5)).add(1).sub(challengeCompletions(this.layer, this.id))
                 return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1004) || challengeCompletions(this.layer, this.id) > 0 },
@@ -395,7 +395,7 @@ addLayer("hrm", {
                 return str
             },
             canComplete() {
-                let clear = player.hbl.blessings.max(1).div(Decimal.pow10(player.h.stage).mul(player.h.stage)).ln().div(Decimal.mul(Decimal.ln(10), player.h.stage.div(6))).add(1).sub(challengeCompletions(this.layer, this.id))
+                let clear = player.hbl.blessings.div(Decimal.pow10(player.h.stage).mul(player.h.stage)).add(1).ln().div(Decimal.mul(Decimal.ln(10), player.h.stage.div(6))).add(1).sub(challengeCompletions(this.layer, this.id))
                 return clear.gt(0) ? clear.pow(0.8).floor().toNumber() : 0
             },
             unlocked() { return hasUpgrade("hpw", 1005) || challengeCompletions(this.layer, this.id) > 0 },

@@ -157,9 +157,14 @@ addLayer("tera", {
         player.tera.piositySpell = new Decimal(1)
 
         // SIN
-        player.tera.wrath = [new Decimal(1), new Decimal(1), new Decimal(1)]
-        player.tera.lust = [new Decimal(1), new Decimal(1), new Decimal(1)]
-        player.tera.clickables = {}
+        player.sins.envy = [new Decimal(1), new Decimal(1), new Decimal(1)]
+        player.sins.wrath = [new Decimal(1), new Decimal(1), new Decimal(1)]
+        player.sins.lust = [new Decimal(1), new Decimal(1), new Decimal(1)]
+        player.sins.gluttony = [new Decimal(1), new Decimal(1), new Decimal(1)]
+        player.sins.sloth = [new Decimal(1), new Decimal(1), new Decimal(1)]
+        player.sins.greed = [new Decimal(1), new Decimal(1), new Decimal(1)]
+        player.sins.pride = [new Decimal(1), new Decimal(1), new Decimal(1)]
+        player.sins.clickables = {}
 
         // POWER
         player.hpw.totalPower = new Decimal(0)

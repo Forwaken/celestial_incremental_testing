@@ -1367,7 +1367,7 @@
       key: "recip",
       value: function recip() {
         if (this.mag === 0) {
-          return Decimal.dNaN;
+          return Decimal.dOne;
         } else if (this.layer === 0) {
           return FC(this.sign, 0, 1 / this.mag);
         } else {
@@ -1707,7 +1707,8 @@
       key: "absLog10",
       value: function absLog10() {
         if (this.sign === 0) {
-          return Decimal.dNaN;
+          console.warn("A absLog10() function was triggered that should have NaNed.")
+          return Decimal.dZero;
         } else if (this.layer > 0) {
           return FC(Math.sign(this.mag), this.layer - 1, Math.abs(this.mag));
         } else {
@@ -1718,7 +1719,8 @@
       key: "log10",
       value: function log10() {
         if (this.sign <= 0) {
-          return Decimal.dNaN;
+          console.warn("A log10() function was triggered that should have NaNed.")
+          return Decimal.dZero;
         } else if (this.layer > 0) {
           return FC(Math.sign(this.mag), this.layer - 1, Math.abs(this.mag));
         } else {
@@ -1731,15 +1733,18 @@
         base = D(base);
 
         if (this.sign <= 0) {
-          return Decimal.dNaN;
+          console.warn("A log() function was triggered that should have NaNed.")
+          return Decimal.dZero;
         }
 
         if (base.sign <= 0) {
-          return Decimal.dNaN;
+          console.warn("A log() function was triggered that should have NaNed.")
+          return Decimal.dZero;
         }
 
         if (base.sign === 1 && base.layer === 0 && base.mag === 1) {
-          return Decimal.dNaN;
+          console.warn("A log() function was triggered that should have NaNed.")
+          return Decimal.dZero;
         } else if (this.layer === 0 && base.layer === 0) {
           return FC(this.sign, 0, Math.log(this.mag) / Math.log(base.mag));
         }
@@ -1750,7 +1755,8 @@
       key: "log2",
       value: function log2() {
         if (this.sign <= 0) {
-          return Decimal.dNaN;
+          console.warn("A log2() function was triggered that should have NaNed.")
+          return Decimal.dZero;
         } else if (this.layer === 0) {
           return FC(this.sign, 0, Math.log2(this.mag));
         } else if (this.layer === 1) {
@@ -1765,7 +1771,8 @@
       key: "ln",
       value: function ln() {
         if (this.sign <= 0) {
-          return Decimal.dNaN;
+          console.warn("A ln() function was triggered that should have NaNed.")
+          return Decimal.dZero;
         } else if (this.layer === 0) {
           return FC(this.sign, 0, Math.log(this.mag));
         } else if (this.layer === 1) {
