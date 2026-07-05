@@ -110,7 +110,7 @@ addLayer("hpu", {
         let softcap2 = Decimal.pow(1.5, player.hpu.purifierSoftcap)
         let softcap3 = Decimal.pow(2, player.hpu.purifierSoftcap.sub(1)).div(5)
         let softcap4 = Decimal.mul(player.hpu.purifierSoftcap, 0.15).add(1)
-        let softcap5 = Decimal.div(player.hpu.purifierSoftcap, 25).add(1)
+        let softcap5 = Decimal.div(player.hpu.purifierSoftcap, 50).add(1)
 
         player.hpu.purifiers[0].effect = player.hpu.purifiers[0].amount.div(player.h.purifierDiv).div(10).add(1)
         if (player.hpu.purifiers[0].effect.gt(softcap1)) player.hpu.purifiers[0].effect = player.hpu.purifiers[0].effect.div(softcap1).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(softcap1)
@@ -140,7 +140,7 @@ addLayer("hpu", {
             if (player.hpu.purifiers[5].effect.gt(softcap1)) player.hpu.purifiers[5].effect = player.hpu.purifiers[5].effect.div(softcap1).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(softcap1)
         }
 
-        player.hpu.purifiers[6].effect = player.hpu.purifiers[6].amount.div(player.h.purifierDiv).div(25).add(1)
+        player.hpu.purifiers[6].effect = player.hpu.purifiers[6].amount.div(player.h.purifierDiv).div(50).add(1)
         if (player.hpu.purifiers[6].effect.gt(softcap5)) player.hpu.purifiers[6].effect = player.hpu.purifiers[6].effect.div(softcap5).pow(Decimal.div(3.5, player.h.stage.max(4))).mul(softcap5)
 
         let addPure = new Decimal(0)
@@ -357,7 +357,7 @@ addLayer("hpu", {
         9: {
             title() {
                 let str = "<h3>External Expansion</h3><br>Lv." + formatWhole(player.hpu.purifiers[6].amount) + "<br>^" + format(player.hpu.purifiers[6].effect) + " External Effects"
-                if (player.hpu.purifiers[6].effect.gt(Decimal.div(player.hpu.purifierSoftcap, 25).add(1))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
+                if (player.hpu.purifiers[6].effect.gt(Decimal.div(player.hpu.purifierSoftcap, 50).add(1))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
             canClick() {return player.hpu.purity.gte(1) && !hasUpgrade("hpw", 1107)},
@@ -377,6 +377,7 @@ addLayer("hpu", {
                 return look
             },
         },
+        // Slightly boosts power, with no softcap
         101: {
             title: "1",
             canClick() { return player.hpu.purifierAssign != 1},

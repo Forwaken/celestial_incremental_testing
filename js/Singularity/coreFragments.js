@@ -69,6 +69,7 @@
         player.cof.fragmentScore[0] = player.points.plus(1).log10().pow(0.7).div(33).div(5)
         player.cof.fragmentScore[0] = player.cof.fragmentScore[0].mul(player.f.factorPower.plus(1).log10().pow(0.446).div(33))
         player.cof.fragmentScore[0] = player.cof.fragmentScore[0].mul(player.p.prestigePoints.plus(1).log10().pow(0.444).div(33))
+        if (player.sins.clickables["pride"]) player.cof.fragmentScore[0] = player.cof.fragmentScore[0].mul(player.sins.pride[1])
 
         //natural
         if (!inChallenge("ip", 12))

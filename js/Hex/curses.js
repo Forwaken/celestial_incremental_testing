@@ -15,7 +15,7 @@ addLayer("hcu", {
     }},
     automate() {
         if (hasMilestone("hre", 12) && !inChallenge("hrm", 15)) {
-            for (let i = 101; i < 113; i++) {
+            for (let i = 101; i < 115; i++) {
                 buyMaxExBuyable("hcu", i)
             }
         }
@@ -53,7 +53,7 @@ addLayer("hcu", {
         // SOFTCAPS AND PER SECOND
         if (inChallenge("hrm", 12)) player.hcu.cursesGain = player.hcu.cursesGain.pow(Decimal.div(3.6, player.h.stage.max(4)))
         if (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2)))) player.hcu.cursesGain = player.hcu.cursesGain.div(Decimal.pow10(player.h.stage.mul(2))).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(Decimal.pow10(player.h.stage.mul(2)))
-        if (player.hcu.cursesGain.gte(Decimal.pow(1e100, player.h.stage.mul(2)))) player.hcu.cursesGain = player.hcu.cursesGain.div(Decimal.pow(1e100, player.h.stage.mul(2))).pow(0.1).mul(Decimal.pow(1e100, player.h.stage.mul(2)))
+        if (player.hcu.cursesGain.gte(1.79e308)) player.hcu.cursesGain = player.hcu.cursesGain.div(1.79e308).pow(Decimal.div(3.6, player.h.stage.max(4))).mul(1.79e308)
         player.hcu.cursesGain = player.hcu.cursesGain.mul(player.h.tickspeed)
         player.hcu.curses = player.hcu.curses.add(player.hcu.cursesGain.mul(delta))
 
@@ -911,7 +911,7 @@ addLayer("hcu", {
                 player.hcu.cursesGain.gt(0) ? look.color = "white" : look.color = "gray"
                 return look
             }],
-            ["raw-html", () => {return (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2))) && inChallenge("hrm", 12)) || player.hcu.cursesGain.gte(Decimal.pow(1e100, player.h.stage.mul(2))) ? "<small>[SOFTCAPPED<sup>2</sup>]</small>" :
+            ["raw-html", () => {return (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2))) && inChallenge("hrm", 12)) || player.hcu.cursesGain.gte(1.79e308) ? "<small>[SOFTCAPPED<sup>2</sup>]</small>" :
                 player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2))) || inChallenge("hrm", 12) ? "<small>[SOFTCAPPED]</small>" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {
                 let str = "<div class='bottomTooltip'>Base Formula<hr><small>log" + formatWhole(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1))) + "(Blessings)"

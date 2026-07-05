@@ -65,8 +65,8 @@ addLayer("hpr", {
         player.hpr.rankReq[5] = layers.h.hexReq(player.hpr.rank[5], player.h.stage.pow(5), Decimal.div(player.h.stage, 5.5), player.hpr.divider)
         player.hpr.rankGain[5] = layers.h.hexGain(player.hpr.rank[4], player.h.stage.pow(5), Decimal.div(player.h.stage, 5.5), player.hpr.divider).sub(player.hpr.rank[5])
 
-        player.hpr.rankReq[6] = layers.h.hexReq(player.hpr.rank[6], player.h.stage.pow(player.h.stage).div(hasUpgrade("hpw", 74) ? 1.2 : 1), player.h.stage, player.hpr.divider)
-        player.hpr.rankGain[6] = layers.h.hexGain(player.hpr.rank[0], player.h.stage.pow(player.h.stage).div(hasUpgrade("hpw", 74) ? 1.2 : 1), player.h.stage, player.hpr.divider).sub(player.hpr.rank[6])
+        player.hpr.rankReq[6] = layers.h.hexReq(player.hpr.rank[6], player.h.stage.pow(player.h.stage).div(hasUpgrade("hpw", 74) ? 1.25 : 1), player.h.stage, player.hpr.divider)
+        player.hpr.rankGain[6] = layers.h.hexGain(player.hpr.rank[0], player.h.stage.pow(player.h.stage).div(hasUpgrade("hpw", 74) ? 1.25 : 1), player.h.stage, player.hpr.divider).sub(player.hpr.rank[6])
 
         for (let i = 0; i < 12; i++) {
             if (player.hpr.rankGain[i].lt(0)) player.hpr.rankGain[i] = new Decimal(0)

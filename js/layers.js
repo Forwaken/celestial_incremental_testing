@@ -231,6 +231,7 @@
             player.i.pylonEnergyPerSecond = player.i.pylonEnergyPerSecond.mul(buyableEffect("i", 13))
             player.i.pylonEnergyPerSecond = player.i.pylonEnergyPerSecond.mul(player.in.pylonEnergyEffect3)
             player.i.pylonEnergyPerSecond = player.i.pylonEnergyPerSecond.mul(buyableEffect("sme", 143))
+            if (player.sins.clickables["pride"]) player.i.pylonEnergyPerSecond = player.i.pylonEnergyPerSecond.mul(player.sins.pride[2])
 
             player.i.pylonPassiveEffect = player.points.pow(0.002).add(1).pow(player.i.pylonTierEffect)
         } else

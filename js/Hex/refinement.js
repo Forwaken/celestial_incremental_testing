@@ -161,7 +161,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -172,7 +172,7 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(150) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -186,7 +186,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -211,7 +211,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -236,7 +236,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -253,7 +253,7 @@ addLayer("hre", {
             canAfford() { return this.currency().gte(this.cost())},
             display() {
                 return "<h3>Increase Base</h3>\n\
-                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 3) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
@@ -261,7 +261,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -286,7 +286,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -311,7 +311,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -322,7 +322,7 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(150) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -336,7 +336,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -361,7 +361,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -386,7 +386,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -411,7 +411,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -436,7 +436,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -461,7 +461,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -486,7 +486,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -511,7 +511,7 @@ addLayer("hre", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "147px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#aaa"
                 return look
             },
@@ -789,7 +789,7 @@ addLayer("hre", {
                             }],
                         ]],
                         ["raw-html", () => {return "<i>Temperer production requires at least " + formatSimple(Decimal.sub(70, buyableEffect("hre", 21).sub(1))) + " refinements</i>"}, {color: "#ccc", fontSize: "16px", fontFamily: "monospace"}],
-                    ], {width: "650px", height: "60px", background: "#444", border: "3px solid white", borderRadius: "20px 20px 0 0"}],
+                    ], {width: "740px", height: "60px", background: "#444", border: "3px solid white", borderRadius: "20px 20px 0 0"}],
                     ["style-row", [
                         ["style-column", [
                             ["raw-html", () => {return player.h.stageName[0] + " Points"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -798,28 +798,28 @@ addLayer("hre", {
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "Log" + formatSimple(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 11)).add(1))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 11],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "x" + formatSimple(Decimal.mul(player.h.stage.max(1), buyableEffect("hre", 12)))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 12],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "^" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)), 3)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 13],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
-                    ], {width: "650px", height: "120px", background: "#000e26", border: "3px solid white", marginTop: "-3px"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
+                    ], {width: "740px", height: "120px", background: "#000e26", border: "3px solid white", marginTop: "-3px"}],
                     ["style-row", [
                         ["style-column", [
                             ["raw-html", "Temperers", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -828,28 +828,28 @@ addLayer("hre", {
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "-" + formatSimple(player.h.stage.mul(10).sub(1).sub(buyableEffect("hre", 21).sub(1)))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 21],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
-                                ["raw-html", () => {return formatSimple(Decimal.mul(1.2, buyableEffect("hre", 22)), 2) + "^"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                                ["raw-html", () => {return formatSimple(Decimal.mul(1.2, buyableEffect("hre", 22)), 3) + "^"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 22],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "x" + formatSimple(buyableEffect("hre", 23))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 23],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
-                    ], {width: "650px", height: "120px", background: "#222", border: "3px solid white", marginTop: "-3px"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
+                    ], {width: "740px", height: "120px", background: "#222", border: "3px solid white", marginTop: "-3px"}],
                     ["style-row", [
                         ["style-column", [
                             ["raw-html", "Blessings", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -862,28 +862,28 @@ addLayer("hre", {
                                     if (eff.gte(0)) return "+" + formatSimple(eff)
                                     return formatSimple(eff)
                                 }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 31],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "x" + formatSimple(buyableEffect("hre", 32))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 32],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "^" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hre", 33)), 3)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 33],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
-                    ], {width: "650px", height: "120px", background: "#261c00", border: "3px solid white", marginTop: "-3px"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
+                    ], {width: "740px", height: "120px", background: "#261c00", border: "3px solid white", marginTop: "-3px"}],
                     ["style-row", [
                         ["style-column", [
                             ["raw-html", "Boons", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -892,11 +892,11 @@ addLayer("hre", {
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "^" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hre", 41)), 2)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 41],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {
@@ -904,20 +904,20 @@ addLayer("hre", {
                                     if (eff.gte(1)) return "x" + formatSimple(eff)
                                     return "/" + formatSimple(Decimal.div(1, eff))
                                 }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 42],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return formatSimple(upgradeEffect("hpw", 52).sub(1).mul(100)) + "% Deposited/s"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 43],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
-                    ], {width: "650px", height: "120px", background: "#1e1600", border: "3px solid white", marginTop: "-3px"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
+                    ], {width: "740px", height: "120px", background: "#1e1600", border: "3px solid white", marginTop: "-3px"}],
                     ["style-row", [
                         ["style-column", [
                             ["raw-html", "Curses", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -926,32 +926,32 @@ addLayer("hre", {
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "Log" + formatSimple(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 51)).add(1))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 51],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "x" + formatSimple(buyableEffect("hre", 52))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 52],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
                                 ["raw-html", () => {return "^" + formatSimple(buyableEffect("hre", 53), 2)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
+                            ], {width: "177px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 53],
-                            ], {width: "147px", height: "80px"}],
-                        ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
-                    ], {width: "650px", height: "120px", background: "#232b2b", border: "3px solid white", marginTop: "-3px"}],
+                            ], {width: "177px", height: "80px"}],
+                        ], {width: "177px", height: "120px", borderLeft: "3px solid white"}],
+                    ], {width: "740px", height: "120px", background: "#232b2b", border: "3px solid white", marginTop: "-3px"}],
                     ["style-column", [
                         ["raw-html", "<i>Buyables are in the same order as formula operators</i>", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ["raw-html", "<i>Tempering only resets on power level resets and above</i>", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                    ], {width: "650px", height: "45px", background: "#444", lineHeight: "1.2", border: "3px solid white", borderRadius: "0 0 20px 20px", marginTop: "-3px"}]
+                    ], {width: "740px", height: "45px", background: "#444", lineHeight: "1.2", border: "3px solid white", borderRadius: "0 0 20px 20px", marginTop: "-3px"}]
                 ],
             },
             "Milestones": {

@@ -42,10 +42,12 @@ addLayer("hsa", {
             if (player.hpr.rank[5].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[5].pow(Decimal.add(0.5, step.mul(5))).mul(4).add(1))
             if (player.hpr.rank[6].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[6].pow(Decimal.sub(0.5, step)).div(10).add(1))
         } else {
-            if (player.hpr.rank[5].gt(0)) player.hsa.holyPowerGain = player.hpr.rank[5].pow(0.5).div(10)
+            if (player.hpr.rank[5].gt(0) && !hasUpgrade("hpw", 167)) player.hsa.holyPowerGain = player.hpr.rank[5].pow(0.5).div(10)
+            if (player.hpr.rank[5].gt(0) && hasUpgrade("hpw", 167)) player.hsa.holyPowerGain = player.hpr.rank[5].pow(0.7).div(3)
         }
         if (hasUpgrade("hsa", 11)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(2)
         if (hasUpgrade("hsa", 16)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(upgradeEffect("hsa", 16))
+        if (hasUpgrade("hpw", 168)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(upgradeEffect("hpw", 168))
 
         if (hasUpgrade("hsa", 13)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.pow(upgradeEffect("hsa", 13))
 
@@ -97,12 +99,14 @@ addLayer("hsa", {
             player.hsa.dimensionAmounts[i] = player.hsa.dimensionAmounts[i].add(player.hsa.dimensionsPerSecond[i].mul(delta))
         }
 
-        player.hsa.sacredEffect = player.hsa.sacredEnergy.add(1).log(player.h.stage).div(10).add(1)
-        if (player.hsa.sacredEffect.gt(2)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(2).div(2).add(2)
-        if (player.hsa.sacredEffect.gt(3)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(3).div(2).add(3)
-        if (player.hsa.sacredEffect.gt(4)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(4).div(2).add(4)
-        if (player.hsa.sacredEffect.gt(5)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(5).div(2).add(5)
-        player.hsa.sacredEffect = player.hsa.sacredEffect.min(6)
+        if (player.h.stage.lte(6) || hasUpgrade("hpw", 166)) {
+            player.hsa.sacredEffect = player.hsa.sacredEnergy.add(1).log(player.h.stage).div(10).add(1)
+            if (player.hsa.sacredEffect.gt(2)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(2).div(2).add(2)
+            if (player.hsa.sacredEffect.gt(3)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(3).div(2).add(3)
+            if (player.hsa.sacredEffect.gt(4)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(4).div(2).add(4)
+            if (player.hsa.sacredEffect.gt(5)) player.hsa.sacredEffect = player.hsa.sacredEffect.sub(5).div(2).add(5)
+            player.hsa.sacredEffect = player.hsa.sacredEffect.min(6)
+        } else player.hsa.sacredEffect = new Decimal(1)
 
         player.hsa.sacredEffect2 = Decimal.pow(1.5, player.hsa.sacredEnergy.add(1).log(player.h.stage))
 
@@ -213,8 +217,8 @@ addLayer("hsa", {
                 if (player.hsa.praying) curTime = curTime.add(Decimal.mul(1, player.hsa.prayerSpeed.mul(player.h.tickspeed)))
                 if (!player.hsa.praying && player.hsa.prayerTime.gt(0)) curTime = curTime.sub(player.hsa.prayerDecay.mul(player.h.tickspeed))
                 let str = "<h3>Pray to speed up holy dimensions</h3><br>x" + formatSimple(player.hsa.prayerMult) + " holy dimension tickspeed<br>Prayer Time: " + formatTime(player.hsa.prayerTime)
-                if (curTime.gt(0.01)) str = str.concat("<small style='color:rgba(0,100,0,0.6)'> (+" + formatTime(curTime) + ")</small>")
-                if (curTime.lt(-0.01)) str = str.concat("<small style='color:rgba(100,0,0,0.6)'> (-" + formatTime(curTime.mul(-1)) + ")</small>")
+                if (curTime.gt(0)) str = str.concat("<small style='color:rgba(0,100,0,0.6)'> (+" + formatTime(curTime) + ")</small>")
+                if (curTime.lt(0)) str = str.concat("<small style='color:rgba(100,0,0,0.6)'> (-" + formatTime(curTime.mul(-1)) + ")</small>")
                 return str
             },
             canClick: true,
@@ -744,7 +748,7 @@ addLayer("hsa", {
                             return look
                         }],
                     ]],
-                    ["row", [
+                    ["style-row", [
                         ["raw-html", () => {return "Boosts " + player.h.stageName[1] + " point softcap exponent by x" + format(player.hsa.sacredEffect, 3) }, {color: "rgba(0,0,0,0.6)", fontSize: "16px", fontFamily: "monospace"}],
                         ["raw-html", () => {
                             return player.hsa.sacredEffect.gte(6) ? "[HARDCAPPED]" :
@@ -754,7 +758,7 @@ addLayer("hsa", {
                             player.hsa.sacredEffect.gte(2) ? "[SOFTCAPPED]" :
                             ""
                         }, {color: "rgba(255,0,0,0.6)", fontSize: "16px", fontFamily: "monospace", marginLeft: "10px"}],
-                    ]],
+                    ], () => {return player.h.stage.lte(6) || hasUpgrade("hpw", 166) ? {} : {color: "rgba(0,0,0,0.6)", textDecoration: "line-through", textDecorationThickness: "3px"}}],
                     ["row", [
                         ["raw-html", () => {return "Boosts " + player.h.stageName[1] + " point gain after softcap by x" + formatSimple(player.hsa.sacredEffect2) }, {color: "rgba(0,0,0,0.6)", fontSize: "16px", fontFamily: "monospace"}],
                         //["raw-html", () => {return player.hsa.sacredEffect.gte(0.6) ? "[HARDCAPPED]" : player.hsa.sacredEffect.gte(0.5) ? "[SOFTCAPPED<sup>2</sup>]" : player.hsa.sacredEffect.gte(0.3) ? "[SOFTCAPPED]" : "" }, {color: "rgba(255,0,0,0.6)", fontSize: "16px", fontFamily: "monospace", marginLeft: "10px"}],
@@ -865,7 +869,7 @@ addLayer("hsa", {
             ["raw-html", () => {return "You have <h3>" + format(player.hsa.holyPower) + "</h3> holy power." }, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return "(+" + format(player.hsa.holyPowerGain) + ")" }, () => {
                 let look = {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
-                (player.h.stage.lte(6) && player.hpr.rank[1].gt(0)) || player.hpr.rank[5].gt(0) ? look.color = "rgba(0,0,0,0.6)" : look.color = "rgba(100,100,100,0.6)"
+                player.hpr.rank[5].gt(0) || (player.h.stage.lte(6) && player.hpr.rank[1].gt(0)) ? look.color = "rgba(0,0,0,0.6)" : look.color = "rgba(100,100,100,0.6)"
                 return look
             }],
         ]],

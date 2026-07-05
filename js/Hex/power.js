@@ -510,7 +510,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description: "Boost purifier efficiency based on refinements.",
             tooltip() {
-                return "((Refinements^" + formatSimple(Decimal.div(3.5, player.h.stage.max(4))) + ")/20)+1"
+                return "((Refinements^" + formatSimple(Decimal.div(3.5, player.h.stage.max(4))) + ")/50)+1"
             },
             branches: [36],
             cost() {return player.h.stage.pow(42).floor()},
@@ -519,7 +519,7 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hre.refinement.pow(Decimal.div(3.5, player.h.stage.max(4))).div(20).add(1)
+                return player.hre.refinement.pow(Decimal.div(3.5, player.h.stage.max(4))).div(50).add(1)
             },
             effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -607,7 +607,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description: "Boost Jinx cap based on boons.",
             tooltip() {
-                return "((log" + formatWhole(player.h.stage.pow(2)) + "(Boons+1))/100)+1"
+                return "(((log" + formatWhole(player.h.stage.pow(2)) + "(Boons+1))^" + formatSimple(Decimal.div(3.5, player.h.stage.max(4))) + ")/50)+1"
             },
             branches: [45],
             cost() {return player.h.stage.pow(56).floor()},
@@ -616,7 +616,7 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hbl.boons.add(1).log(player.h.stage.pow(2)).div(100).add(1)
+                return player.hbl.boons.add(1).log(player.h.stage.pow(2)).pow(Decimal.div(3.5, player.h.stage.max(4))).div(50).add(1)
             },
             effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -742,9 +742,9 @@ addLayer("hpw", {
         74: {
             title: "Might δ:2",
             unlocked() {return player.h.stage.neq(6)},
-            description() {return "Reduce the cost scaling of provenances past ζ by 20%."}, // MAKE IT CHANGE TO JUST REDUCING PROVENANCE SCALING WHEN BELOW HEX
+            description() {return "Reduce the cost scaling of provenances past ζ by 25%."}, // MAKE IT CHANGE TO JUST REDUCING PROVENANCE SCALING WHEN BELOW HEX
             branches: [73],
-            cost() {return player.h.stage.pow(25).floor()},
+            cost() {return player.h.stage.pow(30).floor()},
             canAfford() { return hasUpgrade("hpw", 73)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -756,7 +756,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Unlock " + player.h.stageName[1] + " of sacrifice."},
             branches: [74],
-            cost() {return player.h.stage.pow(45).floor()},
+            cost() {return player.h.stage.pow(60).floor()},
             canAfford() { return hasUpgrade("hpw", 74)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -768,13 +768,13 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Boost provenance efficiency based on curses."},
             branches: [75],
-            cost() {return player.h.stage.pow(70).floor()},
+            cost() {return player.h.stage.pow(110).floor()},
             canAfford() { return hasUpgrade("hpw", 75)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hcu.curses.add(1).log(player.h.stage.pow(3)).div(100).add(1)
+                return player.hcu.curses.add(1).log(player.h.stage.pow(3)).pow(Decimal.div(3.5, player.h.stage.max(4))).div(50).add(1)
             },
             effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -887,7 +887,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Boost time spent in this power reset. (decays based on time in this power reset)"},
             branches: [103],
-            cost() {return player.h.stage.pow(30).floor()},
+            cost() {return player.h.stage.pow(45).floor()},
             canAfford() { return hasUpgrade("hpw", 103)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -904,7 +904,7 @@ addLayer("hpw", {
             description: "Improve Might 1:1's effect.",
             tooltip() {return "(log" + formatWhole(player.h.stage.max(2)) + "(Power+1)+1)*2<br>↓<br>(log" + formatSimple(player.h.stage.div(2).max(1.5)) + "(Power+1)+1)*((log" + formatWhole(player.h.stage.max(2)) + "(Time in Power+1)/10)+2)"},
             branches: [104],
-            cost() {return player.h.stage.pow(50).floor()},
+            cost() {return player.h.stage.pow(90).floor()},
             canAfford() { return hasUpgrade("hpw", 104)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -916,7 +916,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Gain 1% of power gain per second."},
             branches: [105],
-            cost() {return player.h.stage.pow(75).floor()},
+            cost() {return player.h.stage.pow(150).floor()},
             canAfford() { return hasUpgrade("hpw", 105)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1012,7 +1012,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Divide refinement requirements based on purities."},
             branches: [133],
-            cost() {return player.h.stage.pow(45).floor()},
+            cost() {return player.h.stage.pow(60).floor()},
             canAfford() { return hasUpgrade("hpw", 133)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1028,7 +1028,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description: "Improve refiner 6's first effect.",
             branches: [134],
-            cost() {return player.h.stage.pow(75).floor()},
+            cost() {return player.h.stage.pow(120).floor()},
             canAfford() { return hasUpgrade("hpw", 134)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1040,7 +1040,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description: "Unlock a vex effect that reduces refinement scaling.",
             branches: [135],
-            cost() {return player.h.stage.pow(110).floor()},
+            cost() {return player.h.stage.pow(200).floor()},
             canAfford() { return hasUpgrade("hpw", 135)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1195,9 +1195,9 @@ addLayer("hpw", {
         166: {
             title: "Might η:2",
             unlocked() {return player.h.stage.neq(6)},
-            description() {return "???"},
+            description() {return "Re-unlock sacred energies first effect."},
             branches: [165],
-            cost() {return player.h.stage.pow(70).floor()},
+            cost() {return player.h.stage.pow(90).floor()},
             canAfford() { return hasUpgrade("hpw", 165)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1207,9 +1207,9 @@ addLayer("hpw", {
         167: {
             title: "Might η:3",
             unlocked() {return player.h.stage.neq(6)},
-            description() {return "???"},
+            description() {return "Improve base holy power formula."},
             branches: [166],
-            cost() {return player.h.stage.pow(120).floor()},
+            cost() {return player.h.stage.pow(180).floor()},
             canAfford() { return hasUpgrade("hpw", 166)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1219,13 +1219,17 @@ addLayer("hpw", {
         168: {
             title: "Might η:4",
             unlocked() {return player.h.stage.neq(6)},
-            description() {return "???"},
+            description() {return "Boost holy power gain based on purity."},
             branches: [167],
-            cost() {return player.h.stage.pow(180).floor()},
+            cost() {return player.h.stage.pow(300).floor()},
             canAfford() { return hasUpgrade("hpw", 167)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
+            effect() {
+                return player.hpu.totalPurity.pow(Decimal.div(3.5, player.h.stage)).div(2).add(1)
+            },
+            effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         171: {
@@ -1686,7 +1690,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.gte(7)},
             description: "Automate External Expansion.",
             branches: [1104],
-            cost() {return new Decimal(player.h.stage.pow(40)).floor()},
+            cost() {return new Decimal(player.h.stage.pow(50)).floor()},
             canAfford() { return hasUpgrade("hpw", 1104)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1728,9 +1732,9 @@ addLayer("hpw", {
         2003: {
             title: "Might S:(",
             unlocked() {return player.h.stage.eq(7)},
-            description: "Improve envy and wrath's power effect formulas.",
+            description: "Improve envy and wrath's power effect formulas.<br>[NOT IMPLEMENTED]",
             branches: [2001, 2002],
-            cost() {return new Decimal(1e30)},
+            cost() {return Decimal.pow10(player.h.stage.mul(15))},
             canAfford() { return hasUpgrade("hpw", 2001) && hasUpgrade("hpw", 2002)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1766,9 +1770,9 @@ addLayer("hpw", {
         2006: {
             title: "Might S:{",
             unlocked() {return player.h.stage.eq(7)},
-            description: "Improve lust and gluttony's power effect formulas.",
+            description: "Improve lust and gluttony's power effect formulas.<br>[NOT IMPLEMENTED]",
             branches: [2004, 2005],
-            cost() {return new Decimal(1e40)},
+            cost() {return Decimal.pow10(player.h.stage.mul(20))},
             canAfford() { return hasUpgrade("hpw", 2004) && hasUpgrade("hpw", 2005)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1804,9 +1808,9 @@ addLayer("hpw", {
         2009: {
             title: "Might S:[",
             unlocked() {return player.h.stage.eq(7)},
-            description: "Improve sloth's power effect formula and boost S:1 and S:2.",
+            description: "Improve sloth's power effect formula and boost S:1 and S:2.<br>[NOT IMPLEMENTED]",
             branches: [2007, 2008],
-            cost() {return new Decimal(1e50)},
+            cost() {return Decimal.pow10(player.h.stage.mul(25))},
             canAfford() { return hasUpgrade("hpw", 2007) && hasUpgrade("hpw", 2008)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
