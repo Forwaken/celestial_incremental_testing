@@ -328,6 +328,16 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal1"] = true
+
+                let comp = 0
+                for (let i = 1; i < 7; i++) {
+                    if (player.tera.clickables["seal"+i]) comp++
+                }
+                if (comp>=6) {
+                    player.tera.trueHex = player.tera.trueHex.add(1)
+                    layers.tera.teraReset()
+                    player.h.stage = new Decimal(7)
+                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -338,6 +348,16 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal2"] = true
+
+                let comp = 0
+                for (let i = 1; i < 7; i++) {
+                    if (player.tera.clickables["seal"+i]) comp++
+                }
+                if (comp>=6) {
+                    player.tera.trueHex = player.tera.trueHex.add(1)
+                    layers.tera.teraReset()
+                    player.h.stage = new Decimal(7)
+                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -348,6 +368,16 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal3"] = true
+
+                let comp = 0
+                for (let i = 1; i < 7; i++) {
+                    if (player.tera.clickables["seal"+i]) comp++
+                }
+                if (comp>=6) {
+                    player.tera.trueHex = player.tera.trueHex.add(1)
+                    layers.tera.teraReset()
+                    player.h.stage = new Decimal(7)
+                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -358,6 +388,16 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal4"] = true
+
+                let comp = 0
+                for (let i = 1; i < 7; i++) {
+                    if (player.tera.clickables["seal"+i]) comp++
+                }
+                if (comp>=6) {
+                    player.tera.trueHex = player.tera.trueHex.add(1)
+                    layers.tera.teraReset()
+                    player.h.stage = new Decimal(7)
+                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -368,6 +408,16 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal5"] = true
+
+                let comp = 0
+                for (let i = 1; i < 7; i++) {
+                    if (player.tera.clickables["seal"+i]) comp++
+                }
+                if (comp>=6) {
+                    player.tera.trueHex = player.tera.trueHex.add(1)
+                    layers.tera.teraReset()
+                    player.h.stage = new Decimal(7)
+                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -378,6 +428,16 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal6"] = true
+
+                let comp = 0
+                for (let i = 1; i < 7; i++) {
+                    if (player.tera.clickables["seal"+i]) comp++
+                }
+                if (comp>=6) {
+                    player.tera.trueHex = player.tera.trueHex.add(1)
+                    layers.tera.teraReset()
+                    player.h.stage = new Decimal(7)
+                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
