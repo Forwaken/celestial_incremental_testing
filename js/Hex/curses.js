@@ -22,7 +22,7 @@ addLayer("hcu", {
     },
     update(delta) {
         player.hcu.cursesGain = new Decimal(0)
-        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1))).mul(buyableEffect("hre", 52)).pow(buyableEffect("hre", 53))
+        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 51)).add(1)).mul(buyableEffect("hre", 52)).pow(buyableEffect("hre", 53))
         if (hasUpgrade("ta", 16) && inChallenge("hrm", 13)) player.hcu.cursesGain = Decimal.pow(player.hve.vexTotal.mul(0.2).add(player.h.stage.mul(3).div(10)), player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1)))).sub(1).mul(buyableEffect("hre", 52)).pow(buyableEffect("hre", 53))
         if (hasUpgrade("ta", 16) && hasMilestone("hre", 10)) player.hcu.cursesGain = player.hcu.cursesGain.add(player.h.stage.div(10))
         if (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(5)))) player.hcu.cursesGain = player.hcu.cursesGain.div(Decimal.pow10(player.h.stage.mul(5))).pow(0.3).mul(Decimal.pow10(player.h.stage.mul(5)))
@@ -32,6 +32,7 @@ addLayer("hcu", {
         if (hasUpgrade("hbl", 4)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("hbl", 4))
         if (hasUpgrade("hpw", 22)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("hpw", 22))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(player.h.prePowerMult)
+        if (hasUpgrade("hbl", 103)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("hbl", 103))
 
         let externalCur = new Decimal(1)
         externalCur = externalCur.mul(buyableEffect("ta", 49))
@@ -47,6 +48,7 @@ addLayer("hcu", {
         player.hcu.cursesGain = player.hcu.cursesGain.pow(buyableEffect("hcu", 106))
         if (hasUpgrade("hve", 63)) player.hcu.cursesGain = player.hcu.cursesGain.pow(1.03)
         if (hasUpgrade("hpw", 102)) player.hcu.cursesGain = player.hcu.cursesGain.pow(upgradeEffect("hpw", 102))
+        player.hcu.cursesGain = player.hcu.cursesGain.pow(buyableEffect("hve", 13))
 
         // SOFTCAPS AND PER SECOND
         if (inChallenge("hrm", 12)) player.hcu.cursesGain = player.hcu.cursesGain.pow(Decimal.div(3.6, player.h.stage.max(4)))
@@ -62,6 +64,7 @@ addLayer("hcu", {
             if (tmp["hcu"].buyables[i].extraAmount != null) player.hcu.jinxTotal = player.hcu.jinxTotal.add(tmp["hcu"].buyables[i].extraAmount)
         }
         player.hcu.jinxTotal = player.hcu.jinxTotal.mul(player.hve.vexEffects[1])
+        if (hasUpgrade("hbl", 7)) player.hcu.jinxTotal = player.hcu.jinxTotal.mul(upgradeEffect("hbl", 7))
         player.hcu.jinxTotal = player.hcu.jinxTotal.mul(levelableEffect("pet", 109)[1].pow(player.h.externalRaise))
 
         // JINX ADD CAP

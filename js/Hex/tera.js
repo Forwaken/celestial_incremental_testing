@@ -246,6 +246,9 @@ addLayer("tera", {
             player.hve.upgrades.splice(i, 1);
             i--;
         }
+        for (let i = 11; i < 15; i++) {
+            player.hve.buyables[i] = new Decimal(0)
+        }
 
         // BLESSINGS
         player.hbl.blessings = new Decimal(0)

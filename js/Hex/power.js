@@ -28,6 +28,7 @@ addLayer("hpw", {
         if (player.sins.clickables["lust"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.lust[0])
         if (player.sins.clickables["gluttony"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.gluttony[0])
         if (player.sins.clickables["sloth"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.sloth[0])
+        player.hpw.powerGain = player.hpw.powerGain.mul(buyableEffect("hve", 14))
 
         let external = new Decimal(1)
         if (hasUpgrade("cs", 202)) external = external.mul(2)
@@ -41,6 +42,8 @@ addLayer("hpw", {
         player.hpw.powerGain = player.hpw.powerGain.mul(external)
 
         // POWER MODIFIERS
+        if (player.sins.clickables["greed"]) player.hpw.powerGain = player.hpw.powerGain.pow(player.sins.greed[0])
+        if (player.sins.clickables["pride"]) player.hpw.powerGain = player.hpw.powerGain.pow(player.sins.pride[0])
         let externalPow = new Decimal(1)
         externalPow = externalPow.mul(levelableEffect("pu", 210)[1])
         externalPow = externalPow.mul(player.n.pylonPassiveEffect)
@@ -138,6 +141,9 @@ addLayer("hpw", {
             for (let i = 0; i < player.hve.upgrades.length; i++) {
                 player.hve.upgrades.splice(i, 1);
                 i--;
+            }
+            for (let i = 11; i < 15; i++) {
+                player.hve.buyables[i] = new Decimal(0)
             }
         }
 
@@ -1138,7 +1144,7 @@ addLayer("hpw", {
         162: {
             title: "Might 17:2",
             unlocked() {return player.h.stage.gte(7)},
-            description: "Unlock new graces.<br>[NOT IMPLEMENTED]",
+            description: "Unlock new graces.",
             branches: [152],
             cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
             canAfford() { return hasUpgrade("hpw", 152)},
@@ -1255,7 +1261,7 @@ addLayer("hpw", {
         173: {
             title: "Might 18:3",
             unlocked() {return player.h.stage.gte(7)},
-            description: "Unlock vex buyables.<br>[NOT IMPLEMENTED]",
+            description: "Unlock vex buyables.",
             branches: [163],
             cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
             canAfford() { return hasUpgrade("hpw", 163)},
@@ -1722,7 +1728,7 @@ addLayer("hpw", {
         2003: {
             title: "Might S:(",
             unlocked() {return player.h.stage.eq(7)},
-            description: "Improve wrath and lust's power effect formulas.",
+            description: "Improve envy and wrath's power effect formulas.",
             branches: [2001, 2002],
             cost() {return new Decimal(1e30)},
             canAfford() { return hasUpgrade("hpw", 2001) && hasUpgrade("hpw", 2002)},

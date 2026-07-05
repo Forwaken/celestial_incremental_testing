@@ -23,6 +23,7 @@ addLayer("hve", {
         player.hve.vexDiv = new Decimal(1)
         if (hasUpgrade("hpw", 112)) player.hve.vexDiv = player.hve.vexDiv.mul(Decimal.pow10(player.h.stage))
         if (hasUpgrade("hpw", 44)) player.hve.vexDiv = player.hve.vexDiv.mul(upgradeEffect("hpw", 44))
+        if (hasUpgrade("hbl", 102)) player.hve.vexDiv = player.hve.vexDiv.mul(upgradeEffect("hbl", 102))
 
         let connect = Decimal.pow10(player.h.stage.mul(2))
 
@@ -39,12 +40,12 @@ addLayer("hve", {
         if (hasUpgrade("hpw", 62)) player.hve.vexEffects[1] = effVex.mul(0.05).add(1)
         if (hasUpgrade("hpw", 92)) player.hve.vexEffects[2] = effVex.pow(Decimal.div(7.2, player.h.stage)).div(2).add(1)
         //player.hve.vexEffects[2] = Decimal.pow(Decimal.div(3.96, player.h.stage).add(1), effVex.pow(Decimal.div(3.96, player.h.stage)))
-        if (hasUpgrade("hpw", 136)) player.hve.vexEffects[3] = effVex.div(100).add(1)
+        if (hasUpgrade("hpw", 136)) player.hve.vexEffects[3] = effVex.pow(Decimal.div(3.5, player.h.stage)).div(100).add(1)
     },
     clickables: {
         1: {
             title() {
-                let str = "<h3>Vex, but reset curse content.<br><small>Req: " + format(player.hve.vexReq) + " curses</small></h3>"
+                let str = "<h3>Vex, but reset curse content.<br><small>Req: " + formatSimple(player.hcu.curses) + "/" + format(player.hve.vexReq) + " curses</small></h3>"
                 if (player.hve.vexTotal.gte(player.h.stage.mul(2))) str = str.concat("<br><small style='color:red'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -94,6 +95,9 @@ addLayer("hve", {
                         player.hve.upgrades.splice(i, 1);
                         i--;
                     }
+                    for (let i = 11; i < 15; i++) {
+                        player.hve.buyables[i] = new Decimal(0)
+                    }
                     layers.hpw.powerReset(2)
                 }
             },
@@ -106,7 +110,7 @@ addLayer("hve", {
         },
         3: {
             title() { return "Fill rows with available vexes<br><small style='font-size:11px'>(Goes from left->right)</small>"},
-            canClick() { return player.hve.rowCurrent.some((x) => x > 0)},
+            canClick() { return player.hve.rowCurrent.some((x) => x > 0) && player.hve.vex.gt(0)},
             unlocked: true,
             onClick() {
                 let count = player.hve.rowCurrent
@@ -458,6 +462,84 @@ addLayer("hve", {
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },
     },
+    buyables: {
+        11: {
+            currency() { return player.hve.vex},
+            pay(amt) { player.hve.vex = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked() {return hasUpgrade("hpw", 173)},
+            cost(x) { return getBuyableAmount(this.layer, this.id).add(1).floor() },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Raise " + player.h.stageName[0] + " Points</h3>\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\
+                    Next: ^" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).div(100).add(1), 2) + "\n\
+                    <div style='margin-top:5px'>Cost: " + formatWhole(this.cost()) + (this.cost().eq(1) ? " Vex</div>" : " Vexes</div>")
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "140px", height: "90px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "20px", margin: "2px"},
+        },
+        12: {
+            currency() { return player.hve.vex},
+            pay(amt) { player.hve.vex = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked() {return hasUpgrade("hpw", 173)},
+            cost(x) { return getBuyableAmount(this.layer, this.id).add(1).floor() },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Raise Blessings</h3>\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\
+                    Next: ^" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).div(100).add(1), 2) + "\n\
+                    <div style='margin-top:5px'>Cost: " + formatWhole(this.cost()) + (this.cost().eq(1) ? " Vex</div>" : " Vexes</div>")
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "140px", height: "90px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "20px", margin: "2px"},
+        },
+        13: {
+            currency() { return player.hve.vex},
+            pay(amt) { player.hve.vex = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked() {return hasUpgrade("hpw", 173)},
+            cost(x) { return getBuyableAmount(this.layer, this.id).add(1).floor() },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Raise Curses</h3>\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\
+                    Next: ^" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).div(100).add(1), 2) + "\n\
+                    <div style='margin-top:3px'>Cost: " + formatWhole(this.cost()) + (this.cost().eq(1) ? " Vex</div>" : " Vexes</div>")
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "140px", height: "90px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "20px", margin: "2px"},
+        },
+        14: {
+            currency() { return player.hve.vex},
+            pay(amt) { player.hve.vex = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
+            unlocked() {return hasUpgrade("hpw", 173)},
+            cost(x) { return getBuyableAmount(this.layer, this.id).add(1).floor() },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>Multiply Power</h3>\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\
+                    Next: x" + formatSimple(Decimal.pow(1.5, getBuyableAmount(this.layer, this.id).add(1))) + "\n\
+                    <div style='margin-top:3px'>Cost: " + formatWhole(this.cost()) + (this.cost().eq(1) ? " Vex</div>" : " Vexes</div>")
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "140px", height: "90px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "20px", margin: "2px"},
+        },
+    },
     tabFormat: [
         ["row", [
             ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -557,12 +639,13 @@ addLayer("hve", {
                             ["raw-html", () => {return hasUpgrade("hpw", 62) ? "Jinx Score: x" + format(player.hve.vexEffects[1]) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return hasUpgrade("hpw", 92) ? "Blessings: x" + format(player.hve.vexEffects[2]) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return hasUpgrade("hpw", 136) ? "Refinement Scaling: /" + format(player.hve.vexEffects[3]) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ], {width: "300px", height: "110px"}],
+                        ], {width: "300px", height: "120px"}],
                     ], {width: "300px", height: "160px", backgroundColor: "#160016", border: "2px solid #808", borderRadius: "15px"}],
                     ["blank", "10px"],
                     ["style-column", [
-
-                    ], {width: "300px", height: "200px", background: "#160016", border: "2px solid #808", borderRadius: "15px"}],
+                        ["row", [["buyable", 11], ["buyable", 12]]],
+                        ["row", [["buyable", 13], ["buyable", 14]]],
+                    ], () => {return hasUpgrade("hpw", 173) ? {width: "300px", height: "200px", background: "#160016", border: "2px solid #808", borderRadius: "15px"} : {width: "300px", height: "200px"}}],
                 ], {width: "300px", height: "400px"}],
             ], {width: "325px", height: "600px"}],
         ], {backgroundColor: "#202", border: "3px solid white", borderRadius: "15px"}],

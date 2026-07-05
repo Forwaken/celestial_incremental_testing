@@ -73,6 +73,8 @@ addLayer("hpu", {
         let requirementSub = new Decimal(0)
         requirementSub = requirementSub.add(buyableEffect("hcu", 114).sub(1))
         if (hasUpgrade("hpw", 35)) requirementSub = requirementSub.add(upgradeEffect("hpw", 35).sub(1))
+        if (hasUpgrade("hbl", 105)) requirementSub = requirementSub.add(upgradeEffect("hbl", 105).sub(1))
+
         player.hpu.purityReq = purityMade.mul(player.h.stage).add(player.h.stage.mul(7)).sub(requirementSub).ceil()
         player.hpu.purityGain = player.hre.refinement.add(requirementSub).sub(player.h.stage.mul(7)).div(player.h.stage).add(1).sub(purityMade).floor()
 
@@ -154,9 +156,9 @@ addLayer("hpu", {
     clickables: {
         1: {
             title() {
-                if (inChallenge("hrm", 16)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
-                if (inChallenge("hrm", 12) && player.hpu.totalPurity.sub(player.hpu.keptPurity).gte(10)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3><br><small style='color:darkred'>[SOFTCAPPED]</small>"
-                return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
+                if (inChallenge("hrm", 16)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points and refinement.</h2><br><h3>Req: " + formatWhole(player.hre.refinement) + "/" + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
+                if (inChallenge("hrm", 12) && player.hpu.totalPurity.sub(player.hpu.keptPurity).gte(10)) return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hre.refinement) + "/" + formatWhole(player.hpu.purityReq) + " Refinements</h3><br><small style='color:darkred'>[SOFTCAPPED]</small>"
+                return "<h2>Purify, but reset " + player.h.stageName[1] + " points, provenance, and refinement.</h2><br><h3>Req: " + formatWhole(player.hre.refinement) + "/" + formatWhole(player.hpu.purityReq) + " Refinements</h3>"
             },
             canClick() { return player.hre.refinement.gt(0) && player.hpu.purityGain.gte(1) && (!hasMilestone("hre", 14) || inChallenge("hrm", 15))},
             unlocked: true,
@@ -330,7 +332,7 @@ addLayer("hpu", {
         },
         8: {
             title() {
-                let str = "<h3>Cleansed Curses</h3><br>Lv." + formatWhole(player.hpu.purifiers[5].amount) + "<br>^" + format(player.hpu.purifiers[5].effect) + " 4th Grace Effect"
+                let str = "<h3>Cleansed Curses</h3><br>Lv." + formatWhole(player.hpu.purifiers[5].amount) + "<br>^" + format(player.hpu.purifiers[5].effect) + " Grace 4's Effect"
                 if (inChallenge("hrm", 12)) str = "<h3>Cleansed Curses</h3><br>Lv." + formatWhole(player.hpu.purifiers[5].amount) + "<br>^" + format(player.hpu.purifiers[5].effect) + " Base Α-Jinx Effect"
                 if (player.hpu.purifiers[5].effect.gt(Decimal.mul(player.hpu.purifierSoftcap, 0.15).add(1)) || (inChallenge("hrm", 12) && player.hpu.purifiers[5].effect.gt(Decimal.div(player.hpu.purifierSoftcap, 10).add(1)))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str

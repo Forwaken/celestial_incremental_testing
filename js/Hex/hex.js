@@ -92,17 +92,21 @@ addLayer("h", {
         if (hasUpgrade("hpw", 37)) player.h.purifierDiv = player.h.purifierDiv.div(upgradeEffect("hpw", 37))
 
         player.h.refinementScale = new Decimal(1)
-        if (player.sins.clickables["gluttony"]) player.h.refinementScale = player.h.refinementScale.mul(Decimal.div(1.6, hasUpgrade("hpw", 2005) ? upgradeEffect("hpw", 2005) : 1))
+        if (player.sins.clickables["gluttony"]) {
+            if (hasUpgrade("hpw", 2005)) player.h.refinementScale = player.h.refinementScale.mul(1.4)
+            else player.h.refinementScale = player.h.refinementScale.mul(1.6)
+        }
         player.h.refinementScale = player.h.refinementScale.div(player.hve.vexEffects[3])
+        if (hasUpgrade("hbl", 106)) player.h.refinementScale = player.h.refinementScale.div(upgradeEffect("hbl", 106))
 
         // START OF HEX POINT GAIN
         player.h.hexPointGain = new Decimal(0)
         if (!hasChallenge("ip", 13) && layerShown("h")) player.h.hexPointGain = Decimal.mul(2, player.h.stage)
         if (hasChallenge("ip", 13)) {
             if (!hasMilestone("hre", 2)) {
-                player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 11).sub(1))).mul(player.h.stage.max(1).mul(buyableEffect("hre", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)))
+                player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 11)).add(1)).mul(player.h.stage.max(1).mul(buyableEffect("hre", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)))
             } else {
-                player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 11).sub(1))).mul(player.h.stage.max(1).mul(buyableEffect("hre", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)))
+                player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 11)).add(1)).mul(player.h.stage.max(1).mul(buyableEffect("hre", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)))
             }
         }
         for (let i = 0; i < 6; i++) {
@@ -133,6 +137,8 @@ addLayer("h", {
         // POWER
         if (hasUpgrade("hve", 61)) player.h.hexPointGain = player.h.hexPointGain.pow(1.03)
         if (hasUpgrade("hpw", 165)) player.h.hexPointGain = player.h.hexPointGain.pow(1.05)
+        player.h.hexPointGain = player.h.hexPointGain.pow(buyableEffect("hve", 11))
+        if (hasUpgrade("hbl", 107)) player.h.hexPointGain = player.h.hexPointGain.pow(upgradeEffect("hbl", 107))
         let exp = new Decimal(1)
         for (let i = 6; i < 7; i++) {
             exp = exp.add(player.hpr.rankEffect[i][1])

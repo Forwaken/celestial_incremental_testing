@@ -83,9 +83,13 @@ addLayer("hbl", {
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.h.prePowerMult)
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.tera.piositySpell)
         if (hasUpgrade("hpw", 13)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 13))
+        if (player.sins.clickables["greed"]) player.hbl.blessingsGain = player.hbl.blessingsGain.div(Decimal.div(77, hasUpgrade("hpw", 2008) ? upgradeEffect("hpw", 2008) : 1))
+        if (hasUpgrade("hbl", 104)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hbl", 104))
+        if (hasUpgrade("hpw", 172)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 172))
 
         // POWER AND AUTOMATION
         if (hasUpgrade("hve", 62)) player.hbl.blessingsGain = player.hbl.blessingsGain.pow(1.03)
+        player.hbl.blessingsGain = player.hbl.blessingsGain.pow(buyableEffect("hve", 12))
 
         let bps = new Decimal(0)
         if (!inChallenge("hrm", 11)) bps = player.hpu.purifiers[4].effect
@@ -451,11 +455,13 @@ addLayer("hbl", {
                 let eff = player.ta.negativeInfinityPoints.add(1).log(player.h.stage.max(2)).pow(Decimal.div(3.6, player.h.stage.max(4))).ceil()
                 if (inChallenge("hrm", 12)) eff = eff.pow(Decimal.div(1.8, player.h.stage.max(2))).ceil()
                 if (eff.gte(player.h.stage.mul(1.5))) eff = eff.div(player.h.stage.mul(1.5)).pow(Decimal.div(1.8, player.h.stage.max(2))).mul(player.h.stage.mul(1.5)).ceil().min(player.h.stage.mul(3))
+                if (eff.gte(player.h.stage.mul(3) && hasUpgrade("hbl", 101))) eff = player.ta.negativeInfinityPoints.add(1).log("1e1000").pow(Decimal.div(3.6, player.h.stage.max(4))).add(player.h.stage.mul(3)).floor()
                 return eff
             },
             effectDisplay() {
                 if (upgradeEffect(this.layer, this.id).lt(player.h.stage.mul(1.5))) return "+" + formatWhole(upgradeEffect(this.layer, this.id))
                 if (upgradeEffect(this.layer, this.id).lt(player.h.stage.mul(3))) return "+" + formatWhole(upgradeEffect(this.layer, this.id)) + "<br><small style='color:red'>[SOFTCAPPED]</small>"
+                if (upgradeEffect(this.layer, this.id).gte(player.h.stage.mul(3)) && hasUpgrade("hbl", 101)) return "+" + formatWhole(upgradeEffect(this.layer, this.id)) + "<br><small style='color:red'>[SOFTCAPPED<sup>2</sup>]</small>"
                 return "+" + formatWhole(upgradeEffect(this.layer, this.id)) + "<br><small style='color:red'>[HARDCAPPED]</small>"
             }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
@@ -501,11 +507,14 @@ addLayer("hbl", {
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
-                let eff = player.tad.infinitum.add(1).log(player.h.stage.max(2)).pow(Decimal.div(18, player.h.stage).add(1)).add(1).pow(player.hpu.purifiers[5].effect)
+                let eff = player.tad.infinitum.add(1).log(player.h.stage.max(2)).pow(Decimal.div(18, player.h.stage).add(1)).add(1)
+                if (eff.gte(1e10)) eff = eff.div(1e10).pow(Decimal.div(1.8, player.h.stage.max(2))).mul(1e10)
+                eff = eff.pow(player.hpu.purifiers[5].effect)
                 if (inChallenge("hrm", 12)) eff = eff.pow(Decimal.div(1.8, player.h.stage.max(2)))
                 return eff
             },
             effectDisplay() {
+                if (player.tad.infinitum.add(1).log(player.h.stage.max(2)).pow(Decimal.div(18, player.h.stage).add(1)).add(1).gte(1e10)) return format(upgradeEffect(this.layer, this.id)) + "x<br><small style='color:red'>[SOFTCAPPED]</small>"
                 return format(upgradeEffect(this.layer, this.id)) + "x"
             }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
@@ -558,16 +567,123 @@ addLayer("hbl", {
             description() {
                 return "SMA boosts jinx score."
             },
-            cost() {return player.h.stage.pow(player.h.stage).pow(player.h.stage)},
+            cost() {return Decimal.pow10(player.h.stage.mul(6))},
             currencyLocation() { return player.hbl },
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
                 return player.sma.starmetalAlloy.add(1).log(player.h.stage).div(player.h.stage.mul(10)).add(1)
             },
-            effectDisplay() {
-                return "x" + format(upgradeEffect(this.layer, this.id))
-            }, // Add formatting to the effect
+            effectDisplay() {return "x" + format(upgradeEffect(this.layer, this.id))}, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        
+        101: {
+            title: "Grace EX1",
+            unlocked() { return hasUpgrade("hpw", 162) },
+            description() {
+                return "Replace Grace 1's hardcap with a softcap."
+            },
+            cost() {return Decimal.pow10(player.h.stage.mul(2.5))},
+            currencyLocation() { return player.hbl },
+            currencyDisplayName: "Blessings",
+            currencyInternalName: "blessings",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        102: {
+            title: "Grace EX2",
+            unlocked() { return hasUpgrade("hpw", 162) },
+            description() {
+                return "Nests reduce vex requirement."
+            },
+            cost() {return Decimal.pow10(player.h.stage.mul(3))},
+            currencyLocation() { return player.hbl },
+            currencyDisplayName: "Blessings",
+            currencyInternalName: "blessings",
+            effect() {
+                return player.n.nest.pow(0.7)
+            },
+            effectDisplay() {return "/" + format(upgradeEffect(this.layer, this.id))}, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        103: {
+            title: "Grace EX3",
+            unlocked() { return hasUpgrade("hpw", 162) },
+            description() {
+                return "Dark Essence boosts curse gain."
+            },
+            cost() {return Decimal.pow10(player.h.stage.mul(3.5))},
+            currencyLocation() { return player.hbl },
+            currencyDisplayName: "Blessings",
+            currencyInternalName: "blessings",
+            effect() {
+                return player.bh.darkEssence.add(1).log(player.h.stage).pow(2).add(1)
+            },
+            effectDisplay() {return "x" + format(upgradeEffect(this.layer, this.id))}, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        104: {
+            title: "Grace EX4",
+            unlocked() { return hasUpgrade("hpw", 162) },
+            description() {
+                return "Stars boost blessing gain"
+            },
+            cost() {return Decimal.pow10(player.h.stage.mul(4))},
+            currencyLocation() { return player.hbl },
+            currencyDisplayName: "Blessings",
+            currencyInternalName: "blessings",
+            effect() {
+                return player.au2.stars.add(1).log(player.h.stage).pow(0.7).div(player.h.stage).add(1)
+            },
+            effectDisplay() {return "x" + format(upgradeEffect(this.layer, this.id))}, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        105: {
+            title: "Grace EX5",
+            unlocked() { return hasUpgrade("hpw", 162) },
+            description() {
+                return "Enhance points reduce purity requirement"
+            },
+            cost() {return Decimal.pow10(player.h.stage.mul(4.5))},
+            currencyLocation() { return player.hbl },
+            currencyDisplayName: "Blessings",
+            currencyInternalName: "blessings",
+            effect() {
+                return player.en.enhancePoints.add(1).log(player.h.stage).pow(0.5).add(1).floor()
+            },
+            effectDisplay() {return "-" + formatWhole(upgradeEffect(this.layer, this.id).sub(1))}, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        106: {
+            title: "Grace EX6",
+            unlocked() { return hasUpgrade("hpw", 162) },
+            description() {
+                return "Steel reduces refinement scaling."
+            },
+            cost() {return Decimal.pow10(player.h.stage.mul(5))},
+            currencyLocation() { return player.hbl },
+            currencyDisplayName: "Blessings",
+            currencyInternalName: "blessings",
+            effect() {
+                return player.gh.steel.add(1).log("1e1000").pow(Decimal.div(2.8, player.h.stage.max(3))).div(player.h.stage.mul(10)).add(1)
+            },
+            effectDisplay() {return "/" + format(upgradeEffect(this.layer, this.id))}, // Add formatting to the effect
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        107: {
+            title: "Grace EX7",
+            unlocked() { return hasUpgrade("hpw", 162) && player.h.stage.gte(7)},
+            description() {
+                return "Starmetal Essence raises " + player.h.stageName[1] + " points"
+            },
+            cost() {return Decimal.pow10(player.h.stage.pow(2).mul(2.5))},
+            currencyLocation() { return player.hbl },
+            currencyDisplayName: "Blessings",
+            currencyInternalName: "blessings",
+            effect() {
+                return player.sme.starmetalEssence.add(1).log(player.h.stage.pow(2)).pow(0.5).div(player.h.stage.mul(10)).add(1)
+            },
+            effectDisplay() {return "^" + format(upgradeEffect(this.layer, this.id), 3)}, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
         },
     },
@@ -654,9 +770,18 @@ addLayer("hbl", {
                 unlocked() { return hasUpgrade("ta", 18) || hasUpgrade("bi", 12)},
                 content: [
                     ["blank", "5px"],
-                    ["row", [["upgrade", 1], ["upgrade", 2], ["upgrade", 3]]],
-                    ["row", [["upgrade", 4], ["upgrade", 5], ["upgrade", 6]]],
-                    ["row", [["upgrade", 7]]],
+                    ["row", [
+                        ["style-row", [
+                            ["upgrade", 1], ["upgrade", 2], ["upgrade", 3],
+                            ["upgrade", 4], ["upgrade", 5], ["upgrade", 6],
+                            ["upgrade", 7],
+                        ], {width: "395px"}],
+                        ["style-row", [
+                            ["upgrade", 101], ["upgrade", 102], ["upgrade", 103],
+                            ["upgrade", 104], ["upgrade", 105], ["upgrade", 106],
+                            ["upgrade", 107],
+                        ], () => {return hasUpgrade("hpw", 162) ? {width: "395px", marginLeft: "10px"} : {display: "none !important"}}]
+                    ]],
                 ]
             },
             "Miracles": {

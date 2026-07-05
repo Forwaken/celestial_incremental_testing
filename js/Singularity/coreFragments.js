@@ -86,6 +86,7 @@
         player.cof.fragmentScore[2] = player.m.codeExperience.plus(1).log10().pow(0.45).div(4)
         player.cof.fragmentScore[2] = player.cof.fragmentScore[2].mul(player.gh.steel.plus(1).log10().pow(0.39).div(2))
         player.cof.fragmentScore[2] = player.cof.fragmentScore[2].mul(player.oi.oil.plus(1).log10().pow(0.35).div(2))
+        if (player.sins.clickables["greed"]) player.cof.fragmentScore[2] = player.cof.fragmentScore[2].mul(player.sins.greed[1])
 
         //paradox
         player.cof.fragmentScore[3] = player.in.infinityPoints.plus(1).log10().pow(0.52).div(4).mul(1.25)

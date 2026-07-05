@@ -12,6 +12,8 @@ addLayer("sins", {
         lust: [new Decimal(1), new Decimal(1), new Decimal(1)],
         gluttony: [new Decimal(1), new Decimal(1), new Decimal(1)],
         sloth: [new Decimal(1), new Decimal(1), new Decimal(1)],
+        greed: [new Decimal(1), new Decimal(1), new Decimal(1)],
+        pride: [new Decimal(1), new Decimal(1), new Decimal(1)],
     }},
     update (delta) {
         if (hasUpgrade("hpw", 2003)) player.sins.envy[0] = Decimal.pow(Decimal.div(2.5, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
@@ -35,6 +37,12 @@ addLayer("sins", {
         else player.sins.sloth[0] = Decimal.pow(Decimal.div(1.7, player.h.stage).add(1), player.h.hexPoint.add(1).log(1e6))
         player.sins.sloth[1] = player.h.hexPoint.add(1).log(1e6).div(10).add(1)
         player.sins.sloth[2] = player.h.hexPoint.add(1).log(1e6).div(5).add(1)
+        player.sins.greed[0] = player.hbl.blessings.add(1).log(player.h.stage).pow(0.7).div(100).add(1)
+        player.sins.greed[1] = player.hbl.blessings.add(1).log(7).div(20).add(1)
+        player.sins.greed[2] = player.hbl.blessings.add(1).log(7).div(10).add(1)
+        player.sins.pride[0] = player.hpw.powerGain.add(1).log(player.h.stage).pow(0.7).div(100).add(1)
+        player.sins.pride[1] = player.hpw.powerGain.add(1).log(7).div(20).add(1)
+        player.sins.pride[2] = player.hpw.powerGain.add(1).log(7).div(10).add(1)
     },
     clickables: {
         "envy": {
@@ -319,7 +327,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "x" + formatSimple(Decimal.div(1.6, hasUpgrade("hpw", 2005) ? upgradeEffect("hpw", 2005) : 1)) + " Refinement Scaling"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(hasUpgrade("hpw", 2005) ? 1.4 : 1.6) + " Refinement Scaling"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#98745b", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
@@ -376,14 +384,14 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "/77 Blessings", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(77, hasUpgrade("hpw", 2008) ? upgradeEffect("hpw", 2008) : 1)) + " Blessings"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#988f5b", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "^1.05 Power Gain", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "x1 Technological Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "12px", fontFamily: "monospace"}],
-                        ["raw-html", "x1 Technological Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "12px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "^" + formatSimple(player.sins.greed[0], 3) + " Power Gain"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.greed[1]) + " Technological Fragment Score"}, {color: "rgba(0,0,0,0.6)", fontSize: "12px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "<s>x" + formatSimple(player.sins.greed[2]) + " Technological Pylon Energy</s>"}, {color: "rgba(0,0,0,0.6)", fontSize: "12px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on Blessings)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "90px", background: "#988f5b", borderRadius: "10px"}],
                 ], () => {return player.hpw.upgTotal.gte(42) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],
@@ -409,10 +417,10 @@ addLayer("sins", {
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "^1.05 Power Gain", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "x1 Ancient Fragment Score", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "^1 Ancient Pylon Energy", {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "(Based on Curses)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "^" + formatSimple(player.sins.pride[0], 3) + " Power Gain"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.pride[1]) + " Ancient Fragment Score"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.pride[2]) + " Ancient Pylon Energy"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "(Based on Power Gain)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "90px", background: "#594f7a", borderRadius: "10px"}],
                 ], () => {return player.hpw.upgTotal.gte(49) ? {width: "250px", height: "150px", lineHeight: "0.9"} : {display: "none !important"}}],
                 ["style-column", [

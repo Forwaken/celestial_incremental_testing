@@ -80,7 +80,7 @@ addLayer("hre", {
         if (player.hre.refinement.gte(player.h.stage.div(2).floor())) player.hre.refinementEffect[1][1] = Decimal.pow(player.h.stage.div(2.15), player.hre.refinement.sub(player.h.stage.div(2).floor().sub(1))).pow(player.hpu.purifiers[0].effect)
 
         if (player.hre.refinement.gte(player.h.stage.mul(1.5).floor())) {
-            let buff = hasUpgrade("hpw", 181) ? 2 : 1
+            let buff = hasUpgrade("hpw", 171) ? 2 : 1
             player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.5*buff, player.h.stage).add(1), player.hre.refinement.sub(player.h.stage.mul(0.75).ceil()).pow(Decimal.div(3.6, player.h.stage.max(4))))
             if (inChallenge("hrm", 16)) player.hre.refinementEffect[2][0] = Decimal.pow(Decimal.div(0.36*buff, player.h.stage).add(1), player.hre.refinement.sub(player.h.stage.mul(0.75).floor()).pow(Decimal.div(3.6, player.h.stage.max(4))))
         }
@@ -106,7 +106,7 @@ addLayer("hre", {
 
         player.hre.tempererPerSec = new Decimal(0)
         if (hasUpgrade("hpw", 151)) {
-            player.hre.tempererPerSec = Decimal.pow(Decimal.mul(1.1, buyableEffect("hre", 22)), player.hre.refinement.sub(player.h.stage.mul(10).sub(buyableEffect("hre", 21).sub(1))).add(1).max(0)).sub(1).div(10).mul(buyableEffect("hre", 23))
+            player.hre.tempererPerSec = Decimal.pow(Decimal.mul(1.2, buyableEffect("hre", 22)), player.hre.refinement.sub(player.h.stage.mul(10).sub(buyableEffect("hre", 21).sub(1))).add(1).max(0)).sub(1).mul(buyableEffect("hre", 23)).mul(player.h.tickspeed)
             player.hre.temperer = player.hre.temperer.add(player.hre.tempererPerSec.mul(delta))
         }
     },
@@ -144,16 +144,16 @@ addLayer("hre", {
         11: {
             costBase() { return new Decimal(100) },
             costGrowth() { return new Decimal(100) },
-            purchaseLimit() { return player.h.stage.sub(2).mul(10).max(0) },
+            purchaseLimit() { return new Decimal(50) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(5).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
-                return "<h3>Decrease Log</h3>\n\
-                    Currently: -" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1)) + "\n\ \n\
+                return "<h3>Reduce Log</h3>\n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
@@ -197,7 +197,7 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -247,13 +247,13 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(25) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(200).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
                 return "<h3>Increase Base</h3>\n\
-                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
@@ -272,7 +272,7 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(150) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -322,7 +322,7 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(150) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -397,7 +397,7 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(150) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -444,16 +444,16 @@ addLayer("hre", {
         51: {
             costBase() { return new Decimal(1600) },
             costGrowth() { return new Decimal(1600) },
-            purchaseLimit() { return player.h.stage.sub(2).mul(10).max(0) },
+            purchaseLimit() { return new Decimal(50) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(5).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
-                return "<h3>Decrease Log</h3>\n\
-                    Currently: -" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1)) + "\n\ \n\
+                return "<h3>Reduce Log</h3>\n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
@@ -472,7 +472,7 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(150) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -497,7 +497,7 @@ addLayer("hre", {
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.hre.temperer},
             pay(amt) { player.hre.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -780,13 +780,11 @@ addLayer("hre", {
                     ["blank", "10px"],
                     ["style-column", [
                         ["tooltip-row", [
-                            ["raw-html", () => {return "You have " + formatSimple(player.hre.temperer) + " temperers"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return player.hre.tempererPerSec.eq(0) ? "<span style='color:gray'>(+0/s)</span>" : player.hre.tempererPerSec.gt(0) ? "(+" + formatSimple(player.hre.tempererPerSec) + "/s)" : "<span style='color:red'>(" + format(player.hre.tempererPerSec) + "/s)</span>" }, {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
+                            ["raw-html", () => {return "You have " + formatSimple(player.hre.temperer, 2) + " temperers"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return player.hre.tempererPerSec.eq(0) ? "<span style='color:gray'>(+0/s)</span>" : player.hre.tempererPerSec.gt(0) ? "(+" + formatSimple(player.hre.tempererPerSec, 2) + "/s)" : "<span style='color:red'>(" + format(player.hre.tempererPerSec) + "/s)</span>" }, {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
                             ["raw-html", () => {
-                                let str = "<div class='bottomTooltip'>Base Formula<hr><small>(" + formatSimple(Decimal.mul(1.1, buyableEffect("hre", 22)), 2) + "^(Refinements-" + formatWhole(player.h.stage.mul(10).sub(1).sub(buyableEffect("hre", 21).sub(1))) + ")-1)"
-                                let eff = Decimal.mul(0.1, buyableEffect("hre", 23))
-                                if (eff.gte(1)) str = str.concat("x" + formatSimple(eff))
-                                else str = str.concat("/" + formatSimple(Decimal.div(1, eff)))
+                                let str = "<div class='bottomTooltip'>Base Formula<hr><small>(" + formatSimple(Decimal.mul(1.2, buyableEffect("hre", 22)), 2) + "^(Refinements-" + formatWhole(player.h.stage.mul(10).sub(1).sub(buyableEffect("hre", 21).sub(1))) + ")-1)"
+                                if (buyableEffect("hre", 23).gte(1)) str = str.concat("x" + formatSimple(buyableEffect("hre", 23)))
                                 return str + "</small></div>"
                             }],
                         ]],
@@ -799,7 +797,7 @@ addLayer("hre", {
                         ], {width: "200px", height: "120px"}],
                         ["style-column", [
                             ["style-row", [
-                                ["raw-html", () => {return "Log" + formatSimple(Decimal.sub(player.h.stage.max(2), buyableEffect("hre", 11).sub(1)))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return "Log" + formatSimple(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 11)).add(1))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 11],
@@ -837,7 +835,7 @@ addLayer("hre", {
                         ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
-                                ["raw-html", () => {return formatSimple(Decimal.mul(1.1, buyableEffect("hre", 22)), 2) + "^"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return formatSimple(Decimal.mul(1.2, buyableEffect("hre", 22)), 2) + "^"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 22],
@@ -845,11 +843,7 @@ addLayer("hre", {
                         ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
-                                ["raw-html", () => {
-                                    let eff = Decimal.mul(0.1, buyableEffect("hre", 23))
-                                    if (eff.gte(1)) return "x" + formatSimple(eff)
-                                    return "/" + formatSimple(Decimal.div(1, eff))
-                                }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return "x" + formatSimple(buyableEffect("hre", 23))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 23],
@@ -931,7 +925,7 @@ addLayer("hre", {
                         ], {width: "200px", height: "120px"}],
                         ["style-column", [
                             ["style-row", [
-                                ["raw-html", () => {return "Log" + formatSimple(Decimal.sub(player.h.stage.max(2), buyableEffect("hre", 51).sub(1)))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return "Log" + formatSimple(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 51)).add(1))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 51],
@@ -947,7 +941,7 @@ addLayer("hre", {
                         ], {width: "147px", height: "120px", borderLeft: "3px solid white"}],
                         ["style-column", [
                             ["style-row", [
-                                ["raw-html", () => {return "^" + formatSimple(buyableEffect("hre", 53))}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return "^" + formatSimple(buyableEffect("hre", 53), 2)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "147px", height: "37px", borderBottom: "3px solid white"}],
                             ["style-row", [
                                 ["buyable", 53],
