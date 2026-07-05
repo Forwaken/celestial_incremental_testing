@@ -577,6 +577,9 @@ addLayer("hpw", {
             title: "Might γ:2",
             unlocked() {return player.h.stage.neq(6)},
             description: "Reduce Vex requirement based on jinx score.",
+            tooltip() {
+                return "Jinx Score+1"
+            },
             branches: [43],
             cost() {return player.h.stage.pow(20).floor()},
             canAfford() { return hasUpgrade("hpw", 43)},
@@ -584,7 +587,7 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hcu.jinxTotal
+                return player.hcu.jinxTotal.add(1)
             },
             effectDisplay() { return "/" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -607,7 +610,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description: "Boost Jinx cap based on boons.",
             tooltip() {
-                return "(((log" + formatWhole(player.h.stage.pow(2)) + "(Boons+1))^" + formatSimple(Decimal.div(3.5, player.h.stage.max(4))) + ")/50)+1"
+                return "(((log" + formatWhole(player.h.stage.pow(2)) + "(Boons+1))^" + formatSimple(Decimal.div(3.5, player.h.stage.max(4)), 2) + ")/50)+1"
             },
             branches: [45],
             cost() {return player.h.stage.pow(56).floor()},
@@ -701,6 +704,7 @@ addLayer("hpw", {
                 if (hasUpgrade("hpw", 164)) return "Boost pre-power resources based on mights."
                 return "Boost blessings based on mights."
             },
+            tooltip() {return "(Mights/5)+1"},
             branches: [61, 62],
             cost() {return new Decimal(player.h.stage.div(2).pow(11)).pow(player.hpw.upgScale[7]).floor()},
             canAfford() { return hasUpgrade("hpw", 61) || hasUpgrade("hpw", 62)},
@@ -767,6 +771,7 @@ addLayer("hpw", {
             title: "Might δ:4",
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Boost provenance efficiency based on curses."},
+            tooltip() {return "(((log" + formatWhole(player.h.stage.pow(3)) + "(Curses+1))^" + formatSimple(Decimal.div(3.5, player.h.stage.max(4)), 2) + ")/50)+1"},
             branches: [75],
             cost() {return player.h.stage.pow(110).floor()},
             canAfford() { return hasUpgrade("hpw", 75)},
@@ -825,6 +830,10 @@ addLayer("hpw", {
                 if (inChallenge("hrm", 16)) return "Boost refiner 1 effects based on boons."
                 return "Boost provenance effects based on boons."
             },
+            tooltip() {
+                if (inChallenge("hrm", 16)) return "(1.05^(log" + formatSimple(Decimal.pow10(player.h.stage)) + "(Boons+1)))-1"
+                return "1.1^(log" + formatSimple(Decimal.pow10(player.h.stage)) + "(Boons+1))"
+            },
             branches: [91],
             cost() {return new Decimal(player.h.stage.div(2).pow(15)).pow(player.hpw.upgScale[10]).floor()},
             canAfford() { return hasUpgrade("hpw", 91)},
@@ -849,6 +858,7 @@ addLayer("hpw", {
             title: "Might 11:2",
             unlocked: true,
             description: "Raise curse gain based on jinx score.",
+            tooltip() {return "((log10((Jinx Total/10)+1))/100)+1"},
             branches: [92],
             cost() {return new Decimal(player.h.stage.div(2).pow(15)).pow(player.hpw.upgScale[10]).floor()},
             canAfford() { return hasUpgrade("hpw", 92)},
@@ -870,6 +880,7 @@ addLayer("hpw", {
             title: "Might ε:1",
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Boost Uni-Alpha tickspeed based on time spent in this power reset."},
+            tooltip() {return "((Since Power^0.3)/" + formatSimple(player.h.stage.div(2)) + ")+1"},
             branches: [102],
             cost() {return player.h.stage.pow(15).floor()},
             canAfford() { return hasUpgrade("hpw", 102)},
@@ -886,6 +897,7 @@ addLayer("hpw", {
             title: "Might ε:2",
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Boost time spent in this power reset. (decays based on time in this power reset)"},
+            tooltip() {return "(9/((log" + formatWhole(player.h.stage) + "(Since Power+1)/10))+1)+1"},
             branches: [103],
             cost() {return player.h.stage.pow(45).floor()},
             canAfford() { return hasUpgrade("hpw", 103)},
@@ -995,6 +1007,7 @@ addLayer("hpw", {
             title: "Might ζ:1",
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Boost refiner 1's first effect based on boons."},
+            tooltip() {return "(log" + formatSimple(Decimal.pow10(player.h.stage)) + "(Boons+1)/20)+1"},
             branches: [132],
             cost() {return player.h.stage.pow(20).floor()},
             canAfford() { return hasUpgrade("hpw", 132)},
@@ -1011,6 +1024,7 @@ addLayer("hpw", {
             title: "Might ζ:2",
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Divide refinement requirements based on purities."},
+            tooltip() {return formatSimple(player.h.stage.div(2)) + "^Purities"},
             branches: [133],
             cost() {return player.h.stage.pow(60).floor()},
             canAfford() { return hasUpgrade("hpw", 133)},
@@ -1051,6 +1065,7 @@ addLayer("hpw", {
             title: "Might 15:1",
             unlocked: true,
             description: "Multiply pre-power resources based on power.",
+            tooltip() {return "1.3^(log((Power/" + formatSimple(Decimal.pow10(player.h.stage)) + ")+1)^0.9)"},
             branches: [132],
             cost() {return new Decimal(player.h.stage.div(2).pow(20)).pow(player.hpw.upgScale[14]).floor()},
             canAfford() { return hasUpgrade("hpw", 132)},
@@ -1081,6 +1096,7 @@ addLayer("hpw", {
             title: "Might 16:2",
             unlocked() {return player.h.stage.gte(7)},
             description: "Gain free purities based on blessings.",
+            tooltip() {return "Floor(log" + formatSimple(Decimal.pow10(player.h.stage.div(2))) + "(Blessings+1)^0.5)"},
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
@@ -1111,6 +1127,7 @@ addLayer("hpw", {
             title: "Might 16:4",
             unlocked() {return player.h.stage.gte(7)},
             description: "Raise external effects based on α-provenance.",
+            tooltip() {return "(log" + formatWhole(player.h.stage) + "(α-Provenance+1)/100)+1"},
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
@@ -1128,6 +1145,7 @@ addLayer("hpw", {
             title: "Might 17:1",
             unlocked() {return player.h.stage.gte(7)},
             description() {return "Divide provenance req's based on " + player.h.stageName[1] + " points."},
+            tooltip() {return "((log" + formatWhole(player.h.stage) + "(" + player.h.stageName[0] + " Points+1)^0.7)/100)+1"},
             branches: [151],
             cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
             canAfford() { return hasUpgrade("hpw", 151)},
@@ -1220,6 +1238,7 @@ addLayer("hpw", {
             title: "Might η:4",
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Boost holy power gain based on purity."},
+            tooltip() {return "((Purities^" + formatSimple(Decimal.div(3.5, player.h.stage)) + ")/2)+1"},
             branches: [167],
             cost() {return player.h.stage.pow(300).floor()},
             canAfford() { return hasUpgrade("hpw", 167)},
@@ -1249,6 +1268,7 @@ addLayer("hpw", {
             title: "Might 18:2",
             unlocked() {return player.h.stage.gte(7)},
             description: "Boost blessings based on time spent in this tera reset.",
+            tooltip() {return "((Since Tera^0.4)/" + formatSimple(player.h.stage.div(2)) + ")+1"},
             branches: [162],
             cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
             canAfford() { return hasUpgrade("hpw", 162)},
@@ -2074,7 +2094,7 @@ addLayer("hpw", {
                         ["upgrade", 31],
                         ["bt-upgrade", 32],
                         ["bt-upgrade", 33],
-                        ["style-row", [["upgrade", 1031], ["upgrade", 44]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1031], ["bt-upgrade", 44]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 1022], ["upgrade", 36]], {width: "140px", height: "140px"}],
@@ -2092,7 +2112,7 @@ addLayer("hpw", {
                         ["style-row", [["upgrade", 1033], ["bt-upgrade", 46]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["style-row", [["upgrade", 1041], ["upgrade", 76]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1041], ["bt-upgrade", 76]], {width: "140px", height: "140px"}],
                         ["upgrade", 61],
                         ["upgrade", 62],
                         ["style-row", [["upgrade", 2004]], {width: "140px", height: "140px"}],
@@ -2100,7 +2120,7 @@ addLayer("hpw", {
                     ["row", [
                         ["style-row", [["upgrade", 1042], ["upgrade", 75]], {width: "140px", height: "140px"}],
                         ["style-row", [["upgrade", 1004], ["upgrade", 73]], {width: "140px", height: "140px"}],
-                        ["upgrade", 71],
+                        ["bt-upgrade", 71],
                         ["upgrade", 72],
                         ["style-row", [["upgrade", 2006]], {width: "140px", height: "140px"}],
                     ]],
@@ -2119,15 +2139,15 @@ addLayer("hpw", {
                         ["upgrade", 91],
                         ["upgrade", 92],
                         ["blank", ["70px", "140px"]],
-                        ["style-row", [["upgrade", 1051], ["upgrade", 104]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1051], ["bt-upgrade", 104]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
                     ]],
                     ["row", [
                         ["upgrade", 1105],
                         ["upgrade", 1102],
-                        ["upgrade", 101],
-                        ["upgrade", 102],
-                        ["style-row", [["upgrade", 1005], ["upgrade", 103]], {width: "140px", height: "140px"}],
+                        ["bt-upgrade", 101],
+                        ["bt-upgrade", 102],
+                        ["style-row", [["upgrade", 1005], ["bt-upgrade", 103]], {width: "140px", height: "140px"}],
                         ["style-row", [["upgrade", 1052], ["bt-upgrade", 105]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
@@ -2149,35 +2169,35 @@ addLayer("hpw", {
                         ["style-row", [["upgrade", 2009]], {width: "140px", height: "140px"}],
                         ["upgrade", 131],
                         ["upgrade", 132],
-                        ["style-row", [["upgrade", 1006], ["upgrade", 133]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1006], ["bt-upgrade", 133]], {width: "140px", height: "140px"}],
                         ["style-row", [["upgrade", 1062], ["upgrade", 135]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 2008]], {width: "140px", height: "140px", marginRight: "70px"}],
-                        ["style-row", [["upgrade", 141], ["buyable", 0]], {width: "140px", height: "140px"}],
+                        ["style-row", [["bt-upgrade", 141], ["buyable", 0]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
-                        ["style-row", [["upgrade", 1063], ["upgrade", 134]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1063], ["bt-upgrade", 134]], {width: "140px", height: "140px"}],
                     ]],
                     ["style-column", [
                         ["row", [
                             ["style-row", [["upgrade", 166]], {width: "140px", height: "140px", marginLeft: "35px", marginRight: "35px"}],
                             ["upgrade", 151],
-                            ["upgrade", 152],
+                            ["bt-upgrade", 152],
                             ["upgrade", 153],
-                            ["upgrade", 154],
+                            ["bt-upgrade", 154],
                         ]],
                         ["row", [
                             ["style-row", [["upgrade", 167]], {width: "105px", height: "140px"}],
                             ["style-row", [["upgrade", 165]], {width: "105px", height: "140px"}],
-                            ["upgrade", 161],
+                            ["bt-upgrade", 161],
                             ["upgrade", 162],
                             ["upgrade", 163],
                             ["upgrade", 164],
                         ]],
                         ["row", [
-                            ["style-row", [["upgrade", 168]], {width: "140px", height: "140px", marginLeft: "35px", marginRight: "35px"}],
+                            ["style-row", [["bt-upgrade", 168]], {width: "140px", height: "140px", marginLeft: "35px", marginRight: "35px"}],
                             ["upgrade", 171],
-                            ["upgrade", 172],
+                            ["bt-upgrade", 172],
                             ["upgrade", 173],
                             ["upgrade", 174],
                         ]],
