@@ -467,6 +467,14 @@ addLayer("hpr", {
             onPress() {
                 clickClickable(this.layer, 6)
             },
+        },
+        {
+            key: "7", 
+            description: "Gain η provenance",
+            unlocked() {return player.h.stage.gte(7)},
+            onPress() {
+                clickClickable(this.layer, 7)
+            },
         }
 	]
 });
