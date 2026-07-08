@@ -1744,10 +1744,11 @@ addLayer("tera", {
             }
         },
         "hept7": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 49 Hept Essence"},
+            fullDisplay() {return "<h3>Growing Muscles</h3><br>Boost power gain based on time in this power reset.<br>[CAPPED AT x7]<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 49 Hept Essence"},
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.heptEssence.gte(49)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(49)},
+            effect() {return player.hpw.sincePower.add(1).log(7).add(1).min(7)},
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -1766,7 +1767,7 @@ addLayer("tera", {
             }
         },
         "hept9": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 40,353,607 Hept Essence"},
+            fullDisplay() {return "<h3>Hepted Curses?</h3><br>Increase base of Κ-Jinx by +0.02.<br><br>Cost: 40,353,607 Hept Essence"},
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.heptEssence.gte(40353607)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(40353607)},

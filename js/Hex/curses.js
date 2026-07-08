@@ -656,7 +656,11 @@ addLayer("hcu", {
                 amt = amt.add(player.hcu.jinxedJinxEffects[2])
                 return amt
             },
-            effect(x) { return Decimal.mul(0.03, getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
+            effect(x) {
+                let amt = getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)
+                if (hasUpgrade("tera", "hept9")) return Decimal.mul(0.05, amt)
+                return Decimal.mul(0.03, amt)
+            },
             unlocked() { return hasUpgrade("bi", 13) },
             cost(x = getBuyableAmount(this.layer, this.id)) {
                 if (x.lt(player.h.stage)) {
@@ -669,7 +673,9 @@ addLayer("hcu", {
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Κ-Jinx" },
-            display() { return "Increase Η-Jinx's effect by +0.03x" },
+            display() {
+                return hasUpgrade("tera", "hept9") ? "Increase Η-Jinx's effect by +0.05x" : "Increase Η-Jinx's effect by +0.03x"
+            },
             total() { return "(Total: +" + format(tmp[this.layer].buyables[this.id].effect) + "x)"},
             buy(mult) {
                 if (mult != true) {
