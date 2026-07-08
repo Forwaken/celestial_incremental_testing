@@ -429,7 +429,10 @@ addLayer("hpu", {
                 return look
             }],
         ]],
-        ["raw-html", () => {return "(You have <h3>" + formatWhole(player.hpu.totalPurity.sub(player.hpu.keptPurity)) + "+" + formatWhole(player.hpu.keptPurity) + "</h3> total purity)" }, {color: "#ddd", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {
+            if (player.hpu.keptPurity.eq(0)) return "(You have <h3>" + formatWhole(player.hpu.totalPurity.sub(player.hpu.keptPurity)) + "</h3> total purity)"
+            return "(You have <h3>" + formatWhole(player.hpu.totalPurity.sub(player.hpu.keptPurity)) + "+" + formatWhole(player.hpu.keptPurity) + "</h3> total purity)"
+        }, {color: "#ddd", fontSize: "16px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["clickable", 1],
         ["blank", "10px"],
