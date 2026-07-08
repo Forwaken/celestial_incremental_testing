@@ -880,4 +880,16 @@ addLayer("hsa", {
         ["blank", "25px"],
     ],
     layerShown() { return inChallenge("hrm", 14) || hasUpgrade("hpw", 75)}, // Decides if this node is shown or not.
+    hotkeys: [
+        {
+            key: "s", 
+            description: "Sacrifice",
+            unlocked() {
+                return inChallenge("hrm", 14) || hasUpgrade("hpw", 75)
+            },
+            onPress() {
+                clickClickable(this.layer, 1)
+            },
+        }
+	]
 });

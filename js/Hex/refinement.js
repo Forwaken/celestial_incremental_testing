@@ -110,6 +110,9 @@ addLayer("hre", {
             player.hre.tempererPerSec = Decimal.pow(Decimal.mul(1.2, buyableEffect("hre", 22)), player.hre.refinement.sub(player.h.stage.mul(10).sub(buyableEffect("hre", 21).sub(1))).add(1).max(0)).sub(1).mul(buyableEffect("hre", 23)).mul(player.h.tickspeed)
             player.hre.temperer = player.hre.temperer.add(player.hre.tempererPerSec.mul(delta))
         }
+        
+        // CHECK FOR ACHS
+        // if (!hasAchievement("achievements", 303) && player.hre.refinement.gte(30)) completeAchievement("achievements", 303)
     },
     clickables: {
         1: {
@@ -1028,4 +1031,13 @@ addLayer("hre", {
         ["blank", "25px"],
     ],
     layerShown() { return true }, // Decides if this node is shown or not.
+    hotkeys: [
+        {
+            key: "r", 
+            description: "Refine",
+            onPress() {
+                clickClickable(this.layer, 1)
+            },
+        }
+	]
 });

@@ -102,6 +102,7 @@
             player.cbs.pylonEnergyToGet = player.cbs.pylonEnergyToGet.mul(buyableEffect("cbs", 23))
             player.cbs.pylonEnergyToGet = player.cbs.pylonEnergyToGet.mul(player.n.pylonEnergyEffect3)
             if (player.sins.clickables["sloth"]) player.cbs.pylonEnergyToGet = player.cbs.pylonEnergyToGet.mul(player.sins.sloth[2])
+            player.cbs.pylonEnergyToGet = player.cbs.pylonEnergyToGet.mul(buyableEffect("ev0", 24))
 
             player.cbs.pylonPassiveEffect = player.pol.pollinators.plus(1).log10().pow(0.002).div(5).add(1).pow(player.cbs.pylonTierEffect)
         } else {

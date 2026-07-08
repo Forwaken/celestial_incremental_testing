@@ -1237,6 +1237,20 @@
                     ], {maxWidth: "900px"}],
                 ]
             },
+            "Perks": {
+                buttonStyle() { return { color: "#7dd3f9", background: "#0f354c", borderColor: "#0a82b9", borderRadius: "5px" } },
+                unlocked() { return player.ca.defeatedCante },
+                content: [
+                    ["style-column", [
+                        ["raw-html", "Perks for defeating Cante", {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
+                    ], {width: "800px", border: "3px solid #0f354c", backgroundImage: "linear-gradient(45deg, #0a82b9 0%, #7dd3f9 100%)", borderBottom: "5px", paddingTop: "5px", paddingBottom: "5px", borderRadius: "15px 15px 0px 0px"}],
+                    ["style-column", [
+                        ["raw-html", "<u>Unlocks</u>", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", "Universe 3: Domain of Singularity.", {color: "rgba(0,0,0,0.6)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "Singularity, and the ability to reset for singularity points.", {color: "rgba(0,0,0,0.6)", fontSize: "18px", fontFamily: "monospace"}],
+                    ], {width: "800px", border: "3px solid #0f354c", backgroundImage: "linear-gradient(45deg, #0a82b9 0%, #7dd3f9 100%)", paddingTop: "5px", paddingBottom: "5px", borderRadius: "0px 0px 15px 15px"}]
+                ]
+            }
         },
     },
     tabFormat: [
@@ -1245,7 +1259,39 @@
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],
-    layerShown() { return (player.startedGame == true && player.in.unlockedInfinity && hasUpgrade("bi", 24)) || hasMilestone("s", 19)}
+    layerShown() { return (player.startedGame == true && player.in.unlockedInfinity && hasUpgrade("bi", 24)) || hasMilestone("s", 19)},
+    hotkeys: [
+        {
+            key: "x", 
+            description: "Reset replicanti for galaxy dust",
+            unlocked() {
+                return player.ca.unlockedCante
+            },
+            onPress() {
+                clickClickable(this.layer, 12)
+            },
+        },
+        {
+            key: "r", 
+            description: "Reset replicanti for replicanti galaxies",
+            unlocked() {
+                return player.ca.unlockedCante && hasUpgrade("bi", 26)
+            },
+            onPress() {
+                clickClickable(this.layer, 13)
+            },
+        },
+        {
+            key: "c", 
+            description: "Convert a Cante core into a remembrance core",
+            unlocked() {
+                return player.ca.unlockedCante
+            },
+            onPress() {
+                clickClickable(this.layer, 15)
+            },
+        }
+	]
 })
 
 // i came up with this guy's name

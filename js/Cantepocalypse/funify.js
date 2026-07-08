@@ -974,7 +974,7 @@
         111: {
             title: "Apathy XI",
             unlocked() {return player.fu.enterNumb},
-            description: "Half all A1 cooldowns.",
+            description: "Halve all A1 cooldowns.",
             cost: new Decimal(128),
             currencyLocation() {return player.fu},
             currencyDisplayName: "Apathy",
@@ -2483,7 +2483,7 @@
                 return "Softcap Weakener #1"
             },
             display() {
-                return "which are weakening the first replicanti point by /" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                return "which are weakening the first replicanti point softcap by /" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Fear."
             },
             buy(mult) {
@@ -2517,7 +2517,7 @@
                 return "Softcap Extender #2"
             },
             display() {
-                return "which are extending the second replicanti point by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                return "which are extending the second replicanti point softcap by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Fear."
             },
             buy(mult) {
@@ -2551,7 +2551,7 @@
                 return "Softcap Weakener #2"
             },
             display() {
-                return "which are weakening the second replicanti point by /" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                return "which are weakening the second replicanti point softcap by /" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Fear."
             },
             buy(mult) {
@@ -2794,7 +2794,7 @@
                 return "Fundamental Anonymity"
             },
             display() {
-                return "which are boosting anonymity formulas exponent by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                return "which are boosting anonymity formulas' exponent by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Numbness."
             },
             buy(mult) {
@@ -3158,7 +3158,7 @@
             goal() { return new Decimal("1e75") },
             canComplete: function () { return player.cp.replicantiPoints.gte(1e75) },
             goalDescription() { return "1e75 Replicanti Points" },
-            rewardDescription: "Expand your hives limits.",
+            rewardDescription: "Expand your hive's limits.",
             onEnter() {
                 if (!player.fu.enterNumb) player.fu.enterNumb = true
                 player.fu.funifyPause = new Decimal(12)
@@ -3331,6 +3331,9 @@
                         ["raw-html", "Perks for killing Jocus", {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
                     ], {width: "800px", border: "3px solid #5e8503", backgroundImage: "linear-gradient(120deg, #fcff04 0%, #befa32 100%)", borderBottom: "5px", paddingTop: "5px", paddingBottom: "5px", borderRadius: "15px 15px 0px 0px"}],
                     ["style-column", [
+                        ["raw-html", "<u>Unlocks</u>", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", "Universe γ: Hall of Celestials.", {color: "rgba(0,0,0,0.6)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["blank", "10px"],
                         ["raw-html", "<u>Effects</u>", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
                         ["raw-html", "Gain 100% of time cubes per second.", {color: "rgba(0,0,0,0.6)", fontSize: "18px", fontFamily: "monospace"}],
                         ["raw-html", "x10 singularity points.", {color: "rgba(0,0,0,0.6)", fontSize: "18px", fontFamily: "monospace"}],
@@ -3459,7 +3462,36 @@
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],
-    layerShown() { return player.startedGame == true && hasUpgrade("cp", 19) }
+    layerShown() { return player.startedGame == true && hasUpgrade("cp", 19) },
+    hotkeys: [
+        {
+            key: "f", 
+            description: "Funify",
+            onPress() {
+                clickClickable(this.layer, 11)
+            },
+        },
+        {
+            key: "j", 
+            description: "Gain Jocus Essence",
+            unlocked() {
+                return hasUpgrade("fu", 17)
+            },
+            onPress() {
+                clickClickable(this.layer, 11)
+            },
+        },
+        {
+            key: "y", 
+            description: "Gain Apathy",
+            unlocked() {
+                return player.al.cocoonLevel >= 10
+            },
+            onPress() {
+                clickClickable(this.layer, 11)
+            },
+        },
+	]
 })
 
 // hai icecreamdude-senpai :3

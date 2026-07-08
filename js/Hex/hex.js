@@ -113,6 +113,7 @@ addLayer("h", {
                 player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 11)).add(1)).mul(player.h.stage.max(1).mul(buyableEffect("hre", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)))
             }
         }
+        if (hasAchievement("achievements", 303)) player.h.hexPointGain = player.h.hexPointGain.mul(1.5)
         for (let i = 0; i < 6; i++) {
             player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[i][1])
         }

@@ -545,7 +545,7 @@
                     ["blank", "10px"],
                     ["raw-html", function () { return player.sm.buyables[106].gte(1) ? "<h5>ESC: " + format(buyableEffect("sm", 106).mul(100)) + "%" : "" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
                     ["raw-html", function () { return "<h6>Mult: " + format(player.wof.wheelPointsMult) + "x. (also based on amount of wheel spins)" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
-                    ["raw-html", function () { return "<h6>Wheels spinned: " + formatWhole(player.wof.wheelsSpinned) + "" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
+                    ["raw-html", function () { return "<h6>Wheels spun: " + formatWhole(player.wof.wheelsSpinned) + "" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
                     ["blank", "25px"],
                     ], {width: "600px", height: "700px", background: "rgba(5, 80, 28, 0.5)", border: "0px solid #ccc", borderRight: "0px", borderLeft: "0px", borderRadius: "15px 0px 0px 15px"}],
 
@@ -575,5 +575,14 @@
         ["raw-html", () => { return player.za.chancePoints.gte(player.za.chancePointsSoftcapStart) ? "After " + format(player.za.chancePointsSoftcapStart) + " chance points, gain is divided by /" + format(player.za.chancePointsSoftcapEffect) + "." : "Softcap start: " + format(player.za.chancePointsSoftcapStart) + "." }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
         ["microtabs", "stuff", { 'border-width': '0px' }],
     ],
-    layerShown() { return player.startedGame == true && hasUpgrade("za", 13) && !player.sma.inStarmetalChallenge}
+    layerShown() { return player.startedGame == true && hasUpgrade("za", 13) && !player.sma.inStarmetalChallenge},
+    hotkeys: [
+        {
+            key: "w", 
+            description: "Spin Wheel",
+            onPress() {
+                clickClickable(this.layer, 21)
+            },
+        }
+	]
 })

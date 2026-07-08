@@ -1,5 +1,5 @@
 ﻿﻿addLayer("du", {
-    name: "Dark Universe I: Abscence of Light", // This is optional, only used in a few places, If absent it just uses the layer id.
+    name: "Dark Universe I: Absence of Light", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "1", // This appears on the layer's node. Default is the id with the first letter capitalized
     row: 1,
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
@@ -11,6 +11,9 @@
         pointSoftcap2: new Decimal(0.1),
         secondSoftcapStart: new Decimal(1.79e308),
         pointGain: new Decimal(0),
+
+        noPunchcards: true,
+        aniciffoSummon: false,
     }},
     automate() {},
     nodeStyle() {
@@ -20,7 +23,7 @@
             "border-color": "#151515",
         };
     },
-    tooltip: "Dark Universe 1 - Abscence of Light",
+    tooltip: "Dark Universe 1 - Absence of Light",
     branches: ["in"],
     color: "black",
     update(delta) {
@@ -76,7 +79,7 @@
 
         // =-- SOFTCAP 2 END --=
         if (player.du.pointGain.gte(player.du.secondSoftcapStart)) player.du.pointGain = player.du.pointGain.div(player.du.secondSoftcapStart).pow(player.du.pointSoftcap2).mul(player.du.secondSoftcapStart)
-        
+
         // POST SOFTCAP MULTIPLIERS
         if (getLevelableTier("pu", 100, true)) player.du.pointGain = player.du.pointGain.mul(levelableEffect("pu", 100)[1])
 
@@ -93,6 +96,13 @@
         player.du.pointSoftcap = player.du.pointSoftcap.pow(player.dv.cloudEffect)
         player.du.pointSoftcap = player.du.pointSoftcap.pow(buyableEffect("rp", 12))
 
+        //Conditions for aniciffo unlock (very secret)
+        if (player.le.resetAmount.gte(8) && player.du.noPunchcards && player.s.pylonBuilt && player.pet.legPetTimers[0].current.lte(30)) {
+            player.du.aniciffoSummon = true
+        } else
+        {
+            player.du.aniciffoSummon = false
+        }
     },
     bars: {},
     upgrades: {},
@@ -123,4 +133,5 @@
     ],
     layerShown() { return player.sma.inStarmetalChallenge},
     deactivated() { return !player.sma.inStarmetalChallenge},
+
 })

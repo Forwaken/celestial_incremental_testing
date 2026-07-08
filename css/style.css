@@ -403,6 +403,26 @@ h1, h2, h3, b, input {
 	text-align: left;
 }
 
+.levelableExtraText {
+	position: absolute;
+	right: 2.5%;
+	bottom: 10%;
+	width: 90%;
+	height: 20%;
+	color: lightcoral;
+	font-size: 14px;
+	padding-right: 5%;
+	text-shadow:
+    1px 1px 1px black,
+    -1px 1px 1px black,
+    -1px -1px 1px black,
+    1px -1px 1px black;
+	text-align: right;
+	vertical-align: bottom;
+}
+
+
+
 .levelableBottom {
 	width: 90%;
 	height: 15px;
@@ -1591,6 +1611,15 @@ button > * {
 
 .evoContainer {
 	background: rgba(0,0,0,0.2);
+	border-radius: 15px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+}
+
+.chestContainer {
+	background: rgba(0,0,0,0.5);
 	border-radius: 15px;
 	padding-left: 10px;
 	padding-right: 10px;

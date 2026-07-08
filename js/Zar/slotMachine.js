@@ -288,7 +288,6 @@
         player.cf.buyables[33] = new Decimal(0)
         player.cf.buyables[34] = new Decimal(0)
 
-        player.cf.autoFlip = false
 
         player.wof.wheelPoints = new Decimal(0)
         player.wof.wheelsSpinned = new Decimal(0)
@@ -1029,7 +1028,7 @@
                     ["raw-html", function () { return "<h5>Mult: " + format(player.sm.totalChipMult) + "x. (also based on amount of slot spins)" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
                     ["raw-html", function () { return "<h5>(Only boosts chip gains)" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
                     ["blank", "25px"],
-                    ["raw-html", function () { return "<h5>Slots spinned: " + formatWhole(player.sm.spinAmount) + "" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
+                    ["raw-html", function () { return "<h5>Slots spun: " + formatWhole(player.sm.spinAmount) + "" }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
                     ["blank", "25px"],
                     ], {width: "625px", height: "700px", background: "rgba(69, 80, 5, 0.5)", border: "0px solid #ccc", borderRight: "0px", borderLeft: "0px", borderRadius: "15px 0px 0px 15px"}],
 
@@ -1141,7 +1140,16 @@
         ["raw-html", () => { return player.za.chancePoints.gte(player.za.chancePointsSoftcapStart) ? "After " + format(player.za.chancePointsSoftcapStart) + " chance points, gain is divided by /" + format(player.za.chancePointsSoftcapEffect) + "." : "Softcap start: " + format(player.za.chancePointsSoftcapStart) + "." }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
         ["microtabs", "stuff", { 'border-width': '0px' }],
     ],
-    layerShown() { return player.startedGame == true && hasUpgrade("za", 16) && !player.sma.inStarmetalChallenge}
+    layerShown() { return player.startedGame == true && hasUpgrade("za", 16) && !player.sma.inStarmetalChallenge},
+    hotkeys: [
+        {
+            key: "s", 
+            description: "Spin Slot Machine",
+            onPress() {
+                clickClickable(this.layer, 21)
+            },
+        }
+	]
 })
 //makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 550, y: 450, text: "Lucky!<br><small>Double Rewards!</small>"})
 //makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 550, y: 450, text: "Jackpot!<br><small>Quadruple Rewards!</small>"})
