@@ -320,7 +320,10 @@ addLayer("hve", {
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },
         43: {
-            fullDisplay() { return "Vex 13 is raised to the power of <br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with Jinx Score)"},
+            fullDisplay() {
+                if (upgradeEffect(this.layer, this.id).gt(10)) return "Vex 13 is raised to the power of <br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with Jinx Score)<br><small style='color:red'>[SOFTCAPPED]</small>"
+                return "Vex 13 is raised to the power of <br>" + format(upgradeEffect(this.layer, this.id)) + "<br>(Increases with Jinx Score)"
+            },
             unlocked: true,
             cost() {return new Decimal(1)},
             canAfford() { return player.hve.rowCurrent[3] > 0},
@@ -332,7 +335,9 @@ addLayer("hve", {
             currencyDisplayName: "Vex",
             currencyInternalName: "vex",
             effect() {
-                return player.hcu.jinxTotal.div(player.h.stage.mul(2.5)).pow(Decimal.div(3.6, player.h.stage)).div(player.h.stage).add(1)
+                let eff = player.hcu.jinxTotal.div(player.h.stage.mul(2.5)).pow(Decimal.div(3.6, player.h.stage)).div(player.h.stage).add(1)
+                if (eff.gt(10)) eff = eff.div(10).pow(Decimal.div(1.8, player.h.stage)).mul(10)
+                return eff
             },
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},
         },

@@ -49,6 +49,7 @@ addLayer("hcu", {
         if (hasUpgrade("hve", 63)) player.hcu.cursesGain = player.hcu.cursesGain.pow(1.03)
         if (hasUpgrade("hpw", 102)) player.hcu.cursesGain = player.hcu.cursesGain.pow(upgradeEffect("hpw", 102))
         player.hcu.cursesGain = player.hcu.cursesGain.pow(buyableEffect("hve", 13))
+        player.hcu.cursesGain = player.hcu.cursesGain.pow(buyableEffect("hpw", 13))
 
         // SOFTCAPS AND PER SECOND
         if (inChallenge("hrm", 12)) player.hcu.cursesGain = player.hcu.cursesGain.pow(Decimal.div(3.6, player.h.stage.max(4)))

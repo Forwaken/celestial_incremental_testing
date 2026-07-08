@@ -310,7 +310,7 @@ addLayer("hsa", {
         },
         17: {
             title: "Limpidity",
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(7)},
             description() {return "Multiply prayer speed based on time in this power reset"},
             cost() {return player.h.stage.div(2).pow(40)},
             currencyLocation() { return player.hsa },
@@ -408,7 +408,7 @@ addLayer("hsa", {
         },
         27: {
             title: "Vigilant",
-            unlocked: true,
+            unlocked() {return player.h.stage.gte(7)},
             description() {return "Vexes boosts the 7th holy dimension."},
             cost() {return player.h.stage.pow(36)},
             currencyLocation() { return player.hsa },

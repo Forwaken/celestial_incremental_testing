@@ -66,6 +66,8 @@ addLayer("h", {
         player.h.tickspeed = player.h.tickspeed.mul(player.tera.trueHexEffect)
         if (hasUpgrade("hpw", 103)) player.h.tickspeed = player.h.tickspeed.mul(upgradeEffect("hpw", 103))
         if (hasUpgrade("hpw", 174)) player.h.tickspeed = player.h.tickspeed.mul(3)
+        player.h.tickspeed = player.h.tickspeed.mul(buyableEffect("hpw", 16))
+        player.h.tickspeed = player.h.tickspeed.mul(player.tera.virtueEffects[4][1])
 
         player.h.externalRaise = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.externalRaise = Decimal.pow(0.5, player.h.stage.sub(6).abs())
@@ -123,6 +125,7 @@ addLayer("h", {
         if (hasUpgrade("hve", 12)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hve", 12))
         if (hasUpgrade("hve", 13)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hve", 13))
         player.h.hexPointGain = player.h.hexPointGain.mul(player.h.prePowerMult)
+        player.h.hexPointGain = player.h.hexPointGain.mul(player.tera.virtueEffects[0][1])
 
         // EXTERNAL MODIFIERS
         let externalHex = new Decimal(1)
@@ -140,6 +143,7 @@ addLayer("h", {
         if (hasUpgrade("hpw", 165)) player.h.hexPointGain = player.h.hexPointGain.pow(1.05)
         player.h.hexPointGain = player.h.hexPointGain.pow(buyableEffect("hve", 11))
         if (hasUpgrade("hbl", 107)) player.h.hexPointGain = player.h.hexPointGain.pow(upgradeEffect("hbl", 107))
+        player.h.hexPointGain = player.h.hexPointGain.pow(buyableEffect("hpw", 14))
         let exp = new Decimal(1)
         for (let i = 6; i < 7; i++) {
             exp = exp.add(player.hpr.rankEffect[i][1])
@@ -173,6 +177,7 @@ addLayer("h", {
         if (hasUpgrade("hpw", 141)) player.h.prePowerMult = player.h.prePowerMult.mul(upgradeEffect("hpw", 141))
         player.h.prePowerMult = player.h.prePowerMult.mul(player.hre.refinementEffect[6][0])
         if (hasUpgrade("hpw", 71) && hasUpgrade("hpw", 164)) player.h.prePowerMult = player.h.prePowerMult.mul(upgradeEffect("hpw", 71))
+        player.h.prePowerMult = player.h.prePowerMult.mul(buyableEffect("hpw", 15))
         player.h.prePowerMult = player.h.prePowerMult.div(player.hrm.challengeSoftcap)
         player.h.prePowerMult = player.h.prePowerMult.div(player.h.preNerf)
 

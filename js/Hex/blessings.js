@@ -86,6 +86,8 @@ addLayer("hbl", {
         if (player.sins.clickables["greed"]) player.hbl.blessingsGain = player.hbl.blessingsGain.div(Decimal.div(77, hasUpgrade("hpw", 2008) ? upgradeEffect("hpw", 2008) : 1))
         if (hasUpgrade("hbl", 104)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hbl", 104))
         if (hasUpgrade("hpw", 172)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 172))
+        player.hbl.blessingsGain = player.hbl.blessingsGain.mul(buyableEffect("hpw", 11))
+        player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.tera.virtueEffects[5][1])
 
         // POWER AND AUTOMATION
         if (hasUpgrade("hve", 62)) player.hbl.blessingsGain = player.hbl.blessingsGain.pow(1.03)

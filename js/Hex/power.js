@@ -29,6 +29,7 @@ addLayer("hpw", {
         if (player.sins.clickables["gluttony"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.gluttony[0])
         if (player.sins.clickables["sloth"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.sloth[0])
         player.hpw.powerGain = player.hpw.powerGain.mul(buyableEffect("hve", 14))
+        player.hpw.powerGain = player.hpw.powerGain.mul(player.tera.virtueEffects[6][1])
 
         let external = new Decimal(1)
         if (hasUpgrade("cs", 202)) external = external.mul(2)
@@ -1410,6 +1411,10 @@ addLayer("hpw", {
             title: "Might A:3",
             unlocked() {return challengeCompletions("hrm", 11) >= 3 && layers.hrm.layerShown()},
             description: "Boost check back xp based on power.",
+            tooltip() {
+                if (buyableEffect("hrm", 5).gt(1)) return "((log10(Power+1)/20)+1)^" + formatSimple(buyableEffect("hrm", 5))
+                return "(log10(Power+1)/20)+1"
+            },
             branches: [1001],
             cost() {return new Decimal(player.h.stage.pow(3)).floor()},
             canAfford() { return hasUpgrade("hpw", 1001)},
@@ -1453,6 +1458,10 @@ addLayer("hpw", {
             title: "Might B:3",
             unlocked() {return challengeCompletions("hrm", 12) >= 3 && layers.hrm.layerShown()},
             description: "Boost crystals and steel based on power.",
+            tooltip() {
+                if (buyableEffect("hrm", 5).gt(1)) return "((Power^0.2)+1)^" + formatSimple(buyableEffect("hrm", 5))
+                return "(Power^0.2)+1"
+            },
             branches: [1002],
             cost() {return new Decimal(player.h.stage.pow(4)).floor()},
             canAfford() { return hasUpgrade("hpw", 1002)},
@@ -1493,6 +1502,10 @@ addLayer("hpw", {
             title: "Might C:3",
             unlocked() {return challengeCompletions("hrm", 13) >= 3 && layers.hrm.layerShown()},
             description: "Boost pollinators based on power.",
+            tooltip() {
+                if (buyableEffect("hrm", 5).gt(1)) return "((Power^0.15)+1)^" + formatSimple(buyableEffect("hrm", 5))
+                return "(Power^0.15)+1"
+            },
             branches: [1003],
             cost() {return new Decimal(player.h.stage.pow(5)).floor()},
             canAfford() { return hasUpgrade("hpw", 1003)},
@@ -1533,6 +1546,10 @@ addLayer("hpw", {
             title: "Might D:3",
             unlocked() {return challengeCompletions("hrm", 14) >= 3 && layers.hrm.layerShown()},
             description: "Boost infinity dimensions based on power.",
+            tooltip() {
+                if (buyableEffect("hrm", 5).gt(1)) return "((Power^0.3)+1)^" + formatSimple(buyableEffect("hrm", 5))
+                return "(Power^0.3)+1"
+            },
             branches: [1004],
             cost() {return new Decimal(player.h.stage.pow(8)).floor()},
             canAfford() { return hasUpgrade("hpw", 1004)},
@@ -1573,6 +1590,15 @@ addLayer("hpw", {
             title: "Might E:3",
             unlocked() {return challengeCompletions("hrm", 15) >= 3 && layers.hrm.layerShown()},
             description: "Boost mastery point effects based on power.",
+            tooltip() {
+                if (buyableEffect("hrm", 5).gt(1)) {
+                    if (Decimal.pow(1.06, player.hpw.power.add(1).log(6)).gte(5)) return"((log6(Power+1))/5.5)^" + formatSimple(buyableEffect("hrm", 5))
+                    return "(1.06^(log6(Power+1)))^" + formatSimple(buyableEffect("hrm", 5))
+                } else {
+                    if (Decimal.pow(1.06, player.hpw.power.add(1).log(6)).gte(5)) return "(log6(Power+1))/5.5"
+                    return "1.06^(log6(Power+1))"
+                }
+            },
             branches: [1005],
             cost() {return new Decimal(player.h.stage.pow(10)).floor()},
             canAfford() { return hasUpgrade("hpw", 1005)},
@@ -1620,6 +1646,10 @@ addLayer("hpw", {
             title: "Might F:3",
             unlocked() {return challengeCompletions("hrm", 16) >= 3 && layers.hrm.layerShown()},
             description: "Boost infinity points based on power.",
+            tooltip() {
+                if (buyableEffect("hrm", 5).gt(1)) return "((Power^0.25)+1)^" + formatSimple(buyableEffect("hrm", 5))
+                return "(Power^0.25)+1"
+            },
             branches: [1006],
             cost() {return new Decimal(player.h.stage.pow(13)).floor()},
             canAfford() { return hasUpgrade("hpw", 1006)},
@@ -2007,6 +2037,150 @@ addLayer("hpw", {
             },
             style: {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "10px"},
         },
+        11: {
+            costBase() { return new Decimal(1e60) },
+            costGrowth() { return new Decimal(36) },
+            purchaseLimit() { return new Decimal(50) },
+            currency() { return player.hpw.power},
+            pay(amt) { player.hpw.power = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id))},
+            unlocked() { return hasUpgrade("tera", "hex1") },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 1).gte(1)},
+            branches: [1],
+            display() {
+                return "<h3>Might EX-α</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                    Boost blessing gain.\n\
+                    Currently: x" + formatWhole(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "10px"},
+        },
+        12: {
+            costBase() { return new Decimal(1e70) },
+            costGrowth() { return new Decimal(216) },
+            purchaseLimit() { return new Decimal(50) },
+            currency() { return player.hpw.power},
+            pay(amt) { player.hpw.power = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).add(1)},
+            unlocked() { return hasUpgrade("tera", "hex1") },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 2).gte(1)},
+            branches: [2],
+            display() {
+                return "<h3>Might EX-β</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                    Reduce purity requirement.\n\
+                    Currently: -" + formatWhole(tmp[this.layer].buyables[this.id].effect.sub(1)) + "\n\ \n\
+                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "10px"},
+        },
+        13: {
+            costBase() { return new Decimal(1e80) },
+            costGrowth() { return new Decimal(1296) },
+            purchaseLimit() { return new Decimal(50) },
+            currency() { return player.hpw.power},
+            pay(amt) { player.hpw.power = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.9).div(100).add(1)},
+            unlocked() { return hasUpgrade("tera", "hex1") },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 3).gte(1)},
+            branches: [3],
+            display() {
+                return "<h3>Might EX-γ</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                    Boost curse gain.\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 3) + "\n\ \n\
+                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "10px"},
+        },
+        14: {
+            costBase() { return new Decimal(1e90) },
+            costGrowth() { return new Decimal(7776) },
+            purchaseLimit() { return new Decimal(50) },
+            currency() { return player.hpw.power},
+            pay(amt) { player.hpw.power = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.1).div(100).add(1)},
+            unlocked() { return hasUpgrade("tera", "hex1") },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 4).gte(1)},
+            branches: [4],
+            display() {
+                return "<h3>Might EX-δ</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                    Boost " + player.h.stageName[1] + " point gain.\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 3) + "\n\ \n\
+                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "10px"},
+        },
+        15: {
+            costBase() { return new Decimal(1e100) },
+            costGrowth() { return new Decimal(46656) },
+            purchaseLimit() { return new Decimal(50) },
+            currency() { return player.hpw.power},
+            pay(amt) { player.hpw.power = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id))},
+            unlocked() { return hasUpgrade("tera", "hex1") },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 5).gte(1)},
+            branches: [5],
+            display() {
+                return "<h3>Might EX-ε</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                    Boost pre power resource gain.\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "10px"},
+        },
+        16: {
+            costBase() { return new Decimal(1e110) },
+            costGrowth() { return new Decimal(279936) },
+            purchaseLimit() { return new Decimal(50) },
+            currency() { return player.hpw.power},
+            pay(amt) { player.hpw.power = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id))},
+            unlocked() { return hasUpgrade("tera", "hex1") },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) && getBuyableAmount("hpw", 6).gte(1)},
+            branches: [6],
+            display() {
+                return "<h3>Might EX-ζ</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
+                    Boost uni-alpha tickspeed gain.\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "120px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "10px"},
+        },
     },
     milestones: {
         1: {
@@ -2087,7 +2261,7 @@ addLayer("hpw", {
                         ["style-row", [["upgrade", 2002]], {width: "140px", height: "140px"}],
                         ["upgrade", 21],
                         ["bt-upgrade", 22],
-                        ["style-row", [["upgrade", 1013], ["bt-upgrade", 16]], {width: "140px", height: "140px"}],
+                        ["style-row", [["bt-upgrade", 1013], ["bt-upgrade", 16]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 1021], ["bt-upgrade", 37]], {width: "140px", height: "140px"}],
@@ -2105,11 +2279,11 @@ addLayer("hpw", {
                         ["style-row", [["upgrade", 1032], ["bt-upgrade", 45]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["style-row", [["upgrade", 1023], ["bt-upgrade", 35]], {width: "140px", height: "140px"}],
+                        ["style-row", [["bt-upgrade", 1023], ["bt-upgrade", 35]], {width: "140px", height: "140px"}],
                         ["upgrade", 51],
                         ["upgrade", 52],
                         ["upgrade", 53],
-                        ["style-row", [["upgrade", 1033], ["bt-upgrade", 46]], {width: "140px", height: "140px"}],
+                        ["style-row", [["bt-upgrade", 1033], ["bt-upgrade", 46]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 1041], ["bt-upgrade", 76]], {width: "140px", height: "140px"}],
@@ -2126,7 +2300,7 @@ addLayer("hpw", {
                     ]],
                     ["row", [
                         ["style-row", [["upgrade", 1107]], {width: "140px", height: "140px"}],
-                        ["style-row", [["upgrade", 1043], ["upgrade", 74]], {width: "140px", height: "140px"}],
+                        ["style-row", [["bt-upgrade", 1043], ["upgrade", 74]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
                         ["upgrade", 81],
                         ["style-row", [["upgrade", 2005]], {width: "140px", height: "140px", marginLeft: "70px"}],
@@ -2156,7 +2330,7 @@ addLayer("hpw", {
                         ["upgrade", 111],
                         ["upgrade", 112],
                         ["blank", ["70px", "140px"]],
-                        ["style-row", [["upgrade", 1053], ["upgrade", 106]], {width: "140px", height: "140px"}],
+                        ["style-row", [["bt-upgrade", 1053], ["upgrade", 106]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
                     ]],
                     ["row", [
@@ -2176,8 +2350,34 @@ addLayer("hpw", {
                         ["style-row", [["upgrade", 2008]], {width: "140px", height: "140px", marginRight: "70px"}],
                         ["style-row", [["bt-upgrade", 141], ["buyable", 0]], {width: "140px", height: "140px"}],
                         ["blank", ["70px", "140px"]],
-                        ["style-row", [["upgrade", 1063], ["bt-upgrade", 134]], {width: "140px", height: "140px"}],
+                        ["style-row", [["bt-upgrade", 1063], ["bt-upgrade", 134]], {width: "140px", height: "140px"}],
                     ]],
+                    ["style-column", [
+                        ["row", [
+                            ["style-row", [["buyable", 16]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 6]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 1]], {width: "140px", height: "140px"}],
+                            ["style-row", [
+                                ["buyable", 11],
+                                ["style-column", [
+                                    ["raw-html", "Kept on singularity<br>First purchase keeps the respective realm challenge on singularity", {color: "rgba(0,0,0,0.6)", userSelect: "none", fontSize: "14px", fontFamily: "monospace"}],
+                                ], () => {return player.ir.iriditeDefeated ? {display: "none !important"} : {width: "180px", height: "110px", backgroundColor: "#933", border: "5px solid rgba(0,0,0,0.5)", marginLeft: "50px", borderRadius: "25px"}}],
+                            ], {width: "140px", height: "140px"}],
+                        ]],
+                        ["row", [
+                            ["style-row", [["buyable", 15]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 5]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 7]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 2]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 12]], {width: "140px", height: "140px"}],
+                        ]],
+                        ["row", [
+                            ["style-row", [["buyable", 14]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 4]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 3]], {width: "140px", height: "140px"}],
+                            ["style-row", [["buyable", 13]], {width: "140px", height: "140px"}],
+                        ]],
+                    ], () => {return player.h.stage.eq(6) && layers.hrm.layerShown() ? {} : {display: "none !important"}}],
                     ["style-column", [
                         ["row", [
                             ["style-row", [["upgrade", 166]], {width: "140px", height: "140px", marginLeft: "35px", marginRight: "35px"}],
@@ -2202,25 +2402,6 @@ addLayer("hpw", {
                             ["upgrade", 174],
                         ]],
                     ], () => {return player.h.stage.gte(7) ? {} : {display: "none !important"}}],
-                    ["style-column", [
-                        ["row", [
-                            ["blank", ["210px", "140px"]],
-                            ["style-row", [["buyable", 6]], {width: "140px", height: "140px"}],
-                            ["style-row", [["buyable", 1]], {width: "140px", height: "140px"}],
-                            ["style-column", [
-                                ["raw-html", "Kept on singularity<br>First purchase keeps the respective realm challenge on singularity", {color: "rgba(0,0,0,0.6)", userSelect: "none", fontSize: "14px", fontFamily: "monospace"}],
-                            ], {width: "180px", height: "110px", backgroundColor: "#933", border: "5px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "25px"}],
-                        ]],
-                        ["row", [
-                            ["style-row", [["buyable", 5]], {width: "140px", height: "140px"}],
-                            ["style-row", [["buyable", 7]], {width: "140px", height: "140px"}],
-                            ["style-row", [["buyable", 2]], {width: "140px", height: "140px"}],
-                        ]],
-                        ["row", [
-                            ["style-row", [["buyable", 4]], {width: "140px", height: "140px"}],
-                            ["style-row", [["buyable", 3]], {width: "140px", height: "140px"}],
-                        ]],
-                    ], () => {return player.h.stage.eq(6) && layers.hrm.layerShown() ? {} : {display: "none !important"}}],
                 ],
             },
             "Vigors": {

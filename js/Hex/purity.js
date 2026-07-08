@@ -74,6 +74,8 @@ addLayer("hpu", {
         requirementSub = requirementSub.add(buyableEffect("hcu", 114).sub(1))
         if (hasUpgrade("hpw", 35)) requirementSub = requirementSub.add(upgradeEffect("hpw", 35).sub(1))
         if (hasUpgrade("hbl", 105)) requirementSub = requirementSub.add(upgradeEffect("hbl", 105).sub(1))
+        requirementSub = requirementSub.add(buyableEffect("hpw", 12).sub(1))
+        requirementSub = requirementSub.add(player.tera.virtueEffects[2][1])
 
         player.hpu.purityReq = purityMade.mul(player.h.stage).add(player.h.stage.mul(7)).sub(requirementSub).ceil()
         player.hpu.purityGain = player.hre.refinement.add(requirementSub).sub(player.h.stage.mul(7)).div(player.h.stage).add(1).sub(purityMade).floor()

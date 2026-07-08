@@ -23,6 +23,7 @@ addLayer("hre", {
         if (inChallenge("hrm", 16)) player.hre.refinementDiv = player.hre.refinementDiv.mul(player.hre.refinementEffect[1][0])
         player.hre.refinementDiv = player.hre.refinementDiv.mul(player.h.prePowerMult)
         if (hasUpgrade("hpw", 134)) player.hre.refinementDiv = player.hre.refinementDiv.mul(upgradeEffect("hpw", 134))
+        player.hre.refinementDiv = player.hre.refinementDiv.mul(player.tera.virtueEffects[3][1])
 
         let externalDiv = new Decimal(1)
         externalDiv = externalDiv.mul(player.rf.abilityEffects[7])
