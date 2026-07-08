@@ -125,7 +125,7 @@ addLayer("tera", {
             [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)],
             [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)],
             [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)]],
-        hexUnseal: false,
+        virtueUnlocks: [false, false, false, false, false, false, false],
 
         seal: false,
     }},
@@ -183,12 +183,13 @@ addLayer("tera", {
         player.tera.virtueEssenceGain[0] = player.tera.virtue[0].div(7).pow(1.3)
         player.tera.virtueEffects[0][0] = player.tera.virtueEssence[0].gte(1) ? player.tera.virtueEssence[0].pow(0.35).div(10).add(1) : new Decimal(1)
         player.tera.virtueEffects[0][1] = player.tera.virtueEssence[0].gte(49) ? Decimal.pow(2, player.tera.virtueEssence[0].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
-        if (!player.tera.hexUnseal && player.tera.virtueEssence[0].gte(3500)) player.tera.hexUnseal = true
+        if (!player.tera.virtueUnlocks[0] && player.tera.virtueEssence[0].gte(3500)) player.tera.virtueUnlocks[0] = true
         player.tera.virtueReq[1] = layers.h.hexReq(player.tera.virtue[1], 7, 1.5, new Decimal(1))
         player.tera.virtueGain[1] = layers.h.hexGain(player.tera.virtue[0], 7, 1.5, new Decimal(1)).sub(player.tera.virtue[1]).max(0)
         player.tera.virtueEssenceGain[1] = player.tera.virtue[1].div(6).pow(1.28)
         player.tera.virtueEffects[1][0] = player.tera.virtueEssence[1].gte(1) ? player.tera.virtueEssence[1].pow(0.38).div(9).add(1) : new Decimal(1)
         player.tera.virtueEffects[1][1] = player.tera.virtueEssence[1].gte(49) ? Decimal.pow(3, player.tera.virtueEssence[1].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
+        if (!player.tera.virtueUnlocks[1] && player.tera.virtueEssence[1].gte(14000)) player.tera.virtueUnlocks[1] = true
         player.tera.virtueReq[2] = layers.h.hexReq(player.tera.virtue[2], 14, 1.45, new Decimal(1))
         player.tera.virtueGain[2] = layers.h.hexGain(player.tera.virtue[1], 14, 1.45, new Decimal(1)).sub(player.tera.virtue[2]).max(0)
         player.tera.virtueEssenceGain[2] = player.tera.virtue[2].div(5).pow(1.26)
@@ -307,6 +308,8 @@ addLayer("tera", {
         for (let i = 101; i < 115; i++) {
             player.hcu.buyables[i] = new Decimal(0)
         }
+        player.hve.jinxedJinx = new Decimal(0)
+        player.hve.jinxedJinxEffects = [new Decimal(1), new Decimal(1), new Decimal(0)]
 
         // VEXES
         player.hve.vex = new Decimal(0)
@@ -717,8 +720,8 @@ addLayer("tera", {
             },
         },
         106: {
-            title() {return !player.tera.hexUnseal ? "<h2>CURRENTLY SEALED</h2><br><h3>[Perhaps a virtuous power could break this seal?]</h3>" : player.h.stage.neq(6) ? (Decimal.gt(player.tera.clickables[106], 0) ? "<h2>Are you sure?</h2><br><h3>[Resets ALL previous Uni-α content]</h3>" : "<h2>Switch to Hex Universe</h2><br><h3>[Resets ALL previous Uni-α content]</h3>") : "<h2>Switch to Hex Universe</h2><br><h3>[ALREADY IN HEX UNIVERSE]</h3>"},
-            canClick() {return player.h.stage.neq(6) && player.tera.hexUnseal},
+            title() {return !player.tera.virtueUnlocks[0] ? "<h2>CURRENTLY SEALED</h2><br><h3>[Perhaps a virtuous power could break this seal?]</h3>" : player.h.stage.neq(6) ? (Decimal.gt(player.tera.clickables[106], 0) ? "<h2>Are you sure?</h2><br><h3>[Resets ALL previous Uni-α content]</h3>" : "<h2>Switch to Hex Universe</h2><br><h3>[Resets ALL previous Uni-α content]</h3>") : "<h2>Switch to Hex Universe</h2><br><h3>[ALREADY IN HEX UNIVERSE]</h3>"},
+            canClick() {return player.h.stage.neq(6) && player.tera.virtueUnlocks[0]},
             unlocked: true,
             onClick() {
                 if (Decimal.lte(player.tera.clickables[106], 0)) {
@@ -1356,7 +1359,11 @@ addLayer("tera", {
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).add(1) },
             unlocked: true,
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            cost(x) {
+                let amt = x || getBuyableAmount(this.layer, this.id)
+                if (amt.gte(10)) return this.costGrowth().pow(amt.div(3).pow(2).mul(3)).mul(this.costBase())
+                return this.costGrowth().pow(amt).mul(this.costBase())
+            },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
                 return "<h3>Improve Bewitch Effects</h3>\n\
@@ -2026,7 +2033,7 @@ addLayer("tera", {
                             ["style-row", [
                                 ["style-row", [["raw-html", "3,500", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "Unseal Uni-Alpha: Hex"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.hexUnseal && player.tera.virtueEssence[0].lt(3500)) {look.background = "#bf8f8f"};return look}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks[0] && player.tera.virtueEssence[0].lt(3500)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "???", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
@@ -2065,8 +2072,8 @@ addLayer("tera", {
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[1].lt(49)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "14,000", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[1].lt(14000)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", () => {return "Unlock the jinxed jinx"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks[1] && player.tera.virtueEssence[1].lt(14000)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "???", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],

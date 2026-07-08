@@ -85,6 +85,12 @@ addLayer("hve", {
                 player.hcu.buyables[110] = new Decimal(0)
                 player.hcu.buyables[111] = new Decimal(0)
                 if (!hasMilestone("hpw", 4)) player.hcu.buyables[112] = new Decimal(0)
+                for (let i = 113; i < 115; i++) {
+                    player.hcu.buyables[i] = new Decimal(0)
+                }
+
+                player.hve.jinxedJinx = new Decimal(0)
+                player.hve.jinxedJinxEffects = [new Decimal(1), new Decimal(1), new Decimal(0)]
             },
             style() {
                 let look = {width: "300px", minHeight: "80px", fontSize: "9px", border: "2px solid black", borderRadius: "15px"}

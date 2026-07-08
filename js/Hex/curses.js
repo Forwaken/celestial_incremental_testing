@@ -12,6 +12,11 @@ addLayer("hcu", {
         jinxTotal: new Decimal(0),
         jinxAddCap: new Decimal(0),
         jinxDiv: new Decimal(1),
+        jinxTot: new Decimal(0),
+
+        jinxedJinx: new Decimal(0),
+        jinxedJinxReq: new Decimal(500),
+        jinxedJinxEffects: [new Decimal(1), new Decimal(1), new Decimal(0)],
     }},
     automate() {
         if (hasMilestone("hre", 12) && !inChallenge("hrm", 15)) {
@@ -33,6 +38,7 @@ addLayer("hcu", {
         if (hasUpgrade("hpw", 22)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("hpw", 22))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(player.h.prePowerMult)
         if (hasUpgrade("hbl", 103)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("hbl", 103))
+        player.hcu.cursesGain = player.hcu.cursesGain.mul(player.hcu.jinxedJinxEffects[0])
 
         let externalCur = new Decimal(1)
         externalCur = externalCur.mul(buyableEffect("ta", 49))
@@ -64,6 +70,8 @@ addLayer("hcu", {
             player.hcu.jinxTotal = player.hcu.jinxTotal.add(getBuyableAmount("hcu", i))
             if (tmp["hcu"].buyables[i].extraAmount != null) player.hcu.jinxTotal = player.hcu.jinxTotal.add(tmp["hcu"].buyables[i].extraAmount)
         }
+        player.hcu.jinxTotal = player.hcu.jinxTotal.add(player.hcu.jinxedJinx)
+        player.hcu.jinxTot = player.hcu.jinxTotal
         player.hcu.jinxTotal = player.hcu.jinxTotal.mul(player.hve.vexEffects[1])
         if (hasUpgrade("hbl", 7)) player.hcu.jinxTotal = player.hcu.jinxTotal.mul(upgradeEffect("hbl", 7))
         player.hcu.jinxTotal = player.hcu.jinxTotal.mul(levelableEffect("pet", 109)[1].pow(player.h.externalRaise))
@@ -80,6 +88,12 @@ addLayer("hcu", {
         player.hcu.jinxDiv = new Decimal(1)
         player.hcu.jinxDiv = player.hcu.jinxDiv.mul(buyableEffect("hcu", 104))
         if (hasUpgrade("hpw", 43)) player.hcu.jinxDiv = player.hcu.jinxDiv.mul(upgradeEffect("hpw", 43))
+
+        // JINXED JINX
+        player.hcu.jinxedJinxReq = player.hcu.jinxedJinx.add(5).mul(100)
+        player.hcu.jinxedJinxEffects[0] = player.hcu.jinxTot.pow(player.hcu.jinxedJinx.div(5).add(1)).div(100).pow(player.hcu.jinxedJinx)
+        player.hcu.jinxedJinxEffects[1] = player.hcu.jinxedJinx.div(20).add(1)
+        player.hcu.jinxedJinxEffects[2] = player.hcu.jinxedJinx
     },
     clickables: {
         1: {
@@ -98,6 +112,36 @@ addLayer("hcu", {
                 }
             },
             style: {width: "200px", minHeight: "40px", borderRadius: "15px"},
+        },
+        100: {
+            title() {
+                return "<div style='display:flex;align-items:center;justify-content:center;width:250px;height:40px;background:rgba(0,0,0,0.2);border-radius:15px;font-size:20px;margin-top:15px;margin-bottom:10px'>" + formatWhole(player.hcu.jinxedJinx) + " Jinxed Jinx</div>" +
+                "<div style='display:flex;align-items:center;justify-content:center;width:350px;height:80px;background:rgba(0,0,0,0.2);border-radius:15px;font-size:16px;margin-bottom:10px'>Gain a jinxed jinx, but reset curse content.</h2><br>Req: " + formatWhole(player.hcu.jinxTot) + "/" + formatWhole(player.hcu.jinxedJinxReq) + " Jinxes</div>" +
+                "<div style='display:flex;align-items:center;justify-content:center;width:350px;height:120px;background:rgba(0,0,0,0.2);border-radius:15px;font-size:16px'>Effects:<br>x" + formatSimple(player.hcu.jinxedJinxEffects[0]) + " Curses<br>(Based on total jinxes)<br>x" + formatSimple(player.hcu.jinxedJinxEffects[1], 2) + " Jinx Cap<br>+" + formatWhole(player.hcu.jinxedJinxEffects[2]) + " free hexed jinxes</div>"
+            },
+            canClick() { return player.hcu.curses.gt(0) && player.hcu.jinxTot.gte(player.hcu.jinxedJinxReq)},
+            unlocked: true,
+            onClick() {
+                player.hcu.jinxedJinx = player.hcu.jinxedJinx.add(1)
+
+                // RESET CODE
+                player.hcu.curses = new Decimal(0)
+                player.hcu.cursesGain = new Decimal(0)
+                for (let i = 101; i < 109; i++) {
+                    player.hcu.buyables[i] = new Decimal(0)
+                }
+                if (!hasMilestone("hpw", 4)) player.hcu.buyables[109] = new Decimal(0)
+                player.hcu.buyables[110] = new Decimal(0)
+                player.hcu.buyables[111] = new Decimal(0)
+                if (!hasMilestone("hpw", 4)) player.hcu.buyables[112] = new Decimal(0)
+                for (let i = 113; i < 115; i++) {
+                    player.hcu.buyables[i] = new Decimal(0)
+                }
+            },
+            style() {
+                let look = {width: "400px", minHeight: "300px", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
+                return look
+            },
         },
     },
     buyables: {
@@ -427,6 +471,7 @@ addLayer("hcu", {
             extraAmount() {
                 let amt = new Decimal(0)
                 if (hasUpgrade("hve", 51)) amt = amt.add(1)
+                amt = amt.add(player.hcu.jinxedJinxEffects[2])
                 return amt
             },
             effect(x) {
@@ -484,6 +529,7 @@ addLayer("hcu", {
             extraAmount() {
                 let amt = new Decimal(0)
                 if (hasUpgrade("hve", 51)) amt = amt.add(1)
+                amt = amt.add(player.hcu.jinxedJinxEffects[2])
                 return amt
             },
             effect(x) {
@@ -542,6 +588,7 @@ addLayer("hcu", {
             extraAmount() {
                 let amt = new Decimal(0)
                 if (hasUpgrade("hve", 51)) amt = amt.add(1)
+                amt = amt.add(player.hcu.jinxedJinxEffects[2])
                 return amt
             },
             effect(x) {
@@ -606,6 +653,7 @@ addLayer("hcu", {
             extraAmount() {
                 let amt = new Decimal(0)
                 if (hasUpgrade("hve", 51)) amt = amt.add(1)
+                amt = amt.add(player.hcu.jinxedJinxEffects[2])
                 return amt
             },
             effect(x) { return Decimal.mul(0.03, getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
@@ -655,6 +703,7 @@ addLayer("hcu", {
             extraAmount() {
                 let amt = new Decimal(0)
                 if (hasUpgrade("hve", 51)) amt = amt.add(1)
+                amt = amt.add(player.hcu.jinxedJinxEffects[2])
                 return amt
             },
             effect(x) {
@@ -707,6 +756,7 @@ addLayer("hcu", {
             extraAmount() {
                 let amt = new Decimal(0)
                 if (hasUpgrade("hve", 51)) amt = amt.add(1)
+                amt = amt.add(player.hcu.jinxedJinxEffects[2])
                 return amt
             },
             effect(x) { return Decimal.mul(0.1, getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
@@ -808,7 +858,13 @@ addLayer("hcu", {
             },
             currency() { return player.hcu.curses},
             pay(amt) { player.hcu.curses = this.currency().sub(amt).max(0) },
-            effect(x) {return getBuyableAmount(this.layer, this.id).add(1)},
+            extraAmount() {
+                let amt = new Decimal(0)
+                if (hasUpgrade("hve", 51)) amt = amt.add(1)
+                amt = amt.add(player.hcu.jinxedJinxEffects[2])
+                return amt
+            },
+            effect(x) {return getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount).add(1)},
             unlocked() { return player.h.stage.gte(7) },
             cost(x = getBuyableAmount(this.layer, this.id)) {
                 if (x.lt(player.h.stage.div(2))) {
@@ -888,6 +944,14 @@ addLayer("hcu", {
                             ["raw-html", () => {return formatWhole(player.hcu.jinxTotal)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                         ], {width: "100px", height: "35px", backgroundColor: "#232b2b", borderRadius: "0 15px 15px 0"}],
                     ], {width: "250px", height: "35px", backgroundColor: "#354040", border: "2px solid black", borderRadius: "15px"}],
+                ],
+            },
+            "Jinxed Jinx": {
+                buttonStyle() {return {borderRadius: "5px"}},
+                unlocked() {return player.tera.virtueUnlocks[1]},
+                content: [
+                    ["blank", "20px"],
+                    ["clickable", 100],
                 ],
             },
         },

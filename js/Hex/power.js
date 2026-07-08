@@ -131,6 +131,9 @@ addLayer("hpw", {
             player.hcu.buyables[i] = new Decimal(0)
         }
 
+        player.hve.jinxedJinx = new Decimal(0)
+        player.hve.jinxedJinxEffects = [new Decimal(1), new Decimal(1), new Decimal(0)]
+
         // VEXES
         if (type != 2) {
             player.hve.vex = new Decimal(0)
