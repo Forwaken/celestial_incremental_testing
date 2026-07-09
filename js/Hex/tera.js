@@ -2382,17 +2382,19 @@ addLayer("tera", {
                         ["blank", "10px"],
                         ["clickable", "heptReset"],
                         ["blank", "10px"],
-                        ["tooltip-row", [
-                            ["raw-html", () => {return "You have <h3>" + formatSimple(player.tera.heptEssence) + "</h3> hept essence."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return "(+" + formatSimple(player.tera.heptEssencePerSecond, 2) + "/s)"}, () => {
-                                let look = {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}
-                                player.tera.heptEssencePerSecond.gt(0) ? look.color = "white" : look.color = "gray"
-                                return look
-                            }],
-                            ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>(7<sup>(True Hept)</sup>)/70</small></div>"}],
-                        ]],
-                        ["blank", "10px"],
-                        ["microtabs", "hept", {borderWidth: "0px"}],
+                        ["style-column", [
+                            ["tooltip-row", [
+                                ["raw-html", () => {return "You have <h3>" + formatSimple(player.tera.heptEssence) + "</h3> hept essence."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return "(+" + formatSimple(player.tera.heptEssencePerSecond, 2) + "/s)"}, () => {
+                                    let look = {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}
+                                    player.tera.heptEssencePerSecond.gt(0) ? look.color = "white" : look.color = "gray"
+                                    return look
+                                }],
+                                ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>(7<sup>(True Hept)</sup>)/70</small></div>"}],
+                            ]],
+                            ["blank", "10px"],
+                            ["microtabs", "hept", {borderWidth: "0px"}]
+                        ], () => {return player.tera.trueHept.gt(0) ? {} : {display: "none !important"}}],
                     ], {width: "597px", height: "720px", background: "#2c3142"}],
                 ],
             },
