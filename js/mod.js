@@ -886,6 +886,41 @@ let credits = `<h1>Credits:</h1><br>
 		`
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v1.14 - The Novasent Update Part IV: Tera</h3><br>
+		Content:<br>
+			- Added Tera, and its subsequent content.<br>
+			- Completely rebalanced uni-alpha.<br>
+			- Remade hex of sacrifice.<br>
+			- Added new Zar Dungeon upgrades.<br>
+			- Added new Laboratory upgrades.<br><br>
+		Minor Changes:<br>
+			- Improved the challenge components UI.<br>
+			- Added bulk realm challenge completion.<br>
+			- Clarified that purifier respeccing doesn't reset anything.<br>
+			- Made things that power reset give you power you would have gained if you meet the req.<br>
+			- Added a bulk-assign button to Vex.<br>
+			- Added purchase values to twig upgrades.<br>
+			- Improved buying reqs for the last row of stabilization buyables to prevent locking yourself out of purchases.<br>
+			- Improved Zar's Dungeon UI.<br>
+			- Added bulk cante/remembrance core gain.<br>
+			- Added -D1's song to the jukebox.<br><br>
+		Balancing:<br>
+			- Completely rebalanced uni-alpha.<br>
+			- Black heart currency drops now roll the remainder instead of flooring.<br>
+			- Halved the time skip cooldown in Stagnant Synestia.<br>
+			- Buffed Kres' first upgrade by +0.05 to account for a new addition.<br>
+			- Doubled the byproduct gain from the 4th rune. [Stagnant Synestia]<br>
+			- Reduced Stagnant Synestia's max combo from 100 -> 50.<br>
+			- Doubled the scaling of stagnant synestia's combo formula.<br>
+			- Reduced distance between stagnant synestia milestones from 25 -> 10, and added a new milestone.<br>
+			- Increased Stagnant Synestia's combo scaling from 1.025 -> 1.05, and the start of scaling from 25 -> 10.<br>
+			- Roughly doubled the rewards from Stagnant Synestia celestialites, and made it possible to get both drops at the same time.<br>
+			- Made the check back ritual cooldown be effected by check back tickspeed.<br><br>
+		Bug Fixes:<br>
+			- Changed the size of some text in black heart to prevent text overflow.<br>
+			- Fixed Dice Five and The Creation not being effected by base character stat multipliers.<br>
+			- Fixed the spelling of "Remembrance" in many parts of the game.<br>
+			- Fixed a bug with IP (4:2)'s softcap. [It accidentally gave you x1e5,000 extra IP for free]<br><br>
 	<h3>v1.13.1 - Akash's Mini-Update I: Negative Diamonds</h3><br>
 		Content:<br>
 			- Added page 3 of achievements.<br>

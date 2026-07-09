@@ -359,6 +359,14 @@ addLayer("jukebox", {
             file: "music/alephBattle.mp3",
             unlocked() {return player.alephsChamber.milestone[25] > 0},
         },
+        "depth-1-neg": {
+            artist: "Icecreamdude",
+            name: "N/A",
+            description: "Negative Depth 1",
+            img: "resources/music/depth-1-neg.png",
+            file: "music/depth1Encore.mp3",
+            unlocked() {return player.depth1.lowestCombo.lt(0)},
+        },
 
         // CUTSCENE SONGS
         "cutscene-piano": {
@@ -572,7 +580,7 @@ addLayer("jukebox", {
                     ["row", [
                         ["jukebox", "none"], ["jukebox", "black-heart"], ["jukebox", "depth-1"], ["jukebox", "depth-2"],
                         ["jukebox", "depth-3"], ["jukebox", "matos-lair"], ["jukebox", "matos-fight"], ["jukebox", "stagnant-synestia"],
-                        ["jukebox", "depth-4"], ["jukebox", "laboratory"], ["jukebox", "aleph-fight"],
+                        ["jukebox", "depth-4"], ["jukebox", "laboratory"], ["jukebox", "aleph-fight"], ["jukebox", "depth-1-neg"],
                     ]],
                     ["blank", "2px"],
                 ],

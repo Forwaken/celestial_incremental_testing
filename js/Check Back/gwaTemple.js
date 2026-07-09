@@ -61,7 +61,6 @@ addLayer("gwaTemple", {
         // GWA POINTS
         let gwaAmt = new Decimal(0)
         if (hasMilestone("gwaTemple", 11)) gwaAmt = gwaAmt.add(player.gwaTemple.gwark)
-        gwaAmt = gwaAmt.add(10)
         if (hasUpgrade("gwaTemple", 16)) gwaAmt = gwaAmt.mul(2)
         player.gwaTemple.gwaPointsGain = gwaAmt.add(1).log(2).div(6)
 
