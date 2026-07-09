@@ -886,7 +886,7 @@ let credits = `<h1>Credits:</h1><br>
 		`
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v1.14 - The Novasent Update Part IV: Tera</h3><br>
+	<h3>v1.14 - The Novasent Update Part IV: Tera [UNFINISHED]</h3><br>
 		Content:<br>
 			- Added Tera, and its subsequent content.<br>
 			- Completely rebalanced uni-alpha.<br>
