@@ -68,6 +68,11 @@ addLayer("hpw", {
         player.hpw.sincePower = player.hpw.sincePower.add(Decimal.mul(delta, sinceGain.mul(player.h.tickspeed)))
     },
     powerReset(type) {
+        if (player.h.stage.eq(7) && player.hpw.powerGain.gte(1e70)) {
+            for (let i = 0; i < 7; i++) {
+                if (!player.sins.sinUsed[i]) player.tera.sinMastery[i] = true
+            }
+        }
         // SACRIFICE
         player.hsa.holyPower = new Decimal(0)
         player.hsa.holyPowerGain = new Decimal(0)

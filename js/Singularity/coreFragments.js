@@ -69,17 +69,15 @@
         player.cof.fragmentScore[0] = player.points.plus(1).log10().pow(0.7).div(33).div(5)
         player.cof.fragmentScore[0] = player.cof.fragmentScore[0].mul(player.f.factorPower.plus(1).log10().pow(0.446).div(33))
         player.cof.fragmentScore[0] = player.cof.fragmentScore[0].mul(player.p.prestigePoints.plus(1).log10().pow(0.444).div(33))
-        if (player.sins.clickables["pride"]) player.cof.fragmentScore[0] = player.cof.fragmentScore[0].mul(player.sins.pride[1])
+        if (player.sins.clickables["pride"] || player.tera.sinMastery[6]) player.cof.fragmentScore[0] = player.cof.fragmentScore[0].mul(player.sins.pride[1])
 
         //natural
-        if (!inChallenge("ip", 12))
-        {
-        player.cof.fragmentScore[1] = player.t.trees.plus(1).log10().pow(0.425).div(6).div(1.25)
-        player.cof.fragmentScore[1] = player.cof.fragmentScore[1].mul(player.g.grass.plus(1).log10().pow(0.35).div(5))
-        player.cof.fragmentScore[1] = player.cof.fragmentScore[1].mul(player.gh.grasshoppers.plus(1).log10().pow(0.35).div(5))
-        if (player.sins.clickables["lust"]) player.cof.fragmentScore[1] = player.cof.fragmentScore[1].mul(player.sins.lust[1])
-        } else
-        {
+        if (!inChallenge("ip", 12)) {
+            player.cof.fragmentScore[1] = player.t.trees.plus(1).log10().pow(0.425).div(6).div(1.25)
+            player.cof.fragmentScore[1] = player.cof.fragmentScore[1].mul(player.g.grass.plus(1).log10().pow(0.35).div(5))
+            player.cof.fragmentScore[1] = player.cof.fragmentScore[1].mul(player.gh.grasshoppers.plus(1).log10().pow(0.35).div(5))
+            if (player.sins.clickables["lust"] || player.tera.sinMastery[2]) player.cof.fragmentScore[1] = player.cof.fragmentScore[1].mul(player.sins.lust[1])
+        } else {
             player.cof.fragmentScore[1] = new Decimal(0)
         }
 
@@ -87,31 +85,31 @@
         player.cof.fragmentScore[2] = player.m.codeExperience.plus(1).log10().pow(0.45).div(4)
         player.cof.fragmentScore[2] = player.cof.fragmentScore[2].mul(player.gh.steel.plus(1).log10().pow(0.39).div(2))
         player.cof.fragmentScore[2] = player.cof.fragmentScore[2].mul(player.oi.oil.plus(1).log10().pow(0.35).div(2))
-        if (player.sins.clickables["greed"]) player.cof.fragmentScore[2] = player.cof.fragmentScore[2].mul(player.sins.greed[1])
+        if (player.sins.clickables["greed"] || player.tera.sinMastery[5]) player.cof.fragmentScore[2] = player.cof.fragmentScore[2].mul(player.sins.greed[1])
 
         //paradox
         player.cof.fragmentScore[3] = player.in.infinityPoints.plus(1).log10().pow(0.52).div(4).mul(1.25)
         player.cof.fragmentScore[3] = player.cof.fragmentScore[3].mul(player.in.infinities.plus(1).log(10).pow(0.6))
         player.cof.fragmentScore[3] = player.cof.fragmentScore[3].mul(player.ta.negativeInfinityPoints.plus(1).log10().pow(0.45).div(2.25))
-        if (player.sins.clickables["envy"]) player.cof.fragmentScore[3] = player.cof.fragmentScore[3].mul(player.sins.envy[1])
+        if (player.sins.clickables["envy"] || player.tera.sinMastery[0]) player.cof.fragmentScore[3] = player.cof.fragmentScore[3].mul(player.sins.envy[1])
 
         //radioactive
         player.cof.fragmentScore[4] = player.s.singularityPoints.plus(1).log10().pow(0.65).div(3).mul(2.5)
         player.cof.fragmentScore[4] = player.cof.fragmentScore[4].mul(player.ra.radiation.plus(1).log10().div(1.5))
         player.cof.fragmentScore[4] = player.cof.fragmentScore[4].mul(player.sd.singularityPower.plus(1).log10().pow(0.555).div(17,5))
-        if (player.sins.clickables["wrath"]) player.cof.fragmentScore[4] = player.cof.fragmentScore[4].mul(player.sins.wrath[1])
+        if (player.sins.clickables["wrath"] || player.tera.sinMastery[1]) player.cof.fragmentScore[4] = player.cof.fragmentScore[4].mul(player.sins.wrath[1])
 
         //cosmic
         player.cof.fragmentScore[5] = player.ad.antimatter.plus(1).log10().pow(0.5).div(3).mul(2)
         player.cof.fragmentScore[5] = player.cof.fragmentScore[5].mul(player.au2.stars.plus(1).log10().pow(1.6).div(6))
         player.cof.fragmentScore[5] = player.cof.fragmentScore[5].mul(player.ca.replicanti.plus(1).log10().pow(0.55).div(12))
-        if (player.sins.clickables["gluttony"]) player.cof.fragmentScore[5] = player.cof.fragmentScore[5].mul(player.sins.gluttony[1])
+        if (player.sins.clickables["gluttony"] || player.tera.sinMastery[3]) player.cof.fragmentScore[5] = player.cof.fragmentScore[5].mul(player.sins.gluttony[1])
 
         //temporal
         player.cof.fragmentScore[6] = player.cb.level.plus(1).log10().pow(1.25)
         player.cof.fragmentScore[6] = player.cof.fragmentScore[6].mul(player.cb.XPBoost.plus(1).log10().pow(1.25))
         player.cof.fragmentScore[6] = player.cof.fragmentScore[6].mul(player.cb.petPoints.plus(1).log10().pow(1.25))
-        if (player.sins.clickables["sloth"]) player.cof.fragmentScore[6] = player.cof.fragmentScore[6].mul(player.sins.sloth[1])
+        if (player.sins.clickables["sloth"] || player.tera.sinMastery[4]) player.cof.fragmentScore[6] = player.cof.fragmentScore[6].mul(player.sins.sloth[1])
 
         let maxIndex = 0
         for (let i = 1; i < player.cof.fragmentScore.length; i++) {

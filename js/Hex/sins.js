@@ -14,6 +14,8 @@ addLayer("sins", {
         sloth: [new Decimal(1), new Decimal(1), new Decimal(1)],
         greed: [new Decimal(1), new Decimal(1), new Decimal(1)],
         pride: [new Decimal(1), new Decimal(1), new Decimal(1)],
+
+        sinUsed: [false, false, false, false, false, false, false],
     }},
     update (delta) {
         if (hasUpgrade("hpw", 2003)) player.sins.envy[0] = Decimal.pow(Decimal.div(2.5, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
@@ -62,6 +64,7 @@ addLayer("sins", {
                         layers.hpw.powerReset(0)
                     }
                     player.sins.clickables["envy"] = true
+                    player.sins.sinUsed[0] = true
                 }
             },
             style() {
@@ -87,6 +90,7 @@ addLayer("sins", {
                         layers.hpw.powerReset(0)
                     }
                     player.sins.clickables["wrath"] = true
+                    player.sins.sinUsed[1] = true
                 }
             },
             style() {
@@ -112,6 +116,7 @@ addLayer("sins", {
                         layers.hpw.powerReset(0)
                     }
                     player.sins.clickables["lust"] = true
+                    player.sins.sinUsed[2] = true
                 }
             },
             style() {
@@ -137,6 +142,7 @@ addLayer("sins", {
                         layers.hpw.powerReset(0)
                     }
                     player.sins.clickables["gluttony"] = true
+                    player.sins.sinUsed[3] = true
                 }
             },
             style() {
@@ -162,6 +168,7 @@ addLayer("sins", {
                         layers.hpw.powerReset(0)
                     }
                     player.sins.clickables["sloth"] = true
+                    player.sins.sinUsed[4] = true
                 }
             },
             style() {
@@ -187,6 +194,7 @@ addLayer("sins", {
                         layers.hpw.powerReset(0)
                     }
                     player.sins.clickables["greed"] = true
+                    player.sins.sinUsed[5] = true
                 }
             },
             style() {
@@ -212,6 +220,7 @@ addLayer("sins", {
                         layers.hpw.powerReset(0)
                     }
                     player.sins.clickables["pride"] = true
+                    player.sins.sinUsed[6] = true
                 }
             },
             style() {

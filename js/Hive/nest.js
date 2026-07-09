@@ -88,7 +88,7 @@ addLayer("n", {
             player.n.pylonEnergyPerSecond = player.n.pylonEnergyPerSecond.mul(buyableEffect("n", 2))
             player.n.pylonEnergyPerSecond = player.n.pylonEnergyPerSecond.mul(buyableEffect("n", 3))
             player.n.pylonEnergyPerSecond = player.n.pylonEnergyPerSecond.mul(player.s.pylonEnergyEffect4)
-            if (player.sins.clickables["lust"]) player.n.pylonEnergyPerSecond = player.n.pylonEnergyPerSecond.mul(player.sins.lust[2])
+            if (player.sins.clickables["lust"] || player.tera.sinMastery[2]) player.n.pylonEnergyPerSecond = player.n.pylonEnergyPerSecond.mul(player.sins.lust[2])
 
             player.n.pylonPassiveEffect = player.bee.bees.add(1).log(10).pow(0.05).sub(1).div(5).add(1.1).pow(player.n.pylonTierEffect)
         } else {

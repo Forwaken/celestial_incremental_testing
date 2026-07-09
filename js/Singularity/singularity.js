@@ -111,7 +111,7 @@
             player.s.pylonEnergyPerSecond = player.s.pylonEnergyPerSecond.mul(buyableEffect("s", 1))
             player.s.pylonEnergyPerSecond = player.s.pylonEnergyPerSecond.mul(buyableEffect("s", 2))
             player.s.pylonEnergyPerSecond = player.s.pylonEnergyPerSecond.mul(buyableEffect("s", 3))
-            if (player.sins.clickables["wrath"]) player.s.pylonEnergyPerSecond = player.s.pylonEnergyPerSecond.mul(player.sins.wrath[2])
+            if (player.sins.clickables["wrath"] || player.tera.sinMastery[1]) player.s.pylonEnergyPerSecond = player.s.pylonEnergyPerSecond.mul(player.sins.wrath[2])
 
             player.s.pylonPassiveEffect = player.points.pow(0.0001).add(1).pow(player.s.pylonTierEffect)
         } else {
