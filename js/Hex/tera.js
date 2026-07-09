@@ -184,6 +184,7 @@ addLayer("tera", {
         player.tera.virtueEffects[0][0] = player.tera.virtueEssence[0].gte(1) ? player.tera.virtueEssence[0].pow(0.35).div(10).add(1) : new Decimal(1)
         player.tera.virtueEffects[0][1] = player.tera.virtueEssence[0].gte(49) ? Decimal.pow(2, player.tera.virtueEssence[0].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
         if (!player.tera.virtueUnlocks[0] && player.tera.virtueEssence[0].gte(3500)) player.tera.virtueUnlocks[0] = true
+        if (player.tera.trueHept.gte(2)) player.tera.virtue[0] = player.tera.virtue[0].add(player.tera.virtueGain[0])
         player.tera.virtueReq[1] = layers.h.hexReq(player.tera.virtue[1], 7, 1.5, new Decimal(1))
         player.tera.virtueGain[1] = layers.h.hexGain(player.tera.virtue[0], 7, 1.5, new Decimal(1)).sub(player.tera.virtue[1]).max(0)
         player.tera.virtueEssenceGain[1] = player.tera.virtue[1].div(6).pow(1.28)
@@ -195,11 +196,13 @@ addLayer("tera", {
         player.tera.virtueEssenceGain[2] = player.tera.virtue[2].div(5).pow(1.26)
         player.tera.virtueEffects[2][0] = player.tera.virtueEssence[2].gte(1) ? player.tera.virtueEssence[2].pow(0.41).div(8).add(1) : new Decimal(1)
         player.tera.virtueEffects[2][1] = player.tera.virtueEssence[2].gte(49) ? player.tera.virtueEssence[2].div(7).add(1).log(7).pow(0.7).floor() : new Decimal(0)
+        if (!player.tera.virtueUnlocks[2] && player.tera.virtueEssence[2].gte(70000)) player.tera.virtueUnlocks[2] = true
         player.tera.virtueReq[3] = layers.h.hexReq(player.tera.virtue[3], 21, 1.4, new Decimal(1))
         player.tera.virtueGain[3] = layers.h.hexGain(player.tera.virtue[2], 21, 1.4, new Decimal(1)).sub(player.tera.virtue[3]).max(0)
         player.tera.virtueEssenceGain[3] = player.tera.virtue[3].div(4).pow(1.24)
         player.tera.virtueEffects[3][0] = player.tera.virtueEssence[3].gte(1) ? player.tera.virtueEssence[3].pow(0.44).div(7).add(1) : new Decimal(1)
         player.tera.virtueEffects[3][1] = player.tera.virtueEssence[3].gte(49) ? Decimal.pow(2.5, player.tera.virtueEssence[3].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
+        if (!player.tera.virtueUnlocks[3] && player.tera.virtueEssence[3].gte(350000)) player.tera.virtueUnlocks[3] = true
         player.tera.virtueReq[4] = layers.h.hexReq(player.tera.virtue[4], 28, 1.35, new Decimal(1))
         player.tera.virtueGain[4] = layers.h.hexGain(player.tera.virtue[3], 28, 1.35, new Decimal(1)).sub(player.tera.virtue[4]).max(0)
         player.tera.virtueEssenceGain[4] = player.tera.virtue[4].div(3).pow(1.22)
@@ -354,8 +357,10 @@ addLayer("tera", {
             player.hre.refinementEffect[i] = [new Decimal(1), new Decimal(1)]
         }
         for (let i = 0; i < player.hre.milestones.length; i++) {
-            player.hre.milestones.splice(i, 1);
-            i--;
+            if (!(player.tera.virtueUnlocks[3] && Decimal.lte(+player.hre.milestones[i], player.tera.trueHept))) {
+                player.hre.milestones.splice(i, 1);
+                i--;
+            }
         }
         player.hre.temperer = new Decimal(0)
         player.hre.tempererPerSec = new Decimal(0)
@@ -794,7 +799,14 @@ addLayer("tera", {
                 let str = "<h2>Reset ALL previous content for true hepts</h2><br>"
                 if (player.h.stage.eq(7)) str = str.concat("<h3>Req: " + formatWhole(player.tera.trueHeptReq) + " Power</h3>")
                 else str = str.concat("<h3>[ONLY POSSIBLE WHEN Uni-α IS HEPT]</h3>")
-                if (player.tera.trueHept.eq(0)) str = str.concat("<br>At true hept 1, unlock true hept content.")
+                if (player.tera.trueHept.eq(0)) str = str.concat("<br>At true hept 1, unlock true hept content.") // ADDED
+                if (player.tera.trueHept.eq(1)) str = str.concat("<br>At true hept 2, automate kindness gain.") // ADDED
+                // Automate Patience Gain
+                // Automate Chastity Gain
+                // Automate Temperance Gain
+                // Automate Diligence Gain
+                // Automate Charity Gain
+                // Automate Humility Gain
                 return str
             },
             canClick() {return player.h.stage.eq(7) && player.hpw.power.gte(player.tera.trueHeptReq)},
@@ -1361,7 +1373,7 @@ addLayer("tera", {
             unlocked: true,
             cost(x) {
                 let amt = x || getBuyableAmount(this.layer, this.id)
-                if (amt.gte(10)) return this.costGrowth().pow(amt.div(3).pow(2).mul(3)).mul(this.costBase())
+                if (amt.gte(10)) return this.costGrowth().pow(amt.div(10).pow(2).mul(10)).mul(this.costBase())
                 return this.costGrowth().pow(amt).mul(this.costBase())
             },
             canAfford() { return this.currency().gte(this.cost())},
@@ -2113,8 +2125,8 @@ addLayer("tera", {
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[2].lt(49)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "70,000", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[2].lt(70000)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", () => {return "Extend the purifier softcap by 1"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks[2] && player.tera.virtueEssence[2].lt(70000)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "???", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
@@ -2153,8 +2165,8 @@ addLayer("tera", {
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[3].lt(49)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "350,000", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[3].lt(350000)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", () => {return "Keep refinement milestones on tera reset based on true hept"}, {color: "rgba(0,0,0,0.7)", fontSize: "12px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", lineHeight: "0.8", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks[3] && player.tera.virtueEssence[3].lt(350000)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "???", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],

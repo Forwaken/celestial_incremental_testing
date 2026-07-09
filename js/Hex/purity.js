@@ -108,6 +108,7 @@ addLayer("hpu", {
 
         player.hpu.purifierSoftcap = new Decimal(5)
         if (hasUpgrade("hpw", 34)) player.hpu.purifierSoftcap = player.hpu.purifierSoftcap.add(upgradeEffect("hpw", 34).sub(1))
+        if (player.tera.virtueUnlocks[2]) player.hpu.purifierSoftcap = player.hpu.purifierSoftcap.add(1)
         let softcap1 = Decimal.div(player.hpu.purifierSoftcap, 10).add(1)
         let softcap2 = Decimal.pow(1.5, player.hpu.purifierSoftcap)
         let softcap3 = Decimal.pow(2, player.hpu.purifierSoftcap.sub(1)).div(5)
@@ -408,6 +409,29 @@ addLayer("hpu", {
             style: {width: "50px", minHeight: "40px", borderRadius: "0 13px 13px 0"},
         },
     },
+    microtabs: {
+        purity: {
+            "Purifiers": {
+                buttonStyle() { return {borderRadius: "5px"}},
+                unlocked: true,
+                content: [
+                    ["blank", "10px"],
+                    ["clickable", 2],
+                    ["blank", "10px"],
+                    ["row", [["clickable", 3], ["clickable", 4], ["clickable", 5]]],
+                    ["row", [["clickable", 6], ["clickable", 7], ["clickable", 8]]],
+                    ["row", [["clickable", 9]]],
+                    ["blank", "10px"],
+                    ["style-row", [
+                        ["style-row", [
+                            ["raw-html", "Level Amount", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ], {width: "98px", height: "40px", borderRight: "2px solid black"}],
+                        ["clickable", 101], ["clickable", 102], ["clickable", 103]
+                    ], {width: "250px", height: "40px", backgroundColor: "#2c2a22", border: "2px solid black", borderRadius: "15px"}],
+                ]
+            },
+        },
+    },
     tabFormat: [
         ["row", [
             ["raw-html", () => {return "You have <h3>" + format(player.h.hexPoint) + "</h3> " + player.h.stageName[1] + " points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -435,19 +459,8 @@ addLayer("hpu", {
         }, {color: "#ddd", fontSize: "16px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["clickable", 1],
-        ["blank", "10px"],
-        ["clickable", 2],
-        ["blank", "10px"],
-        ["row", [["clickable", 3], ["clickable", 4], ["clickable", 5]]],
-        ["row", [["clickable", 6], ["clickable", 7], ["clickable", 8]]],
-        ["row", [["clickable", 9]]],
-        ["blank", "10px"],
-        ["style-row", [
-            ["style-row", [
-                ["raw-html", "Level Amount", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-            ], {width: "98px", height: "40px", borderRight: "2px solid black"}],
-            ["clickable", 101], ["clickable", 102], ["clickable", 103]
-        ], {width: "250px", height: "40px", backgroundColor: "#2c2a22", border: "2px solid black", borderRadius: "15px"}],
+        ["blank", "5px"],
+        ["microtabs", "purity", {borderWidth: "0px"}],
         ["blank", "25px"],
     ],
     layerShown() { return hasUpgrade("i", 29) }, // Decides if this node is shown or not.
