@@ -774,14 +774,14 @@ addLayer("tera", {
                 else str = str.concat("<h3>[ONLY POSSIBLE WHEN Uni-α IS HEX]</h3>")
                 if (player.tera.trueHex.eq(0)) str = str.concat("<br>At true hex 1, unlock true hex content.") // ADDED
                 if (player.tera.trueHex.eq(1)) str = str.concat("<br>At true hex 2, unlock the second set of spell buyables.") // ADDED
-                if (player.tera.trueHex.eq(2)) str = str.concat("<br>At true hex 3, unlock a new hex spell.")
+                if (player.tera.trueHex.eq(2)) str = str.concat("<br>At true hex 3, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
                 if (player.tera.trueHex.eq(3)) str = str.concat("<br>At true hex 4, unlock a hex essence effect.") // ADDED
                 if (player.tera.trueHex.eq(4)) str = str.concat("<br>At true hex 5, double chronotachysis duration.") // ADDED
                 if (player.tera.trueHex.eq(5)) str = str.concat("<br>At true hex 6, unlock a true hex effect.") // ADDED
                 if (player.tera.trueHex.gte(6) && player.tera.trueHex.lt(9)) str = str.concat("<br>At true hex 9, unlock the third set of spell buyables.") // ADDED
-                if (player.tera.trueHex.gte(9) && player.tera.trueHex.lt(12)) str = str.concat("<br>At true hex 12, unlock a new hex spell.")
+                if (player.tera.trueHex.gte(9) && player.tera.trueHex.lt(12)) str = str.concat("<br>At true hex 12, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
                 if (player.tera.trueHex.gte(12) && player.tera.trueHex.lt(15)) str = str.concat("<br>At true hex 15, improve piosity spell formula.") // ADDED
-                if (player.tera.trueHex.gte(15) && player.tera.trueHex.lt(18)) str = str.concat("<br>At true hex 18, unlock a new hex spell.")
+                if (player.tera.trueHex.gte(15) && player.tera.trueHex.lt(18)) str = str.concat("<br>At true hex 18, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
                 return str
             },
             canClick() {return player.h.stage.eq(6) && player.hpw.power.gte(player.tera.trueHexReq)},
