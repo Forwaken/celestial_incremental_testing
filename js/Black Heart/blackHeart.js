@@ -606,11 +606,11 @@ addLayer("bh", {
 
             // DICE FIVE
             "diceFive_diceSlice": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
-            "diceFive_luckyLift": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
-            "diceFive_coinToss": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
-            "diceFive_fickleFavor": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
-            "diceFive_fortunesMalace": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
-            "diceFive_snakeEyes": {selected: ["diceFive", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
+            "diceFive_luckyLift": {selected: ["none", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
+            "diceFive_coinToss": {selected: ["none", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
+            "diceFive_fickleFavor": {selected: ["none", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
+            "diceFive_fortunesMalace": {selected: ["none", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
+            "diceFive_snakeEyes": {selected: ["none", 0], level: new Decimal(0), maxLevel: new Decimal(0)},
         },
 
         //Stagnant Timer

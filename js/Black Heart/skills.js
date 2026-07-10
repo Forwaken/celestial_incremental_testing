@@ -1094,23 +1094,21 @@ BHA.diceFive_diceSlice = {
     instant: true,
     type: "function",
     target: "celestialite",
-    effects: {
-        "luckMult"() {return new Decimal(0.25) }, // Multiplicative Effect
-    },
     cooldown: new Decimal(15),
     cooldownCap: new Decimal(6),
     method: "physical",
-    duration: new Decimal(7),
     active: true,
+    duration: new Decimal(7),
     constantTarget: "celestialite",
     constantType: "effect",
-    onTrigger(index, slot, target, method)
-    {
+    effects: {
+        "luckMult"() {return new Decimal(0.25) }, // Multiplicative Effect
+    },
+    onTrigger(index, slot, target, method) {
         let roll = getRandomInt(player.bh.skillData["diceFive_diceSlice"].level.add(6)) + 1
         let baseDmg = new Decimal(0.6).add(player.bh.skillData["diceFive_diceSlice"].level.mul(0.10))
 
         let dmg = baseDmg.mul(roll).mul(player.bh.characters[index].damage)
-
         bhAttack(dmg, index, slot, "celestialite", "", "physical")
     },
 }
@@ -1205,7 +1203,7 @@ BHA.diceFive_fortunesMalace = {
     description(char) {
         let effect = new Decimal(10).add(player.bh.skillData["diceFive_fortunesMalace"].level.mul(2))
         if (player.alephsChamber.milestone[25] >= 2) effect = effect.mul(Decimal.div(char.potency.add(100), 100))
-        return "Boost team damage and agility based on luck.<br.Currently: " + formatSimple(char.luck.pow(0.5).div(10).mul(effect)) + "%"
+        return "Boost team damage and agility based on luck.<br>Currently: " + formatSimple(char.luck.pow(0.7).div(15).mul(effect)) + "%"
     },
     passiveText() {return "+" + formatSimple(player.bh.skillData["diceFive_fortunesMalace"].maxLevel.div(2)) + " LUCK"},
     char: "diceFive",
@@ -1219,8 +1217,8 @@ BHA.diceFive_fortunesMalace = {
     constantType: "effect",
     constantTarget: "allPlayer",
     effects: {
-        "damageMult"(char) {return char.luck.pow(0.5).div(10).mul(Decimal.add(0.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
-        "agilityMult"(char) {return char.luck.pow(0.5).div(10).mul(Decimal.add(0.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
+        "damageMult"(char) {return char.luck.pow(0.7).div(15).mul(Decimal.add(1.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
+        "agilityMult"(char) {return char.luck.pow(0.7).div(15).mul(Decimal.add(1.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
     },
     cooldown: new Decimal(Infinity),
 }
