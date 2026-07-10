@@ -402,8 +402,8 @@ addLayer("tera", {
                 borderRadius: "10px",
             },
             display() {
-                if (player.tera.hexEnergyGain.lt(0)) return formatSimple(player.tera.hexEnergy) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy<br><small>[-" + formatSimple(player.tera.hexEnergyGain.abs()) + "/s]</small>"
-                return formatSimple(player.tera.hexEnergy) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy<br><small>[" + formatSimple(player.tera.hexEnergyGain) + "/s]</small>"
+                if (player.tera.hexEnergyGain.lt(0)) return formatSimple(player.tera.hexEnergy, 2) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy<br><small>[-" + formatSimple(player.tera.hexEnergyGain.abs(), 2) + "/s]</small>"
+                return formatSimple(player.tera.hexEnergy, 2) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy<br><small>[" + formatSimple(player.tera.hexEnergyGain, 2) + "/s]</small>"
             },
         },
     },
