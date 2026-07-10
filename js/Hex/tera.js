@@ -275,7 +275,7 @@ addLayer("tera", {
         player.hsa.prayerMult = new Decimal(1)
         player.hsa.prayTimeCheck = new Decimal(0)
         player.hsa.praying = false
-        if (player.hsa.autoSac >= 0) player.hsa.autoSac = false
+        if (player.hsa.autoSac >= 0) player.hsa.autoSac = -1
 
         player.hsa.upgrades.splice(0, player.hsa.upgrades.length)
 

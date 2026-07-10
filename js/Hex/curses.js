@@ -93,7 +93,7 @@ addLayer("hcu", {
         player.hcu.jinxedJinxReq = player.hcu.jinxedJinx.mul(100).add(500)
         if (player.hcu.jinxedJinx.gte(2)) player.hcu.jinxedJinxReq = player.hcu.jinxedJinxReq.add(Decimal.pow(2, player.hcu.jinxedJinx.sub(2)).mul(10))
         player.hcu.jinxedJinxEffects[0] = player.hcu.jinxTot.pow(player.hcu.jinxedJinx.div(5).add(1)).div(100).pow(player.hcu.jinxedJinx)
-        player.hcu.jinxedJinxEffects[1] = player.hcu.jinxedJinx.div(20).add(1)
+        player.hcu.jinxedJinxEffects[1] = player.hcu.jinxedJinx.div(50).add(1)
         player.hcu.jinxedJinxEffects[2] = player.hcu.jinxedJinx
     },
     clickables: {
@@ -113,6 +113,29 @@ addLayer("hcu", {
                 }
             },
             style: {width: "200px", minHeight: "40px", borderRadius: "15px"},
+        },
+        2: {
+            title() {return "<h3>Buy Jinxed Jinx</h3><br><small style='font-size:10px'>[Req: " + formatWhole(player.hcu.jinxTot) + "/" + formatWhole(player.hcu.jinxedJinxReq) + " Jinxes]</small>"},
+            canClick() { return player.hcu.curses.gt(0) && player.hcu.jinxTot.gte(player.hcu.jinxedJinxReq)},
+            unlocked() {return player.tera.virtueUnlocks[1]},
+            onClick() {
+                player.hcu.jinxedJinx = player.hcu.jinxedJinx.add(1)
+
+                // RESET CODE
+                player.hcu.curses = new Decimal(0)
+                player.hcu.cursesGain = new Decimal(0)
+                for (let i = 101; i < 109; i++) {
+                    player.hcu.buyables[i] = new Decimal(0)
+                }
+                if (!hasMilestone("hpw", 4)) player.hcu.buyables[109] = new Decimal(0)
+                player.hcu.buyables[110] = new Decimal(0)
+                player.hcu.buyables[111] = new Decimal(0)
+                if (!hasMilestone("hpw", 4)) player.hcu.buyables[112] = new Decimal(0)
+                for (let i = 113; i < 115; i++) {
+                    player.hcu.buyables[i] = new Decimal(0)
+                }
+            },
+            style: {width: "200px", minHeight: "40px", lineHeight: "0.8", borderRadius: "15px", marginLeft: "25px"},
         },
         100: {
             title() {
@@ -994,7 +1017,7 @@ addLayer("hcu", {
             }],
         ]],
         ["blank", "10px"],
-        ["clickable", 1],
+        ["row", [["clickable", 1], ["clickable", 2]]],
         ["blank", "5px"],
         ["microtabs", "curse", {borderWidth: "0px"}],
         ["blank", "25px"],
@@ -1006,6 +1029,14 @@ addLayer("hcu", {
             description: "Buy Max Jinxes",
             onPress() {
                 clickClickable(this.layer, 1)
+            },
+        },
+        {
+            key: "k", 
+            description: "Buy Jinxed Jinx",
+            unlocked() {return player.tera.virtueUnlocks[1]},
+            onPress() {
+                clickClickable(this.layer, 2)
             },
         }
 	]
