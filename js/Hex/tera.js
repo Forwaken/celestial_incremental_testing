@@ -146,8 +146,10 @@ addLayer("tera", {
 
         player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).add(1).pow(buyableEffect("tera", "hexOpacity")).sub(1) : new Decimal(0)
 
-        player.tera.hexEssenceSoftcap = player.tera.hexEssencePerSecond.gte(1e6) ? Decimal.pow(0.6, player.tera.hexEssencePerSecond.add(1).log(1e6)) : new Decimal(1)
-        player.tera.hexEssencePerSecond = player.tera.hexEssencePerSecond.div(1e6).pow(player.tera.hexEssenceSoftcap).mul(1e6)
+        let softcapStart = new Decimal(1e6)
+        if (hasUpgrade("tera", "hex12")) softcapStart = softcapStart.mul(upgradeEffect("tera", "hex12"))
+        player.tera.hexEssenceSoftcap = player.tera.hexEssencePerSecond.gte(softcapStart) ? Decimal.pow(0.6, player.tera.hexEssencePerSecond.add(1).log(1e6)) : new Decimal(1)
+        player.tera.hexEssencePerSecond = player.tera.hexEssencePerSecond.div(softcapStart).pow(player.tera.hexEssenceSoftcap).mul(softcapStart)
         player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
 
         player.tera.hexEssenceEffect = player.tera.trueHex.gte(4) ? Decimal.pow(1.01, player.tera.hexEssence.add(1).log(6)) : new Decimal(1)
@@ -1578,7 +1580,7 @@ addLayer("tera", {
             }
         },
         "hex4": {
-            fullDisplay() {return "<h3>???</h3><br>???.<br><br>Cost: 60 Vexes<br><small>[REQ BEING IN HEX]</small>"},
+            fullDisplay() {return "<h3>Doomed Vexes</h3><br>Reduce point doom softcap's scaling based on highest vexes.<br>Currently: /" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 60 Vexes<br><small>[REQ BEING IN HEX]</small>"},
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hve.vexTotal.gte(60)},
             pay() {
@@ -1593,6 +1595,7 @@ addLayer("tera", {
                     i--;
                 }
             },
+            effect() {return player.hve.vexHighest.pow(0.7).div(100).add(1)},
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -1682,10 +1685,11 @@ addLayer("tera", {
             }
         },
         "hex12": {
-            fullDisplay() {return "<h3>???</h3><br>???.<br><br>Cost: 1e48 Hex Essence"},
+            fullDisplay() {return "<h3>Hexed Softcap</h3><br>Delay hex essence softcap based on true hex.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 1e48 Hex Essence"},
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(1e48)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(1e48)},
+            effect() {return Decimal.pow(2, player.tera.trueHex)},
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -2445,7 +2449,9 @@ addLayer("tera", {
                             }],
                             ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>(((6*Red)<sup>(True Hex*Green)-1</sup>)*Blue/60)<sup>Opacity</sup></small></div>"}],
                         ]],
-                        ["raw-html", () => {return player.tera.hexEssencePerSecond.gte(1e6) ? "UNAVOIDABLE SOFTCAP: Gain past 1e6 is raised by ^" + formatSimple(player.tera.hexEssenceSoftcap, 3) : ""}, {color: "red", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {
+                            let softcapStart = hasUpgrade("tera", "hex12") ? Decimal.mul(1e6, upgradeEffect("tera", "hex12")) : new Decimal(1e6)
+                            return player.tera.hexEssencePerSecond.gte(softcapStart) ? "UNAVOIDABLE SOFTCAP: Gain past " + formatShortSimple(softcapStart) + " is raised by ^" + formatSimple(player.tera.hexEssenceSoftcap, 3) : ""}, {color: "red", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return player.tera.trueHex.gte(4) ? "Boosts hex energy gain by x" + formatSimple(player.tera.hexEssenceEffect, 2) : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ["blank", "10px"],
                         ["microtabs", "hex", {borderWidth: "0px"}],

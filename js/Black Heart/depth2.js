@@ -281,7 +281,7 @@ addLayer("depth2", {
         },
         105: {
             title: "Steady Negativity",
-            unlocked() {return hasUpgrade("darkTemple", 10)},
+            unlocked() {return player.depth2.lowestCombo.lt(0)},
             description: "Reduce negative scaling by 1%.",
             cost: new Decimal(300),
             currencyLocation() { return player.depth2 },
@@ -295,7 +295,7 @@ addLayer("depth2", {
         },
         106: {
             title: "Bound Bandage",
-            unlocked() {return hasUpgrade("darkTemple", 10)},
+            unlocked() {return player.depth2.lowestCombo.lt(0)},
             description: "Bandage now passively increases your regen by 10%.",
             cost: new Decimal(1200),
             currencyLocation() { return player.depth2 },

@@ -14,6 +14,7 @@ addLayer("hve", {
         vexReq: new Decimal(300),
         vexGain: new Decimal(0),
         vexDiv: new Decimal(1),
+        vexHighest: new Decimal(0),
         vexEffects: [new Decimal(0), new Decimal(1), new Decimal(1), new Decimal(1)],
 
         rowCurrent: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -54,6 +55,8 @@ addLayer("hve", {
         if (hasUpgrade("hpw", 92)) player.hve.vexEffects[2] = effVex.pow(Decimal.div(7.2, player.h.stage)).div(2).add(1)
         //player.hve.vexEffects[2] = Decimal.pow(Decimal.div(3.96, player.h.stage).add(1), effVex.pow(Decimal.div(3.96, player.h.stage)))
         if (hasUpgrade("hpw", 136)) player.hve.vexEffects[3] = effVex.pow(Decimal.div(3.5, player.h.stage)).div(100).add(1)
+
+        if (player.hve.vexTotal.gt(player.hve.vexHighest)) player.hve.vexHighest = player.hve.vexTotal
     },
     clickables: {
         1: {
