@@ -1295,7 +1295,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id).add(1)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
