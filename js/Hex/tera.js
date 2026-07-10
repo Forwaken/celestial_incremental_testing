@@ -142,7 +142,7 @@ addLayer("tera", {
         // TRUE HEX CONTENT
         player.tera.trueHexReq = Decimal.pow(1e6, player.tera.trueHex).mul(1e60)
         player.tera.trueHexGain = player.hpw.power.add(1).div(1e60).ln().div(Decimal.ln(1e6)).add(1).sub(player.tera.trueHex).floor().max(0)
-        player.tera.trueHexEffect = player.tera.trueHex.gte(6) ? Decimal.pow(7/6, player.tera.trueHex.sub(5)) : new Decimal(1)
+        player.tera.trueHexEffect = player.tera.trueHex.gte(10) ? Decimal.pow(7/6, player.tera.trueHex.sub(5)) : new Decimal(1)
 
         player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).add(1).pow(buyableEffect("tera", "hexOpacity")).sub(1) : new Decimal(0)
 
@@ -780,8 +780,9 @@ addLayer("tera", {
                 if (player.tera.trueHex.eq(2)) str = str.concat("<br>At true hex 3, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
                 if (player.tera.trueHex.eq(3)) str = str.concat("<br>At true hex 4, unlock a hex essence effect.") // ADDED
                 if (player.tera.trueHex.eq(4)) str = str.concat("<br>At true hex 5, double chronotachysis duration.") // ADDED
-                if (player.tera.trueHex.eq(5)) str = str.concat("<br>At true hex 6, unlock a true hex effect.") // ADDED
-                if (player.tera.trueHex.gte(6) && player.tera.trueHex.lt(9)) str = str.concat("<br>At true hex 9, unlock the third set of spell buyables.") // ADDED
+                if (player.tera.trueHex.eq(5)) str = str.concat("<br>At true hex 6, unlock bulk true hexing.") // ADDED
+                if (player.tera.trueHex.gte(6) && player.tera.trueHex.lt(8)) str = str.concat("<br>At true hex 8, unlock the third set of spell buyables.") // ADDED
+                if (player.tera.trueHex.gte(8) && player.tera.trueHex.lt(10)) str = str.concat("<br>At true hex 10, unlock a true hex effect.") // ADDED
                 if (player.tera.trueHex.gte(9) && player.tera.trueHex.lt(12)) str = str.concat("<br>At true hex 12, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
                 if (player.tera.trueHex.gte(12) && player.tera.trueHex.lt(15)) str = str.concat("<br>At true hex 15, improve piosity spell formula.") // ADDED
                 if (player.tera.trueHex.gte(15) && player.tera.trueHex.lt(18)) str = str.concat("<br>At true hex 18, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
@@ -790,7 +791,8 @@ addLayer("tera", {
             canClick() {return player.h.stage.eq(6) && player.hpw.power.gte(player.tera.trueHexReq)},
             unlocked: true,
             onClick() {
-                player.tera.trueHex = player.tera.trueHex.add(player.tera.trueHexGain)
+                if (player.tera.trueHex.gte(6)) player.tera.trueHex = player.tera.trueHex.add(player.tera.trueHexGain)
+                else player.tera.trueHex = player.tera.trueHex.add(1)
 
                 layers.tera.teraReset()
             },
@@ -809,6 +811,7 @@ addLayer("tera", {
                 if (player.tera.trueHept.eq(1)) str = str.concat("<br>At true hept 2, automate kindness gain.") // ADDED
                 if (player.tera.trueHept.eq(2)) str = str.concat("<br>At true hept 3, [NOT IMPLEMENTED].") // ADDED
                 if (player.tera.trueHept.eq(3)) str = str.concat("<br>At true hept 4, automate patience gain.") // ADDED
+                if (player.tera.trueHept.eq(6)) str = str.concat("<br>At true hept 7, unlock bulk true hepting.") // ADDED
                 // Automate Chastity Gain
                 // Automate Temperance Gain
                 // Automate Diligence Gain
@@ -819,7 +822,8 @@ addLayer("tera", {
             canClick() {return player.h.stage.eq(7) && player.hpw.power.gte(player.tera.trueHeptReq)},
             unlocked: true,
             onClick() {
-                player.tera.trueHept = player.tera.trueHept.add(player.tera.trueHeptGain)
+                if (player.tera.trueHept.gte(7)) player.tera.trueHept = player.tera.trueHept.add(player.tera.trueHeptGain)
+                else player.tera.trueHept = player.tera.trueHept.add(1)
 
                 layers.tera.teraReset()
             },
@@ -2438,14 +2442,14 @@ addLayer("tera", {
                         ["blank", "10px"],
                         ["row", [
                             ["raw-html", () => {return "You are at <h3>" + formatWhole(player.tera.trueHex) + "</h3> true hex."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return "(+" + formatWhole(player.tera.trueHexGain) + ")"}, () => {
-                                let look = {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
+                            ["raw-html", () => {return player.tera.trueHex.gte(6) ? "<span style='margin-left:10px'>(+" + formatWhole(player.tera.trueHexGain) + ")</span>" : ""}, () => {
+                                let look = {color: "white", fontSize: "24px", fontFamily: "monospace"}
                                 player.tera.trueHexGain.gt(0) ? look.color = "white" : look.color = "gray"
                                 return look
                             }],
                             //["raw-html", () => {return player.hre.refinement.gte(player.h.stage.mul(15)) ? "[SOFTCAPPED<sup>2</sup>]" : player.hre.refinement.gte(player.h.stage.mul(10)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
                         ]],
-                        ["raw-html", () => {return player.tera.trueHex.gte(6) ? "Boosts uni-alpha tickspeed by x" + formatSimple(player.tera.trueHexEffect, 2) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(10) ? "Boosts uni-alpha tickspeed by x" + formatSimple(player.tera.trueHexEffect, 2) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                         ["blank", "10px"],
                         ["clickable", "hexReset"],
                         ["blank", "10px"],
@@ -2488,8 +2492,8 @@ addLayer("tera", {
                         ["blank", "10px"],
                         ["row", [
                             ["raw-html", () => {return "You are at <h3>" + formatWhole(player.tera.trueHept) + "</h3> true hept."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return "(+" + formatWhole(player.tera.trueHeptGain) + ")"}, () => {
-                                let look = {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
+                            ["raw-html", () => {return player.tera.trueHept.gte(7) ? "<span style='margin-left:10px'>(+" + formatWhole(player.tera.trueHeptGain) + ")</span>" : ""}, () => {
+                                let look = {color: "white", fontSize: "24px", fontFamily: "monospace"}
                                 player.tera.trueHeptGain.gt(0) ? look.color = "white" : look.color = "gray"
                                 return look
                             }],
