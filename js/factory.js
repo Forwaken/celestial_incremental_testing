@@ -275,7 +275,7 @@
                 return "Star Accumulator"
             },
             display() {
-                return "Unlock a building where you can increase how many stars you obtain based on time since last launch.\n\Each level improves star gain before softcap by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                return "Unlock a building where you can delay the star softcap based on time since last launch.\n\Each level improves star gain before softcap by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Steel"
             },
             buy(mult) {
@@ -1215,6 +1215,152 @@
             },
             style: { width: '200px', height: '175px', },
         },
+        501: {
+            costBase() { return new Decimal("1e40000") },
+            costGrowth() { return new Decimal("1e2000") },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.rf.rocketFuel},
+            pay(amt) { player.rf.rocketFuel = this.currency().sub(amt) },
+            effect(x) {return Decimal.pow(player.au2.timeSinceLaunch.add(1).log(10).div(100).add(1.05), getBuyableAmount(this.layer, this.id))},
+            unlocked() { return player.fa.buyables[16].gte(1) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Fueled Stars"
+            },
+            display() {
+                return "Delays star softcap by " + formatSimple(player.au2.timeSinceLaunch.add(1).log(10).add(5)) + "% compounding.\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\
+                    Next: x" + formatSimple(Decimal.pow(player.au2.timeSinceLaunch.add(1).log(10).div(100).add(1.05), getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\ \n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Rocket Fuel"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: "200px", height: "175px"},
+        },
+        502: {
+            costBase() { return new Decimal("1e50000") },
+            costGrowth() { return new Decimal("1e2500") },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.fa.charge},
+            pay(amt) { player.fa.charge = this.currency().sub(amt) },
+            effect(x) {return Decimal.pow(player.au2.timeSinceLaunch.add(1).log(10).div(50).add(1.05), getBuyableAmount(this.layer, this.id))},
+            unlocked() { return player.fa.buyables[16].gte(1) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Charged Stars"
+            },
+            display() {
+                return "Delays star softcap by " + formatSimple(player.au2.timeSinceLaunch.add(1).log(10).mul(2).add(5)) + "% compounding.\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\
+                    Next: x" + formatSimple(Decimal.pow(player.au2.timeSinceLaunch.add(1).log(10).div(50).add(1.05), getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\ \n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Charge"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: "200px", height: "175px"},
+        },
+        503: {
+            costBase() { return new Decimal("1e150000") },
+            costGrowth() { return new Decimal("1e10000") },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.gh.steel},
+            pay(amt) { player.gh.steel = this.currency().sub(amt) },
+            effect(x) {return Decimal.pow(player.au2.timeSinceLaunch.add(1).log(10).div(100).add(1.05), getBuyableAmount(this.layer, this.id))},
+            unlocked() { return player.fa.buyables[16].gte(1) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Steel Stars"
+            },
+            display() {
+                return "Delays star softcap by " + formatSimple(player.au2.timeSinceLaunch.add(1).log(10).add(5)) + "% compounding.\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\
+                    Next: x" + formatSimple(Decimal.pow(player.au2.timeSinceLaunch.add(1).log(10).div(100).add(1.05), getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\ \n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Steel"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: "200px", height: "175px"},
+        },
+        504: {
+            costBase() { return new Decimal("1e1000") },
+            costGrowth() { return new Decimal("1e100") },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.g.moonstone},
+            pay(amt) { player.g.moonstone = this.currency().sub(amt) },
+            effect(x) {return Decimal.pow(player.au2.timeSinceLaunch.add(1).log(10).div(50).add(1.05), getBuyableAmount(this.layer, this.id))},
+            unlocked() { return player.fa.buyables[16].gte(1) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Moonstone Stars"
+            },
+            display() {
+                return "Delays star softcap by " + formatSimple(player.au2.timeSinceLaunch.add(1).log(10).mul(2).add(5)) + "% compounding.\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\
+                    Next: x" + formatSimple(Decimal.pow(player.au2.timeSinceLaunch.add(1).log(10).div(50).add(1.05), getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\ \n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Moonstone"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: {width: "200px", height: "175px"},
+        },
+        //tmp[this.layer].buyables[this.id].effect
+        //player.au2.timeSinceLaunch
     },
     milestones: {
         11: {
@@ -1383,7 +1529,16 @@
                 unlocked() {return player.fa.buyables[16].gte(1)},
                 content: [
                     ["blank", "25px"],
-                    ["raw-html", "COMING SOON<br><small>[THE BUILDING BUYABLE EFFECT STILL WORKS THOUGH]</small>", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "You have <h3>" + format(player.rf.rocketFuel) + "</h3> Rocket Fuel"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "You have <h3>" + format(player.fa.charge) + "</h3> Charge"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "You have <h3>" + format(player.gh.steel) + "</h3> Steel"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "You have <h3>" + format(player.g.moonstone) + "</h3> Moonstone"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ["blank", "25px"],
+                    ["style-row", [
+                        ["ex-buyable", 501], ["ex-buyable", 502], ["ex-buyable", 503], ["ex-buyable", 504],
+                    ]],
+                    ["blank", "25px"],
+                    ["raw-html", "All buyable effects are boosted by time since last star launch.", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                 ]
             },
         },

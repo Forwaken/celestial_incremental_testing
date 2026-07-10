@@ -892,7 +892,8 @@ let changelog = `<h1>Changelog:</h1><br>
 			- Completely rebalanced uni-alpha.<br>
 			- Remade hex of sacrifice.<br>
 			- Added new Zar Dungeon upgrades.<br>
-			- Added new Laboratory upgrades.<br><br>
+			- Added new Laboratory upgrades.<br>
+			- Added the star accumulator.<br><br>
 		Minor Changes:<br>
 			- Improved the challenge components UI.<br>
 			- Added bulk realm challenge completion.<br>

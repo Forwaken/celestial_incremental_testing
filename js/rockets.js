@@ -225,6 +225,7 @@
 
         player.ro.activatedFuel = new Decimal(0)
         player.ro.rocketParts = new Decimal(0)
+        player.au2.timeSinceLaunch = new Decimal(0)
 
         for (let i = 0; i < player.ro.selectedPassengersCommon.length; i++) {
             player.pet.levelables[Decimal.add(100, Decimal.add(1, player.ro.selectedPassengersCommon[i]))][0] = new Decimal(0)

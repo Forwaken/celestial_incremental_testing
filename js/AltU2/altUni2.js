@@ -16,6 +16,8 @@
         starSoftcapStart: new Decimal(1000000),
         starSoftcapEffect: new Decimal(1),
         starSoftcapActive: false,
+
+        timeSinceLaunch: new Decimal(0),
     }},
     automate() {},
     nodeStyle() {
@@ -53,6 +55,9 @@
 
         //Star Softcap
         player.au2.starSoftcapStart = new Decimal(1000000)
+        for (let i = 501; i < 505; i++) {
+            player.au2.starSoftcapStart = player.au2.starSoftcapStart.mul(buyableEffect("fa", i))
+        }
 
         let softcapBase = new Decimal(0.4)
         if (player.alephsChamber.milestone[25] > 0) softcapBase = softcapBase.add(0.1)
@@ -74,6 +79,8 @@
         player.au2.starsToGet = player.au2.starsToGet.mul(buyableEffect("sb", 101)).floor()
 
         player.au2.starsToGet = player.au2.starsToGet.pow(levelableEffect("car", 311)[0]).floor()
+
+        player.au2.timeSinceLaunch = player.au2.timeSinceLaunch.add(delta)
     },
     clickables: {
         1: {
