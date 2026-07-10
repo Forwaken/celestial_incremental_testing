@@ -9,13 +9,6 @@
         currentCutscene: 0,
 
         //Cutscene Info
-        cutsceneText: [
-            "You find yourself in a vast desert of black sand.",
-            "The wind is moderate. It is quite cold.",
-            "It seems as if it's always night. The stars stand in place.",
-            '"You hear a voice in the distance. "This place is dead. Bring it back to life and know your purpose."',
-            "As the voice fades away, you look at your own hands, and see ten points manifest as rings. One for each finger.",
-        ],
         cutsceneIndex: 0,
     }},
     cutscenes: {
@@ -4760,31 +4753,9 @@
         },
     },
     clickables: {
-        11: {
-            title() { return "<img src='resources/forwardarrow.png'style='width:calc(80%);height:calc(80%);margin:10%'></img>" },
-            canClick() { return player.c.cutsceneIndex < player.c.cutsceneText.length },
-            unlocked() { return true },
-            onClick() {
-                player.c.cutsceneIndex = player.c.cutsceneIndex + 1
-            },
-            onHold() { clickClickable(this.layer, this.id) },
-        },
-        12: {
-            title() { return "<img src='resources/backarrow.png'style='width:calc(80%);height:calc(80%);margin:10%'></img>" },
-            canClick() { return player.c.cutsceneIndex > 0},
-            unlocked() { return true },
-            onClick() {
-                player.c.cutsceneIndex = player.c.cutsceneIndex - 1
-            },
-            onHold() { clickClickable(this.layer, this.id) },
-        },
     },
     tabFormat: [
         ["blank", "125px"],
-        ["raw-html", () => { return !player.c.evoCutscene ? player.c.cutsceneText[player.c.cutsceneIndex] : ""}, {color: "white", fontSize: "32px", fontFamily: "monospace"}],
-        ["raw-html", () => { return player.c.evoCutscene ? player.c.cutsceneText[player.c.cutsceneIndex] : ""}, {color: "white", fontSize: "32px", fontFamily: "Verdana, sans-serif"}],
-        ["blank", "25px"],
-        ["row", [["clickable", 12], ["clickable", 11]]],
     ],
     layerShown() { return true }
 })

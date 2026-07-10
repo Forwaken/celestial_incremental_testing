@@ -108,6 +108,7 @@ addLayer("hre", {
         player.hre.tempererPerSec = new Decimal(0)
         if (hasUpgrade("hpw", 151)) {
             player.hre.tempererPerSec = Decimal.pow(Decimal.mul(1.2, buyableEffect("hre", 22)), player.hre.refinement.sub(player.h.stage.mul(10).sub(buyableEffect("hre", 21).sub(1))).add(1).max(0)).sub(1).mul(buyableEffect("hre", 23)).mul(player.h.tickspeed)
+            if (player.hre.tempererPerSec.gte(1e10)) player.hre.tempererPerSec = player.hre.tempererPerSec.div(1e10).pow(Decimal.div(3.5, player.h.stage.max(4))).mul(1e10)
             player.hre.temperer = player.hre.temperer.add(player.hre.tempererPerSec.mul(delta))
         }
         
@@ -803,9 +804,11 @@ addLayer("hre", {
                         ["tooltip-row", [
                             ["raw-html", () => {return "You have " + formatSimple(player.hre.temperer, 2) + " temperers"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {return player.hre.tempererPerSec.eq(0) ? "<span style='color:gray'>(+0/s)</span>" : player.hre.tempererPerSec.gt(0) ? "(+" + formatSimple(player.hre.tempererPerSec, 2) + "/s)" : "<span style='color:red'>(" + format(player.hre.tempererPerSec) + "/s)</span>" }, {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
+                            ["raw-html", () => {return player.hre.tempererPerSec.gte(1e10) ? "<small style='margin-left:10px'>[SOFTCAPPED]</small>" : ""}, {color: "red", fontSize: "20px", fontFamily: "monospace"}],
                             ["raw-html", () => {
                                 let str = "<div class='bottomTooltip'>Base Formula<hr><small>(" + formatSimple(Decimal.mul(1.2, buyableEffect("hre", 22)), 2) + "^(Refinements-" + formatWhole(player.h.stage.mul(10).sub(1).sub(buyableEffect("hre", 21).sub(1))) + ")-1)"
                                 if (buyableEffect("hre", 23).gte(1)) str = str.concat("x" + formatSimple(buyableEffect("hre", 23)))
+                                if (player.hre.tempererPerSec.gte(1e10)) str = str.concat("<br>[SOFTCAP: /1e10 ^" + formatSimple(Decimal.div(3.5, player.h.stage.max(4))) + " *1e10]")
                                 return str + "</small></div>"
                             }],
                         ]],

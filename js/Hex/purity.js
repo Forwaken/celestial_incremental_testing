@@ -144,7 +144,7 @@ addLayer("hpu", {
         }
 
         player.hpu.purifiers[6].effect = player.hpu.purifiers[6].amount.div(player.h.purifierDiv).div(50).add(1)
-        if (player.hpu.purifiers[6].effect.gt(softcap5)) player.hpu.purifiers[6].effect = player.hpu.purifiers[6].effect.div(softcap5).pow(Decimal.div(3.5, player.h.stage.max(4))).mul(softcap5)
+        if (player.hpu.purifiers[6].effect.gt(softcap5)) player.hpu.purifiers[6].effect = player.hpu.purifiers[6].effect.div(softcap5).pow(Decimal.div(1.4, player.h.stage.max(2))).mul(softcap5)
 
         let addPure = new Decimal(0)
         if (hasUpgrade("hpw", 21)) addPure = addPure.add(1)

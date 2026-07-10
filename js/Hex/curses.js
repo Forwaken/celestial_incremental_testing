@@ -90,7 +90,8 @@ addLayer("hcu", {
         if (hasUpgrade("hpw", 43)) player.hcu.jinxDiv = player.hcu.jinxDiv.mul(upgradeEffect("hpw", 43))
 
         // JINXED JINX
-        player.hcu.jinxedJinxReq = player.hcu.jinxedJinx.add(5).mul(100)
+        player.hcu.jinxedJinxReq = player.hcu.jinxedJinx.mul(100).add(500)
+        if (player.hcu.jinxedJinx.gte(2)) player.hcu.jinxedJinxReq = player.hcu.jinxedJinxReq.add(Decimal.pow(2, player.hcu.jinxedJinx.sub(2)).mul(10))
         player.hcu.jinxedJinxEffects[0] = player.hcu.jinxTot.pow(player.hcu.jinxedJinx.div(5).add(1)).div(100).pow(player.hcu.jinxedJinx)
         player.hcu.jinxedJinxEffects[1] = player.hcu.jinxedJinx.div(20).add(1)
         player.hcu.jinxedJinxEffects[2] = player.hcu.jinxedJinx

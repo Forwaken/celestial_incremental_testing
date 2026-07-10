@@ -200,18 +200,18 @@ addLayer("h", {
     },
     effects() {
         let str = ""
-        if (player.h.tickspeed.lt(1)) str = str.concat("Tickspeed is divided by /" + formatSimple(Decimal.div(1, player.h.tickspeed)) + "<br>")
-        if (player.h.tickspeed.gt(1)) str = str.concat("<span style='color:#8f8'>Tickspeed is multiplied by x" + formatSimple(player.h.tickspeed) + "</span><br>")
+        if (player.h.tickspeed.lt(1)) str = str.concat("Tickspeed is divided by /" + formatSimple(Decimal.div(1, player.h.tickspeed), 2) + "<br>")
+        if (player.h.tickspeed.gt(1)) str = str.concat("<span style='color:#8f8'>Tickspeed is multiplied by x" + formatSimple(player.h.tickspeed, 2) + "</span><br>")
         if (player.h.externalRaise.lt(1)) str = str.concat("External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "<br>")
         if (player.h.externalRaise.gt(1)) str = str.concat("<span style='color:#8f8'>External effects are raised by ^" + formatSimple(player.h.externalRaise, 3) + "</span><br>")
-        if (player.h.provenanceDiv.gt(1)) str = str.concat("Provenance Efficiency is divided by /" + formatSimple(player.h.provenanceDiv) + "<br>")
-        if (player.h.provenanceDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Provenance Efficiency is multiplied by x" + formatSimple(Decimal.div(1, player.h.provenanceDiv)) + "</span><br>")
-        if (player.h.refinementScale.gt(1)) str = str.concat("Refinement Scaling is multiplied by x" + formatSimple(player.h.refinementScale) + "<br>")
-        if (player.h.refinementScale.lt(1)) str = str.concat("<span style='color:#8f8'>Refinement Scaling is divided by /" + formatSimple(Decimal.div(1, player.h.refinementScale)) + "</span><br>")
-        if (player.h.jinxDiv.gt(1)) str = str.concat("Jinx caps are divided by /" + formatSimple(player.h.jinxDiv) + "<br>")
-        if (player.h.jinxDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Jinx caps are multiplied by x" + formatSimple(Decimal.div(1, player.h.jinxDiv)) + "</span><br>")
-        if (player.h.purifierDiv.gt(1)) str = str.concat("Purifier Efficiency is divided by /" + formatSimple(player.h.purifierDiv) + "<br>")
-        if (player.h.purifierDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Purifier Efficiency is multiplied by x" + formatSimple(Decimal.div(1, player.h.purifierDiv)) + "</span><br>")
+        if (player.h.provenanceDiv.gt(1)) str = str.concat("Provenance Efficiency is divided by /" + formatSimple(player.h.provenanceDiv, 2) + "<br>")
+        if (player.h.provenanceDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Provenance Efficiency is multiplied by x" + formatSimple(Decimal.div(1, player.h.provenanceDiv), 2) + "</span><br>")
+        if (player.h.refinementScale.gt(1)) str = str.concat("Refinement Scaling is multiplied by x" + formatSimple(player.h.refinementScale, 2) + "<br>")
+        if (player.h.refinementScale.lt(1)) str = str.concat("<span style='color:#8f8'>Refinement Scaling is divided by /" + formatSimple(Decimal.div(1, player.h.refinementScale), 2) + "</span><br>")
+        if (player.h.jinxDiv.gt(1)) str = str.concat("Jinx caps are divided by /" + formatSimple(player.h.jinxDiv, 2) + "<br>")
+        if (player.h.jinxDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Jinx caps are multiplied by x" + formatSimple(Decimal.div(1, player.h.jinxDiv), 2) + "</span><br>")
+        if (player.h.purifierDiv.gt(1)) str = str.concat("Purifier Efficiency is divided by /" + formatSimple(player.h.purifierDiv, 2) + "<br>")
+        if (player.h.purifierDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Purifier Efficiency is multiplied by x" + formatSimple(Decimal.div(1, player.h.purifierDiv), 2) + "</span><br>")
         if (player.h.preNerf.neq(1)) str = str.concat("Pre-power resources are divided by /" + formatSimple(player.h.preNerf) + "<br>")
         if (player.h.powNerf.neq(1)) str = str.concat("Power is divided by /" + formatSimple(player.h.powNerf) + "<br>")
         return str

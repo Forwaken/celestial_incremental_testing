@@ -1698,8 +1698,8 @@ addLayer("tera", {
         },
 
         "hept1": {
-            fullDisplay() {return "<h3>Sinergy</h3><br>Boost external effects based on sins equipped<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e70 Blessings<br><small>[REQ BEING IN HEPT]</small>"},
-            unlocked() {return player.tera.unsealed},
+            fullDisplay() {return "<h3>Sinergy</h3><br>Boost external effects based on sins equipped<br>Currently: ^" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e70 Blessings<br><small>[REQ BEING IN HEPT]</small>"},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hbl.blessings.gte("1e70")},
             pay() {player.hbl.blessings = player.hbl.blessings.sub("1e70")},
             effect() {
@@ -1707,7 +1707,7 @@ addLayer("tera", {
                 for (let i in player.sins.clickables) {
                     if (player.sins.clickables[i]) amt = amt.add(1)
                 }
-                return amt.div(20).add(1)
+                return amt.div(50).add(1)
             },
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
@@ -1716,10 +1716,10 @@ addLayer("tera", {
             }
         },
         "hept2": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e35 Temperers<br><small>[REQ BEING IN HEPT]</small>"},
-            unlocked() {return player.tera.unsealed},
-            canAfford() { return player.h.stage.eq(7) && player.hre.temperer.gte("1e35")},
-            pay() {player.hre.temperer = player.hre.temperer.sub("1e35")},
+            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e21 Temperers<br><small>[REQ BEING IN HEPT]</small>"},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
+            canAfford() { return player.h.stage.eq(7) && player.hre.temperer.gte("1e21")},
+            pay() {player.hre.temperer = player.hre.temperer.sub("1e21")},
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -1728,7 +1728,7 @@ addLayer("tera", {
         },
         "hept3": {
             fullDisplay() {return "<h3>Familiar Feeling</h3><br>Unlock Rage in " + player.h.stageName[0] + " of Power<br>[NOT IMPLEMENTED]<br><br>Req: 70 Purities<br><small>[REQ BEING IN HEPT]</small>"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hpu.totalPurity.add(player.hpu.keptPurity).gte(70)},
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
@@ -1738,7 +1738,7 @@ addLayer("tera", {
         },
         "hept4": {
             fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 70 η-Provenance<br><small>[REQ BEING IN HEPT]</small>"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hpr.rank[6].gte(70)},
             pay() {player.hpr.rank[6] = player.hpr.rank[6].sub(70)},
             style() {
@@ -1749,7 +1749,7 @@ addLayer("tera", {
         },
         "hept5": {
             fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e35 Holy Power<br><small>[REQ BEING IN HEPT]</small>"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hsa.holyPower.gte("1e35")},
             pay() {player.hsa.holyPower = player.hsa.holyPower.sub("1e35")},
             style() {
@@ -1760,7 +1760,7 @@ addLayer("tera", {
         },
         "hept6": {
             fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e480 Curses<br><small>[REQ BEING IN HEPT]</small>"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hcu.curses.gte("1e480")},
             pay() {player.hcu.curses = player.hcu.curses.sub("1e480")},
             style() {
@@ -1771,7 +1771,7 @@ addLayer("tera", {
         },
         "hept7": {
             fullDisplay() {return "<h3>Growing Muscles</h3><br>Boost power gain based on time in this power reset.<br>[CAPPED AT x7]<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 49 Hept Essence"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(49)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(49)},
             effect() {return player.hpw.sincePower.add(1).log(7).add(1).min(7)},
@@ -1783,7 +1783,7 @@ addLayer("tera", {
         },
         "hept8": {
             fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 16,807 Hept Essence"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(16807)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(16807)},
             style() {
@@ -1794,7 +1794,7 @@ addLayer("tera", {
         },
         "hept9": {
             fullDisplay() {return "<h3>Hepted Curses?</h3><br>Increase base of Κ-Jinx by +0.02.<br><br>Cost: 40,353,607 Hept Essence"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(40353607)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(40353607)},
             style() {
@@ -1805,7 +1805,7 @@ addLayer("tera", {
         },
         "hept10": {
             fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e14 Hept Essence"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(1e14)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(1e14)},
             style() {
@@ -1816,7 +1816,7 @@ addLayer("tera", {
         },
         "hept11": {
             fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e28 Hept Essence"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(1e28)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(1e28)},
             style() {
@@ -1827,7 +1827,7 @@ addLayer("tera", {
         },
         "hept12": {
             fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e56 Hept Essence"},
-            unlocked() {return player.tera.unsealed},
+            unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(1e56)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(1e56)},
             style() {
@@ -2549,11 +2549,11 @@ addLayer("tera", {
                         ], {width: "785px", height: "250px", background: "repeating-linear-gradient(135deg, #5d79a1 0px, #5d79a1 20px, #425673 20px, #425673 40px)", paddingRight: "15px"}],
                         ["style-column", [
                             ["raw-html", "Uni-Alpha: Hept", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
-                        ], {width: "800px", height: "40px", background: "#95A6DD", borderTop: "3px solid #2c3142", borderBottom: "3px solid #2c3142"}],
+                        ], () => {return player.tera.trueHept.gte(1) ? {width: "800px", height: "40px", background: "#95A6DD", borderTop: "3px solid #2c3142", borderBottom: "3px solid #2c3142"} : {display: "none !important"}}],
                         ["style-row", [
                             ["upgrade", "hept1"], ["upgrade", "hept2"], ["upgrade", "hept3"], ["upgrade", "hept4"], ["upgrade", "hept5"], ["upgrade", "hept6"],
                             ["upgrade", "hept7"], ["upgrade", "hept8"], ["upgrade", "hept9"], ["upgrade", "hept10"], ["upgrade", "hept11"], ["upgrade", "hept12"],
-                        ], {width: "785px", height: "250px", background: "repeating-linear-gradient(135deg, #68749a 0px, #68749a 20px, #4a536e 20px, #4a536e 40px)", paddingRight: "15px", borderBottom: "3px solid #2c3142"}],
+                        ], () => {return player.tera.trueHept.gte(1) ? {width: "785px", height: "250px", background: "repeating-linear-gradient(135deg, #68749a 0px, #68749a 20px, #4a536e 20px, #4a536e 40px)", paddingRight: "15px", borderBottom: "3px solid #2c3142"} : {display: "none !important"}}],
                     ], {width: "800px", height: "720px", background: "repeating-linear-gradient(135deg, #141b24 0px, #141b24 20px, #0d1117 20px, #0d1117 40px)", border: "3px solid #5085D8"}],
                 ],
             },

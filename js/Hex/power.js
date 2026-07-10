@@ -1137,7 +1137,9 @@ addLayer("hpw", {
             title: "Might 16:4",
             unlocked() {return player.h.stage.gte(7)},
             description: "Raise external effects based on α-provenance.",
-            tooltip() {return "(log" + formatWhole(player.h.stage) + "(α-Provenance+1)/100)+1"},
+            tooltip() {
+                return "(log" + formatWhole(player.h.stage) + "(α-Provenance+1)/100)+1"
+            },
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
@@ -1146,7 +1148,9 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hpr.rank[0].add(1).log(player.h.stage).div(100).add(1)
+                let eff = player.hpr.rank[0].add(1).log(player.h.stage).div(100).add(1)
+                if (eff.gt(1.1)) eff = player.hpr.rank[0].add(1).log(player.h.stage).pow(Decimal.div(3.5, player.h.stage)).div(100).add(1.068)
+                return eff
             },
             effectDisplay() { return "^" + formatSimple(upgradeEffect(this.layer, this.id), 3) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
