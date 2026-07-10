@@ -3068,14 +3068,14 @@ addLayer("bh", {
                             }
                         }
                     }
-                    player.bh.characterData[currChar].usedSP = player.bh.characterData[currChar].usedSP.sub(spCost) // Give back SP from that equipped skill
+                    player.bh.characterData[currChar].usedSP = player.bh.characterData[currChar].usedSP.sub(spCost).max(0) // Give back SP from that equipped skill
                     player.bh.characterData[currChar].skills[currSkill] = "none" // Unequip skill from stored skill data
                 } else {
                     if (player.bh.characters[pastChar].skills[pastSkill].id != "none") { // If there is an old skill, remove the old one
                         let pastSkillName = player.bh.characters[pastChar].skills[pastSkill].id
                         let pastSkillCost = Decimal.sumArithmeticSeries(player.bh.skillData[pastSkillName].level, 1, 1, 0).mul(Decimal.add(1, BHA[pastSkillName].spCost.div(5).floor())).add(BHA[pastSkillName].spCost)
                         player.bh.skillData[pastSkillName].selected = ["none", 0] // Unselect old skill
-                        player.bh.characterData[player.bh.characters[pastChar].id].usedSP = player.bh.characterData[player.bh.characters[pastChar].id].usedSP.sub(pastSkillCost) // Give back SP from old skill
+                        player.bh.characterData[player.bh.characters[pastChar].id].usedSP = player.bh.characterData[player.bh.characters[pastChar].id].usedSP.sub(pastSkillCost).max(0) // Give back SP from old skill
                         player.bh.characterData[player.bh.characters[pastChar].id].skills[pastSkill] = "none" // Unequip old skill from stored character data
                     }
                     player.bh.skillData[player.bh.skillSelection].selected = [player.bh.characters[pastChar].id, pastSkill] // Equip new skill
@@ -3143,7 +3143,7 @@ addLayer("bh", {
                 player.bh.skillData[player.bh.skillSelection].level = player.bh.skillData[player.bh.skillSelection].level.sub(1)
                 if (player.bh.skillData[player.bh.skillSelection].selected[0] != "none") {
                     let currChar = player.bh.skillData[player.bh.skillSelection].selected[0]
-                    player.bh.characterData[currChar].usedSP = player.bh.characterData[currChar].usedSP.sub(Decimal.add(1, BHA[player.bh.skillSelection].spCost.div(5).floor()).mul(player.bh.skillData[player.bh.skillSelection].level.add(1)))
+                    player.bh.characterData[currChar].usedSP = player.bh.characterData[currChar].usedSP.sub(Decimal.add(1, BHA[player.bh.skillSelection].spCost.div(5).floor()).mul(player.bh.skillData[player.bh.skillSelection].level.add(1))).max(0)
                 }
             },
             style() {
@@ -4307,7 +4307,18 @@ addLayer("bh", {
                             ["row", [
                                 ["clickable", "Char-Kres"], ["clickable", "Char-Nav"], ["clickable", "Char-Sel"], ["clickable", "Char-Eclipse"], ["clickable", "Char-Geroa"], ["clickable", "Char-Vespasian"], ["clickable", "Char-Creation"], ["clickable", "Char-DiceFive"]
                             ]],
-                        ], {width: "497px", height: "480px"}],
+                        ], {width: "497px", height: "417px"}],
+                        ["style-row", [
+                            ["style-row", [
+                                ["raw-html", () => {return "Combo Scaling Reduction<hr style='width:100px'>" + formatSimple(Decimal.mul(player.bh.comboScalingReduction, 100)) + "%"}, {color: "var(--textColor)", fontSize: "14px", fontFamily: "monospace"}],
+                            ], {width: "120px", height: "55px", background: "var(--layerBackground)", borderRadius: "10px", marginRight: "4px"}],
+                            ["style-row", [
+                                ["raw-html", () => {return "Double Reward Chance<hr style='width:100px'>" + formatSimple(Decimal.mul(player.bh.celestialite.curAdd, 100)) + "%"}, {color: "var(--textColor)", fontSize: "14px", fontFamily: "monospace"}],
+                            ], {width: "120px", height: "55px", background: "var(--layerBackground)", borderRadius: "10px", marginRight: "4px"}],
+                            ["style-row", [
+                                ["raw-html", () => {return "Skill Cap Cost Divisor<hr style='width:100px'>/" + formatSimple(player.bh.skillCostDiv)}, {color: "var(--textColor)", fontSize: "14px", fontFamily: "monospace"}],
+                            ], {width: "120px", height: "55px", background: "var(--layerBackground)", borderRadius: "10px", marginRight: "4px"}],
+                        ], {width: "497px", height: "60px", lineHeight: "1", background: "var(--miscButtonDisable)", borderTop: "3px solid var(--regBorder)"}],
                     ], {width: "497px", height: "677px"}],
                 ]
             },
