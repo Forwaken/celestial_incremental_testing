@@ -195,6 +195,7 @@ addLayer("tera", {
         player.tera.virtueEffects[1][0] = player.tera.virtueEssence[1].gte(1) ? player.tera.virtueEssence[1].pow(0.38).div(9).add(1) : new Decimal(1)
         player.tera.virtueEffects[1][1] = player.tera.virtueEssence[1].gte(49) ? Decimal.pow(3, player.tera.virtueEssence[1].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
         if (!player.tera.virtueUnlocks[1] && player.tera.virtueEssence[1].gte(14000)) player.tera.virtueUnlocks[1] = true
+        if (player.tera.trueHept.gte(4)) player.tera.virtue[1] = player.tera.virtue[1].add(player.tera.virtueGain[1])
         player.tera.virtueReq[2] = layers.h.hexReq(player.tera.virtue[2], 14, 1.45, new Decimal(1))
         player.tera.virtueGain[2] = layers.h.hexGain(player.tera.virtue[1], 14, 1.45, new Decimal(1)).sub(player.tera.virtue[2]).max(0)
         player.tera.virtueEssenceGain[2] = player.tera.virtue[2].div(5).pow(1.26)
@@ -806,7 +807,8 @@ addLayer("tera", {
                 else str = str.concat("<h3>[ONLY POSSIBLE WHEN Uni-α IS HEPT]</h3>")
                 if (player.tera.trueHept.eq(0)) str = str.concat("<br>At true hept 1, unlock true hept content.") // ADDED
                 if (player.tera.trueHept.eq(1)) str = str.concat("<br>At true hept 2, automate kindness gain.") // ADDED
-                // Automate Patience Gain
+                if (player.tera.trueHept.eq(2)) str = str.concat("<br>At true hept 3, [NOT IMPLEMENTED].") // ADDED
+                if (player.tera.trueHept.eq(3)) str = str.concat("<br>At true hept 4, automate patience gain.") // ADDED
                 // Automate Chastity Gain
                 // Automate Temperance Gain
                 // Automate Diligence Gain
