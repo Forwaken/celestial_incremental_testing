@@ -795,7 +795,7 @@ addLayer("bh", {
         if (hasMilestone("db", 105)) player.bh.comboScalingReduction = player.bh.comboScalingReduction + 0.002
         if (hasUpgrade("depth4", 3)) player.bh.comboScalingReduction = player.bh.comboScalingReduction + 0.002
         player.bh.comboScalingReduction = player.bh.comboScalingReduction + (buyableEffect("laboratory", 1).sub(1).toNumber())
-        player.bh.comboScalingReduction = player.bh.comboScalingReduction + levelableEffect("car", 113)[0].toNumber()
+        player.bh.comboScalingReduction = player.bh.comboScalingReduction + levelableEffect("car", 113)[0].sub(1).toNumber()
         player.bh.comboScaling = Math.max(player.bh.comboScaling - player.bh.comboScalingReduction , 1)
 
         player.bh.comboScalingStart = new Decimal(Infinity)

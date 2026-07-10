@@ -909,6 +909,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		Balancing:<br>
 			- Completely rebalanced uni-alpha.<br>
 			- Black heart currency drops now roll the remainder instead of flooring.<br>
+			- Fixed combo scaling before dice space.<br>
 			- Halved the time skip cooldown in Stagnant Synestia.<br>
 			- Buffed Kres' first upgrade by +0.05 to account for a new addition.<br>
 			- Doubled the byproduct gain from the 4th rune. [Stagnant Synestia]<br>

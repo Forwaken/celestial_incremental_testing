@@ -316,8 +316,8 @@ addLayer("tera", {
         for (let i = 101; i < 115; i++) {
             player.hcu.buyables[i] = new Decimal(0)
         }
-        player.hve.jinxedJinx = new Decimal(0)
-        player.hve.jinxedJinxEffects = [new Decimal(1), new Decimal(1), new Decimal(0)]
+        player.hcu.jinxedJinx = new Decimal(0)
+        player.hcu.jinxedJinxEffects = [new Decimal(1), new Decimal(1), new Decimal(0)]
 
         // VEXES
         player.hve.vex = new Decimal(0)
