@@ -88,7 +88,7 @@ addLayer("h", {
         if (hasUpgrade("hpw", 76)) player.h.provenanceDiv = player.h.provenanceDiv.div(upgradeEffect("hpw", 76))
 
         player.h.jinxDiv = new Decimal(1)
-        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(Decimal.div(6, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1))
+        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(Decimal.div(3, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1))
         if (hasUpgrade("hpw", 46)) player.h.jinxDiv = player.h.jinxDiv.div(upgradeEffect("hpw", 46))
         player.h.jinxDiv = player.h.jinxDiv.div(player.hcu.jinxedJinxEffects[1])
 
