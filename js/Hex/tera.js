@@ -1698,10 +1698,17 @@ addLayer("tera", {
         },
 
         "hept1": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e70 Blessings<br><small>[REQ BEING IN HEPT]</small>"},
+            fullDisplay() {return "<h3>Sinergy</h3><br>Boost external effects based on sins equipped<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e70 Blessings<br><small>[REQ BEING IN HEPT]</small>"},
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(7) && player.hbl.blessings.gte("1e70")},
             pay() {player.hbl.blessings = player.hbl.blessings.sub("1e70")},
+            effect() {
+                let amt = new Decimal(0)
+                for (let i in player.sins.clickables) {
+                    if (player.sins.clickables[i]) amt = amt.add(1)
+                }
+                return amt.div(20).add(1)
+            },
             style() {
                 let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -1720,7 +1727,7 @@ addLayer("tera", {
             }
         },
         "hept3": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Req: 70 Purities<br><small>[REQ BEING IN HEPT]</small>"},
+            fullDisplay() {return "<h3>Familiar Feeling</h3><br>Unlock Rage in " + player.h.stageName[0] + " of Power<br>[NOT IMPLEMENTED]<br><br>Req: 70 Purities<br><small>[REQ BEING IN HEPT]</small>"},
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(7) && player.hpu.totalPurity.add(player.hpu.keptPurity).gte(70)},
             style() {
@@ -1831,8 +1838,8 @@ addLayer("tera", {
         },
         // HEPT UPGRADES
         // Reduce external penalty based on equipped sins
-        //
-        //
+        // Unlock rage in power (In all universes, but a few unique buyables while in sins)
+        // 
         // Unlock dark OTFs
         // EXTERNAL UNLOCK/BUFF x2
 
@@ -2455,14 +2462,6 @@ addLayer("tera", {
                         ["raw-html", () => {return player.tera.trueHex.gte(4) ? "Boosts hex energy gain by x" + formatSimple(player.tera.hexEssenceEffect, 2) : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ["blank", "10px"],
                         ["microtabs", "hex", {borderWidth: "0px"}],
-
-                        /*
-                        It is going to revolve around using hex essence (gained based on your true hex) to buy three resources with different mechanics that work together.
-                        First is Hex (color), which will be upgrades themed on hex colors.
-                        Second is Hex (number), which is hexadecimal themed buffs towards the formula to gain hex essence.
-                        Third is Hex (spell), which are active abilities to boost both hex essence gain and uni-alpha resource gain.
-                        */
-                        // Three increasing resources (in the style of neutrons from matter dimensions). All named hex with paranthesis with the 3 meanings of hex (color, number, spell)
                     ], {width: "597px", height: "720px", background: "#273345"}],
                 ],
             },

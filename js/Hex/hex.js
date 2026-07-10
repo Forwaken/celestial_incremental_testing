@@ -73,6 +73,7 @@ addLayer("h", {
         if (player.h.stage.neq(6)) player.h.externalRaise = Decimal.pow(0.5, player.h.stage.sub(6).abs())
         player.h.externalRaise = player.h.externalRaise.mul(player.hpu.purifiers[6].effect)
         if (hasUpgrade("hpw", 154)) player.h.externalRaise = player.h.externalRaise.mul(upgradeEffect("hpw", 154))
+        if (hasUpgrade("tera", "hept1")) player.h.externalRaise = player.h.externalRaise.mul(upgradeEffect("tera", "hept1"))
 
         player.h.preNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.preNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
