@@ -917,6 +917,7 @@ let changelog = `<h1>Changelog:</h1><br>
 			- Reduced distance between stagnant synestia milestones from 25 -> 10, and added a new milestone.<br>
 			- Increased Stagnant Synestia's combo scaling from 1.025 -> 1.05, and the start of scaling from 25 -> 10.<br>
 			- Roughly doubled the rewards from Stagnant Synestia celestialites, and made it possible to get both drops at the same time.<br>
+			- Added softcaps to charger milestones.<br>
 			- Made the check back ritual cooldown be affected by check back tickspeed.<br>
 			- Nerfed the "3 of Diamonds" card.<br><br>
 		Bug Fixes:<br>

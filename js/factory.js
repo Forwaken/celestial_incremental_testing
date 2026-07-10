@@ -76,16 +76,26 @@
         if (player.fa.buyables[13].gte(1)) player.fa.charge = player.fa.charge.add(player.fa.chargeRate.mul(delta))
 
         player.fa.milestoneEffect[0] = player.fa.charge.pow(0.3).div(3).add(1) //ip
+        if (player.fa.milestoneEffect[0].gte("1e25000")) player.fa.milestoneEffect[0] = player.fa.milestoneEffect[0].div("1e25000").pow(0.1).mul("1e25000")
         player.fa.milestoneEffect[1] = player.fa.charge.pow(3).add(1) //ad
+        if (player.fa.milestoneEffect[1].gte("1e200000")) player.fa.milestoneEffect[1] = player.fa.milestoneEffect[1].div("1e200000").pow(0.05).mul("1e200000")
         player.fa.milestoneEffect[2] = player.fa.charge.add(1).log(10).pow(0.5).add(1) //bi
+        if (player.fa.charge.gte("1e250000")) player.fa.milestoneEffect[2] = Decimal.pow(2, player.fa.charge.add(1).log("1e25000")).div(2)
         player.fa.milestoneEffect[3] = player.fa.charge.pow(0.35).div(5).add(1) //steel
+        if (player.fa.milestoneEffect[3].gte("1e50000")) player.fa.milestoneEffect[3] = player.fa.milestoneEffect[3].div("1e50000").pow(0.3).mul("1e50000")
         player.fa.milestoneEffect[4] = player.fa.charge.pow(0.25).div(5).add(1) //nip
+        if (player.fa.milestoneEffect[4].gte("1e20000")) player.fa.milestoneEffect[4] = player.fa.milestoneEffect[4].div("1e20000").pow(0.1).mul("1e20000")
         player.fa.milestoneEffect[5] = player.fa.charge.pow(0.3).div(2).add(1) //id
+        if (player.fa.milestoneEffect[5].gte("1e25000")) player.fa.milestoneEffect[5] = player.fa.milestoneEffect[5].div("1e25000").pow(0.2).mul("1e25000")
         player.fa.milestoneEffect[6] = player.fa.charge.pow(0.1).div(4).add(1) //oil
+        if (player.fa.milestoneEffect[6].gte("1e10000")) player.fa.milestoneEffect[6] = player.fa.milestoneEffect[6].div("1e10000").pow(0.3).mul("1e10000")
         player.fa.milestoneEffect[7] = player.fa.charge.pow(0.25).div(5).add(1) //anon
+        if (player.fa.milestoneEffect[7].gte("1e25000")) player.fa.milestoneEffect[7] = player.fa.milestoneEffect[7].div("1e25000").pow(0.3).mul("1e25000")
         player.fa.milestoneEffect[8] = player.fa.charge.pow(0.08).div(15).add(1) //galaxy dust
+        if (player.fa.milestoneEffect[8].gte("1e10000")) player.fa.milestoneEffect[8] = player.fa.milestoneEffect[8].div("1e10000").pow(0.2).mul("1e10000")
         player.fa.milestoneEffect[9] = player.fa.charge.pow(0.1).add(1) //charge
         player.fa.milestoneEffect[10] = Decimal.pow(10, player.fa.charge.add(1).log(1e10).pow(0.5)) //pre-otf
+        if (player.fa.milestoneEffect[10].gte(1e100)) player.fa.milestoneEffect[10] = player.fa.milestoneEffect[10].div(1e100).pow(0.3).mul(1e100)
     },
     clickables: {},
     bars: {},
@@ -1365,67 +1375,100 @@
     milestones: {
         11: {
             requirementDescription: "<h3>100 Best Charge",
-            effectDescription() { return "Boosts infinity points based on charge:<br>Currently: " + format(player.fa.milestoneEffect[0]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[0].gte("1e25000")) return "Boosts infinity points based on charge:<br>Currently: " + format(player.fa.milestoneEffect[0]) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return "Boosts infinity points based on charge:<br>Currently: " + format(player.fa.milestoneEffect[0]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(100) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         12: {
             requirementDescription: "<h3>1,000 Best Charge",
-            effectDescription() {return "Boosts AD (ignoring softcap) based on charge:<br>Currently: " + format(player.fa.milestoneEffect[1]) + "x"},
+            effectDescription() {
+                if (player.fa.milestoneEffect[1].gte("1e200000")) return "Boosts AD (ignoring softcap) based on charge:<br>Currently: " + format(player.fa.milestoneEffect[1]) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return "Boosts AD (ignoring softcap) based on charge:<br>Currently: " + format(player.fa.milestoneEffect[1]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(1000) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         13: {
             requirementDescription: "<h3>10,000 Best Charge",
-            effectDescription() { return "Boosts infinities based on charge:<br>Currently: " + format(player.fa.milestoneEffect[2]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[2].gte(501)) return "Boosts infinities based on charge:<br>Currently: " + format(player.fa.milestoneEffect[2]) + "x <small style='color:#040'>[REVERSE SOFTCAPPED]</small>"
+                return "Boosts infinities based on charge:<br>Currently: " + format(player.fa.milestoneEffect[2]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(10000) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         14: {
             requirementDescription: "<h3>100,000 Best Charge",
-            effectDescription() { return "Boosts steel based on charge:<br>Currently: " + format(player.fa.milestoneEffect[3]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[3].gte("1e50000")) return "Boosts steel based on charge:<br>Currently: " + format(player.fa.milestoneEffect[3]) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return "Boosts steel based on charge:<br>Currently: " + format(player.fa.milestoneEffect[3]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(1e5) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         15: {
             requirementDescription: "<h3>1,000,000 Best Charge",
-            effectDescription() { return "Boosts negative infinity points based on charge:<br>Currently: " + format(player.fa.milestoneEffect[4]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[4].gte("1e20000")) return "Boosts negative infinity points based on charge:<br>Currently: " + format(player.fa.milestoneEffect[4]) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return "Boosts negative infinity points based on charge:<br>Currently: " + format(player.fa.milestoneEffect[4]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(1e6) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         16: {
             requirementDescription: "<h3>10,000,000 Best Charge",
-            effectDescription() { return "Boosts infinity dimensions based on charge:<br>Currently: " + format(player.fa.milestoneEffect[5]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[5].gte("1e25000")) return "Boosts infinity dimensions based on charge:<br>Currently: " + format(player.fa.milestoneEffect[5]) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return "Boosts infinity dimensions based on charge:<br>Currently: " + format(player.fa.milestoneEffect[5]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(1e7) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         17: {
             requirementDescription: "<h3>1e9 Best Charge",
-            effectDescription() { return "Boosts oil based on charge: Currently:<br>" + format(player.fa.milestoneEffect[6]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[6].gte("1e10000")) return "Boosts oil based on charge:<br>Currently: " + format(player.fa.milestoneEffect[6]) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return "Boosts oil based on charge:<br>Currently: " + format(player.fa.milestoneEffect[6]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(1e9) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         18: {
             requirementDescription: "<h3>1e11 Best Charge",
-            effectDescription() { return "Boosts anonymity based on charge:<br>Currently: " + format(player.fa.milestoneEffect[7]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[7].gte("1e25000")) return "Boosts anonymity based on charge:<br>Currently: " + format(player.fa.milestoneEffect[7]) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return "Boosts anonymity based on charge:<br>Currently: " + format(player.fa.milestoneEffect[7]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(1e11) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         19: {
             requirementDescription: "<h3>1e14 Best Charge",
-            effectDescription() { return "Boosts galaxy dust based on charge:<br>Currently: " + format(player.fa.milestoneEffect[8]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[8].gte("1e10000")) return "Boosts galaxy dust based on charge:<br>Currently: " + format(player.fa.milestoneEffect[8]) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return "Boosts galaxy dust based on charge:<br>Currently: " + format(player.fa.milestoneEffect[8]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(1e14) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         21: {
             requirementDescription: "<h3>1e50 Best Charge",
-            effectDescription() { return "Boosts charge based on charge:<br>Currently: " + format(player.fa.milestoneEffect[9]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[9].gte("1e10000")) return "Boosts charge based on charge:<br>Currently: " + format(player.fa.milestoneEffect[9]) + "x <small>[NO SOFTCAP, JUST WANTS TO BE INCLUDED]</small>"
+                return "Boosts charge based on charge:<br>Currently: " + format(player.fa.milestoneEffect[9]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(1e50) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         22: {
             requirementDescription: "<h3>1e100 Best Charge",
-            effectDescription() { return "Boosts Pre-OTF currencies based on charge:<br>Currently: " + format(player.fa.milestoneEffect[10]) + "x" },
+            effectDescription() {
+                if (player.fa.milestoneEffect[10].gte(1e100)) return "Boosts Pre-OTF currencies based on charge:<br>Currently: " + format(player.fa.milestoneEffect[10]) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return "Boosts Pre-OTF currencies based on charge:<br>Currently: " + format(player.fa.milestoneEffect[10]) + "x"
+            },
             done() { return player.fa.bestCharge.gte(1e100) },
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
