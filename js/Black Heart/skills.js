@@ -1217,8 +1217,8 @@ BHA.diceFive_fortunesMalace = {
     constantType: "effect",
     constantTarget: "allPlayer",
     effects: {
-        "damageMult"(char) {return char.luck.pow(0.7).div(15).mul(Decimal.add(1.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
-        "agilityMult"(char) {return char.luck.pow(0.7).div(15).mul(Decimal.add(1.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
+        "damageMult"(char) {return char.luck.pow(0.7).div(15).mul(Decimal.add(0.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
+        "agilityMult"(char) {return char.luck.pow(0.7).div(15).mul(Decimal.add(0.1, player.bh.skillData["diceFive_fortunesMalace"].level.mul(0.02))).add(1)},
     },
     cooldown: new Decimal(Infinity),
 }
