@@ -55,7 +55,7 @@ addLayer("n", {
         player.n.nestGain = player.n.nestGain.mul(buyableEffect("tw", 14))
         player.n.nestGain = player.n.nestGain.mul(buyableEffect("tw", 74))
         if (hasMilestone("n", 30)) player.n.nestGain = player.n.nestGain.mul(player.n.milestone30Effect)
-        if (hasUpgrade("tera", "hex10")) player.n.nestGain = player.n.nestGain.mul(upgradeEffect("tera", "hex10"))
+        if (hasUpgrade("tera", "hex2")) player.n.nestGain = player.n.nestGain.mul(upgradeEffect("tera", "hex2"))
 
         player.n.nestGain = player.n.nestGain.mul(10).floor().div(10) // KEEP AT END
 

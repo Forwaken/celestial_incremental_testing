@@ -83,14 +83,14 @@ const fragShopBase = {
     4: {
         name: "Coin Fragment",
         0: new Decimal(6),
-        1: new Decimal(2),
-        2: new Decimal(2),
+        1() {return hasUpgrade("ev15", 13) ? new Decimal(0) : new Decimal(2)},
+        2() {return hasUpgrade("ev15", 13) ? new Decimal(0) : new Decimal(2)},
     },
     5: {
         name: "Refined Fragment",
-        0() {return hasUpgrade("tera", "hex2") ? new Decimal(0) : new Decimal(3)},
+        0() {return hasUpgrade("tera", "hept2") ? new Decimal(0) : new Decimal(3)},
         1: new Decimal(9),
-        2() {return hasUpgrade("tera", "hex2") ? new Decimal(0) : new Decimal(3)},
+        2() {return hasUpgrade("tera", "hept2") ? new Decimal(0) : new Decimal(3)},
     },
     6: {
         name: "Evolution Fragment",
@@ -622,12 +622,6 @@ addLayer("pet", {
         player.pet.fragShopCost1 = run(fragShopBase[player.pet.fragShopIndex][0], fragShopBase[player.pet.fragShopIndex]).mul(fragMul).mul(player.pet.fragShopBulk).mul(10).floor().div(10)
         player.pet.fragShopCost2 = run(fragShopBase[player.pet.fragShopIndex][1], fragShopBase[player.pet.fragShopIndex]).mul(fragMul).mul(player.pet.fragShopBulk).mul(10).floor().div(10)
         player.pet.fragShopCost3 = run(fragShopBase[player.pet.fragShopIndex][2], fragShopBase[player.pet.fragShopIndex]).mul(fragMul).mul(player.pet.fragShopBulk).mul(10).floor().div(10)
-
-        // MODIFIERS FOR FRAG FRAGMENTS
-        if (hasUpgrade("ev15", 13) && player.pet.fragShopIndex == 4) {
-            player.pet.fragShopCost2 = new Decimal(0)
-            player.pet.fragShopCost3 = new Decimal(0)
-        }
 
         for (let i in player.pet.fragShop) {
             player.pet.fragShop[i].current = player.pet.fragShop[i].current.sub(onepersec.mul(delta))

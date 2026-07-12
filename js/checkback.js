@@ -183,8 +183,8 @@ addLayer("cb", {
         onepersec = onepersec.mul(player.cb.cbTickspeed)
 
         player.cb.cbTickspeed = new Decimal(1)
-        if (hasUpgrade("tera", "hex8") && player.hrm.realmEssenceEffects[1].lt(upgradeEffect("tera", "hex8"))) {
-            player.cb.cbTickspeed = player.cb.cbTickspeed.mul(upgradeEffect("tera", "hex8"))
+        if (hasUpgrade("tera", "hex10") && player.hrm.realmEssenceEffects[1].lt(upgradeEffect("tera", "hex10"))) {
+            player.cb.cbTickspeed = player.cb.cbTickspeed.mul(upgradeEffect("tera", "hex10"))
         } else player.cb.cbTickspeed = player.cb.cbTickspeed.mul(player.hrm.realmEssenceEffects[1])
         if (hasUpgrade("cs", 1203)) player.cb.cbTickspeed = player.cb.cbTickspeed.mul(1.1)
         player.cb.cbTickspeed = player.cb.cbTickspeed.mul(buyableEffect("ev2", 32))

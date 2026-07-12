@@ -72,10 +72,10 @@ addNode("chronotachysisSpell", {
     },
 })
 addLayer("tera", {
-    name() {return "Tera"},
+    name() {return "Tera, the Celestial of Tiers"},
     symbol: "目", // Decides what text appears on the node.
     universe: "UA",
-    tooltip: "Tera", // Decides the nodes tooltip
+    tooltip: "Tera, the Celestial of Tiers", // Decides the nodes tooltip
     color: "#6D9BE0", // Decides the nodes color.
     nodeStyle() {
         if (!player.tera.unsealed) return {background: "linear-gradient(135deg, #425673, #28426c)", borderColor: "#002355", color: "#002355"}
@@ -100,7 +100,7 @@ addLayer("tera", {
         hexEnergyCap: new Decimal(10),
         hexEnergyGain: new Decimal(0),
 
-        piositySpell: new Decimal(300),
+        piositySpell: new Decimal(1),
         piosityAuto: new Decimal(0),
         chronotachysisSpell: [new Decimal(0), new Decimal(2)], // Duration / Multiplier
         // Add spell that increases cost and power of next cast.
@@ -148,14 +148,15 @@ addLayer("tera", {
 
         let softcapStart = new Decimal(1e6)
         if (hasUpgrade("tera", "hex12")) softcapStart = softcapStart.mul(upgradeEffect("tera", "hex12"))
-        player.tera.hexEssenceSoftcap = player.tera.hexEssencePerSecond.gte(softcapStart) ? Decimal.div(0.6, player.tera.hexEssencePerSecond.add(1).log(1e9)) : new Decimal(1)
+        player.tera.hexEssenceSoftcap = player.tera.hexEssencePerSecond.gte(softcapStart) ? Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e6).pow(0.6)) : new Decimal(1)
         player.tera.hexEssencePerSecond = player.tera.hexEssencePerSecond.div(softcapStart).pow(player.tera.hexEssenceSoftcap).mul(softcapStart)
         player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
 
         player.tera.hexEssenceEffect = player.tera.trueHex.gte(4) ? Decimal.pow(1.01, player.tera.hexEssence.add(1).log(6)) : new Decimal(1)
 
         player.tera.hexEnergyCap = new Decimal(9).add(buyableEffect("tera", "hexEnergyCap"))
-        player.tera.hexEnergyGain = Decimal.pow(2, player.tera.trueHex.sub(1)).div(50).mul(buyableEffect("tera", "hexEnergyBuff")).mul(player.tera.hexEssenceEffect)
+        player.tera.hexEnergyGain = Decimal.pow(2, player.tera.trueHex.sub(1)).div(100).mul(buyableEffect("tera", "hexEnergyBuff")).mul(player.tera.hexEssenceEffect)
+        if (hasUpgrade("tera", "hex8")) player.tera.hexEnergyGain = player.tera.hexEnergyGain.mul(upgradeEffect("tera", "hex8"))
 
         if (getBuyableAmount("tera", "piosityAuto").gt(0)) player.tera.piosityAuto = player.tera.piosityAuto.sub(delta)
 
@@ -1161,7 +1162,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(255) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(player.h.hexPoint.add(1).log(6).pow(0.5).div(300).add(1.05), getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) {
                 let amt = x || getBuyableAmount(this.layer, this.id)
@@ -1173,7 +1174,7 @@ addLayer("tera", {
             canAfford() { return this.currency().gte(this.cost())},
             display() {
                 return "<h3>Increase Blue Value</h3>\n\
-                    [Multiplies final effect]\n\
+                    [Multiplies final effect based on " + player.h.stageName[1] + " points]\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
@@ -1560,12 +1561,13 @@ addLayer("tera", {
             }
         },
         "hex2": {
-            fullDisplay() {return "<h3>Cheaper Refining</h3><br>Refined fragments no longer cost lesser or greater fragments.<br><br>Cost: 180 Refinements<br><small>[REQ BEING IN HEX]</small>"},
+            fullDisplay() {return "<h3>Hexed Hive</h3><br>Boost nests based on true hex.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 180 Refinements<br><small>[REQ BEING IN HEX]</small>"},
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hre.refinement.gte(180)},
             pay() {player.hre.refinement = player.hre.refinement.sub(180)},
+            effect() {return Decimal.pow(1.1, player.tera.trueHex)},
             style() {
-                let look = {width: "125px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
                 return look
             }
@@ -1644,13 +1646,13 @@ addLayer("tera", {
             }
         },
         "hex8": {
-            fullDisplay() {return "<h3>Essence Conversion</h3><br>Boost CB-Tickspeed based on hex essence.<br><small>[DOES NOT STACK WITH REALM ESSENCE]</small><br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 216 Hex Essence"},
+            fullDisplay() {return "<h3>Fake Synergy</h3><br>Boost hex energy based on piosity buff.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 216 Hex Essence"},
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(216)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(216)},
-            effect() {return player.tera.hexEssence.add(1).log(6).div(36).add(1)},
+            effect() {return player.tera.piositySpell.add(1).log(6).div(2).add(1.5)},
             style() {
-                let look = {width: "135px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
                 return look
             }
@@ -1667,13 +1669,13 @@ addLayer("tera", {
             }
         },
         "hex10": {
-            fullDisplay() {return "<h3>Hexed Hive</h3><br>Boost nests based on true hexes.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e12 Hex Essence"},
+            fullDisplay() {return "<h3>Essence Conversion</h3><br>Boost CB-Tickspeed based on hex essence.<br><small>[DOES NOT STACK WITH REALM ESSENCE]</small><br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e12 Hex Essence"},
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(1e12)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(1e12)},
-            effect() {return Decimal.pow(1.1, player.tera.trueHex)},
+            effect() {return player.tera.hexEssence.add(1).log(6).div(36).add(1)},
             style() {
-                let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "135px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
                 return look
             }
@@ -1722,12 +1724,12 @@ addLayer("tera", {
             }
         },
         "hept2": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e21 Temperers<br><small>[REQ BEING IN HEPT]</small>"},
+            fullDisplay() {return "<h3>Cheaper Refining</h3><br>Refined fragments no longer cost lesser or greater fragments.<br><br>Cost: 1e21 Temperers<br><small>[REQ BEING IN HEPT]</small>"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hre.temperer.gte("1e21")},
             pay() {player.hre.temperer = player.hre.temperer.sub("1e21")},
             style() {
-                let look = {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "125px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
                 return look
             }
