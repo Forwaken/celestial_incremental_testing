@@ -5,7 +5,6 @@ addLayer("hcu", {
     tooltip: "Curses", // Decides the nodes tooltip
     nodeStyle: {background: "linear-gradient(140deg, #b2d8d8 0%, #8eacac 100%)", backgroundOrigin: "borderBox", borderColor: "#596c6c"},
     color: "#b2d8d8", // Decides the nodes color.
-    branches: ["hbl"], // Decides the nodes branches.
     startData() { return {
         curses: new Decimal(0),
         cursesGain: new Decimal(0),

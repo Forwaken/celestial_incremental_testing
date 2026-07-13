@@ -7,7 +7,7 @@ addLayer("hve", {
     tooltip: "Vexes", // Decides the nodes tooltip
     nodeStyle: {background: "linear-gradient(140deg, #808 0%, #707 100%)", backgroundOrigin: "borderBox", borderColor: "#404"},
     color: "#808", // Decides the nodes color.
-    branches: ["hcu"], // Decides the nodes branches.
+    branches: ["hcu", "hpw"], // Decides the nodes branches.
     startData() { return {
         vex: new Decimal(0),
         vexTotal: new Decimal(0),
@@ -30,8 +30,8 @@ addLayer("hve", {
 
         if (player.hve.vexTotal.lt(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage), player.hve.vexTotal).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv)
         if (player.hve.vexTotal.gte(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage.mul(2)), player.hve.vexTotal).div(connect).div(player.hve.vexDiv)
-        if (player.hcu.curses.lt(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))))) player.hve.vexGain = player.hcu.curses.add(1).div(Decimal.pow10(player.h.stage.mul(10))).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage)).ln()).add(1).sub(player.hve.vexTotal).floor()
-        if (player.hcu.curses.gte(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))))) player.hve.vexGain = player.hcu.curses.add(1).mul(connect).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage.mul(2))).ln()).add(1).sub(player.hve.vexTotal).floor()
+        if (player.hcu.curses.lt(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv))) player.hve.vexGain = player.hcu.curses.add(1).div(Decimal.pow10(player.h.stage.mul(10))).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage)).ln()).add(1).sub(player.hve.vexTotal).floor()
+        if (player.hcu.curses.gte(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv))) player.hve.vexGain = player.hcu.curses.add(1).mul(connect).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage.mul(2))).ln()).add(1).sub(player.hve.vexTotal).floor()
         if (player.hve.vexGain.lt(1)) player.hve.vexGain = new Decimal(0)
 
         if (hasMilestone("hre", 16) && !inChallenge("hrm", 15) && player.hve.vexGain.gt(0)) {
