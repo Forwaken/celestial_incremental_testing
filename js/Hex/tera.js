@@ -784,7 +784,7 @@ addLayer("tera", {
                 else str = str.concat("<h3>[ONLY POSSIBLE WHEN Uni-α IS HEPT]</h3>")
                 if (player.tera.trueHept.eq(0)) str = str.concat("<br>At true hept 1, unlock true hept content.") // ADDED
                 if (player.tera.trueHept.eq(1)) str = str.concat("<br>At true hept 2, automate kindness gain.") // ADDED
-                if (player.tera.trueHept.eq(2)) str = str.concat("<br>At true hept 3, [NOT IMPLEMENTED].") // ADDED
+                if (player.tera.trueHept.eq(2)) str = str.concat("<br>At true hept 3, essence of kindness is no longer reset.") // ADDED
                 if (player.tera.trueHept.eq(3)) str = str.concat("<br>At true hept 4, automate patience gain.") // ADDED
                 if (player.tera.trueHept.eq(6)) str = str.concat("<br>At true hept 7, unlock bulk true hepting.") // ADDED
                 // Automate Chastity Gain
@@ -914,7 +914,7 @@ addLayer("tera", {
         },
         "virtue1": {
             title() { return "Reset hept essence,<br>but gain kindness.<br><small>Req: " + formatSimple(player.tera.virtueReq[0]) + " Hept Essence</small>"},
-            canClick() { return player.tera.virtueGain[0].gt(0)},
+            canClick() { return player.tera.virtueGain[0].gt(0) && player.tera.trueHept.lt(2)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[0] = player.tera.virtue[0].add(player.tera.virtueGain[0])
@@ -924,13 +924,13 @@ addLayer("tera", {
             },
             style() {
                 let look = {width: "175px", minHeight: "100px", fontSize: "10px", lineHeight: "1.1", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
-                this.canClick() ? look.background = "#95A6DD" : look.background = "#bf8f8f"
+                player.tera.trueHept.gte(2) ? look.background = "#77bf5f" : this.canClick() ? look.background = "#95A6DD" : look.background = "#bf8f8f"
                 return look
             },
         },
         "virtue2": {
             title() { return "Reset previous true hept content,<br>but gain patience.<br><small>Req: " + formatSimple(player.tera.virtueReq[1]) + " Kindness</small>"},
-            canClick() { return player.tera.virtueGain[1].gt(0)},
+            canClick() { return player.tera.virtueGain[1].gt(0) && player.tera.trueHept.lt(4)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[1] = player.tera.virtue[1].add(player.tera.virtueGain[1])
@@ -939,12 +939,14 @@ addLayer("tera", {
                 player.tera.heptEssencePerSecond = new Decimal(0)
                 player.tera.virtue[0] = new Decimal(0)
                 player.tera.virtueGain[0] = new Decimal(0)
-                player.tera.virtueEssence[0] = new Decimal(0)
-                player.tera.virtueEssenceGain[0] = new Decimal(0)
+                if (player.tera.trueHept.lt(3)) {
+                    player.tera.virtueEssence[0] = new Decimal(0)
+                    player.tera.virtueEssenceGain[0] = new Decimal(0)
+                }
             },
             style() {
                 let look = {width: "175px", minHeight: "100px", fontSize: "10px", lineHeight: "1.1", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
-                this.canClick() ? look.background = "#95A6DD" : look.background = "#bf8f8f"
+                player.tera.trueHept.gte(4) ? look.background = "#77bf5f" : this.canClick() ? look.background = "#95A6DD" : look.background = "#bf8f8f"
                 return look
             },
         },
@@ -960,6 +962,7 @@ addLayer("tera", {
                 for (let i = 0; i < 2; i++) {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
+                    if (i == 0 && player.tera.trueHept.gte(3)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
@@ -982,6 +985,7 @@ addLayer("tera", {
                 for (let i = 0; i < 3; i++) {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
+                    if (i == 0 && player.tera.trueHept.gte(3)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
@@ -1004,6 +1008,7 @@ addLayer("tera", {
                 for (let i = 0; i < 4; i++) {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
+                    if (i == 0 && player.tera.trueHept.gte(3)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
@@ -1026,6 +1031,7 @@ addLayer("tera", {
                 for (let i = 0; i < 5; i++) {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
+                    if (i == 0 && player.tera.trueHept.gte(3)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
@@ -1048,6 +1054,7 @@ addLayer("tera", {
                 for (let i = 0; i < 6; i++) {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
+                    if (i == 0 && player.tera.trueHept.gte(3)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
@@ -2336,97 +2343,97 @@ addLayer("tera", {
                     ["style-column", [
                         ["style-column", [
                             ["raw-html", "Sin Mastery", () => {return {color: "white", fontSize: "24px", fontFamily: "monospace"}}],
-                        ], {width: "500px", height: "30px", borderBottom: "3px solid #95A6DD"}],
-                        ["style-column", [
+                        ], {width: "800px", height: "30px", borderBottom: "3px solid #95A6DD"}],
+                        ["style-row", [
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Envy Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Envy Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Boosts paradox fragment score by x" + formatSimple(player.sins.envy[1]) + "<br>" +
                                     "Boosts paradox pylon energy by x" + formatSimple(player.sins.envy[2]) + "<br>" +
                                     "[Based on Provenances]"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#628B62", border: "3px solid #314531", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "80px", background: "#628B62", border: "3px solid #314531", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.sinMastery[0]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Wrath Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Wrath Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Boosts radioactive fragment score by x" + formatSimple(player.sins.wrath[1]) + "<br>" +
                                     "Boosts radioactive pylon energy by x" + formatSimple(player.sins.wrath[2]) + "<br>" +
                                     "[Based on Curses]"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#965A5A", border: "3px solid #4b2d2d", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "80px", background: "#965A5A", border: "3px solid #4b2d2d", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.sinMastery[1]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Lust Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Lust Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Boosts natural fragment score by x" + formatSimple(player.sins.lust[1]) + "<br>" +
                                     "Boosts natural pylon energy by x" + formatSimple(player.sins.lust[2]) + "<br>" +
                                     "[Based on Purity]"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#BF8F97", border: "3px solid #5f474b", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "80px", background: "#BF8F97", border: "3px solid #5f474b", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.sinMastery[2]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Gluttony Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Gluttony Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Boosts cosmic fragment score by x" + formatSimple(player.sins.gluttony[1]) + "<br>" +
                                     "Boosts cosmic pylon energy by x" + formatSimple(player.sins.gluttony[2]) + "<br>" +
                                     "[Based on Refinements]"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#BF9172", border: "3px solid #5f4839", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "80px", background: "#BF9172", border: "3px solid #5f4839", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.sinMastery[3]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Sloth Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Sloth Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Boosts temporal fragment score by x" + formatSimple(player.sins.sloth[1]) + "<br>" +
                                     "Boosts temporal pylon energy by x" + formatSimple(player.sins.sloth[2]) + "<br>" +
                                     "[Based on " + player.h.stageName[0] + " Points]"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#628B8B", border: "3px solid #314545", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "80px", background: "#628B8B", border: "3px solid #314545", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.sinMastery[4]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Greed Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Greed Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Boosts technological fragment score by x" + formatSimple(player.sins.greed[1]) + "<br>" +
                                     "Boosts technological pylon energy by x" + formatSimple(player.sins.greed[2]) + "<br>" +
                                     "[Based on Blessings]"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#BFB372", border: "3px solid #5f5939", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "80px", background: "#BFB372", border: "3px solid #5f5939", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.sinMastery[5]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Pride Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Pride Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Boosts ancient fragment score by x" + formatSimple(player.sins.pride[1]) + "<br>" +
                                     "Boosts ancient pylon energy by x" + formatSimple(player.sins.pride[2]) + "<br>" +
                                     "[Based on Power Gain]"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#706399", border: "3px solid #38314c", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "80px", background: "#706399", border: "3px solid #38314c", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.sinMastery[6]) look.filter = "brightness(25%)"
                                 return look
                             }],
-                        ], {width: "500px", height: "630px", background: "#1a222e", overflow: "hidden"}],
+                        ], {width: "800px", height: "380px", background: "#1a222e", overflow: "hidden"}],
                         ["style-column", [
                             ["raw-html", "Obtaining sin mastery requires you to reach 1e70 power without using that sin.<br>Sin mastery effects do not stack with sins.<br>Sin mastery is kept on Tera resets.", () => {return {color: "white", fontSize: "14px", fontFamily: "monospace"}}],
-                        ], {width: "500px", height: "80px", borderTop: "3px solid #95A6DD"}],
-                    ], {width: "500px", height: "746px", background: "#4a536e", border: "3px solid #95A6DD", borderRadius: "15px"}],
+                        ], {width: "800px", height: "70px", borderTop: "3px solid #95A6DD"}],
+                    ], {width: "800px", height: "486px", background: "#4a536e", border: "3px solid #95A6DD", borderRadius: "15px"}],
                     ["blank", "20px"],
                 ],
             },

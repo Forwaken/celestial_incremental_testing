@@ -957,7 +957,7 @@ function calcTarget(index, slot, target, action = "none") {
             result = []
         case "randomPlayer":
             if (celestialiteTaunt && (action == "heal" || action == "effect")) return [3]
-            if (playerTaunt >= 0) return [playerTaunt]
+            if (playerTaunt >= 0 && action == "damage") return [playerTaunt]
             let potTarget = []
             for (let i = 0; i < 3; i++) {
                 if (player.bh.characters[i].health.gt(0) && player.bh.characters[i].id != "none") potTarget.push(i)
@@ -967,7 +967,7 @@ function calcTarget(index, slot, target, action = "none") {
             break;
         case "randomPlayerHeal":
             if (celestialiteTaunt && (action == "heal" || action == "effect") && player.bh.celestialite.health.lt(player.bh.celestialite.maxHealth)) return [3]
-            if (playerTaunt >= 0 && player.bh.characters[playerTaunt].health.lt(player.bh.characters[playerTaunt].maxHealth)) return [playerTaunt]
+            if (playerTaunt >= 0 && action == "damage" && player.bh.characters[playerTaunt].health.lt(player.bh.characters[playerTaunt].maxHealth)) return [playerTaunt]
             let pothTarget = []
             for (let i = 0; i < 3; i++) {
                 if (player.bh.characters[i].health.gt(0) && (player.bh.characters[i].health.lt(player.bh.characters[i].maxHealth)) && player.bh.characters[i].id != "none") pothTarget.push(i)
@@ -984,7 +984,7 @@ function calcTarget(index, slot, target, action = "none") {
             break;
         case "random":
             let rndTarget = [3]
-            if (playerTaunt >= 0) {
+            if (playerTaunt >= 0 && action == "damage") {
                 rndTarget.push(playerTaunt)
             } else {
                 for (let i = 0; i < 3; i++) {
@@ -997,7 +997,7 @@ function calcTarget(index, slot, target, action = "none") {
         case "randomHeal":
             let rndhTarget = []
             if (player.bh.celestialite.health.lt(player.bh.celestialite.maxHealth)) rndhTarget.push(3)
-            if (playerTaunt >= 0 && player.bh.characters[playerTaunt].health.lt(player.bh.characters[playerTaunt].maxHealth)) {
+            if (playerTaunt >= 0 && action == "damage" && player.bh.characters[playerTaunt].health.lt(player.bh.characters[playerTaunt].maxHealth)) {
                 rndhTarget.push(playerTaunt)
             } else {
                 for (let i = 0; i < 3; i++) {
@@ -1019,7 +1019,7 @@ function calcTarget(index, slot, target, action = "none") {
             for (let i = 0; i < 3; i++) {
                 if (player.bh.characters[i].health.gt(0) && player.bh.characters[i].id != "none") plays.push(i)
             }
-            if (playerTaunt >= 0) {
+            if (action == "damage" && playerTaunt >= 0) {
                 for (let i = 0; i < plays.length; i++) {plays[i] = playerTaunt}
             }
             result = plays
@@ -1029,7 +1029,7 @@ function calcTarget(index, slot, target, action = "none") {
             for (let i = 0; i < 3; i++) {
                 if (player.bh.characters[i].health.gt(0) && player.bh.characters[i].id != "none") play.push(i)
             }
-            if (playerTaunt >= 0) {
+            if (action == "damage" && playerTaunt >= 0) {
                 for (let i = 0; i < play.length; i++) {play[i] = playerTaunt}
             }
             play.push(3)
