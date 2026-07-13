@@ -61,7 +61,7 @@ addNode("chronotachysisSpell", {
         if (this.canClick()) {
             player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))
             let duration = player.tera.chronotachysisSpell[0]
-            duration = duration.add(buyableEffect("tera", "chronotachysisDuration").sub(1).add(60).mul(player.tera.trueHex.gte(5) ? new Decimal(2) : new Decimal(1)))
+            duration = duration.add(buyableEffect("tera", "chronotachysisDuration").sub(1).add(60))
             player.tera.chronotachysisSpell = [duration, Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))]
         }
     },
@@ -149,6 +149,7 @@ addLayer("tera", {
         let softcapStart = new Decimal(1e6)
         if (hasUpgrade("tera", "hex12")) softcapStart = softcapStart.mul(upgradeEffect("tera", "hex12"))
         player.tera.hexEssenceSoftcap = player.tera.hexEssencePerSecond.gte(softcapStart) ? Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e6).pow(0.6)) : new Decimal(1)
+        if (player.tera.trueHex.gte(5) && player.tera.hexEssenceSoftcap.lt(1)) player.tera.hexEssenceSoftcap = Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e6).pow(0.3))
         player.tera.hexEssencePerSecond = player.tera.hexEssencePerSecond.div(softcapStart).pow(player.tera.hexEssenceSoftcap).mul(softcapStart)
         player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
 
@@ -754,7 +755,7 @@ addLayer("tera", {
                 if (player.tera.trueHex.eq(1)) str = str.concat("<br>At true hex 2, unlock the second set of spell buyables.") // ADDED
                 if (player.tera.trueHex.eq(2)) str = str.concat("<br>At true hex 3, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
                 if (player.tera.trueHex.eq(3)) str = str.concat("<br>At true hex 4, unlock a hex essence effect.") // ADDED
-                if (player.tera.trueHex.eq(4)) str = str.concat("<br>At true hex 5, double chronotachysis duration.") // ADDED
+                if (player.tera.trueHex.eq(4)) str = str.concat("<br>At true hex 5, reduce hex essence softcap.") // ADDED
                 if (player.tera.trueHex.eq(5)) str = str.concat("<br>At true hex 6, unlock bulk true hexing.") // ADDED
                 if (player.tera.trueHex.gte(6) && player.tera.trueHex.lt(8)) str = str.concat("<br>At true hex 8, unlock the third set of spell buyables.") // ADDED
                 if (player.tera.trueHex.gte(8) && player.tera.trueHex.lt(10)) str = str.concat("<br>At true hex 10, unlock a true hex effect.") // ADDED
@@ -762,6 +763,8 @@ addLayer("tera", {
                 if (player.tera.trueHex.gte(12) && player.tera.trueHex.lt(15)) str = str.concat("<br>At true hex 15, improve piosity spell formula.") // ADDED
                 if (player.tera.trueHex.gte(15) && player.tera.trueHex.lt(18)) str = str.concat("<br>At true hex 18, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
                 return str
+
+                // Realm Essence Per Second (x20 gain per second)
             },
             canClick() {return player.h.stage.eq(6) && player.hpw.power.gte(player.tera.trueHexReq)},
             unlocked: true,
@@ -886,7 +889,7 @@ addLayer("tera", {
             onClick() {
                 player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))
                 let duration = player.tera.chronotachysisSpell[0]
-            duration = duration.add(buyableEffect("tera", "chronotachysisDuration").sub(1).add(60).mul(player.tera.trueHex.gte(5) ? new Decimal(2) : new Decimal(1)))
+                duration = duration.add(buyableEffect("tera", "chronotachysisDuration").sub(1).add(60))
                 player.tera.chronotachysisSpell = [duration, Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))]
             },
             style() {
