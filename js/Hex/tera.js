@@ -753,11 +753,12 @@ addLayer("tera", {
                 else str = str.concat("<h3>[ONLY POSSIBLE WHEN Uni-α IS HEX]</h3>")
                 if (player.tera.trueHex.eq(0)) str = str.concat("<br>At true hex 1, unlock true hex content.") // ADDED
                 if (player.tera.trueHex.eq(1)) str = str.concat("<br>At true hex 2, unlock the second set of spell buyables.") // ADDED
-                if (player.tera.trueHex.eq(2)) str = str.concat("<br>At true hex 3, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
+                if (player.tera.trueHex.eq(2)) str = str.concat("<br>At true hex 3, unlock spell enhancement.<br>[NOT IMPLEMENTED]") // ADDED
                 if (player.tera.trueHex.eq(3)) str = str.concat("<br>At true hex 4, unlock a hex essence effect.") // ADDED
                 if (player.tera.trueHex.eq(4)) str = str.concat("<br>At true hex 5, reduce hex essence softcap.") // ADDED
                 if (player.tera.trueHex.eq(5)) str = str.concat("<br>At true hex 6, unlock bulk true hexing.") // ADDED
-                if (player.tera.trueHex.gte(6) && player.tera.trueHex.lt(8)) str = str.concat("<br>At true hex 8, unlock the third set of spell buyables.") // ADDED
+                if (player.tera.trueHex.eq(6)) str = str.concat("<br>At true hex 7, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
+                if (player.tera.trueHex.eq(7)) str = str.concat("<br>At true hex 8, unlock the third set of spell buyables.") // ADDED
                 if (player.tera.trueHex.gte(8) && player.tera.trueHex.lt(10)) str = str.concat("<br>At true hex 10, unlock a true hex effect.") // ADDED
                 if (player.tera.trueHex.gte(9) && player.tera.trueHex.lt(12)) str = str.concat("<br>At true hex 12, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
                 if (player.tera.trueHex.gte(12) && player.tera.trueHex.lt(15)) str = str.concat("<br>At true hex 15, improve piosity spell formula.") // ADDED
@@ -1200,7 +1201,7 @@ addLayer("tera", {
         },
         "hexEnergyBuff": {
             costBase() { return new Decimal(2).mul(buyableEffect("tera", "hexEnergyPrestige")) },
-            costGrowth() { return new Decimal(0.4).mul(buyableEffect("tera", "hexEnergyPrestige").pow(0.5)) },
+            costGrowth() { return new Decimal(0.4).mul(buyableEffect("tera", "hexEnergyPrestige")) },
             purchaseLimit() { return new Decimal(90) },
             currency() { return player.tera.hexEnergy},
             pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
@@ -1225,7 +1226,7 @@ addLayer("tera", {
         },
         "hexEnergyCap": {
             costBase() { return new Decimal(5).mul(buyableEffect("tera", "hexEnergyPrestige")) },
-            costGrowth() { return new Decimal(0.5).mul(buyableEffect("tera", "hexEnergyPrestige").pow(0.5)) },
+            costGrowth() { return new Decimal(0.5).mul(buyableEffect("tera", "hexEnergyPrestige")) },
             purchaseLimit() { return new Decimal(90) },
             currency() { return player.tera.hexEnergy},
             pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
