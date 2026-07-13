@@ -1229,7 +1229,10 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(90) },
             currency() { return player.tera.hexEnergy},
             pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).add(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))) },
+            effect(x) {
+                if (getBuyableAmount("tera", "hexEnergyPrestige").gt(0)) return getBuyableAmount(this.layer, this.id).add(Decimal.pow10(getBuyableAmount("tera", "hexEnergyPrestige")).mul(0.9)).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))).add(1)
+                return getBuyableAmount(this.layer, this.id).add(1)
+            },
             unlocked: true,
             cost(x) { return getBuyableAmount(this.layer, this.id).mul(this.costGrowth()).add(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -1545,10 +1548,10 @@ addLayer("tera", {
             }
         },
         "hex2": {
-            fullDisplay() {return "<h3>Hexed Hive</h3><br>Boost nests based on true hex.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 180 Refinements<br><small>[REQ BEING IN HEX]</small>"},
+            fullDisplay() {return "<h3>Hexed Hive</h3><br>Boost nests based on true hex.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 150 Refinements<br><small>[REQ BEING IN HEX]</small>"},
             unlocked() {return player.tera.unsealed},
-            canAfford() { return player.h.stage.eq(6) && player.hre.refinement.gte(180)},
-            pay() {player.hre.refinement = player.hre.refinement.sub(180)},
+            canAfford() { return player.h.stage.eq(6) && player.hre.refinement.gte(150)},
+            pay() {player.hre.refinement = player.hre.refinement.sub(150)},
             effect() {return Decimal.pow(1.1, player.tera.trueHex)},
             style() {
                 let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
@@ -2557,7 +2560,7 @@ addLayer("tera", {
             ["clickable", 1], ["clickable", 2], ["clickable", 3], ["clickable", 4],
             ["clickable", 5], ["clickable", 6], ["clickable", 7], ["clickable", 8],
             ["clickable", 9], ["clickable", 10], ["clickable", 11], ["clickable", 12],
-        ], {width: "100%", background: "#1a222e", border: "3px solid #85ADE6", borderRadius: "50px 50px 50px 50px / 20px 20px 20px 20px", maskImage: "linear-gradient(to right, transparent, transparent 5%, black 20%, black 80%, transparent 95%, transparent)"}],
+        ], {maxWidth: "100%", background: "#1a222e", border: "3px solid #85ADE6", borderRadius: "50px 50px 50px 50px / 20px 20px 20px 20px", maskImage: "linear-gradient(to right, transparent, transparent 5%, black 20%, black 80%, transparent 95%, transparent)"}],
         ["blank", "10px"],
         ["style-column", [
             ["buttonless-microtabs", "stuff", {borderWidth: "0"}],
