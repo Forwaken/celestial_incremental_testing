@@ -26,8 +26,8 @@ addLayer("hcu", {
     },
     update(delta) {
         player.hcu.cursesGain = new Decimal(0)
-        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 51)).add(1)).mul(buyableEffect("hre", 52)).pow(buyableEffect("hre", 53))
-        if (hasUpgrade("ta", 16) && inChallenge("hrm", 13)) player.hcu.cursesGain = Decimal.pow(player.hve.vexTotal.mul(0.2).add(player.h.stage.mul(3).div(10)), player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1)))).sub(1).mul(buyableEffect("hre", 52)).pow(buyableEffect("hre", 53))
+        if (hasUpgrade("ta", 16)) player.hcu.cursesGain = player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hte", 51)).add(1)).mul(buyableEffect("hte", 52)).pow(buyableEffect("hte", 53))
+        if (hasUpgrade("ta", 16) && inChallenge("hrm", 13)) player.hcu.cursesGain = Decimal.pow(player.hve.vexTotal.mul(0.2).add(player.h.stage.mul(3).div(10)), player.hbl.blessings.add(1).log(player.h.stage.max(2).sub(buyableEffect("hte", 51).sub(1)))).sub(1).mul(buyableEffect("hte", 52)).pow(buyableEffect("hte", 53))
         if (hasUpgrade("ta", 16) && hasMilestone("hre", 10)) player.hcu.cursesGain = player.hcu.cursesGain.add(player.h.stage.div(10))
         if (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(5)))) player.hcu.cursesGain = player.hcu.cursesGain.div(Decimal.pow10(player.h.stage.mul(5))).pow(0.3).mul(Decimal.pow10(player.h.stage.mul(5)))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(buyableEffect("hcu", 101))
@@ -313,7 +313,10 @@ addLayer("hcu", {
             },
             canAfford() { return this.currency().gte(this.cost()) },
             title() { return "Γ-Jinx" },
-            display() { return "Curses are multiplied by " + format(player.hcu.curses.div(player.h.stage).add(1).log(player.h.stage).add(1).pow(Decimal.div(1.8, player.h.stage))) + " (based on curses)" },
+            display() {
+                if (hasUpgrade("hpw", 163)) return "Curses are multiplied by " + format(player.hcu.curses.div(player.h.stage).add(1).log(2).add(1).pow(Decimal.div(2.4, player.h.stage.max(2)))) + " (based on curses)"
+                return "Curses are multiplied by " + format(player.hcu.curses.div(player.h.stage).add(1).log(player.h.stage).add(1).pow(Decimal.div(1.8, player.h.stage))) + " (based on curses)"
+            },
             total() { return "(Total: " + format(tmp[this.layer].buyables[this.id].effect) + "x)"},
             buy(mult) {
                 if (mult != true) {
@@ -1008,9 +1011,9 @@ addLayer("hcu", {
             ["raw-html", () => {return (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2))) && inChallenge("hrm", 12)) || player.hcu.cursesGain.gte(1.79e308) ? "<small>[SOFTCAPPED<sup>2</sup>]</small>" :
                 player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2))) || inChallenge("hrm", 12) ? "<small>[SOFTCAPPED]</small>" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {
-                let str = "<div class='bottomTooltip'>Base Formula<hr><small>log" + formatWhole(player.h.stage.max(2).sub(buyableEffect("hre", 51).sub(1))) + "(Blessings)"
-                if (buyableEffect("hre", 52).gt(1)) str = str.concat("x" + formatSimple(buyableEffect("hre", 52)))
-                if (buyableEffect("hre", 53).gt(1)) str = str.concat("^" + formatSimple(buyableEffect("hre", 53), 2))
+                let str = "<div class='bottomTooltip'>Base Formula<hr><small>log" + formatWhole(player.h.stage.max(2).sub(buyableEffect("hte", 51).sub(1))) + "(Blessings)"
+                if (buyableEffect("hte", 52).gt(1)) str = str.concat("x" + formatSimple(buyableEffect("hte", 52)))
+                if (buyableEffect("hte", 53).gt(1)) str = str.concat("^" + formatSimple(buyableEffect("hte", 53), 2))
                 if (hasMilestone("hre", 10)) str = str.concat("+" + formatSimple(player.h.stage.div(10)))
                 return str + "</small></div>"
             }],

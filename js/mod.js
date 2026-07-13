@@ -32,7 +32,7 @@
 		"Check Back/diamondDust.js", "Check Back/treasureRoom.js",
 		"Puzzle World/akash.js", "Puzzle World/elements.js", 
 		"Puzzle World/Puzzle Fighting/puzzleFighting.js",
-		"Hex/tera.js", "Hex/sins.js",
+		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js",
 		"Ordinal/ordinal.js", "Ordinal/markup.js",
 	],
 
@@ -196,6 +196,9 @@ function updateStyles() {
 			break;
 		case "sins":
 			layerBG = "#0e140e"
+			break;
+		case "hte":
+			layerBG = "#100a04"
 			break;
 		case "bigc":
 			layerBG = "#b87c34"

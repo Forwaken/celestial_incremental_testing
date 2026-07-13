@@ -369,10 +369,12 @@ addLayer("tera", {
                 i--;
             }
         }
-        player.hre.temperer = new Decimal(0)
-        player.hre.tempererPerSec = new Decimal(0)
-        for (let i in player.hre.buyables) {
-            player.hre.buyables[i] = new Decimal(0)
+        
+        // TEMPERING
+        player.hte.temperer = new Decimal(0)
+        player.hte.tempererPerSec = new Decimal(0)
+        for (let i in player.hte.buyables) {
+            player.hte.buyables[i] = new Decimal(0)
         }
         
         // RANK
@@ -1698,8 +1700,8 @@ addLayer("tera", {
         "hept2": {
             fullDisplay() {return "<h3>Cheaper Refining</h3><br>Refined fragments no longer cost lesser or greater fragments.<br><br>Cost: 1e21 Temperers<br><small>[REQ BEING IN HEPT]</small>"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
-            canAfford() { return player.h.stage.eq(7) && player.hre.temperer.gte("1e21")},
-            pay() {player.hre.temperer = player.hre.temperer.sub("1e21")},
+            canAfford() { return player.h.stage.eq(7) && player.hte.temperer.gte("1e21")},
+            pay() {player.hte.temperer = player.hte.temperer.sub("1e21")},
             style() {
                 let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -2545,7 +2547,7 @@ addLayer("tera", {
             ["clickable", 1], ["clickable", 2], ["clickable", 3], ["clickable", 4],
             ["clickable", 5], ["clickable", 6], ["clickable", 7], ["clickable", 8],
             ["clickable", 9], ["clickable", 10], ["clickable", 11], ["clickable", 12],
-        ], {maxWidth: "1250px"}],
+        ], {width: "100%", background: "#1a222e", border: "3px solid #85ADE6", borderRadius: "50px 50px 50px 50px / 20px 20px 20px 20px", maskImage: "linear-gradient(to right, transparent, transparent 5%, black 20%, black 80%, transparent 95%, transparent)"}],
         ["blank", "10px"],
         ["style-column", [
             ["buttonless-microtabs", "stuff", {borderWidth: "0"}],

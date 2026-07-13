@@ -745,7 +745,7 @@
                 return player.hre.refinement.gte(2)
             },
             rewardDescription() {
-                return "Permanently unlock " + player.h.stageName[1] + " as an otherworldly feature, and change base " + player.h.stageName[1] + " point formula to:<br><small>(log<sub>" + formatWhole(player.h.stage.max(2).sub(buyableEffect("hre", 11).sub(1))) + "</sub>(Celestial Points+1)*" + formatWhole(player.h.stage.max(1).mul(buyableEffect("hre", 12))) + ")<sup>" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)), 2) + "</sup></small>"
+                return "Permanently unlock " + player.h.stageName[1] + " as an otherworldly feature, and change base " + player.h.stageName[1] + " point formula to:<br><small>(log<sub>" + formatWhole(player.h.stage.max(2).sub(buyableEffect("hte", 11).sub(1))) + "</sub>(Celestial Points+1)*" + formatWhole(player.h.stage.max(1).mul(buyableEffect("hte", 12))) + ")<sup>" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hte", 13)), 2) + "</sup></small>"
             },
             unlocked() { return hasChallenge("ip", 12) },
             onEnter() {

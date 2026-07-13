@@ -69,7 +69,7 @@ addLayer("hbl", {
     },
     update(delta) {
         player.hbl.blessingsGain = new Decimal(0)
-        if (player.hre.refinement.gte(player.h.stage.mul(2))) player.hbl.blessingsGain = player.hre.refinement.sub(player.h.stage.mul(2).sub(1).sub(buyableEffect("hre", 31).sub(1))).mul(buyableEffect("hre", 32)).pow(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hre", 33)))
+        if (player.hre.refinement.gte(player.h.stage.mul(2))) player.hbl.blessingsGain = player.hre.refinement.sub(player.h.stage.mul(2).sub(1).sub(buyableEffect("hte", 31).sub(1))).mul(buyableEffect("hte", 32)).pow(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hte", 33)))
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.hbl.boosters[4].effect)
         if (hasMilestone("hbl", 1)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(2)
         if (hasMilestone("hbl", 1) || inChallenge("hrm", 12)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.hpu.purifiers[1].effect)
@@ -107,7 +107,7 @@ addLayer("hbl", {
         if (hasUpgrade("hpw", 14)) player.hrm.blessLimit = player.hrm.blessLimit.add(upgradeEffect("hpw", 14).mul(resetGain).mul(delta))
         
         // BOON START
-        player.hbl.boonsGain = player.hbl.blessings.pow(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hre", 41))).div(player.h.stage).mul(buyableEffect("hre", 42))
+        player.hbl.boonsGain = player.hbl.blessings.pow(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hte", 41))).div(player.h.stage).mul(buyableEffect("hte", 42))
         player.hbl.boonsGain = player.hbl.boonsGain.mul(player.hbl.boosters[1].effect)
         player.hbl.boonsGain = player.hbl.boonsGain.mul(player.hre.refinementEffect[3][0])
         player.hbl.boonsGain = player.hbl.boonsGain.mul(buyableEffect("hcu", 108))
@@ -749,9 +749,9 @@ addLayer("hbl", {
                         ["raw-html", () => {return player.hbl.boonsGain.eq(0) ? "" : player.hbl.boonsGain.gt(0) ? "(+" + format(player.hbl.boonsGain) + "/s)" : "<span style='color:red'>(" + format(player.hbl.boonsGain) + "/s)</span>" }, {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
                         ["raw-html", () => {return inChallenge("hrm", 12) && player.hbl.boonsGain.gt(0) ? "<small>[SOFTCAPPED]</small>" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
                         ["raw-html", () => {
-                            str = "<div class='bottomTooltip'>Base Formula<hr><small>(Blessings^" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hre", 41)), 2) + ")"
-                            if (buyableEffect("hre", 42).gte(player.h.stage)) return str + ")x" + formatSimple(Decimal.div(buyableEffect("hre", 42), player.h.stage)) + "</small></div>"
-                            return str + ")/" + formatSimple(Decimal.div(player.h.stage, buyableEffect("hre", 42))) + "</small></div>"
+                            str = "<div class='bottomTooltip'>Base Formula<hr><small>(Blessings^" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hte", 41)), 2) + ")"
+                            if (buyableEffect("hte", 42).gte(player.h.stage)) return str + ")x" + formatSimple(Decimal.div(buyableEffect("hte", 42), player.h.stage)) + "</small></div>"
+                            return str + ")/" + formatSimple(Decimal.div(player.h.stage, buyableEffect("hte", 42))) + "</small></div>"
                         }],
                     ]],
                     ["blank", "10px"],
@@ -850,11 +850,11 @@ addLayer("hbl", {
             ["raw-html", () => {return player.hbl.blessingPerSec.eq(0) ? "" : player.hbl.blessingPerSec.gt(0) ? "(+" + format(player.hbl.blessingPerSec) + "/s)" : "<span style='color:red'>(" + format(player.hbl.blessingPerSec) + "/s)</span>" }, {color: "white", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {
                 let str = "<div class='bottomTooltip'>Base Formula<hr><small>(Refinements"
-                let eff1 = Decimal.sub(buyableEffect("hre", 31).sub(1), player.h.stage.mul(2).sub(1))
+                let eff1 = Decimal.sub(buyableEffect("hte", 31).sub(1), player.h.stage.mul(2).sub(1))
                 if (eff1.gte(0)) str = str.concat("+" + formatSimple(eff1))
                 else str = str.concat(formatSimple(eff1))
-                if (buyableEffect("hre", 32).gt(1)) str = str.concat("*" + formatSimple(buyableEffect("hre", 32)))
-                return str + ")^" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hre", 33)), 3) + "</small></div>"
+                if (buyableEffect("hte", 32).gt(1)) str = str.concat("*" + formatSimple(buyableEffect("hte", 32)))
+                return str + ")^" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hte", 33)), 3) + "</small></div>"
             }],
         ]],
         ["raw-html", () => {return inChallenge("hrm", 11) ? "Bless resets used: " + formatWhole(player.hrm.blessLimit) + "/" + formatWhole(player.h.stage) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],

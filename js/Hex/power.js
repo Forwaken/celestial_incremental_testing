@@ -193,10 +193,12 @@ addLayer("hpw", {
         for (let i = 0; i < 12; i++) {
             player.hre.refinementEffect[i] = [new Decimal(1), new Decimal(1)]
         }
-        player.hre.temperer = new Decimal(0)
-        player.hre.tempererPerSec = new Decimal(0)
-        for (let i in player.hre.buyables) {
-            player.hre.buyables[i] = new Decimal(0)
+
+        // TEMPERING
+        player.hte.temperer = new Decimal(0)
+        player.hte.tempererPerSec = new Decimal(0)
+        for (let i in player.hte.buyables) {
+            player.hte.buyables[i] = new Decimal(0)
         }
         
         // RANK
@@ -661,7 +663,7 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                let eff = new Decimal(0.1).mul(buyableEffect("hre", 43))
+                let eff = new Decimal(0.1).mul(buyableEffect("hte", 43))
                 if (hasUpgrade("hpw", 51)) eff = eff.mul(10)
                 if (hasUpgrade("hpw", 53)) eff = eff.mul(10)
                 return eff.add(1)
@@ -1092,7 +1094,7 @@ addLayer("hpw", {
         151: {
             title: "Might 16:1",
             unlocked() {return player.h.stage.gte(7)},
-            description: "Unlock tempering in refinement.",
+            description() {return "Unlock " + player.h.stageName[0] + " of Tempering."},
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},

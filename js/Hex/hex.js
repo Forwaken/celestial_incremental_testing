@@ -88,19 +88,16 @@ addLayer("h", {
         if (hasUpgrade("hpw", 76)) player.h.provenanceDiv = player.h.provenanceDiv.div(upgradeEffect("hpw", 76))
 
         player.h.jinxDiv = new Decimal(1)
-        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(Decimal.div(3, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1))
+        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(Decimal.div(0.6, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1).add(1))
         if (hasUpgrade("hpw", 46)) player.h.jinxDiv = player.h.jinxDiv.div(upgradeEffect("hpw", 46))
         player.h.jinxDiv = player.h.jinxDiv.div(player.hcu.jinxedJinxEffects[1])
 
         player.h.purifierDiv = new Decimal(1)
-        if (player.sins.clickables["lust"]) player.h.purifierDiv = player.h.purifierDiv.mul(Decimal.div(6, hasUpgrade("hpw", 2004) ? upgradeEffect("hpw", 2004) : 1))
+        if (player.sins.clickables["lust"]) player.h.purifierDiv = player.h.purifierDiv.mul(Decimal.div(0.6, hasUpgrade("hpw", 2004) ? upgradeEffect("hpw", 2004) : 1).add(1))
         if (hasUpgrade("hpw", 37)) player.h.purifierDiv = player.h.purifierDiv.div(upgradeEffect("hpw", 37))
 
         player.h.refinementScale = new Decimal(1)
-        if (player.sins.clickables["gluttony"]) {
-            if (hasUpgrade("hpw", 2005)) player.h.refinementScale = player.h.refinementScale.mul(1.4)
-            else player.h.refinementScale = player.h.refinementScale.mul(1.6)
-        }
+        if (player.sins.clickables["gluttony"]) player.h.refinementScale = player.h.refinementScale.mul(Decimal.div(0.6, hasUpgrade("hpw", 2005) ? upgradeEffect("hpw", 2005) : 1).add(1))
         player.h.refinementScale = player.h.refinementScale.div(player.hve.vexEffects[3])
         if (hasUpgrade("hbl", 106)) player.h.refinementScale = player.h.refinementScale.div(upgradeEffect("hbl", 106))
 
@@ -109,9 +106,9 @@ addLayer("h", {
         if (!hasChallenge("ip", 13) && layerShown("h")) player.h.hexPointGain = Decimal.mul(2, player.h.stage)
         if (hasChallenge("ip", 13)) {
             if (!hasMilestone("hre", 2)) {
-                player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 11)).add(1)).mul(player.h.stage.max(1).mul(buyableEffect("hre", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)))
+                player.h.hexPointGain = player.points.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hte", 11)).add(1)).mul(player.h.stage.max(1).mul(buyableEffect("hte", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hte", 13)))
             } else {
-                player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hre", 11)).add(1)).mul(player.h.stage.max(1).mul(buyableEffect("hre", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hre", 13)))
+                player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hte", 11)).add(1)).mul(player.h.stage.max(1).mul(buyableEffect("hte", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hte", 13)))
             }
         }
         if (hasAchievement("achievements", 303)) player.h.hexPointGain = player.h.hexPointGain.mul(1.5)

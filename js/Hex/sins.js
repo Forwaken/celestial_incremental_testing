@@ -22,14 +22,14 @@ addLayer("sins", {
         else player.sins.envy[0] = Decimal.pow(Decimal.div(2, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
         player.sins.envy[1] = player.hpr.rank[0].add(1).log(7).div(8).add(1)
         player.sins.envy[2] = player.hpr.rank[0].add(1).log(7).div(4).add(1)
-        if (hasUpgrade("hpw", 2003)) player.sins.wrath[0] = Decimal.pow(Decimal.div(4.2, player.h.stage).add(1), player.hcu.curses.add(1).log(666).pow(0.7))
-        else player.sins.wrath[0] = Decimal.pow(Decimal.div(3.5, player.h.stage).add(1), player.hcu.curses.add(1).log(666).pow(0.7))
-        player.sins.wrath[1] = player.hcu.curses.add(1).log(666).div(10).add(1)
-        player.sins.wrath[2] = player.hcu.curses.add(1).log(666).div(5).add(1)
-        if (hasUpgrade("hpw", 2006)) player.sins.lust[0] = Decimal.pow(Decimal.div(8, player.h.stage).add(1), player.hpu.totalPurity.pow(0.85))
-        else player.sins.lust[0] = Decimal.pow(Decimal.div(8, player.h.stage).add(1), player.hpu.totalPurity.pow(0.7))
-        player.sins.lust[1] = player.hpu.totalPurity.pow(1.3).div(10).add(1)
-        player.sins.lust[2] = player.hpu.totalPurity.pow(1.3).div(5).add(1)
+        if (hasUpgrade("hpw", 2003)) player.sins.wrath[0] = Decimal.pow(Decimal.div(2.8, player.h.stage).add(1), player.hcu.curses.add(1).log(666).pow(0.7))
+        else player.sins.wrath[0] = Decimal.pow(Decimal.div(2.1, player.h.stage).add(1), player.hcu.curses.add(1).log(666).pow(0.7))
+        player.sins.wrath[1] = player.hcu.curses.add(1).log(666).pow(0.7).div(10).add(1)
+        player.sins.wrath[2] = player.hcu.curses.add(1).log(666).pow(0.7).div(5).add(1)
+        if (hasUpgrade("hpw", 2006)) player.sins.lust[0] = Decimal.pow(Decimal.div(4, player.h.stage).add(1), player.hpu.totalPurity.pow(0.85))
+        else player.sins.lust[0] = Decimal.pow(Decimal.div(4, player.h.stage).add(1), player.hpu.totalPurity.pow(0.7))
+        player.sins.lust[1] = player.hpu.totalPurity.div(10).add(1)
+        player.sins.lust[2] = player.hpu.totalPurity.div(5).add(1)
         let refWeight = player.hre.refinement.gte(70) ? player.hre.refinement.sub(35) : player.hre.refinement.div(2)
         if (hasUpgrade("hpw", 2006)) player.sins.gluttony[0] = Decimal.pow(Decimal.div(1, player.h.stage).add(1), refWeight.pow(0.9))
         else player.sins.gluttony[0] = Decimal.pow(Decimal.div(1, player.h.stage).add(1), refWeight.pow(0.75))
@@ -279,7 +279,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(3, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1)) + " Jinx Cap"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(0.6, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1).add(1)) + " Jinx Cap"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#784848", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
@@ -308,7 +308,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(6, hasUpgrade("hpw", 2004) ? upgradeEffect("hpw", 2004) : 1)) + " Purifier Effectiveness"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(0.6, hasUpgrade("hpw", 2004) ? upgradeEffect("hpw", 2004) : 1).add(1)) + " Purifier Effectiveness"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#987278", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
@@ -336,7 +336,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "x" + formatSimple(hasUpgrade("hpw", 2005) ? 1.4 : 1.6) + " Refinement Scaling"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(Decimal.div(0.6, hasUpgrade("hpw", 2005) ? upgradeEffect("hpw", 2005) : 1).add(1)) + " Refinement Scaling"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#98745b", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
