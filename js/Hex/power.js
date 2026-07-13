@@ -1077,7 +1077,7 @@ addLayer("hpw", {
             title: "Might 15:1",
             unlocked: true,
             description: "Multiply pre-power resources based on power.",
-            tooltip() {return "1.3^(log((Power/" + formatSimple(Decimal.pow10(player.h.stage)) + ")+1)^0.9)"},
+            tooltip() {return "1.3^(log" + formatWhole(player.h.stage) + "((Power/" + formatSimple(Decimal.pow10(player.h.stage)) + ")+1)^0.9)"},
             branches: [132],
             cost() {return new Decimal(player.h.stage.div(2).pow(20)).pow(player.hpw.upgScale[14]).floor()},
             canAfford() { return hasUpgrade("hpw", 132)},
