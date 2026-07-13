@@ -304,7 +304,7 @@ addLayer("hbl", {
         },
         5: {
             title() {
-                let str = "<h3>Refiner Req Booster <small>Lv." + formatWhole(player.hbl.boosters[3].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[3].xp) + "/" + formatWhole(player.hbl.boosters[3].req) + ")<br>/" + format(player.hbl.boosters[3].effect) + " Refinement Req<br><small>(Hold to deposit boons)</small>"
+                let str = "<span style='font-size:17px'>Refiner Req Booster <small>Lv." + formatWhole(player.hbl.boosters[3].level) + "</small></span><br>(" + formatWhole(player.hbl.boosters[3].xp) + "/" + formatWhole(player.hbl.boosters[3].req) + ")<br>/" + format(player.hbl.boosters[3].effect) + " Refinement Req<br><small>(Hold to deposit boons)</small>"
                 if (player.hbl.boosters[3].effect.gte(Decimal.pow10(player.h.stage.mul(2)))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
