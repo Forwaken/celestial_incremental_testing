@@ -1949,85 +1949,85 @@ addLayer("tera", {
                     ["style-column", [
                         ["style-column", [
                             ["raw-html", "Realm Challenge Mastery", () => {return {color: "white", fontSize: "24px", fontFamily: "monospace"}}],
-                        ], {width: "500px", height: "30px", borderBottom: "3px solid #85ade6"}],
-                        ["style-column", [
+                        ], {width: "800px", height: "30px", borderBottom: "3px solid #85ade6"}],
+                        ["style-row", [
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Creator Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
-                                    "Raises rank, tier, tetr, and pent effects by ^1.18<br>" +
+                                    return "<div style='line-height:1.2'><h3>Creator Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    "Raises rank, tier, tetr, and pent effects<br>by ^1.18<br>" +
                                     "Multiplies factor base by x120<br>" +
                                     "Multiplies check back xp by x" + formatSimple(upgradeEffect("hpw", 1013)) + " <small>[Based on power]</small></div>"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#c44", border: "3px solid #800", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "100px", background: "#c44", border: "3px solid #800", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.realmMastery[0]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Higher Plane Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Higher Plane Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Raises prestige points gain by ^1.36<br>" +
                                     "Raises tree gain by ^1.24<br>" +
-                                    "Multiplies crystals and steel by x" + formatSimple(upgradeEffect("hpw", 1023)) + " <small>[Based on power]</small></div>"
+                                    "Multiplies crystals and steel by x" + formatSimple(upgradeEffect("hpw", 1023)) + "<br><small>[Based on power]</small></div>"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#c84", border: "3px solid #840", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "100px", background: "#c84", border: "3px solid #840", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.realmMastery[1]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Death Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Death Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Raises grass gain by ^1.18<br>" +
                                     "Raises golden grass gain by ^1.06<br>" +
-                                    "Multiplies pollinators by x" + formatSimple(upgradeEffect("hpw", 1033)) + " <small>[Based on power]</small></div>"
+                                    "Multiplies pollinators by x" + formatSimple(upgradeEffect("hpw", 1033)) + "<br><small>[Based on power]</small></div>"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#cc4", border: "3px solid #880", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "100px", background: "#cc4", border: "3px solid #880", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.realmMastery[2]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Dimension Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Dimension Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Raises grasshopper gain by ^1.1<br>" +
                                     "Raises mod gain by ^1.1<br>" +
-                                    "Multiplies infinity dimensions by x" + formatSimple(upgradeEffect("hpw", 1043)) + " <small>[Based on power]</small></div>"
+                                    "Multiplies infinity dimensions by x" + formatSimple(upgradeEffect("hpw", 1043)) + "<br><small>[Based on power]</small></div>"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#4c4", border: "3px solid #080", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "100px", background: "#4c4", border: "3px solid #080", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.realmMastery[3]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Dream Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Dream Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Raises AD and antimatter by ^1.05<br>" +
                                     "Multiplies NIP by x100<br>" +
-                                    "Raises mastery point effects by ^" + formatSimple(upgradeEffect("hpw", 1053), 2) + " <small>[Based on power]</small></div>"
+                                    "Raises mastery point effects by ^" + formatSimple(upgradeEffect("hpw", 1053), 2) + "<br><small>[Based on power]</small></div>"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#44c", border: "3px solid #008", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "100px", background: "#44c", border: "3px solid #008", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.realmMastery[4]) look.filter = "brightness(25%)"
                                 return look
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Void Realm Challenge Mastery</h3><hr style='border-color:black;width:450px'>" +
+                                    return "<div style='line-height:1.2'><h3>Void Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
                                     "Increases crate roll chance by +25%<br>" +
                                     "Triples replicanti multiplier<br>" +
-                                    "Multiplies infinity points by x" + formatSimple(upgradeEffect("hpw", 1063)) + " <small>[Based on power]</small></div>"
+                                    "Multiplies infinity points by x" + formatSimple(upgradeEffect("hpw", 1063)) + "<br><small>[Based on power]</small></div>"
                                 }, {color: "rgba(0,0,0,0.8)", fontSize: "14px", fontFamily: "monospace"}],
                             ], () => {
-                                let look = {width: "485px", height: "80px", background: "#84c", border: "3px solid #408", borderRadius: "10px", margin: "3px", userSelect: "none"}
+                                let look = {width: "385px", height: "100px", background: "#84c", border: "3px solid #408", borderRadius: "10px", margin: "3px", userSelect: "none"}
                                 if (!player.tera.realmMastery[5]) look.filter = "brightness(25%)"
                                 return look
                             }],
-                        ], {width: "500px", height: "540px", background: "#1a222e"}],
+                        ], {width: "800px", height: "340px", background: "#1a222e"}],
                         ["style-column", [
                             ["raw-html", "Obtaining realm mastery requires you to reach 30 clears.<br>Realm mastery effects do not stack with realm mights.<br>Realm mastery is kept on Tera resets.", () => {return {color: "white", fontSize: "14px", fontFamily: "monospace"}}],
-                        ], {width: "500px", height: "60px", borderTop: "3px solid #85ade6", overflow: "hidden"}],
-                    ], {width: "500px", height: "636px", background: "#425673", border: "3px solid #85ade6", borderRadius: "15px"}],
+                        ], {width: "800px", height: "60px", borderTop: "3px solid #85ade6", overflow: "hidden"}],
+                    ], {width: "800px", height: "436px", background: "#425673", border: "3px solid #85ade6", borderRadius: "15px"}],
                     ["blank", "20px"],
                 ],
             },
