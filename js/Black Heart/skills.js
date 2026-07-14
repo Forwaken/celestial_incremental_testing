@@ -508,17 +508,11 @@ BHA.nav_violetResonance = {
     value() {return new Decimal(30).add(player.bh.skillData["nav_violetResonance"].level.mul(5))},
     cooldown: new Decimal(90),
     cooldownCap: new Decimal(50),
-    onTrigger(index, slot, target, method, char)
-    {
+    onTrigger(index, slot, target, method, char) {
         let heal = new Decimal(30).add(player.bh.skillData["nav_violetResonance"].level.mul(5))
         bhHeal(heal, index, slot, "allPlayer", "")
 
         navHealEffect();
-
-        options.musicVolume = options.musicVolume * 0.2
-        setTimeout(() => {
-            options.musicVolume = options.musicVolume * 5
-        }, 5000);
     },
 }
 

@@ -27,6 +27,8 @@ function getStartOptions() {
 		instantCutsceneText: false,
 		fullscreen: false,
 		bhKeyboard: false,
+		bulletHellOff: false,
+		soundToggle: true,
 		performanceMode: false,
 		debug: false,
 	}

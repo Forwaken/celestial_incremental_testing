@@ -177,6 +177,20 @@ addLayer("settings", {
                 return look
             },
         },
+        29: {
+            title() { return player.depth3.milestone[25] == 0 ? "[FEATURE NOT UNLOCKED]" : "Skip Bullet Hell<hr style='border:1px solid #888;margin-top:1px'>" + options.bulletHellOff },
+            canClick() {return player.depth3.milestone[25] > 0},
+            tooltip() {return player.depth3.milestone[25] == 0 ? "" : "Skipped attacks deal damage based on the duration the attack would have taken. Off-tab attacks are already skipped."},
+            unlocked: true,
+            onClick() {
+                toggleOpt('bulletHellOff')
+            },
+            style() {
+                let look = {width: '100px', minHeight: '60px', color: "var(--textColor)", background: "var(--miscButton)", fontSize: "8px", lineHeight: "1", borderRadius: '0', border: "3px solid var(--miscButtonDisable)"}
+                if (!this.canClick()) {look.background = "var(--miscButtonDisable)";look.borderColor = "var(--layerBackground)"}
+                return look
+            },
+        },
 
         27: {
             title() { return "View Hotkeys"},
@@ -185,7 +199,7 @@ addLayer("settings", {
             onClick() {
                 player.tab = "hk"
             },
-            style: { width: '306px', minHeight: '60px', color: "var(--textColor)", background: "var(--miscButton)", fontSize: "9px", lineHeight: "1.1", borderRadius: '0', border: "3px solid var(--miscButtonDisable)"},
+            style: { width: '409px', minHeight: '60px', color: "var(--textColor)", background: "var(--miscButton)", fontSize: "9px", lineHeight: "1.1", borderRadius: '0', border: "3px solid var(--miscButtonDisable)"},
         },
         28: {
             title() { return "Toggle Music<hr style='border:1px solid #888;margin-top:1px'>" + options.musicToggle },
@@ -195,6 +209,15 @@ addLayer("settings", {
                 toggleOpt('musicToggle')
             },
             style: { width: '100px', minHeight: '57px', color: "var(--textColor)", background: "var(--miscButton)", fontSize: "9px", lineHeight: "1.1", borderRadius: '0', border: "3px solid var(--miscButtonDisable)"},
+        },
+        30: {
+            title() { return "Toggle Sound Effects<hr style='border:1px solid #888;margin-top:1px'>" + options.soundToggle },
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                toggleOpt('soundToggle')
+            },
+            style: { width: '100px', minHeight: '57px', color: "var(--textColor)", background: "var(--miscButton)", fontSize: "8px", lineHeight: "1.1", borderRadius: '0', border: "3px solid var(--miscButtonDisable)"},
         },
         31: {
             title: "Tree Layout",
@@ -602,34 +625,37 @@ addLayer("settings", {
                 ["style-column", [
                     ["style-row", [
                         ["raw-html", "Toggle Options", {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}]
-                    ], {width: "306px", height: "30px", borderBottom: "3px solid var(--regBorder)"}],
+                    ], {width: "409px", height: "30px", borderBottom: "3px solid var(--regBorder)"}],
                     ["style-row", [
                         ["clickable", 21], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
                         ["clickable", 22], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
-                        ["clickable", 23],
-                    ], {width: "306px", borderBottom: "3px solid var(--regBorder)"}],
+                        ["clickable", 23], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
+                        ["clickable", 24],
+                    ], {width: "409px", borderBottom: "3px solid var(--regBorder)"}],
                     ["style-row", [
-                        ["clickable", 24], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
+                        ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
                         ["clickable", 25], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
-                        ["clickable", 26],
-                    ], {width: "306px", borderBottom: "3px solid var(--regBorder)"}],
+                        ["clickable", 26], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
+                        ["clickable", 29], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
+                    ], {width: "409px", borderBottom: "3px solid var(--regBorder)"}],
                     ["style-row", [
                         ["clickable", 27],
-                    ], {width: "306px", borderBottom: "3px solid var(--regBorder)"}],
+                    ], {width: "409px", borderBottom: "3px solid var(--regBorder)"}],
                     ["style-row", [
                         ["clickable", 28],
                         ["style-column", [
                             ["raw-html", () => {return "Volume: " + options.musicVolume}, {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
                             ["blank", "5px"],
                             ["raw-html", () => {return "</td><td><div style=\"margin: 0 10px\"><input type=range id=volume name=Music Volume min=1 max=10 value=" + options.musicVolume + " oninput=updateMusicVolume()><br>"}, {color: "var(--textColor)", fontSize: "18px", fontFamily: "monospace"}],
-                        ], {width: "203px", height: "57px", borderLeft: "3px solid var(--regBorder)"}],
-                    ], {width: "306px"}],
-                ], {width: "306px", background: "var(--layerBackground)", border: "3px solid var(--regBorder)"}],
+                        ], {width: "203px", height: "57px", borderLeft: "3px solid var(--regBorder)", borderRight: "3px solid var(--regBorder)"}],
+                        ["clickable", 30],
+                    ], {width: "409px"}],
+                ], {width: "409px", background: "var(--layerBackground)", border: "3px solid var(--regBorder)"}],
                 ["blank", "8px"],
                 ["top-column", [
                     ["style-row", [
                         ["raw-html", "Credits", {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
-                    ], {width: "306px", height: "30px", borderBottom: "3px solid var(--regBorder)"}],
+                    ], {width: "30409px6px", height: "30px", borderBottom: "3px solid var(--regBorder)"}],
                     ["top-column", [
                         ["blank", "10px"]
                         ["raw-html", "Game by Icecreamdude", {color: "var(--textColor)", fontSize: "14px", fontFamily: "monospace"}],
@@ -639,16 +665,16 @@ addLayer("settings", {
                             "Art: Jtoh_Sc Lemonsja<br>" +
                             "Testing: Nova Piterpicher Vel<br>" +
                             "Bug Fixing: Tsanth Forwaken", {color: "var(--textColor)", fontSize: "12px", fontFamily: "monospace"}],
-                    ], {width: "306px", height: "206px"}],
+                    ], {width: "409px", height: "206px"}],
                     ["style-row", [
-                        ["raw-html", () => "<a href=https://discord.gg/icecreamdude-s-incremental-games-850817562040467556><button class=can style='display:flex;align-items:center;justify-content:center;width:306px;height:40px;font-size:20px;color:#dde0fc;background:#5865f2;border:3px solid #2c3279'>Join the Discord!</button></a>", {fontFamily: "monospace",}],
-                    ], {width: "306px", height: "40px", borderTop: "3px solid var(--regBorder)"}],
+                        ["raw-html", () => "<a href=https://discord.gg/icecreamdude-s-incremental-games-850817562040467556><button class=can style='display:flex;align-items:center;justify-content:center;width:409px;height:40px;font-size:20px;color:#dde0fc;background:#5865f2;border:3px solid #2c3279'>Join the Discord!</button></a>", {fontFamily: "monospace",}],
+                    ], {width: "409px", height: "40px", borderTop: "3px solid var(--regBorder)"}],
                     ["style-row", [
                         ["raw-html", () => {return "Playtime: " + formatTime(player.timePlayed)}, {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
-                    ], {width: "306px", height: "30px", borderTop: "3px solid var(--regBorder)"}],
-                ], {width: "306px", height: "315px", background: "var(--layerBackground)", border: "3px solid var(--regBorder)"}],
+                    ], {width: "409px", height: "30px", borderTop: "3px solid var(--regBorder)"}],
+                ], {width: "409px", height: "315px", background: "var(--layerBackground)", border: "3px solid var(--regBorder)"}],
             ]],
-        ], {width: "634px", background: "var(--miscButtonHover)", border: "3px solid var(--regBorder)", padding: "8px"}],
+        ], {width: "737px", background: "var(--miscButtonHover)", border: "3px solid var(--regBorder)", padding: "8px"}],
         ["blank", "25px"],
     ],
     layerShown() { return false },

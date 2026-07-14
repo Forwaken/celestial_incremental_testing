@@ -1320,7 +1320,13 @@ function stagnantUpdate(time) {
 const navHealSound = new Audio('music/navHeal.mp3');
 function navHealEffect(x, y)
 {
-    if (options.musicToggle) navHealSound.play();
+    if (typeof options !== 'undefined' && options.soundToggle) {
+        navHealSound.play();
+        options.musicVolume = options.musicVolume * 0.2
+        setTimeout(() => {
+            options.musicVolume = options.musicVolume * 5
+        }, 5000);
+    }
     if (typeof options !== 'undefined' && options.toggleParticle === false) return;
 
     // create a small plus-sign SVG generator used for particle images
