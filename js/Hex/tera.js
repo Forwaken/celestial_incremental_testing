@@ -755,14 +755,14 @@ addLayer("tera", {
                 if (player.tera.trueHex.eq(1)) str = str.concat("<br>At true hex 2, unlock the second set of spell buyables.") // ADDED
                 if (player.tera.trueHex.eq(2)) str = str.concat("<br>At true hex 3, unlock spell enhancement.<br>[NOT IMPLEMENTED]") // ADDED
                 if (player.tera.trueHex.eq(3)) str = str.concat("<br>At true hex 4, unlock a hex essence effect.") // ADDED
-                if (player.tera.trueHex.eq(4)) str = str.concat("<br>At true hex 5, reduce hex essence softcap.") // ADDED
+                if (player.tera.trueHex.eq(4)) str = str.concat("<br>At true hex 5, reduce hex essence's softcap.") // ADDED
                 if (player.tera.trueHex.eq(5)) str = str.concat("<br>At true hex 6, unlock bulk true hexing.") // ADDED
-                if (player.tera.trueHex.eq(6)) str = str.concat("<br>At true hex 7, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
+                if (player.tera.trueHex.eq(6)) str = str.concat("<br>At true hex 7, unlock the fourth hex spell.<br>[NOT IMPLEMENTED]")
                 if (player.tera.trueHex.eq(7)) str = str.concat("<br>At true hex 8, unlock the third set of spell buyables.") // ADDED
                 if (player.tera.trueHex.gte(8) && player.tera.trueHex.lt(10)) str = str.concat("<br>At true hex 10, unlock a true hex effect.") // ADDED
-                if (player.tera.trueHex.gte(9) && player.tera.trueHex.lt(12)) str = str.concat("<br>At true hex 12, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
-                if (player.tera.trueHex.gte(12) && player.tera.trueHex.lt(15)) str = str.concat("<br>At true hex 15, improve piosity spell formula.") // ADDED
-                if (player.tera.trueHex.gte(15) && player.tera.trueHex.lt(18)) str = str.concat("<br>At true hex 18, unlock a new hex spell.<br>[NOT IMPLEMENTED]")
+                if (player.tera.trueHex.gte(9) && player.tera.trueHex.lt(12)) str = str.concat("<br>At true hex 12, unlock the fifth new hex spell.<br>[NOT IMPLEMENTED]")
+                if (player.tera.trueHex.gte(12) && player.tera.trueHex.lt(15)) str = str.concat("<br>At true hex 15, improve piosity's spell formula.") // ADDED
+                if (player.tera.trueHex.gte(15) && player.tera.trueHex.lt(18)) str = str.concat("<br>At true hex 18, unlock the sixth hex spell.<br>[NOT IMPLEMENTED]")
                 return str
 
                 // Realm Essence Per Second (x20 gain per second)
@@ -2035,6 +2035,32 @@ addLayer("tera", {
                     ["blank", "20px"],
                 ],
             },
+            "Effects": {
+                buttonStyle() { return {borderColor: "#85ade6", borderRadius: "5px"}},
+                unlocked: true,
+                content: [
+                    ["blank", "10px"],
+                    ["style-column", [
+                        ["raw-html", "True Hex Effects", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
+                    ], {width: "650px", height: "40px", background: "#85ADE6", border: "3px solid #273345", borderRadius: "20px 20px 0 0"}],
+                    ["top-column", [
+                        ["blank", "5px"],
+                        ["raw-html", "At true hex 1, unlock true hex content.", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(2) ? "At true hex 2, unlock the second set of spell buyables." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(3) ? "At true hex 3, unlock spell enhancement. [NOT IMPLEMENTED]" : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(4) ? "At true hex 4, unlock a hex essence effect." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(5) ? "At true hex 5, reduce hex essence's softcap." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(6) ? "At true hex 6, unlock bulk true hexing." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(7) ? "At true hex 7, unlock the fourth hex spell. [NOT IMPLEMENTED]" : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(8) ? "At true hex 8, unlock the third set of spell buyables." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(10) ? "At true hex 10, unlock a true hex effect." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(12) ? "At true hex 12, unlock the fifth hex spell. [NOT IMPLEMENTED]" : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(15) ? "At true hex 15, improve piosity's spell formula." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHex.gte(18) ? "At true hex 18, unlock the sixth hex spell. [NOT IMPLEMENTED]" : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ], {width: "650px", height: "250px", background: "#425673", border: "3px solid #273345", marginTop: "-3px", marginBottom: "-3px"}],
+                    ["style-column", [], {width: "650px", height: "20px", background: "#85ADE6", border: "3px solid #273345", borderRadius: "0 0 20px 20px"}],
+                ],
+            },
         },
         "hept": {
             "Virtues": {
@@ -2442,6 +2468,25 @@ addLayer("tera", {
                         ], {width: "800px", height: "70px", borderTop: "3px solid #95A6DD"}],
                     ], {width: "800px", height: "486px", background: "#4a536e", border: "3px solid #95A6DD", borderRadius: "15px"}],
                     ["blank", "20px"],
+                ],
+            },
+            "Effects": {
+                buttonStyle() { return {borderColor: "#85ade6", borderRadius: "5px"}},
+                unlocked: true,
+                content: [
+                    ["blank", "10px"],
+                    ["style-column", [
+                        ["raw-html", "True Hept Effects", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
+                    ], {width: "650px", height: "40px", background: "#95A6DD", border: "3px solid #2c3142", borderRadius: "20px 20px 0 0"}],
+                    ["top-column", [
+                        ["blank", "5px"],
+                        ["raw-html", "At true hept 1, unlock true hept content.", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHept.gte(2) ? "At true hept 2, automate kindness gain." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHept.gte(3) ? "At true hept 3, essence of kindness is no longer reset." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHept.gte(4) ? "At true hept 4, automate patience gain." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHept.gte(7) ? "At true hept 7, unlock bulk true hepting" : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ], {width: "650px", height: "250px", background: "#4a536e", border: "3px solid #2c3142", marginTop: "-3px", marginBottom: "-3px"}],
+                    ["style-column", [], {width: "650px", height: "20px", background: "#95A6DD", border: "3px solid #2c3142", borderRadius: "0 0 20px 20px"}],
                 ],
             },
         },

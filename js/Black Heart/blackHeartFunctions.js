@@ -1318,8 +1318,7 @@ function stagnantUpdate(time) {
 
 
 const navHealSound = new Audio('music/navHeal.mp3');
-function navHealEffect(x, y)
-{
+function navHealEffect(x, y) {
     if (typeof options !== 'undefined' && options.soundToggle) {
         navHealSound.play();
         options.musicVolume = options.musicVolume * 0.2

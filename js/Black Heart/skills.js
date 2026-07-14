@@ -512,7 +512,7 @@ BHA.nav_violetResonance = {
         let heal = new Decimal(30).add(player.bh.skillData["nav_violetResonance"].level.mul(5))
         bhHeal(heal, index, slot, "allPlayer", "")
 
-        navHealEffect();
+        if (player.tab == "bh") navHealEffect();
     },
 }
 
