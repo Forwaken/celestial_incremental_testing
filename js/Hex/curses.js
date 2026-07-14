@@ -1011,7 +1011,7 @@ addLayer("hcu", {
             ["raw-html", () => {return (player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2))) && inChallenge("hrm", 12)) || player.hcu.cursesGain.gte(1.79e308) ? "<small>[SOFTCAPPED<sup>2</sup>]</small>" :
                 player.hcu.cursesGain.gte(Decimal.pow10(player.h.stage.mul(2))) || inChallenge("hrm", 12) ? "<small>[SOFTCAPPED]</small>" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
             ["raw-html", () => {
-                let str = "<div class='bottomTooltip'>Base Formula<hr><small>log" + formatWhole(player.h.stage.max(2).sub(buyableEffect("hte", 51).sub(1))) + "(Blessings)"
+                let str = "<div class='bottomTooltip'>Base Formula<hr><small>log" + formatWhole(player.h.stage.max(2).sub(1).div(buyableEffect("hte", 51)).add(1)) + "(Blessings)"
                 if (buyableEffect("hte", 52).gt(1)) str = str.concat("x" + formatSimple(buyableEffect("hte", 52)))
                 if (buyableEffect("hte", 53).gt(1)) str = str.concat("^" + formatSimple(buyableEffect("hte", 53), 2))
                 if (hasMilestone("hre", 10)) str = str.concat("+" + formatSimple(player.h.stage.div(10)))
