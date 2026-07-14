@@ -148,8 +148,8 @@ addLayer("tera", {
 
         let softcapStart = new Decimal(1e6)
         if (hasUpgrade("tera", "hex12")) softcapStart = softcapStart.mul(upgradeEffect("tera", "hex12"))
-        player.tera.hexEssenceSoftcap = player.tera.hexEssencePerSecond.gte(softcapStart) ? Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e6).pow(0.6)) : new Decimal(1)
-        if (player.tera.trueHex.gte(5) && player.tera.hexEssenceSoftcap.lt(1)) player.tera.hexEssenceSoftcap = Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e6).pow(0.3))
+        player.tera.hexEssenceSoftcap = player.tera.hexEssencePerSecond.gte(softcapStart) ? Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e6).pow(0.6).max(1)) : new Decimal(1)
+        if (player.tera.trueHex.gte(5) && player.tera.hexEssenceSoftcap.lt(1)) player.tera.hexEssenceSoftcap = Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e6).pow(0.3).max(1))
         player.tera.hexEssencePerSecond = player.tera.hexEssencePerSecond.div(softcapStart).pow(player.tera.hexEssenceSoftcap).mul(softcapStart)
         player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
 

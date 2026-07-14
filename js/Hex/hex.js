@@ -68,6 +68,7 @@ addLayer("h", {
         if (hasUpgrade("hpw", 174)) player.h.tickspeed = player.h.tickspeed.mul(3)
         player.h.tickspeed = player.h.tickspeed.mul(buyableEffect("hpw", 16))
         player.h.tickspeed = player.h.tickspeed.mul(player.tera.virtueEffects[4][1])
+        if (hasUpgrade("hve", 73)) player.h.tickspeed = player.h.tickspeed.mul(upgradeEffect("hve", 73))
 
         player.h.externalRaise = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.externalRaise = Decimal.pow(0.5, player.h.stage.sub(6).abs())
@@ -178,6 +179,7 @@ addLayer("h", {
         player.h.prePowerMult = player.h.prePowerMult.mul(player.hre.refinementEffect[6][0])
         if (hasUpgrade("hpw", 71) && hasUpgrade("hpw", 164)) player.h.prePowerMult = player.h.prePowerMult.mul(upgradeEffect("hpw", 71))
         player.h.prePowerMult = player.h.prePowerMult.mul(buyableEffect("hpw", 15))
+        if (hasUpgrade("hve", 71)) player.h.prePowerMult = player.h.prePowerMult.mul(upgradeEffect("hve", 71))
         player.h.prePowerMult = player.h.prePowerMult.div(player.hrm.challengeSoftcap)
         player.h.prePowerMult = player.h.prePowerMult.div(player.h.preNerf)
 

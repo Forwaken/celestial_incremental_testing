@@ -28,6 +28,7 @@ addLayer("hpw", {
         if (player.sins.clickables["lust"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.lust[0])
         if (player.sins.clickables["gluttony"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.gluttony[0])
         if (player.sins.clickables["sloth"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.sloth[0])
+        if (hasUpgrade("hve", 72)) player.hpw.powerGain = player.hpw.powerGain.mul(upgradeEffect("hve", 72))
         player.hpw.powerGain = player.hpw.powerGain.mul(buyableEffect("hve", 14))
         player.hpw.powerGain = player.hpw.powerGain.mul(player.tera.virtueEffects[6][1])
 
