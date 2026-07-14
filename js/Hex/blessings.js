@@ -457,7 +457,7 @@ addLayer("hbl", {
                 let eff = player.ta.negativeInfinityPoints.add(1).log(player.h.stage.max(2)).pow(Decimal.div(3.6, player.h.stage.max(4))).ceil()
                 if (inChallenge("hrm", 12)) eff = eff.pow(Decimal.div(1.8, player.h.stage.max(2))).ceil()
                 if (eff.gte(player.h.stage.mul(1.5))) eff = eff.div(player.h.stage.mul(1.5)).pow(Decimal.div(1.8, player.h.stage.max(2))).mul(player.h.stage.mul(1.5)).ceil().min(player.h.stage.mul(3))
-                if (eff.gte(player.h.stage.mul(3) && hasUpgrade("hbl", 101))) eff = player.ta.negativeInfinityPoints.add(1).log("1e1000").pow(Decimal.div(3.6, player.h.stage.max(4))).add(player.h.stage.mul(3)).floor()
+                if (eff.gte(player.h.stage.mul(3)) && hasUpgrade("hbl", 101)) eff = player.ta.negativeInfinityPoints.add(1).log("1e1000").pow(Decimal.div(3.6, player.h.stage.max(4))).add(player.h.stage.mul(3)).floor()
                 return eff
             },
             effectDisplay() {
