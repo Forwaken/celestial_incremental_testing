@@ -203,7 +203,7 @@
 	margin-top: 25px;
 }
 /* For when width is less then or equal to 1200px */
-@media (max-width: 1250px) {
+@media (orientation: portrait) {
 	.uniHolder {
 		width: calc(100% - 6px);
 	}

@@ -1522,7 +1522,7 @@ button > * {
     z-index: 1; /* Spawn area stays below other elements */
 }
 
-@media (max-width: 1250px) {
+@media (orientation: portrait) {
     .menu-spawn-area {
         width: 90vw; /* Make it slightly wider for small screens */
         height: 35vh; /* Reduce height on smaller screens */
