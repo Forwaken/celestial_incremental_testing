@@ -2082,8 +2082,9 @@ addLayer("tera", {
                             ["clickable", "virtue1"],
                         ], {width: "175px", height: "194px"}],
                         ["top-column", [
-                            ["style-column", [
+                            ["tooltip-row", [
                                 ["raw-html", () => {return formatSimple(player.tera.virtueEssence[0]) + " Essence of Kindness (+" + formatSimple(player.tera.virtueEssenceGain[0], 2) + "/s)"}, {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>(Kindness/7)^1.3</small></div>"],
                             ], {width: "392px", height: "33px", border: "3px solid rgba(0,0,0,0.5)"}],
                             ["style-column", [], {width: "398px", height: "3px", background: "#95A6DD"}],
                             ["style-row", [
@@ -2122,8 +2123,9 @@ addLayer("tera", {
                             ["clickable", "virtue2"],
                         ], {width: "175px", height: "194px"}],
                         ["top-column", [
-                            ["style-column", [
+                            ["tooltip-row", [
                                 ["raw-html", () => {return formatSimple(player.tera.virtueEssence[1]) + " Essence of Patience (+" + formatSimple(player.tera.virtueEssenceGain[1], 2) + "/s)"}, {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>(Patience/6)^1.28</small></div>"],
                             ], {width: "392px", height: "33px", border: "3px solid rgba(0,0,0,0.5)"}],
                             ["style-column", [], {width: "398px", height: "3px", background: "#95A6DD"}],
                             ["style-row", [
@@ -2162,8 +2164,9 @@ addLayer("tera", {
                             ["clickable", "virtue3"],
                         ], {width: "175px", height: "194px"}],
                         ["top-column", [
-                            ["style-column", [
+                            ["tooltip-row", [
                                 ["raw-html", () => {return formatSimple(player.tera.virtueEssence[2]) + " Essence of Chastity (+" + formatSimple(player.tera.virtueEssenceGain[2], 2) + "/s)"}, {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>(Chastity/5)^1.26</small></div>"],
                             ], {width: "392px", height: "33px", border: "3px solid rgba(0,0,0,0.5)"}],
                             ["style-column", [], {width: "398px", height: "3px", background: "#95A6DD"}],
                             ["style-row", [
@@ -2202,8 +2205,9 @@ addLayer("tera", {
                             ["clickable", "virtue4"],
                         ], {width: "175px", height: "194px"}],
                         ["top-column", [
-                            ["style-column", [
+                            ["tooltip-row", [
                                 ["raw-html", () => {return formatSimple(player.tera.virtueEssence[3]) + " Essence of Temperance (+" + formatSimple(player.tera.virtueEssenceGain[3], 2) + "/s)"}, {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>(Temperance/4)^1.24</small></div>"],
                             ], {width: "392px", height: "33px", border: "3px solid rgba(0,0,0,0.5)"}],
                             ["style-column", [], {width: "398px", height: "3px", background: "#95A6DD"}],
                             ["style-row", [
@@ -2242,8 +2246,9 @@ addLayer("tera", {
                             ["clickable", "virtue5"],
                         ], {width: "175px", height: "194px"}],
                         ["top-column", [
-                            ["style-column", [
+                            ["tooltip-row", [
                                 ["raw-html", () => {return formatSimple(player.tera.virtueEssence[4]) + " Essence of Diligence (+" + formatSimple(player.tera.virtueEssenceGain[4], 2) + "/s)"}, {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>(Diligence/3)^1.22</small></div>"],
                             ], {width: "392px", height: "33px", border: "3px solid rgba(0,0,0,0.5)"}],
                             ["style-column", [], {width: "398px", height: "3px", background: "#95A6DD"}],
                             ["style-row", [
@@ -2282,8 +2287,9 @@ addLayer("tera", {
                             ["clickable", "virtue6"],
                         ], {width: "175px", height: "194px"}],
                         ["top-column", [
-                            ["style-column", [
+                            ["tooltip-row", [
                                 ["raw-html", () => {return formatSimple(player.tera.virtueEssence[5]) + " Essence of Charity (+" + formatSimple(player.tera.virtueEssenceGain[5], 2) + "/s)"}, {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>(Charity/2)^1.2</small></div>"],
                             ], {width: "392px", height: "33px", border: "3px solid rgba(0,0,0,0.5)"}],
                             ["style-column", [], {width: "398px", height: "3px", background: "#95A6DD"}],
                             ["style-row", [
@@ -2322,8 +2328,9 @@ addLayer("tera", {
                             ["clickable", "virtue7"],
                         ], {width: "175px", height: "194px"}],
                         ["top-column", [
-                            ["style-column", [
+                            ["tooltip-row", [
                                 ["raw-html", () => {return formatSimple(player.tera.virtueEssence[6]) + " Essence of Humilty (+" + formatSimple(player.tera.virtueEssenceGain[6], 2) + "/s)"}, {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>Humilty^1.18</small></div>"],
                             ], {width: "392px", height: "33px", border: "3px solid rgba(0,0,0,0.5)"}],
                             ["style-column", [], {width: "398px", height: "3px", background: "#95A6DD"}],
                             ["style-row", [
