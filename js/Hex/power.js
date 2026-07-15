@@ -2193,7 +2193,7 @@ addLayer("hpw", {
             display() {
                 return "<h3>Might EX-ζ</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
-                    Boost uni-alpha tickspeed gain.\n\
+                    Boost uni-alpha tickspeed.\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
             },
