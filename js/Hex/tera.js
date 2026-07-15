@@ -1231,7 +1231,7 @@ addLayer("tera", {
             currency() { return player.tera.hexEnergy},
             pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
             effect(x) {
-                if (getBuyableAmount("tera", "hexEnergyPrestige").gt(0)) return getBuyableAmount(this.layer, this.id).add(Decimal.pow10(getBuyableAmount("tera", "hexEnergyPrestige")).mul(0.9)).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))).add(1)
+                if (getBuyableAmount("tera", "hexEnergyPrestige").gt(0)) return getBuyableAmount(this.layer, this.id).add(9).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))).add(1)
                 return getBuyableAmount(this.layer, this.id).add(1)
             },
             unlocked: true,
