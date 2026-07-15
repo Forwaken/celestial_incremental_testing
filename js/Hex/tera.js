@@ -1,13 +1,13 @@
 addNode("piositySpell", {
     name() {return "🙏"},
     symbol() {return "🙏"},
-    tooltip() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(6, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
-    tooltipLocked() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(6, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
-    canClick() {return player.tera.hexEnergy.gte(Decimal.sub(6, buyableEffect("tera", "piosityCost")))},
+    tooltip() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
+    tooltipLocked() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
+    canClick() {return player.tera.hexEnergy.gte(Decimal.div(5, buyableEffect("tera", "piosityCost")))},
     layerShown() {return player.tera.clickables["piosityPin"]},
     onClick() {
         if (this.canClick()) {
-            player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(6, buyableEffect("tera", "piosityCost")))
+            player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(5, buyableEffect("tera", "piosityCost")))
                 if (player.tera.trueHex.gte(15)) player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1)).add(1).mul(buyableEffect("tera", "piosityBuff").sub(1)).add(1)
                 else player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1)).add(1)
         }
@@ -53,13 +53,13 @@ addNode("bewitchSpell", {
 addNode("chronotachysisSpell", {
     name() {return "⏳"},
     symbol() {return "⏳"},
-    tooltip() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
-    tooltipLocked() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
-    canClick() {return player.tera.hexEnergy.gte(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))},
+    tooltip() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
+    tooltipLocked() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
+    canClick() {return player.tera.hexEnergy.gte(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")))},
     layerShown() {return player.tera.clickables["chronotachysisPin"]},
     onClick() {
         if (this.canClick()) {
-            player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))
+            player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")))
             let duration = player.tera.chronotachysisSpell[0]
             duration = duration.add(buyableEffect("tera", "chronotachysisDuration").sub(1).add(60))
             player.tera.chronotachysisSpell = [duration, Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))]
@@ -813,11 +813,11 @@ addLayer("tera", {
             },
         },
         "piositySpell": {
-            title() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(Decimal.sub(6, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
-            canClick() {return player.tera.hexEnergy.gte(Decimal.sub(6, buyableEffect("tera", "piosityCost")))},
+            title() {return "<h3>Piosity</h3><br>Increases blessings during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost"))) + " Hex-Energy"},
+            canClick() {return player.tera.hexEnergy.gte(Decimal.div(5, buyableEffect("tera", "piosityCost")))},
             unlocked: true,
             onClick() {
-                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(6, buyableEffect("tera", "piosityCost")))
+                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(5, buyableEffect("tera", "piosityCost")))
                 if (player.tera.trueHex.gte(15)) player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1)).add(1).mul(buyableEffect("tera", "piosityBuff").sub(1)).add(1)
                 else player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1)).add(1)
             },
@@ -884,11 +884,11 @@ addLayer("tera", {
             },
         },
         "chronotachysisSpell": {
-            title() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
-            canClick() {return player.tera.hexEnergy.gte(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))},
+            title() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
+            canClick() {return player.tera.hexEnergy.gte(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")))},
             unlocked: true,
             onClick() {
-                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.sub(11, buyableEffect("tera", "chronotachysisCost")))
+                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")))
                 let duration = player.tera.chronotachysisSpell[0]
                 duration = duration.add(buyableEffect("tera", "chronotachysisDuration").sub(1).add(60))
                 player.tera.chronotachysisSpell = [duration, Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))]
@@ -1309,14 +1309,14 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(20) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && player.tera.trueHex.gte(2)},
             display() {
                 if (player.tera.trueHex.lt(2)) return "???"
                 return "<h3>Decrease Piosity Cost</h3>\n\
-                    Currently: -" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1)) + " HE\n\ \n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " HE\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
             buy() {
@@ -1398,14 +1398,14 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(20) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && player.tera.trueHex.gte(2)},
             display() {
                 if (player.tera.trueHex.lt(2)) return "???"
                 return "<h3>Reduce Bewitch Cost</h3>\n\
-                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
             buy() {
@@ -1487,14 +1487,14 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && player.tera.trueHex.gte(2)},
             display() {
                 if (player.tera.trueHex.lt(2)) return "???"
                 return "<h3>Reduce Chronotachysis Cost</h3>\n\
-                    Currently: -" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1)) + " HE\n\ \n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " HE\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
             buy() {
