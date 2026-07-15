@@ -45,6 +45,11 @@ addLayer("hpw", {
         external = external.pow(player.h.externalRaise)
         player.hpw.powerGain = player.hpw.powerGain.mul(external)
 
+        // POWER SOFTCAP
+        let amt = player.hpw.powerGain.gt(player.hpw.power) ? player.hpw.powerGain : player.hpw.power
+        player.hpw.softcap = amt.gte(Decimal.pow10(player.h.stage.mul(10))) ? amt.div(Decimal.pow10(player.h.stage.mul(10))).pow(0.3).div(player.h.stage).add(1) : new Decimal(1)
+        player.hpw.powerGain = player.hpw.powerGain.div(player.hpw.softcap)
+        
         // POWER MODIFIERS
         if (player.sins.clickables["greed"]) player.hpw.powerGain = player.hpw.powerGain.pow(player.sins.greed[0])
         if (player.sins.clickables["pride"]) player.hpw.powerGain = player.hpw.powerGain.pow(player.sins.pride[0])
@@ -56,10 +61,6 @@ addLayer("hpw", {
 
         externalPow = externalPow.pow(player.h.externalRaise)
         player.hpw.powerGain = player.hpw.powerGain.pow(externalPow)
-
-        // POWER SOFTCAP
-        player.hpw.softcap = player.hpw.power.gte(Decimal.pow10(player.h.stage.mul(10))) ? player.hpw.power.div(Decimal.pow10(player.h.stage.mul(10))).pow(0.3).div(player.h.stage).add(1) : new Decimal(1)
-        player.hpw.powerGain = player.hpw.powerGain.div(player.hpw.softcap)
 
         if (hasUpgrade("hpw", 106)) player.hpw.power = player.hpw.power.add(player.hpw.powerGain.div(100).mul(player.h.tickspeed).mul(delta))
         player.hpw.powerGain = player.hpw.powerGain.floor().max(1) // To keep power to whole numbers
@@ -2465,7 +2466,7 @@ addLayer("hpw", {
             ["raw-html", () => {
                 let str = "<div class='bottomTooltip'>Base Formula<hr><small>2^(log" + formatWhole(player.h.stage) + "(Blessings/" + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + "))/" + formatSimple(Decimal.pow(2, player.h.stage.sub(6).abs())) + "</small>"
                 if (player.h.stage.eq(6)) str = "<div class='bottomTooltip'>Base Formula<hr><small>2^(log" + formatWhole(player.h.stage) + "(Blessings/" + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + "))</small>"
-                if (player.hpw.softcap.gt(1)) str = str.concat("<br><small>[SOFTCAP: (((Power/" + formatWhole(Decimal.pow10(player.h.stage.mul(10))) + ")^0.3)/" + formatWhole(player.h.stage) + ")+1]</small>")
+                if (player.hpw.softcap.gt(1)) str = str.concat("<br><small>[SOFTCAP: (((Power/" + formatWhole(Decimal.pow10(player.h.stage.mul(10))) + ")^0.3)/" + formatWhole(player.h.stage) + ")+1 BEFORE EXPONENTS]</small>")
                 return str.concat("</div>")
             }],
         ]],
