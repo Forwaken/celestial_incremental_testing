@@ -2471,7 +2471,7 @@ addLayer("tera", {
                             }],
                         ], {width: "800px", height: "380px", background: "#1a222e", overflow: "hidden"}],
                         ["style-column", [
-                            ["raw-html", "Obtaining sin mastery requires you to reach 1e70 power without using that sin.<br>Sin mastery effects do not stack with sins.<br>Sin mastery is kept on Tera resets.", () => {return {color: "white", fontSize: "14px", fontFamily: "monospace"}}],
+                            ["raw-html", "Obtaining sin mastery requires you to reach 1e70 power without using that sin in that tera run.<br>Sin mastery effects do not stack with sins.<br>Sin mastery is kept on Tera resets.", () => {return {color: "white", fontSize: "14px", fontFamily: "monospace"}}],
                         ], {width: "800px", height: "70px", borderTop: "3px solid #95A6DD"}],
                     ], {width: "800px", height: "486px", background: "#4a536e", border: "3px solid #95A6DD", borderRadius: "15px"}],
                     ["blank", "20px"],
