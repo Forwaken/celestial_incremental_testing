@@ -33,7 +33,7 @@ addLayer("hsa", {
     update(delta) {
         let step = Decimal.div(1, player.h.stage.pow(2))
         player.hsa.holyPowerGain = new Decimal(0)
-        if (player.h.stage.lte(6)) {
+        if (inChallenge("hrm", 14)) {
             if (player.hpr.rank[0].gt(0)) player.hsa.holyPowerGain = player.hpr.rank[0].pow(0.5).div(10)
             if (player.hpr.rank[1].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[1].pow(Decimal.add(0.5, step)).div(5).add(1))
             if (player.hpr.rank[2].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[2].pow(Decimal.add(0.5, step.mul(2))).div(2).add(1))
@@ -51,7 +51,7 @@ addLayer("hsa", {
 
         if (hasUpgrade("hsa", 13)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.pow(upgradeEffect("hsa", 13))
 
-        player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(player.h.tickspeed).mul(delta))
+        if (tmp.hsa.layerShown) player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(player.h.tickspeed).mul(delta))
 
         if (player.hsa.autoSac == true && ((player.h.stage.lte(6) && player.hpr.rank[1].gte(1)) || player.hpr.rank[5].gte(1))) {
             player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
@@ -879,7 +879,7 @@ addLayer("hsa", {
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],
-    layerShown() { return inChallenge("hrm", 14) || hasUpgrade("hpw", 75)}, // Decides if this node is shown or not.
+    layerShown() { return inChallenge("hrm", 14) || hasUpgrade("hpw", 75) || (player.h.stage.eq(6) && player.tera.virtueUnlocks[5])}, // Decides if this node is shown or not.
     hotkeys: [
         {
             key: "s", 
