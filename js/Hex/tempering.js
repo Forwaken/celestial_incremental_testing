@@ -13,9 +13,9 @@ addLayer("hte", {
     update (delta) {
         player.hte.tempererPerSec = new Decimal(0)
         if (hasUpgrade("hpw", 151)) {
-            player.hte.tempererPerSec = Decimal.pow(Decimal.mul(1.2, buyableEffect("hte", 22)), player.hre.refinement.sub(player.h.stage.mul(10).sub(buyableEffect("hte", 21).sub(1))).add(1).max(0)).sub(1).mul(buyableEffect("hte", 23)).mul(player.h.tickspeed)
+            player.hte.tempererPerSec = Decimal.pow(Decimal.mul(1.2, buyableEffect("hte", 22)), player.hre.refinement.sub(player.h.stage.mul(10).sub(buyableEffect("hte", 21).sub(1))).add(1).max(0)).sub(1).mul(buyableEffect("hte", 23))
             if (player.hte.tempererPerSec.gte(1e10)) player.hte.tempererPerSec = player.hte.tempererPerSec.div(1e10).pow(Decimal.div(3.5, player.h.stage.max(4))).mul(1e10)
-            player.hte.temperer = player.hte.temperer.add(player.hte.tempererPerSec.mul(delta))
+            player.hte.temperer = player.hte.temperer.add(player.hte.tempererPerSec.mul(delta).mul(player.h.tickspeed))
         }
     },
     buyables: {

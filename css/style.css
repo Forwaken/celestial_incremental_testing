@@ -1020,6 +1020,7 @@ a {
 	}
 
 .hidden {
+	transition-duration: 0s !important;
 	visibility: hidden;
 	height: 50px !important;
 }

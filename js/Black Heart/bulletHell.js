@@ -43,6 +43,8 @@ function bulletHell(actions, values = {}, exitAction = () => {}) {
     // Check if tabbed in, if not just deal a bunch of damage
     if ((options && options.bulletHellOff) || (player && player.tab && player.tab != "bh")) {
         if (player.bh.celestialite.health.lte(0)) return
+        let amt = 0
+        for (let i = 0; i < 3; i++) {if (player.bh.characters[i].id != "none" && Decimal.gt(player.bh.characters[i].health, 0)) amt++}
         bhAttack(Decimal.mul(player.bh.celestialite.damage, info.duration/3), 3, 0, "allPlayer")
         return
     }
