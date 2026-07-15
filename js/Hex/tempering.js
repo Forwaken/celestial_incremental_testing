@@ -15,7 +15,8 @@ addLayer("hte", {
         if (hasUpgrade("hpw", 151)) {
             player.hte.tempererPerSec = Decimal.pow(Decimal.mul(1.2, buyableEffect("hte", 22)), player.hre.refinement.sub(player.h.stage.mul(10).sub(buyableEffect("hte", 21).sub(1))).add(1).max(0)).sub(1).mul(buyableEffect("hte", 23))
             if (player.hte.tempererPerSec.gte(1e10)) player.hte.tempererPerSec = player.hte.tempererPerSec.div(1e10).pow(Decimal.div(3.5, player.h.stage.max(4))).mul(1e10)
-            player.hte.temperer = player.hte.temperer.add(player.hte.tempererPerSec.mul(delta).mul(player.h.tickspeed))
+            player.hte.tempererPerSec = player.hte.tempererPerSec.mul(player.h.tickspeed)
+            player.hte.temperer = player.hte.temperer.add(player.hte.tempererPerSec.mul(delta))
         }
     },
     buyables: {
@@ -34,6 +35,7 @@ addLayer("hte", {
                     Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
+            tooltip: "Divides starting at 1.",
             buy() {
                 this.pay(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
@@ -334,6 +336,7 @@ addLayer("hte", {
                     Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
+            tooltip: "Divides starting at 1.",
             buy() {
                 this.pay(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))

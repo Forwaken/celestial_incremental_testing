@@ -136,7 +136,7 @@
         player.ca.canteEnergyMult = player.ca.canteEnergyMult.mul(levelableEffect("pet", 403)[0])
         player.ca.canteEnergyMult = player.ca.canteEnergyMult.mul(buyableEffect("ca", 34))
 
-        if (getBuyableAmount("ca", 36).gt(0)) player.ca.canteEnergy = player.ca.canteEnergy.add(player.ca.canteEnergyMult.mul(buyableEffect("ca", 36).sub(1)).mul(delta))
+        if (getBuyableAmount("ca", 36).gt(0)) player.ca.canteEnergy = player.ca.canteEnergy.add(player.ca.canteEnergyMult.mul(buyableEffect("ca", 36).sub(1)).mul(delta).div(player.uni["U2"].tickspeed))
 
         player.ca.canteCoreGain = Decimal.affordArithmeticSeries(player.ca.canteEnergy, 100, 10, player.ca.canteCores).floor().max(1)
         if (player.ca.canteEnergy.gte(player.ca.canteEnergyReq))
@@ -871,14 +871,14 @@
             style: {width: '275px', height: '150px', backgroundColor: '#333c81', color: 'white'},
         },
         31: {
-            costBase() { return new Decimal(1000) },
+            costBase() { return new Decimal(1000).div(buyableEffect("ca", 35)) },
             costGrowth() { return new Decimal(1.2) },
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.ca.canteEnergy},
             pay(amt) { player.ca.canteEnergy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
             unlocked: true,
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Base Gains"
@@ -889,14 +889,14 @@
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35))
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).div(buyableEffect("ca", 35))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -905,14 +905,14 @@
             style: {width: '275px', height: '150px', backgroundColor: '#00c5ff', color: 'black'},
         },
         32: {
-            costBase() { return new Decimal(50) },
+            costBase() { return new Decimal(50).div(buyableEffect("ca", 35)) },
             costGrowth() { return new Decimal(1.2) },
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.ca.canteCores},
             pay(amt) { player.ca.canteCores = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
             unlocked: true,
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Practical Mult"
@@ -923,14 +923,14 @@
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)).floor()
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).div(buyableEffect("ca", 35)).floor()
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -939,14 +939,14 @@
             style: {width: '275px', height: '150px', backgroundColor: '#00c5ff', color: 'black'},
         },
         33: {
-            costBase() { return new Decimal(50) },
+            costBase() { return new Decimal(50).div(buyableEffect("ca", 35)) },
             costGrowth() { return new Decimal(1.3) },
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.ca.rememberanceCores},
             pay(amt) { player.ca.rememberanceCores = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
             unlocked: true,
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Reduced Conflict"
@@ -957,14 +957,14 @@
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).div(buyableEffect("ca", 35)).floor()
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).div(buyableEffect("ca", 35)).floor()
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -1241,6 +1241,7 @@
                 buttonStyle() { return { color: "#7dd3f9", background: "#0f354c", borderColor: "#0a82b9", borderRadius: "5px" } },
                 unlocked() { return player.ca.defeatedCante },
                 content: [
+                    ["blank", "25px"],
                     ["style-column", [
                         ["raw-html", "Perks for defeating Cante", {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
                     ], {width: "800px", border: "3px solid #0f354c", backgroundImage: "linear-gradient(45deg, #0a82b9 0%, #7dd3f9 100%)", borderBottom: "5px", paddingTop: "5px", paddingBottom: "5px", borderRadius: "15px 15px 0px 0px"}],

@@ -120,7 +120,7 @@ addLayer("hpr", {
     clickables: {
         1: {
             title() { return "<h2>Reset " + player.h.stageName[1] + " points,<br>but gain α-Provenance.</h2><br><h3>Req: " + format(player.hpr.rankReq[0]) + " " + player.h.stageName[0] + " Points</h3>"},
-            canClick() { return player.hpr.rankGain[0].gt(0) && (!hasMilestone("hre", 5) || inChallenge("hrm", 15))},
+            canClick() { return player.hpr.rankGain[0].gt(0) && player.h.hexPoint.gt(0) && (!hasMilestone("hre", 5) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
                 player.hpr.rank[0] = player.hpr.rank[0].add(player.hpr.rankGain[0])
@@ -137,7 +137,7 @@ addLayer("hpr", {
         },
         2: {
             title() { return "<h2>Reset prior provenances,<br>but gain β-Provenance.</h2><br><h3>Req: " + formatWhole(player.hpr.rankReq[1]) + " α-Provenance</h3>"},
-            canClick() { return player.hpr.rankGain[1].gt(0) && (!hasMilestone("hre", 7) || inChallenge("hrm", 15))},
+            canClick() { return player.hpr.rankGain[1].gt(0) && player.h.hexPoint.gt(0) && (!hasMilestone("hre", 7) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
                 player.hpr.rank[1] = player.hpr.rank[1].add(player.hpr.rankGain[1])
@@ -160,7 +160,7 @@ addLayer("hpr", {
         },
         3: {
             title() { return "<h2>Reset prior provenances,<br>but gain γ-Provenance.</h2><br><h3>Req: " + formatWhole(player.hpr.rankReq[2]) + " β-Provenance</h3>"},
-            canClick() { return player.hpr.rankGain[2].gt(0) && (!hasMilestone("hre", 9) || inChallenge("hrm", 15))},
+            canClick() { return player.hpr.rankGain[2].gt(0) && player.h.hexPoint.gt(0) && (!hasMilestone("hre", 9) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
                 player.hpr.rank[2] = player.hpr.rank[2].add(player.hpr.rankGain[2])
@@ -182,7 +182,7 @@ addLayer("hpr", {
         },
         4: {
             title() { return "<h2>Reset prior provenances,<br>but gain δ-Provenance.</h2><br><h3>Req: " + formatWhole(player.hpr.rankReq[3]) + " γ-Provenance</h3>"},
-            canClick() { return player.hpr.rankGain[3].gt(0) && (!hasMilestone("hre", 11) || inChallenge("hrm", 15))},
+            canClick() { return player.hpr.rankGain[3].gt(0) && player.h.hexPoint.gt(0) && (!hasMilestone("hre", 11) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
                 player.hpr.rank[3] = player.hpr.rank[3].add(player.hpr.rankGain[3])
@@ -204,7 +204,7 @@ addLayer("hpr", {
         },
         5: {
             title() { return "<h2>Reset prior provenances,<br>but gain ε-Provenance.</h2><br><h3>Req: " + formatWhole(player.hpr.rankReq[4]) + " δ-Provenance</h3>"},
-            canClick() { return player.hpr.rankGain[4].gt(0) && (!hasMilestone("hre", 13) || inChallenge("hrm", 15))},
+            canClick() { return player.hpr.rankGain[4].gt(0) && player.h.hexPoint.gt(0) && (!hasMilestone("hre", 13) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
                 player.hpr.rank[4] = player.hpr.rank[4].add(player.hpr.rankGain[4])
@@ -226,7 +226,7 @@ addLayer("hpr", {
         },
         6: {
             title() { return "<h2>Reset prior provenances,<br>but gain ζ-Provenance.</h2><br><h3>Req: " + formatWhole(player.hpr.rankReq[5]) + " ε-Provenance</h3>"},
-            canClick() { return player.hpr.rankGain[5].gt(0) && (!hasMilestone("hre", 15) || inChallenge("hrm", 15))},
+            canClick() { return player.hpr.rankGain[5].gt(0) && player.h.hexPoint.gt(0) && (!hasMilestone("hre", 15) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
                 player.hpr.rank[5] = player.hpr.rank[5].add(player.hpr.rankGain[5])
@@ -248,7 +248,7 @@ addLayer("hpr", {
         },
         7: {
             title() { return "<h2>Reset prior provenances,<br>but gain η-Provenance.</h2><br><h3>Req: " + formatWhole(player.hpr.rankReq[6]) + " α-Provenance</h3>"},
-            canClick() { return player.hpr.rankGain[6].gt(0)},
+            canClick() { return player.hpr.rankGain[6].gt(0) && player.h.hexPoint.gt(0) && (!hasMilestone("hre", 17) || inChallenge("hrm", 15))},
             unlocked: true,
             onClick() {
                 player.hpr.rank[6] = player.hpr.rank[6].add(player.hpr.rankGain[6])
@@ -264,7 +264,7 @@ addLayer("hpr", {
             },
             style() {
                 let look = {width: "250px", minHeight: "75px", fontSize: "7px", border: "0px", borderRadius: "0px 0px 8px 8px"}
-                //if (hasMilestone("hre", 15) && !inChallenge("hrm", 15)) look.cursor = "default !important"
+                if (hasMilestone("hre", 17) && !inChallenge("hrm", 15)) look.cursor = "default !important"
                 return look
             },
         },
