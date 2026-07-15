@@ -918,7 +918,7 @@ addLayer("tera", {
         },
         "virtue1": {
             title() { return "Reset hept essence,<br>but gain kindness.<br><small>Req: " + formatSimple(player.tera.virtueReq[0]) + " Hept Essence</small>"},
-            canClick() { return player.tera.virtueGain[0].gt(0) && player.tera.trueHept.lt(2)},
+            canClick() { return player.tera.virtueGain[0].gt(0) && player.tera.heptEssence.gt(0) && player.tera.trueHept.lt(2)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[0] = player.tera.virtue[0].add(player.tera.virtueGain[0])
@@ -934,7 +934,7 @@ addLayer("tera", {
         },
         "virtue2": {
             title() { return "Reset previous true hept content,<br>but gain patience.<br><small>Req: " + formatSimple(player.tera.virtueReq[1]) + " Kindness</small>"},
-            canClick() { return player.tera.virtueGain[1].gt(0) && player.tera.trueHept.lt(4)},
+            canClick() { return player.tera.virtueGain[1].gt(0) && player.tera.heptEssence.gt(0) && player.tera.trueHept.lt(4)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[1] = player.tera.virtue[1].add(player.tera.virtueGain[1])
@@ -956,7 +956,7 @@ addLayer("tera", {
         },
         "virtue3": {
             title() { return "Reset previous true hept content,<br>but gain chastity.<br><small>Req: " + formatSimple(player.tera.virtueReq[2]) + " Patience</small>"},
-            canClick() { return player.tera.virtueGain[2].gt(0)},
+            canClick() { return player.tera.virtueGain[2].gt(0) && player.tera.heptEssence.gt(0)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[2] = player.tera.virtue[2].add(player.tera.virtueGain[2])
@@ -979,7 +979,7 @@ addLayer("tera", {
         },
         "virtue4": {
             title() { return "Reset previous true hept content,<br>but gain temperance.<br><small>Req: " + formatSimple(player.tera.virtueReq[3]) + " Chastity</small>"},
-            canClick() { return player.tera.virtueGain[3].gt(0)},
+            canClick() { return player.tera.virtueGain[3].gt(0) && player.tera.heptEssence.gt(0)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[3] = player.tera.virtue[3].add(player.tera.virtueGain[3])
@@ -1002,7 +1002,7 @@ addLayer("tera", {
         },
         "virtue5": {
             title() { return "Reset previous true hept content,<br>but gain diligence.<br><small>Req: " + formatSimple(player.tera.virtueReq[4]) + " Temperance</small>"},
-            canClick() { return player.tera.virtueGain[4].gt(0)},
+            canClick() { return player.tera.virtueGain[4].gt(0) && player.tera.heptEssence.gt(0)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[4] = player.tera.virtue[4].add(player.tera.virtueGain[4])
@@ -1025,7 +1025,7 @@ addLayer("tera", {
         },
         "virtue6": {
             title() { return "Reset previous true hept content,<br>but gain charity.<br><small>Req: " + formatSimple(player.tera.virtueReq[5]) + " Diligence</small>"},
-            canClick() { return player.tera.virtueGain[5].gt(0)},
+            canClick() { return player.tera.virtueGain[5].gt(0) && player.tera.heptEssence.gt(0)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[5] = player.tera.virtue[5].add(player.tera.virtueGain[5])
@@ -1048,7 +1048,7 @@ addLayer("tera", {
         },
         "virtue7": {
             title() { return "Reset previous true hept content,<br>but gain humility.<br><small>Req: " + formatSimple(player.tera.virtueReq[6]) + " Charity</small>"},
-            canClick() { return player.tera.virtueGain[6].gt(0)},
+            canClick() { return player.tera.virtueGain[6].gt(0) && player.tera.heptEssence.gt(0)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[6] = player.tera.virtue[6].add(player.tera.virtueGain[6])
