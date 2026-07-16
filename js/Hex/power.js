@@ -46,8 +46,6 @@ addLayer("hpw", {
         player.hpw.powerGain = player.hpw.powerGain.mul(external)
 
         // POWER SOFTCAP
-        let amt = player.hpw.powerGain.gt(player.hpw.power) ? player.hpw.powerGain : player.hpw.power
-        player.hpw.softcap = amt.gte(Decimal.pow10(player.h.stage.mul(10))) ? amt.div(Decimal.pow10(player.h.stage.mul(10))).pow(0.3).div(player.h.stage).add(1) : new Decimal(1)
         player.hpw.powerGain = player.hpw.powerGain.div(player.hpw.softcap)
         
         // POWER MODIFIERS
@@ -61,6 +59,10 @@ addLayer("hpw", {
 
         externalPow = externalPow.pow(player.h.externalRaise)
         player.hpw.powerGain = player.hpw.powerGain.pow(externalPow)
+
+        // POWER SOFTCAP CALC
+        let amt = player.hpw.powerGain.gt(player.hpw.power) && player.hpw.powerGain.gte(Decimal.pow10(player.h.stage.mul(10)).mul(2)) ? player.hpw.powerGain : player.hpw.power
+        player.hpw.softcap = amt.gte(Decimal.pow10(player.h.stage.mul(10))) ? amt.div(Decimal.pow10(player.h.stage.mul(10))).pow(0.15).div(player.h.stage).add(1) : new Decimal(1)
 
         if (hasUpgrade("hpw", 106)) player.hpw.power = player.hpw.power.add(player.hpw.powerGain.div(100).mul(player.h.tickspeed).mul(delta))
         player.hpw.powerGain = player.hpw.powerGain.floor().max(1) // To keep power to whole numbers
@@ -2466,11 +2468,11 @@ addLayer("hpw", {
             ["raw-html", () => {
                 let str = "<div class='bottomTooltip'>Base Formula<hr><small>2^(log" + formatWhole(player.h.stage) + "(Blessings/" + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + "))/" + formatSimple(Decimal.pow(2, player.h.stage.sub(6).abs())) + "</small>"
                 if (player.h.stage.eq(6)) str = "<div class='bottomTooltip'>Base Formula<hr><small>2^(log" + formatWhole(player.h.stage) + "(Blessings/" + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + "))</small>"
-                if (player.hpw.softcap.gt(1)) str = str.concat("<br><small>[SOFTCAP: (((Power/" + formatWhole(Decimal.pow10(player.h.stage.mul(10))) + ")^0.3)/" + formatWhole(player.h.stage) + ")+1 BEFORE EXPONENTS]</small>")
+                if (player.hpw.softcap.gt(1)) str = str.concat("<br><small>[SOFTCAP: (((Power/" + formatWhole(Decimal.pow10(player.h.stage.mul(10))) + ")^0.3)/" + formatWhole(player.h.stage) + ")+1]</small>")
                 return str.concat("</div>")
             }],
         ]],
-        ["raw-html", () => {return player.hpw.softcap.gt(1) ? "UNAVOIDABLE SOFTCAP: /" + format(player.hpw.softcap) + " to gain." : ""}, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => {return player.hpw.softcap.gt(1) ? "UNAVOIDABLE SOFTCAP: /" + format(player.hpw.softcap) + " to gain before exponents." : ""}, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["clickable", 1],
         ["blank", "5px"],

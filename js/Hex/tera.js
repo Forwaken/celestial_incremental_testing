@@ -395,7 +395,7 @@ addLayer("tera", {
         hexEnergy: {
             unlocked: true,
             direction: RIGHT,
-            width: 555,
+            width: 705,
             height: 40,
             progress() {
                 return player.tera.hexEnergy.div(player.tera.hexEnergyCap)
@@ -823,13 +823,13 @@ addLayer("tera", {
                 else player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1)).add(1)
             },
             style() {
-                let look = {width: "180px", minHeight: "110px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "180px", minHeight: "120px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 this.canClick() ? look.background = "radial-gradient(#cc9900, #ffbf00)" : look.background = "#bf8f8f"
                 return look
             },
         },
         "piosityPin": {
-            title() {return player.tera.clickables["piosityPin"] ? "Unpin from tree" : "Pin to tree"},
+            title() {return player.tera.clickables["piosityPin"] ? "<small>Unpin</small><br>📌" : "Pin<br>📌"},
             canClick: true,
             unlocked: true,
             onClick() {
@@ -840,7 +840,7 @@ addLayer("tera", {
                 }
             },
             style() {
-                let look = {width: "180px", minHeight: "50px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "51px", minHeight: "120px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 !player.tera.clickables["piosityPin"] ? look.background = "white" : look.background = "gray"
                 return look
             },
@@ -862,13 +862,13 @@ addLayer("tera", {
                 }
             },
             style() {
-                let look = {width: "180px", minHeight: "110px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "180px", minHeight: "120px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 !this.canClick() ? look.background = "#bf8f8f" : player.tera.clickables["bewitchSpell"] ? look.background = "linear-gradient(30deg, #7fbebe, #d4e9e9, #7fbebe)" : look.background = "#7c9797"
                 return look
             },
         },
         "bewitchPin": {
-            title() {return player.tera.clickables["bewitchPin"] ? "Unpin from tree" : "Pin to tree"},
+            title() {return player.tera.clickables["bewitchPin"] ? "<small>Unpin</small><br>📌" : "Pin<br>📌"},
             canClick: true,
             unlocked: true,
             onClick() {
@@ -879,7 +879,7 @@ addLayer("tera", {
                 }
             },
             style() {
-                let look = {width: "180px", minHeight: "50px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "51px", minHeight: "120px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 !player.tera.clickables["bewitchPin"] ? look.background = "white" : look.background = "gray"
                 return look
             },
@@ -895,13 +895,13 @@ addLayer("tera", {
                 player.tera.chronotachysisSpell = [duration, Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))]
             },
             style() {
-                let look = {width: "180px", minHeight: "110px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "180px", minHeight: "120px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 this.canClick() ? look.background = "linear-gradient(0deg, #0d66e1, #0098E5, #0d66e1)" : look.background = "#bf8f8f"
                 return look
             },
         },
         "chronotachysisPin": {
-            title() {return player.tera.clickables["chronotachysisPin"] ? "Unpin from tree" : "Pin to tree"},
+            title() {return player.tera.clickables["chronotachysisPin"] ? "<small>Unpin</small><br>📌" : "Pin<br>📌"},
             canClick: true,
             unlocked: true,
             onClick() {
@@ -912,7 +912,7 @@ addLayer("tera", {
                 }
             },
             style() {
-                let look = {width: "180px", minHeight: "50px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "51px", minHeight: "120px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 !player.tera.clickables["chronotachysisPin"] ? look.background = "white" : look.background = "gray"
                 return look
             },
@@ -1211,7 +1211,7 @@ addLayer("tera", {
             cost(x) { return getBuyableAmount(this.layer, this.id).mul(this.costGrowth()).add(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
-                return "<h3>Increase Hex Energy Gain</h3>\n\
+                return "<h3>Increase Hex Energy Gain (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Hex Energy"
             },
@@ -1220,7 +1220,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "150px", height: "110px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "200px", height: "110px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
                 return look
             },
@@ -1239,7 +1239,7 @@ addLayer("tera", {
             cost(x) { return getBuyableAmount(this.layer, this.id).mul(this.costGrowth()).add(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
-                return "<h3>Increase Hex Energy Cap</h3>\n\
+                return "<h3>Increase Hex Energy Cap (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Currently: +" + formatWhole(tmp[this.layer].buyables[this.id].effect.sub(1)) + "\n\ \n\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Hex Energy"
             },
@@ -1248,7 +1248,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "150px", height: "110px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "200px", height: "110px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
                 return look
             },
@@ -1264,7 +1264,8 @@ addLayer("tera", {
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
-                return "Reset hex energy buyables and increase their prices, but keep and improve hex energy buyable effects\n\ \n\
+                return "<h3>Prestige Hex Energy Buyables (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
+                    Reset hex energy buyables and increase their prices, but keep and improve hex energy buyable effects\n\ \n\
                     Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Energy"
             },
             buy() {
@@ -1274,7 +1275,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "255px", height: "110px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0", padding: "10px"}
+                let look = {width: "305px", height: "110px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0", padding: "10px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
                 return look
             },
@@ -1290,7 +1291,7 @@ addLayer("tera", {
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
-                return "<h3>Increase Piosity Boost</h3>\n\
+                return "<h3>Increase Piosity Boost (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Currently: +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100), 2) + "%\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
@@ -1299,7 +1300,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "158px", height: "120px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
                 return look
             },
@@ -1307,7 +1308,7 @@ addLayer("tera", {
         "piosityCost": {
             costBase() { return new Decimal(10) },
             costGrowth() { return new Decimal(10) },
-            purchaseLimit() { return new Decimal(20) },
+            purchaseLimit() { return new Decimal(50) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
@@ -1316,8 +1317,8 @@ addLayer("tera", {
             canAfford() { return this.currency().gte(this.cost()) && player.tera.trueHex.gte(2)},
             display() {
                 if (player.tera.trueHex.lt(2)) return "???"
-                return "<h3>Decrease Piosity Cost</h3>\n\
-                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " HE\n\ \n\
+                return "<h3>Decrease Piosity Cost (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
             buy() {
@@ -1325,7 +1326,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "158px", height: "120px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
                 if (player.tera.trueHex.lt(2)) {look.fontSize = "20px"; look.background = "#425673"; look.color = "rgba(255,255,255,0.8)"}
                 return look
@@ -1344,10 +1345,10 @@ addLayer("tera", {
             display() {
                 if (player.tera.trueHex.lt(9)) return "???"
                 if (getBuyableAmount(this.layer, this.id).eq(0)) {
-                    return "<h3>Auto-cast Piosity</h3>\n\ \n\
+                    return "<h3>Auto-cast Piosity (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\ \n\
                         Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
                 }
-                return "<h3>Auto-cast Piosity</h3>\n\
+                return "<h3>Auto-cast Piosity (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Currently every " + formatTime(tmp[this.layer].buyables[this.id].effect) + "\n\
                     [" + formatTime(player.tera.piosityAuto) + "]\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
@@ -1358,7 +1359,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "158px", height: "120px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#ffbf00"
                 if (player.tera.trueHex.lt(9)) {look.fontSize = "20px"; look.background = "#425673"; look.color = "rgba(255,255,255,0.8)"}
                 return look
@@ -1379,7 +1380,7 @@ addLayer("tera", {
             },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
-                return "<h3>Improve Bewitch Effects</h3>\n\
+                return "<h3>Improve Bewitch Effects (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
@@ -1388,7 +1389,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "158px", height: "120px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#b2d8d8"
                 return look
             },
@@ -1396,7 +1397,7 @@ addLayer("tera", {
         "bewitchCost": {
             costBase() { return new Decimal(27) },
             costGrowth() { return new Decimal(27) },
-            purchaseLimit() { return new Decimal(20) },
+            purchaseLimit() { return new Decimal(50) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
@@ -1405,7 +1406,7 @@ addLayer("tera", {
             canAfford() { return this.currency().gte(this.cost()) && player.tera.trueHex.gte(2)},
             display() {
                 if (player.tera.trueHex.lt(2)) return "???"
-                return "<h3>Reduce Bewitch Cost</h3>\n\
+                return "<h3>Reduce Bewitch Cost (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
@@ -1414,7 +1415,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "158px", height: "120px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#b2d8d8"
                 if (player.tera.trueHex.lt(2)) {look.fontSize = "20px"; look.background = "#425673"; look.color = "rgba(255,255,255,0.8)"}
                 return look
@@ -1433,16 +1434,16 @@ addLayer("tera", {
             display() {
                 if (player.tera.trueHex.lt(9)) return "???"
                 if (getBuyableAmount(this.layer, this.id).gte(2)) {
-                    return "<h3>Unlock new Bewitch Effect</h3>\n\
+                    return "<h3>Unlock new Bewitch Effect (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                         [MAXED]\n\ \n\
                         Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
                 }
                 if (getBuyableAmount(this.layer, this.id).gte(1)) {
-                    return "<h3>Unlock new Bewitch Effect</h3>\n\
+                    return "<h3>Unlock new Bewitch Effect (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                         Next: Increase Effective Vexes\n\ \n\
                         Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
                 }
-                return "<h3>Unlock new Bewitch Effect</h3>\n\
+                return "<h3>Unlock new Bewitch Effect (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Next: Improve B-Jinx Effect\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
@@ -1451,7 +1452,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "158px", height: "120px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#b2d8d8"
                 if (player.tera.trueHex.lt(9)) {look.fontSize = "20px"; look.background = "#425673"; look.color = "rgba(255,255,255,0.8)"}
                 return look
@@ -1468,7 +1469,7 @@ addLayer("tera", {
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
-                return "<h3>Improve Chronotachysis Multiplier</h3>\n\
+                return "<h3>Improve Chronotachysis Mult. (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
@@ -1477,7 +1478,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "158px", height: "120px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#0098E5"
                 return look
             },
@@ -1494,8 +1495,8 @@ addLayer("tera", {
             canAfford() { return this.currency().gte(this.cost()) && player.tera.trueHex.gte(2)},
             display() {
                 if (player.tera.trueHex.lt(2)) return "???"
-                return "<h3>Reduce Chronotachysis Cost</h3>\n\
-                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " HE\n\ \n\
+                return "<h3>Reduce Chronotachysis Cost (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
             buy() {
@@ -1503,7 +1504,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "158px", height: "120px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#0098E5"
                 if (player.tera.trueHex.lt(2)) {look.fontSize = "20px"; look.background = "#425673"; look.color = "rgba(255,255,255,0.8)"}
                 return look
@@ -1521,7 +1522,7 @@ addLayer("tera", {
             canAfford() { return this.currency().gte(this.cost()) && player.tera.trueHex.gte(9)},
             display() {
                 if (player.tera.trueHex.lt(9)) return "???"
-                return "<h3>Improve Chronotachysis Duration</h3>\n\
+                return "<h3>Improve Chronotachysis Duration (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Currently: +" + formatTime(tmp[this.layer].buyables[this.id].effect.sub(1)) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Essence"
             },
@@ -1530,7 +1531,7 @@ addLayer("tera", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style() {
-                let look = {width: "125px", height: "160px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
+                let look = {width: "158px", height: "120px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.background = "#77bf5f" : !this.canAfford() ? look.background =  "#bf8f8f" : look.background = "#0098E5"
                 if (player.tera.trueHex.lt(9)) {look.fontSize = "20px"; look.background = "#425673"; look.color = "rgba(255,255,255,0.8)"}
                 return look
@@ -1908,19 +1909,22 @@ addLayer("tera", {
                         ["buyable", "hexEnergyPrestige"],
                     ], {border: "3px solid #85ade6", marginTop: "-3px"}],
                     ["style-row", [
-                        ["column", [["clickable", "piositySpell"], ["clickable", "piosityPin"]]],
+                        ["clickable", "piosityPin"],
+                        ["clickable", "piositySpell"],
                         ["buyable", "piosityBuff"],
                         ["buyable", "piosityCost"],
                         ["buyable", "piosityAuto"],
                     ], {border: "3px solid #85ade6", marginTop: "-3px"}],
                     ["style-row", [
-                        ["column", [["clickable", "bewitchSpell"], ["clickable", "bewitchPin"]]],
+                        ["clickable", "bewitchPin"],
+                        ["clickable", "bewitchSpell"],
                         ["buyable", "bewitchBuff"],
                         ["buyable", "bewitchCost"],
                         ["buyable", "bewitchEnhance"],
                     ], {border: "3px solid #85ade6", marginTop: "-3px"}],
                     ["style-row", [
-                        ["column", [["clickable", "chronotachysisSpell"], ["clickable", "chronotachysisPin"]]],
+                        ["clickable", "chronotachysisPin"],
+                        ["clickable", "chronotachysisSpell"],
                         ["buyable", "chronotachysisBuff"],
                         ["buyable", "chronotachysisCost"],
                         ["buyable", "chronotachysisDuration"],
