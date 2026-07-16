@@ -53,16 +53,17 @@ addNode("bewitchSpell", {
 addNode("chronotachysisSpell", {
     name() {return "⏳"},
     symbol() {return "⏳"},
-    tooltip() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
-    tooltipLocked() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
-    canClick() {return player.tera.hexEnergy.gte(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")))},
+    tooltip() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
+    tooltipLocked() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
+    canClick() {return player.tera.hexEnergy.gte(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))},
     layerShown() {return player.tera.clickables["chronotachysisPin"]},
     onClick() {
         if (this.canClick()) {
-            player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")))
+            player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))
             let duration = player.tera.chronotachysisSpell[0]
+            duration = duration.mul(Decimal.pow(12, player.tera.chronotachysisSpell[1].sub(player.tera.spellEnhancement)))
             duration = duration.add(buyableEffect("tera", "chronotachysisDuration").sub(1).add(60))
-            player.tera.chronotachysisSpell = [duration, Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))]
+            player.tera.chronotachysisSpell = [duration, player.tera.spellEnhancement]
         }
     },
     nodeStyle() {
@@ -171,6 +172,7 @@ addLayer("tera", {
 
         if (player.tera.clickables["bewitchSpell"] && player.tera.hexEnergy.lte(0)) player.tera.clickables["bewitchSpell"] = false
 
+        if (player.tera.chronotachysisSpell[1].modulo(1).neq(0)) player.tera.chronotachysisSpell[1] = new Decimal(0)
         if (player.tera.chronotachysisSpell[0].gt(0)) player.tera.chronotachysisSpell[0] = player.tera.chronotachysisSpell[0].sub(delta).max(0)
         
         // TRUE HEPT CONTENT
@@ -886,14 +888,15 @@ addLayer("tera", {
             },
         },
         "chronotachysisSpell": {
-            title() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost"))) + " Hex-Energy"},
-            canClick() {return player.tera.hexEnergy.gte(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")))},
+            title() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
+            canClick() {return player.tera.hexEnergy.gte(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))},
             unlocked: true,
             onClick() {
-                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")))
+                player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))
                 let duration = player.tera.chronotachysisSpell[0]
+                duration = duration.mul(Decimal.pow(12, player.tera.chronotachysisSpell[1].sub(player.tera.spellEnhancement)))
                 duration = duration.add(buyableEffect("tera", "chronotachysisDuration").sub(1).add(60))
-                player.tera.chronotachysisSpell = [duration, Decimal.mul(2, buyableEffect("tera", "chronotachysisBuff"))]
+                player.tera.chronotachysisSpell = [duration, player.tera.spellEnhancement]
             },
             style() {
                 let look = {width: "180px", minHeight: "120px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -1488,7 +1491,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(20).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(2) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},

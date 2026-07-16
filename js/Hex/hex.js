@@ -62,7 +62,7 @@ addLayer("h", {
         // GLOBAL NERFS
         player.h.tickspeed = new Decimal(1)
         if (player.sins.clickables["sloth"]) player.h.tickspeed = player.h.tickspeed.div(Decimal.div(77, hasUpgrade("hpw", 2007) ? upgradeEffect("hpw", 2007) : 1))
-        if (player.tera.chronotachysisSpell[0].gt(0)) player.h.tickspeed = player.h.tickspeed.mul(player.tera.chronotachysisSpell[1])
+        if (player.tera.chronotachysisSpell[0].gt(0)) player.h.tickspeed = player.h.tickspeed.mul(buyableEffect("tera", "chronotachysisBuff")).mul(Decimal.pow(12, player.tera.chronotachysisSpell[1]))
         player.h.tickspeed = player.h.tickspeed.mul(player.tera.trueHexEffect)
         if (hasUpgrade("hpw", 103)) player.h.tickspeed = player.h.tickspeed.mul(upgradeEffect("hpw", 103))
         if (hasUpgrade("hpw", 174)) player.h.tickspeed = player.h.tickspeed.mul(3)
