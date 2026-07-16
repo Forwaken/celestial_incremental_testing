@@ -962,6 +962,14 @@ addLayer("achievements", {
             complete() {return player.alephsChamber.milestone[25] > 0},
             unlocked: true,
         },
+        1401: {
+            name: "Truly Unleashed",
+            image: "resources/achievements/14_00.png",
+            tooltip: "<h3>Truly Unleashed</h3><hr style='margin-bottom:4px'>Unleash Tera's Seal",
+            color: "#85ade6",
+            complete() {return player.tera.trueHex.gt(0)},
+            unlocked: true,
+        },
     },
     tooltip: "Achievements",
     color: "white",
@@ -1120,6 +1128,16 @@ addLayer("achievements", {
                     ], {width: "621px", height: "409px", background: "#333", borderLeft: "3px solid white", padding: "3px"}],
                 ],
             },
+            14: { // Early Tera
+                unlocked() {return hasAchievement("achievements", 1401) || player.tera.trueHex.gt(0)},
+                content: [
+                    ["top-column", [
+                        ["row", [
+                            ["achievement", 1401],
+                        ]],
+                    ], {width: "621px", height: "409px", background: "#0d1117", borderLeft: "3px solid white", padding: "3px"}],
+                ],
+            },
         },
     },
     tabFormat: [
@@ -1168,6 +1186,9 @@ addLayer("achievements", {
                 ["style-row", [
                     ["category-button", ["~ 10 ~<br><h6>Early Hive</h6>", "stars", 10], {width: "155px", height: "40px", color: "#f9c901", background: "#352300", borderRight: "3px solid white"}],
                 ], () => {return tmp.achievements.microtabs.stars[10].unlocked ? {width: "155px", height: "40px", borderBottom: "3px solid white"} : {display: "none !important"}}],
+                ["style-row", [
+                    ["category-button", ["~ 14 ~<br><h6>Early Tera</h6>", "stars", 14], {width: "155px", height: "40px", color: "#85ade6", background: "#273345", borderRight: "3px solid white"}],
+                ], () => {return tmp.achievements.microtabs.stars[14].unlocked ? {width: "155px", height: "40px", borderBottom: "3px solid white"} : {display: "none !important"}}],
             ], {width: "170px", height: "415px"}],
             ["style-column", [
                 ["buttonless-microtabs", "stars", {borderWidth: "0"}],

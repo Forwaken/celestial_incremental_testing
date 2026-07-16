@@ -1,5 +1,5 @@
 addNode("piositySpell", {
-    name() {return "🙏"},
+    name() {return "<h2>🙏</h2>"},
     symbol() {return "🙏"},
     tooltip() {return "<h3>Piosity</h3><br>Increases blessings by +" + formatWhole(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))) + "x during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
     tooltipLocked() {return "<h3>Piosity</h3><br>Increases blessings by +" + formatWhole(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))) + "x during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
@@ -19,7 +19,7 @@ addNode("piositySpell", {
     },
 })
 addNode("bewitchSpell", {
-    name() {return "🔮"},
+    name() {return "<h2>🔮</h2>"},
     symbol() {return "🔮"},
     tooltip() {
         let str = "<h3>Bewitch</h3><br>Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " free Δ-jinxes<br>"
@@ -51,7 +51,7 @@ addNode("bewitchSpell", {
     },
 })
 addNode("chronotachysisSpell", {
-    name() {return "⏳"},
+    name() {return "<h2>⏳</h2>"},
     symbol() {return "⏳"},
     tooltip() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
     tooltipLocked() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(12, player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
@@ -183,6 +183,7 @@ addLayer("tera", {
         for (let i = 0; i < 7; i++) {
             player.tera.heptEssencePerSecond = player.tera.heptEssencePerSecond.mul(player.tera.virtueEffects[i][0])
         }
+        if (hasUpgrade("tera", "hept8")) player.tera.heptEssencePerSecond = player.tera.heptEssencePerSecond.mul(upgradeEffect("tera", "hept8"))
 
         player.tera.heptEssence = player.tera.heptEssence.add(player.tera.heptEssencePerSecond.mul(delta))
 
@@ -422,16 +423,6 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal1"] = true
-
-                let comp = 0
-                for (let i = 1; i < 7; i++) {
-                    if (player.tera.clickables["seal"+i]) comp++
-                }
-                if (comp>=6) {
-                    player.tera.trueHex = player.tera.trueHex.add(1)
-                    layers.tera.teraReset()
-                    player.h.stage = new Decimal(7)
-                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -442,16 +433,6 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal2"] = true
-
-                let comp = 0
-                for (let i = 1; i < 7; i++) {
-                    if (player.tera.clickables["seal"+i]) comp++
-                }
-                if (comp>=6) {
-                    player.tera.trueHex = player.tera.trueHex.add(1)
-                    layers.tera.teraReset()
-                    player.h.stage = new Decimal(7)
-                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -462,16 +443,6 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal3"] = true
-
-                let comp = 0
-                for (let i = 1; i < 7; i++) {
-                    if (player.tera.clickables["seal"+i]) comp++
-                }
-                if (comp>=6) {
-                    player.tera.trueHex = player.tera.trueHex.add(1)
-                    layers.tera.teraReset()
-                    player.h.stage = new Decimal(7)
-                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -482,16 +453,6 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal4"] = true
-
-                let comp = 0
-                for (let i = 1; i < 7; i++) {
-                    if (player.tera.clickables["seal"+i]) comp++
-                }
-                if (comp>=6) {
-                    player.tera.trueHex = player.tera.trueHex.add(1)
-                    layers.tera.teraReset()
-                    player.h.stage = new Decimal(7)
-                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -502,16 +463,6 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal5"] = true
-
-                let comp = 0
-                for (let i = 1; i < 7; i++) {
-                    if (player.tera.clickables["seal"+i]) comp++
-                }
-                if (comp>=6) {
-                    player.tera.trueHex = player.tera.trueHex.add(1)
-                    layers.tera.teraReset()
-                    player.h.stage = new Decimal(7)
-                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -522,16 +473,6 @@ addLayer("tera", {
             branches: [["sealCenter", "gray", 25]],
             onClick() {
                 player.tera.clickables["seal6"] = true
-
-                let comp = 0
-                for (let i = 1; i < 7; i++) {
-                    if (player.tera.clickables["seal"+i]) comp++
-                }
-                if (comp>=6) {
-                    player.tera.trueHex = player.tera.trueHex.add(1)
-                    layers.tera.teraReset()
-                    player.h.stage = new Decimal(7)
-                }
             },
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
@@ -543,7 +484,13 @@ addLayer("tera", {
                 return count >= 6
             },
             unlocked: true,
-            onClick() {player.tera.unsealed = true},
+            onClick() {
+                if (!hasAchievement("achievements", 1401)) completeAchievement("achievements", 1401)
+                player.tera.unsealed = true
+                player.tera.trueHex = player.tera.trueHex.add(1)
+                layers.tera.teraReset()
+                player.h.stage = new Decimal(7)
+            },
             style() {
                 let count = 0
                 for (let i = 1; i < 7; i++) {if (player.tera.clickables["seal"+i]) count++}
@@ -1284,19 +1231,16 @@ addLayer("tera", {
             costBase() { return new Decimal(100) },
             costGrowth() {return new Decimal(10)},
             purchaseLimit() { return new Decimal(100) },
-            currency() { return player.tera.hexEnergy},
-            pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
             effect(x) { return Decimal.pow(10, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
-            canAfford() { return this.currency().gte(this.cost())},
+            canAfford() { return player.tera.hexEnergy.gte(this.cost())},
             display() {
                 return "<h3>Prestige Hex Energy Buyables (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Reset hex energy buyables and increase their prices, but keep and improve hex energy buyable effects\n\ \n\
                     Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Energy"
             },
             buy() {
-                this.pay(this.cost())
                 player.tera.buyables["hexEnergyBuff"] = new Decimal(0)
                 player.tera.buyables["hexEnergyCap"] = new Decimal(0)
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
@@ -1579,6 +1523,7 @@ addLayer("tera", {
         },
         "hex2": {
             fullDisplay() {return "<h3>Hexed Hive</h3><br>Boost nests based on true hex.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 150 Refinements<br><small>[REQ BEING IN HEX]</small>"},
+            tooltip: "1.1^(True Hex)",
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hre.refinement.gte(150)},
             pay() {player.hre.refinement = player.hre.refinement.sub(150)},
@@ -1606,6 +1551,7 @@ addLayer("tera", {
         },
         "hex4": {
             fullDisplay() {return "<h3>Doomed Vexes</h3><br>Reduce point doom softcap's scaling based on highest vexes.<br>Currently: /" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 60 Vexes<br><small>[REQ BEING IN HEX]</small>"},
+            tooltip: "(((Highest Vex)^0.7)/100)+1",
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hve.vexTotal.gte(60)},
             pay() {
@@ -1629,6 +1575,7 @@ addLayer("tera", {
         },
         "hex5": {
             fullDisplay() {return "<h3>Colorful Essences</h3><br>Boost realm essence gain based on hex essence.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 1e18 Realm Essence<br><small>[REQ BEING IN HEX]</small>"},
+            tooltip: "1.1^(log6(Hex Essence+1))",
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.h.stage.eq(6) && player.hrm.realmEssence.gte("1e18")},
             pay() {player.hrm.realmEssence = player.hrm.realmEssence.sub("1e18")},
@@ -1652,6 +1599,7 @@ addLayer("tera", {
         },
         "hex7": {
             fullDisplay() {return "<h3>Foundational Ranks</h3><br>Reduce provenance req's based on ranks.<br>Currently: /" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 6 Hex Essence"},
+            tooltip: "((log1e1200(Rank+1)^0.6)/36)+1",
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(6)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(6)},
@@ -1664,6 +1612,7 @@ addLayer("tera", {
         },
         "hex8": {
             fullDisplay() {return "<h3>Fake Synergy</h3><br>Boost hex energy based on piosity buff.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 216 Hex Essence"},
+            tooltip: "(log6(Piosity+1)/2)+1.5", 
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(216)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(216)},
@@ -1687,6 +1636,7 @@ addLayer("tera", {
         },
         "hex10": {
             fullDisplay() {return "<h3>Essence Conversion</h3><br>Boost CB-Tickspeed based on hex essence.<br><small>[DOES NOT STACK WITH REALM ESSENCE]</small><br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e12 Hex Essence"},
+            tooltip: "((log6(Hex Essence+1))/36)+1",
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(1e12)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(1e12)},
@@ -1699,6 +1649,7 @@ addLayer("tera", {
         },
         "hex11": {
             fullDisplay() {return "<h3>Hexed Curses</h3><br>Boost curses based on hex essence.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e24 Hex Essence"},
+            tooltip: "1.5^(log6(Hex Essence+1))", 
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(1e24)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(1e24)},
@@ -1711,6 +1662,7 @@ addLayer("tera", {
         },
         "hex12": {
             fullDisplay() {return "<h3>Hexed Softcap</h3><br>Delay hex essence softcap based on true hex.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 1e48 Hex Essence"},
+            tooltip: "2^(True Hex)",
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(1e48)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(1e48)},
@@ -1724,6 +1676,7 @@ addLayer("tera", {
 
         "hept1": {
             fullDisplay() {return "<h3>Sinergy</h3><br>Boost external effects based on sins equipped<br>Currently: ^" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e70 Blessings<br><small>[REQ BEING IN HEPT]</small>"},
+            tooltip: "(Sins Equiped/50)+1",
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hbl.blessings.gte("1e70")},
             pay() {player.hbl.blessings = player.hbl.blessings.sub("1e70")},
@@ -1796,6 +1749,7 @@ addLayer("tera", {
         },
         "hept7": {
             fullDisplay() {return "<h3>Growing Muscles</h3><br>Boost power gain based on time in this power reset.<br>[CAPPED AT x7]<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 49 Hept Essence"},
+            tooltip: "log7(Since Power+1)+1",
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(49)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(49)},
@@ -1807,10 +1761,12 @@ addLayer("tera", {
             }
         },
         "hept8": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 16,807 Hept Essence"},
+            fullDisplay() {return "<h3>Partial Time</h3><br>Boost hept essence gain based on tickspeed.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 16,807 Hept Essence"},
+            tooltip: "log7(Tickspeed)+1",
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(16807)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(16807)},
+            effect() {return player.h.tickspeed.max(1).log(7).add(1)},
             style() {
                 let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -1874,6 +1830,7 @@ addLayer("tera", {
         // EXTERNAL UNLOCK/BUFF x3
 
         // Remove crystal effect hardcap
+        // More Pent Milestones Maybe?
         // Unlock Rocket Parts (you can equip only one rocket part at a time at first, but there are three potential slots in total. You will start with just one that makes common pets not reset when sent up to space)
     },
     microtabs: {
@@ -1982,9 +1939,9 @@ addLayer("tera", {
                         ["raw-html", "True Hex Upgrades", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
                     ], {width: "650px", height: "40px", background: "#85ADE6", border: "3px solid #273345", borderRadius: "20px 20px 0 0 "}],
                     ["style-row", [
-                        ["style-row", [["upgrade", "hex1"], ["upgrade", "hex2"], ["upgrade", "hex3"], ["upgrade", "hex4"], ["upgrade", "hex5"], ["upgrade", "hex6"]], {width: "300px"}],
+                        ["style-row", [["upgrade", "hex1"], ["bt-upgrade", "hex2"], ["upgrade", "hex3"], ["bt-upgrade", "hex4"], ["bt-upgrade", "hex5"], ["upgrade", "hex6"]], {width: "300px"}],
                         ["blank", ["25px", "10px"]],
-                        ["style-row", [["upgrade", "hex7"], ["upgrade", "hex8"], ["upgrade", "hex9"], ["upgrade", "hex10"], ["upgrade", "hex11"], ["upgrade", "hex12"]], {width: "300px"}],
+                        ["style-row", [["bt-upgrade", "hex7"], ["bt-upgrade", "hex8"], ["upgrade", "hex9"], ["bt-upgrade", "hex10"], ["bt-upgrade", "hex11"], ["bt-upgrade", "hex12"]], {width: "300px"}],
                     ], {width: "650px", height: "370px", background: "repeating-linear-gradient(135deg, #5d79a1 0px, #5d79a1 20px, #425673 20px, #425673 40px)", border: "3px solid #273345", marginTop: "-3px", marginBottom: "-3px"}],
                     ["style-column", [
                         ["raw-html", "Any upgrades effecting Uni-Alpha are counted as external effects.", {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
@@ -2412,9 +2369,9 @@ addLayer("tera", {
                         ["raw-html", "True Hept Upgrades", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
                     ], {width: "650px", height: "40px", background: "#95A6DD", border: "3px solid #2c3142", borderRadius: "20px 20px 0 0 "}],
                     ["style-row", [
-                        ["style-row", [["upgrade", "hept1"], ["upgrade", "hept2"], ["upgrade", "hept3"], ["upgrade", "hept4"], ["upgrade", "hept5"], ["upgrade", "hept6"]], {width: "300px"}],
+                        ["style-row", [["bt-upgrade", "hept1"], ["upgrade", "hept2"], ["upgrade", "hept3"], ["upgrade", "hept4"], ["upgrade", "hept5"], ["upgrade", "hept6"]], {width: "300px"}],
                         ["blank", ["25px", "10px"]],
-                        ["style-row", [["upgrade", "hept7"], ["upgrade", "hept8"], ["upgrade", "hept9"], ["upgrade", "hept10"], ["upgrade", "hept11"], ["upgrade", "hept12"]], {width: "300px"}],
+                        ["style-row", [["bt-upgrade", "hept7"], ["bt-upgrade", "hept8"], ["upgrade", "hept9"], ["upgrade", "hept10"], ["upgrade", "hept11"], ["upgrade", "hept12"]], {width: "300px"}],
                     ], {width: "650px", height: "370px", background: "repeating-linear-gradient(135deg, #68749a 0px, #68749a 20px, #4a536e 20px, #4a536e 40px)", border: "3px solid #2c3142", marginTop: "-3px", marginBottom: "-3px"}],
                     ["style-column", [
                         ["raw-html", "Any upgrades effecting Uni-Alpha are counted as external effects.", {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
