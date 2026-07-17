@@ -9,6 +9,8 @@ addLayer("hte", {
     startData() { return {
         temperer: new Decimal(0),
         tempererPerSec: new Decimal(0),
+
+        buyMax: false,
     }},
     update (delta) {
         player.hte.tempererPerSec = new Decimal(0)
@@ -19,14 +21,34 @@ addLayer("hte", {
             player.hte.temperer = player.hte.temperer.add(player.hte.tempererPerSec.mul(delta))
         }
     },
+    clickables: {
+        1: {
+            title() { return "Buy Max On" },
+            canClick() { return player.hte.buyMax == false },
+            unlocked() { return true },
+            onClick() {
+                player.hte.buyMax = true
+            },
+            style: {width: "80px", minHeight: "50px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px 0px 0px 15px"},
+        },
+        2: {
+            title() { return "Buy Max Off" },
+            canClick() { return player.hte.buyMax == true  },
+            unlocked() { return true },
+            onClick() {
+                player.hte.buyMax = false
+            },
+            style: {width: "80px", minHeight: "50px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0 15px 15px 0"},
+        },
+    },
     buyables: {
         11: {
             costBase() { return new Decimal(100) },
             costGrowth() { return new Decimal(100) },
-            purchaseLimit() { return new Decimal(50) },
+            purchaseLimit() { return new Decimal(100) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(5).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.85).div(5).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -37,8 +59,18 @@ addLayer("hte", {
             },
             tooltip: "Divides starting at 1.",
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -49,10 +81,10 @@ addLayer("hte", {
         12: {
             costBase() { return new Decimal(2) },
             costGrowth() { return new Decimal(2) },
-            purchaseLimit() { return new Decimal(150) },
+            purchaseLimit() { return new Decimal(250) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id).pow(0.85)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -62,8 +94,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -74,10 +116,10 @@ addLayer("hte", {
         13: {
             costBase() { return new Decimal(10) },
             costGrowth() { return new Decimal(10) },
-            purchaseLimit() { return new Decimal(50) },
+            purchaseLimit() { return new Decimal(100) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.85).div(50).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -87,8 +129,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -99,10 +151,10 @@ addLayer("hte", {
         21: {
             costBase() { return new Decimal(20) },
             costGrowth() { return new Decimal(20) },
-            purchaseLimit() { return player.h.stage.mul(5) },
+            purchaseLimit() { return player.h.stage.mul(5).pow(1.15).floor() },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.85).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -112,8 +164,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -124,10 +186,10 @@ addLayer("hte", {
         22: {
             costBase() { return new Decimal(200) },
             costGrowth() { return new Decimal(200) },
-            purchaseLimit() { return new Decimal(25) },
+            purchaseLimit() { return new Decimal(45) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(200).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.85).div(200).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -137,8 +199,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -149,10 +221,10 @@ addLayer("hte", {
         23: {
             costBase() { return new Decimal(4) },
             costGrowth() { return new Decimal(4) },
-            purchaseLimit() { return new Decimal(150) },
+            purchaseLimit() { return new Decimal(250) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id).pow(0.85)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -162,8 +234,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -187,8 +269,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -199,10 +291,10 @@ addLayer("hte", {
         32: {
             costBase() { return new Decimal(8) },
             costGrowth() { return new Decimal(8) },
-            purchaseLimit() { return new Decimal(150) },
+            purchaseLimit() { return new Decimal(250) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id).pow(0.85)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -212,8 +304,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -224,10 +326,10 @@ addLayer("hte", {
         33: {
             costBase() { return new Decimal(400) },
             costGrowth() { return new Decimal(400) },
-            purchaseLimit() { return new Decimal(50) },
+            purchaseLimit() { return new Decimal(100) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.85).div(100).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -237,8 +339,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -249,10 +361,10 @@ addLayer("hte", {
         41: {
             costBase() { return new Decimal(800) },
             costGrowth() { return new Decimal(800) },
-            purchaseLimit() { return new Decimal(50) },
+            purchaseLimit() { return new Decimal(100) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.85).div(100).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -262,8 +374,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -274,10 +396,10 @@ addLayer("hte", {
         42: {
             costBase() { return new Decimal(16) },
             costGrowth() { return new Decimal(16) },
-            purchaseLimit() { return new Decimal(150) },
+            purchaseLimit() { return new Decimal(250) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id).pow(0.85)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -287,8 +409,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -299,10 +431,10 @@ addLayer("hte", {
         43: {
             costBase() { return new Decimal(80) },
             costGrowth() { return new Decimal(80) },
-            purchaseLimit() { return new Decimal(100) },
+            purchaseLimit() { return new Decimal(200) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id).pow(0.85)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -312,8 +444,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -324,10 +466,10 @@ addLayer("hte", {
         51: {
             costBase() { return new Decimal(1600) },
             costGrowth() { return new Decimal(1600) },
-            purchaseLimit() { return new Decimal(50) },
+            purchaseLimit() { return new Decimal(100) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(5).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.85).div(5).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -338,8 +480,18 @@ addLayer("hte", {
             },
             tooltip: "Divides starting at 1.",
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -350,10 +502,10 @@ addLayer("hte", {
         52: {
             costBase() { return new Decimal(32) },
             costGrowth() { return new Decimal(32) },
-            purchaseLimit() { return new Decimal(150) },
+            purchaseLimit() { return new Decimal(250) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(2, getBuyableAmount(this.layer, this.id).pow(0.85)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -363,8 +515,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -375,10 +537,10 @@ addLayer("hte", {
         53: {
             costBase() { return new Decimal(160) },
             costGrowth() { return new Decimal(160) },
-            purchaseLimit() { return new Decimal(100) },
+            purchaseLimit() { return new Decimal(200) },
             currency() { return player.hte.temperer},
             pay(amt) { player.hte.temperer = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.85).div(50).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -388,8 +550,18 @@ addLayer("hte", {
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Temperers"
             },
             buy() {
-                this.pay(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (player.hte.buyMax == false) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
             },
             style() {
                 let look = {width: "177px", height: "80px", fontSize: "12px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -410,7 +582,9 @@ addLayer("hte", {
         ["style-column", [
             ["raw-html", () => {return player.h.stageName[0] + " of Tempering"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
         ], {width: "800px", height: "50px", backgroundColor: "#543414", border: "3px solid white", borderRadius: "20px"}],
-        ["blank", "15px"],
+        ["blank", "10px"],
+        ["style-row", [["clickable", 1], ["clickable", 2]], {width: "160px", height: "50px", border: "3px solid #836546", borderRadius: "18px"}],
+        ["blank", "10px"],
         ["style-column", [
             ["tooltip-row", [
                 ["raw-html", () => {return "You have " + formatSimple(player.hte.temperer, 2) + " temperers"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
@@ -587,6 +761,7 @@ addLayer("hte", {
             ["raw-html", "<i>Buyables are in the same order as formula operators</i>", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
             ["raw-html", "<i>Tempering only resets on power level resets and above</i>", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
         ], {width: "740px", height: "45px", background: "#321f0c", lineHeight: "1.2", border: "3px solid #836546", borderRadius: "0 0 20px 20px", marginTop: "-3px"}],
+        ["blank", "25px"],
     ],
     layerShown() { return hasUpgrade("hpw", 151) }, // Decides if this node is shown or not.
 });
