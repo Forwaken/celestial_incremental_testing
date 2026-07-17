@@ -104,7 +104,11 @@ addLayer("hve", {
         },
         2: {
             title() { return "Respec your vexes<br><small style='font-size:11px'>(Resets pre-power content)</small>"},
-            canClick() { return player.hve.rowSpent.some((x) => x > 0)},
+            canClick() {
+                hasBuy = false
+                for (let i = 11; i < 15; i++) {if (getBuyableAmount("hve", i).gt(0)) hasBuy = true}
+                return player.hve.rowSpent.some((x) => x > 0) || hasBuy
+            },
             unlocked: true,
             onClick() {
                 if (confirm("Are you sure you want to reset pre-power content??")) {
