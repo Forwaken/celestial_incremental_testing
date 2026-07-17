@@ -207,6 +207,7 @@ addLayer("tera", {
         player.tera.virtueEffects[2][0] = player.tera.virtueEssence[2].gte(1) ? player.tera.virtueEssence[2].pow(0.41).div(8).add(1) : new Decimal(1)
         player.tera.virtueEffects[2][1] = player.tera.virtueEssence[2].gte(49) ? player.tera.virtueEssence[2].div(7).add(1).log(7).pow(0.7).floor() : new Decimal(0)
         if (!player.tera.virtueUnlocks[2] && player.tera.virtueEssence[2].gte(70000)) player.tera.virtueUnlocks[2] = true
+        if (player.tera.trueHept.gte(6)) player.tera.virtue[2] = player.tera.virtue[2].add(player.tera.virtueGain[2])
         player.tera.virtueReq[3] = layers.h.hexReq(player.tera.virtue[3], 21, 1.4, new Decimal(1))
         player.tera.virtueGain[3] = layers.h.hexGain(player.tera.virtue[2], 21, 1.4, new Decimal(1)).sub(player.tera.virtue[3]).max(0)
         player.tera.virtueEssenceGain[3] = player.tera.virtue[3].div(4).pow(1.24)
@@ -740,6 +741,8 @@ addLayer("tera", {
                 if (player.tera.trueHept.eq(1)) str = str.concat("<br>At true hept 2, automate kindness gain.") // ADDED
                 if (player.tera.trueHept.eq(2)) str = str.concat("<br>At true hept 3, essence of kindness is no longer reset.") // ADDED
                 if (player.tera.trueHept.eq(3)) str = str.concat("<br>At true hept 4, automate patience gain.") // ADDED
+                if (player.tera.trueHept.eq(4)) str = str.concat("<br>At true hept 5, essence of patience is no longer reset.") // ADDED
+                if (player.tera.trueHept.eq(5)) str = str.concat("<br>At true hept 6, automate chastity gain.") // ADDED
                 if (player.tera.trueHept.eq(6)) str = str.concat("<br>At true hept 7, unlock bulk true hepting.") // ADDED
                 // Automate Chastity Gain
                 // Automate Temperance Gain
@@ -931,7 +934,7 @@ addLayer("tera", {
         },
         "virtue3": {
             title() { return "Reset previous true hept content,<br>but gain chastity.<br><small>Req: " + formatSimple(player.tera.virtueReq[2]) + " Patience</small>"},
-            canClick() { return player.tera.virtueGain[2].gt(0) && player.tera.heptEssence.gt(0)},
+            canClick() { return player.tera.virtueGain[2].gt(0) && player.tera.heptEssence.gt(0) && player.tera.trueHept.lt(6)},
             unlocked: true,
             onClick() {
                 player.tera.virtue[2] = player.tera.virtue[2].add(player.tera.virtueGain[2])
@@ -942,13 +945,14 @@ addLayer("tera", {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
                     if (i == 0 && player.tera.trueHept.gte(3)) continue
+                    if (i == 1 && player.tera.trueHept.gte(5)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
             },
             style() {
                 let look = {width: "175px", minHeight: "100px", fontSize: "10px", lineHeight: "1.1", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
-                this.canClick() ? look.background = "#95A6DD" : look.background = "#bf8f8f"
+                player.tera.trueHept.gte(6) ? look.background = "#77bf5f" : this.canClick() ? look.background = "#95A6DD" : look.background = "#bf8f8f"
                 return look
             },
         },
@@ -965,6 +969,7 @@ addLayer("tera", {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
                     if (i == 0 && player.tera.trueHept.gte(3)) continue
+                    if (i == 1 && player.tera.trueHept.gte(5)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
@@ -988,6 +993,7 @@ addLayer("tera", {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
                     if (i == 0 && player.tera.trueHept.gte(3)) continue
+                    if (i == 1 && player.tera.trueHept.gte(5)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
@@ -1011,6 +1017,7 @@ addLayer("tera", {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
                     if (i == 0 && player.tera.trueHept.gte(3)) continue
+                    if (i == 1 && player.tera.trueHept.gte(5)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
@@ -1034,6 +1041,7 @@ addLayer("tera", {
                     player.tera.virtue[i] = new Decimal(0)
                     player.tera.virtueGain[i] = new Decimal(0)
                     if (i == 0 && player.tera.trueHept.gte(3)) continue
+                    if (i == 1 && player.tera.trueHept.gte(5)) continue
                     player.tera.virtueEssence[i] = new Decimal(0)
                     player.tera.virtueEssenceGain[i] = new Decimal(0)
                 }
@@ -2494,6 +2502,8 @@ addLayer("tera", {
                         ["raw-html", () => {return player.tera.trueHept.gte(2) ? "At true hept 2, automate kindness gain." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ["raw-html", () => {return player.tera.trueHept.gte(3) ? "At true hept 3, essence of kindness is no longer reset." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ["raw-html", () => {return player.tera.trueHept.gte(4) ? "At true hept 4, automate patience gain." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHept.gte(5) ? "At true hept 5, essence of patience is no longer reset." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return player.tera.trueHept.gte(6) ? "At true hept 6, automate chastity gain." : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ["raw-html", () => {return player.tera.trueHept.gte(7) ? "At true hept 7, unlock bulk true hepting" : ""}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ], {width: "650px", height: "250px", background: "#4a536e", border: "3px solid #2c3142", marginTop: "-3px", marginBottom: "-3px"}],
                     ["style-column", [], {width: "650px", height: "20px", background: "#95A6DD", border: "3px solid #2c3142", borderRadius: "0 0 20px 20px"}],
