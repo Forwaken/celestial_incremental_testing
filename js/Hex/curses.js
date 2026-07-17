@@ -23,6 +23,12 @@ addLayer("hcu", {
                 buyMaxExBuyable("hcu", i)
             }
         }
+        if (player.tera.virtueUnlocks2[1] && player.hcu.jinxTot.gte(player.hcu.jinxedJinxReq)) {
+            player.hcu.jinxedJinx = player.hcu.jinxedJinx.add(1)
+
+            player.hcu.jinxedJinxReq = player.hcu.jinxedJinx.mul(100).add(500)
+            if (player.hcu.jinxedJinx.gte(2)) player.hcu.jinxedJinxReq = player.hcu.jinxedJinxReq.add(Decimal.pow(2, player.hcu.jinxedJinx.sub(2)).mul(10))
+        }
     },
     update(delta) {
         player.hcu.cursesGain = new Decimal(0)
@@ -82,6 +88,7 @@ addLayer("hcu", {
         if (hasMilestone("hbl", 3)) player.hcu.jinxAddCap = player.hcu.jinxAddCap.add(player.h.stage)
         if (hasUpgrade("hpw", 33)) player.hcu.jinxAddCap = player.hcu.jinxAddCap.add(upgradeEffect("hpw", 33))
         player.hcu.jinxAddCap = player.hcu.jinxAddCap.add(player.hve.vexEffects[0])
+        player.hcu.jinxAddCap = player.hcu.jinxAddCap.add(player.tera.virtueEffects[1][2])
         if (inChallenge("hrm", 15)) player.hcu.jinxAddCap = player.hcu.jinxAddCap.div(2)
 
         // JINX DIVIDER

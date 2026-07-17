@@ -122,11 +122,12 @@ addLayer("tera", {
         virtueEssence: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
         virtueEssenceGain: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
         virtueEffects: [
-            [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)],
-            [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)],
-            [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)],
-            [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)]],
+            [new Decimal(1), new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1), new Decimal(0)],
+            [new Decimal(1), new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1), new Decimal(1)],
+            [new Decimal(1), new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1), new Decimal(1)],
+            [new Decimal(1), new Decimal(1), new Decimal(1)]],
         virtueUnlocks: [false, false, false, false, false, false, false],
+        virtueUnlocks2: [false, false, false, false, false, false, false],
 
         sinMastery: [false, false, false, false, false, false, false],
 
@@ -192,14 +193,18 @@ addLayer("tera", {
         player.tera.virtueEssenceGain[0] = player.tera.virtue[0].div(7).pow(1.3)
         player.tera.virtueEffects[0][0] = player.tera.virtueEssence[0].gte(1) ? player.tera.virtueEssence[0].pow(0.35).div(10).add(1) : new Decimal(1)
         player.tera.virtueEffects[0][1] = player.tera.virtueEssence[0].gte(49) ? Decimal.pow(2, player.tera.virtueEssence[0].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
+        player.tera.virtueEffects[0][2] = player.tera.virtueEssence[0].gte(1e7) ? Decimal.pow(1.1, player.tera.virtueEssence[0].div(1e7).add(1).log(7).pow(0.7)) : new Decimal(1)
         if (!player.tera.virtueUnlocks[0] && player.tera.virtueEssence[0].gte(3500)) player.tera.virtueUnlocks[0] = true
+        if (!player.tera.virtueUnlocks2[0] && player.tera.virtueEssence[0].gte(1e12)) player.tera.virtueUnlocks2[0] = true
         if (player.tera.trueHept.gte(2)) player.tera.virtue[0] = player.tera.virtue[0].add(player.tera.virtueGain[0])
         player.tera.virtueReq[1] = layers.h.hexReq(player.tera.virtue[1], 7, 1.5, new Decimal(1))
         player.tera.virtueGain[1] = layers.h.hexGain(player.tera.virtue[0], 7, 1.5, new Decimal(1)).sub(player.tera.virtue[1]).max(0)
         player.tera.virtueEssenceGain[1] = player.tera.virtue[1].div(6).pow(1.28)
         player.tera.virtueEffects[1][0] = player.tera.virtueEssence[1].gte(1) ? player.tera.virtueEssence[1].pow(0.38).div(9).add(1) : new Decimal(1)
         player.tera.virtueEffects[1][1] = player.tera.virtueEssence[1].gte(49) ? Decimal.pow(3, player.tera.virtueEssence[1].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
+        player.tera.virtueEffects[1][2] = player.tera.virtueEssence[1].gte(1e8) ? player.tera.virtueEssence[1].div(1e8).add(1).log(7).add(1).floor() : new Decimal(0)
         if (!player.tera.virtueUnlocks[1] && player.tera.virtueEssence[1].gte(14000)) player.tera.virtueUnlocks[1] = true
+        if (!player.tera.virtueUnlocks2[1] && player.tera.virtueEssence[1].gte(1e14)) player.tera.virtueUnlocks2[1] = true
         if (player.tera.trueHept.gte(4)) player.tera.virtue[1] = player.tera.virtue[1].add(player.tera.virtueGain[1])
         player.tera.virtueReq[2] = layers.h.hexReq(player.tera.virtue[2], 14, 1.45, new Decimal(1))
         player.tera.virtueGain[2] = layers.h.hexGain(player.tera.virtue[1], 14, 1.45, new Decimal(1)).sub(player.tera.virtue[2]).max(0)
@@ -2112,13 +2117,13 @@ addLayer("tera", {
                                 ["style-row", [["raw-html", () => {return "Unseal Uni-Alpha: Hex"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks[0] && player.tera.virtueEssence[0].lt(3500)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
-                                ["style-row", [["raw-html", "???", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[0].lt(1e35)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", "1e7", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
+                                ["style-row", [["raw-html", () => {return "Provenance Effects: x" + formatSimple(player.tera.virtueEffects[0][2], 2)}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[0].lt(1e7)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
-                                ["style-row", [["raw-html", "???", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[0].lt(1e140)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", "1e12", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
+                                ["style-row", [["raw-html", () => {return "Unlock ??? <small>[NOT IMPLEMENTED]</small>"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[0] && player.tera.virtueEssence[0].lt(1e12)) {look.background = "#bf8f8f"};return look}],
                         ], {width: "398px", height: "194px", borderLeft: "3px solid #95A6DD", userSelect: "none"}],
                     ], {width: "576px", height: "194px", border: "3px solid #95A6DD", background: "#719671"}],
                     ["style-row", [
@@ -2153,13 +2158,13 @@ addLayer("tera", {
                                 ["style-row", [["raw-html", () => {return "Unlock the jinxed jinx"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks[1] && player.tera.virtueEssence[1].lt(14000)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
-                                ["style-row", [["raw-html", "???", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[1].lt(1e35)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", "1e8", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
+                                ["style-row", [["raw-html", () => {return "Jinx Cap: +" + formatWhole(player.tera.virtueEffects[1][2])}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[1].lt(1e8)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
-                                ["style-row", [["raw-html", "???", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "???"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[1].lt(1e140)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", "1e14", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
+                                ["style-row", [["raw-html", () => {return "Automate jinxed jinx"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[1] && player.tera.virtueEssence[1].lt(1e14)) {look.background = "#bf8f8f"};return look}],
                         ], {width: "398px", height: "194px", borderLeft: "3px solid #95A6DD", userSelect: "none"}],
                     ], {width: "576px", height: "194px", border: "3px solid #95A6DD", background: "#a06a6a", marginTop: "-3px"}],
                     ["style-row", [

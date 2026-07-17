@@ -86,6 +86,7 @@ addLayer("hpr", {
         if (hasUpgrade("hbl", 6)) player.hpr.effectMult = player.hpr.effectMult.mul(upgradeEffect("hbl", 6))
         if (hasMilestone("hbl", 5)) player.hpr.effectMult = player.hpr.effectMult.mul(player.h.stage.div(20).add(1))
         if (hasUpgrade("hpw", 101)) player.hpr.effectMult = player.hpr.effectMult.mul(upgradeEffect("hpw", 101))
+        player.hpr.effectMult = player.hpr.effectMult.mul(player.tera.virtueEffects[0][2])
 
         // Disable effects
         if (inChallenge("hrm", 16)) player.hpr.effectMult = new Decimal(0)

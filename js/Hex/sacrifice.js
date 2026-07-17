@@ -124,7 +124,7 @@ addLayer("hsa", {
         if (player.hsa.praying) {
             player.hsa.prayerTime = player.hsa.prayerTime.add(Decimal.mul(delta, player.hsa.prayerSpeed.mul(player.h.tickspeed)))
         } else if (player.hsa.prayerTime.gt(0)) {
-            player.hsa.prayerTime = player.hsa.prayerTime.sub(player.hsa.prayerDecay.mul(player.h.tickspeed).mul(delta)).max(0)
+            player.hsa.prayerTime = player.hsa.prayerTime.sub(player.hsa.prayerDecay.mul(delta)).max(0)
         }
 
         let prayDist = player.h.stage
@@ -215,7 +215,7 @@ addLayer("hsa", {
             title() {
                 let curTime = buyableEffect("hsa", 1).sub(1).mul(player.hsa.prayerSpeed).mul(player.h.tickspeed)
                 if (player.hsa.praying) curTime = curTime.add(Decimal.mul(1, player.hsa.prayerSpeed.mul(player.h.tickspeed)))
-                if (!player.hsa.praying && player.hsa.prayerTime.gt(0)) curTime = curTime.sub(player.hsa.prayerDecay.mul(player.h.tickspeed))
+                if (!player.hsa.praying && player.hsa.prayerTime.gt(0)) curTime = curTime.sub(player.hsa.prayerDecay)
                 let str = "<h3>Pray to speed up holy dimensions</h3><br>x" + formatSimple(player.hsa.prayerMult) + " holy dimension tickspeed<br>Prayer Time: " + formatTime(player.hsa.prayerTime)
                 if (curTime.gt(0)) str = str.concat("<small style='color:rgba(0,100,0,0.6)'> (+" + formatTime(curTime) + ")</small>")
                 if (curTime.lt(0)) str = str.concat("<small style='color:rgba(100,0,0,0.6)'> (-" + formatTime(curTime.mul(-1)) + ")</small>")
