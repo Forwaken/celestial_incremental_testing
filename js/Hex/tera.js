@@ -1599,7 +1599,7 @@ addLayer("tera", {
         },
         "hex7": {
             fullDisplay() {return "<h3>Foundational Ranks</h3><br>Reduce provenance req's based on ranks.<br>Currently: /" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 6 Hex Essence"},
-            tooltip: "((log1e1200(Rank+1)^0.6)/36)+1",
+            tooltip: "((log1e1200(Ranks+1)^0.6)/36)+1",
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(6)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(6)},

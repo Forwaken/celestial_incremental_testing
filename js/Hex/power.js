@@ -15,6 +15,7 @@ addLayer("hpw", {
         vigor: 0,
         sincePower: new Decimal(0),
         softcap: new Decimal(1),
+        rowAuto: 1,
     }},
     update(delta) {
         player.hpw.powerGain = Decimal.pow(2, player.hbl.blessings.add(1).div(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)).log(player.h.stage)).div(Decimal.pow(2, player.h.stage.sub(6).abs()))
@@ -235,7 +236,7 @@ addLayer("hpw", {
             style: {width: "400px", minHeight: "100px", border: "2px solid black", borderRadius: "15px"},
         },
         2: {
-            title() { return "Respec your mights<br><small style='font-size:11px'>(Does a power reset)</small>"},
+            title() { return "Respec all mights<br><small style='font-size:13px'>(Does a power reset)</small>"},
             canClick() { return hasUpgrade("hpw", 1) || hasUpgrade("hpw", 2)},
             unlocked: true,
             onClick() {
@@ -256,7 +257,22 @@ addLayer("hpw", {
                     setTimeout(() => {layers.hpw.powerReset(0)}, 500)
                 }
             },
-            style: {width: "250px", minHeight: "40px", lineHeight: "0.9", border: "2px solid black", borderRadius: "15px"},
+            style: {width: "200px", minHeight: "83px", fontSize: "12px", lineHeight: "0.9", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "12px 0 0 12px"},
+        },
+        3: {
+            title() { return "Attempt to buy power upgrades up to row " + formatWhole(player.hpw.rowAuto)},
+            canClick() { return true},
+            unlocked: true,
+            onClick() {
+                Object.entries(layers.hpw.upgrades).forEach(([key, value], index) => {
+                    if (key < (player.hpw.rowAuto)*10) {
+                        setTimeout(() => {
+                            buyUpgrade("hpw", key)
+                        }, index*50); // Staggers the execution by 1 second per item
+                    }
+                });
+            },
+            style: {width: "250px", minHeight: "40px", lineHeight: "0.9", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0 12px 0 0"},
         },
     },
     upgrades: {
@@ -2267,7 +2283,13 @@ addLayer("hpw", {
                     ["blank", "5px"],
                     ["raw-html", "<i>Mights increase cost of other mights on the same row.</i>", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ["blank", "5px"],
-                    ["clickable", 2],
+                    ["style-row", [
+                        ["clickable", 2],
+                        ["style-column", [
+                            ["clickable", 3],
+                            ["text-input", "rowAuto", {backgroundColor: "#190000", color: "white", width: "230px", height: "40px", padding: "0 10px", textAlign: "left", fontSize: "28px", border: "0px", borderTop: "3px solid #5e0000", borderRadius: "0 0 12px 0"}],
+                        ], {width: "250px", height: "83px", borderLeft: "3px solid #5e0000"}],
+                    ], {width: "453px", border: "3px solid #5e0000", borderRadius: "15px"}],
                     ["row", [
                         ["style-row", [["upgrade", 2001]], {width: "140px", height: "140px"}],
                         ["bt-upgrade", 1],
