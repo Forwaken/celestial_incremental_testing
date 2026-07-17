@@ -1807,7 +1807,7 @@ addLayer("hpw", {
         2002: {
             title: "Might S:2",
             unlocked() {return player.h.stage.eq(7)},
-            description() {return "Reduce wrath's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            description() {return "Reduce wrath's penalty by /" + formatSimple(Decimal.div(1.6, Decimal.div(0.6, upgradeEffect(this.layer, this.id)).add(1)), 2) + "."},
             branches: [11],
             cost() {return new Decimal(1.4e7)},
             canAfford() { return hasUpgrade("hpw", 11)},
@@ -1835,7 +1835,7 @@ addLayer("hpw", {
         2004: {
             title: "Might S:3",
             unlocked() {return player.h.stage.eq(7)},
-            description() {return "Reduce lust's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            description() {return "Reduce lust's penalty by /" + formatSimple(Decimal.div(1.6, Decimal.div(0.6, upgradeEffect(this.layer, this.id)).add(1)), 2) + "."},
             branches: [72],
             cost() {return new Decimal(7e11)},
             canAfford() { return hasUpgrade("hpw", 72)},
@@ -1848,7 +1848,7 @@ addLayer("hpw", {
         2005: {
             title: "Might S:4",
             unlocked() {return player.h.stage.eq(7)},
-            description() {return "Reduce gluttony's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            description() {return "Reduce gluttony's penalty by /" + formatSimple(Decimal.div(1.6, Decimal.div(0.6, upgradeEffect(this.layer, this.id)).add(1)), 2) + "."},
             branches: [72],
             cost() {return new Decimal(3.5e14)},
             canAfford() { return hasUpgrade("hpw", 72)},
