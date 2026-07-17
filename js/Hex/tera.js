@@ -1214,7 +1214,7 @@ addLayer("tera", {
             currency() { return player.tera.hexEnergy},
             pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
             effect(x) {
-                if (getBuyableAmount("tera", "hexEnergyPrestige").gt(0)) return getBuyableAmount(this.layer, this.id).add(9).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))).add(1)
+                if (getBuyableAmount("tera", "hexEnergyPrestige").gt(0)) return getBuyableAmount(this.layer, this.id).add(10).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))).sub(9)
                 return getBuyableAmount(this.layer, this.id).add(1)
             },
             unlocked: true,
@@ -1839,6 +1839,7 @@ addLayer("tera", {
 
         // Remove crystal effect hardcap
         // More Pent Milestones Maybe?
+        // Miasmic Shadow (hex shadow evo)
         // Unlock Rocket Parts (you can equip only one rocket part at a time at first, but there are three potential slots in total. You will start with just one that makes common pets not reset when sent up to space)
     },
     microtabs: {

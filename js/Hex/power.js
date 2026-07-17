@@ -268,7 +268,7 @@ addLayer("hpw", {
         },
         3: {
             title() { return "Attempt to buy power upgrades up to row " + formatWhole(player.hpw.rowAuto)},
-            tooltip: "Doesn't target side paths",
+            tooltip: "<i>Usually</i> can't target side paths",
             canClick() { return true},
             unlocked: true,
             onClick() {

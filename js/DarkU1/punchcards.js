@@ -1116,7 +1116,7 @@ addLayer("pu", {
                 let eff = [new Decimal(1), new Decimal(1), new Decimal(1)]
                 let time1 = player.le.timeSinceReset.gt(300) ? player.le.timeSinceReset.div(300).pow(0.5).mul(300) : player.le.timeSinceReset
                 eff[0] = Decimal.pow(1.15, time1).pow(this.effectScale()).pow(player.pu.rareRaise)
-                let time2 = player.le.timeSinceEnter.gt(1800) ? player.le.timeSinceEnter.div(1800).pow(0.5).mul(1800) : player.le.timeSinceReset
+                let time2 = player.le.timeSinceEnter.gt(1800) ? player.le.timeSinceEnter.div(1800).pow(0.5).mul(1800) : player.le.timeSinceEnter
                 eff[1] = Decimal.pow(1.05, time2).pow(this.effectScale()).pow(player.pu.rareRaise)
                 eff[2] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
                 return eff
