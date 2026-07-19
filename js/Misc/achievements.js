@@ -1043,10 +1043,11 @@ addLayer("achievements", {
         1411: {
             name: "Double Hex",
             image: "resources/achievements/14_11.png",
-            tooltip: "<h3>Double Hex</h3><hr style='margin-bottom:4px'>Obtain two true hexes",
+            tooltip: "<h3>Double Hex</h3><hr style='margin-bottom:4px'>Obtain two true hexes<br><br>Reward: x2 Realm Essence",
             complete() {return player.tera.trueHex.gte(2)},
             color: "#85ade6",
             unlocked: true,
+            marked: true,
         },
         1412: {
             name: "True Six",

@@ -35,6 +35,7 @@ addLayer("hrm", {
         ext = ext.mul(levelableEffect("pet", 1106)[2])
         if (hasUpgrade("depth3", 6)) ext = ext.mul(upgradeEffect("depth3", 6))
         if (hasUpgrade("tera", "hex5")) ext = ext.mul(upgradeEffect("tera", "hex5"))
+        if (hasAchievement("achievements", 1411)) ext = ext.mul(2)
         ext = ext.pow(player.h.externalRaise)
         player.hrm.realmEssenceGain = player.hrm.realmEssenceGain.mul(ext)
 
