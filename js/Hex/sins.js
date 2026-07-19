@@ -62,9 +62,12 @@ addLayer("sins", {
                         }
 
                         layers.hpw.powerReset(0)
+
+                        player.sins.clickables["envy"] = true
+                        player.sins.sinUsed[0] = true
+                        if (!hasAchievement("achievements", 1404)) completeAchievement("achievements", 1404)
+                        if (!hasAchievement("achievements", 1408) && player.sins.sinUsed.every(item => item === true)) completeAchievement("achievements", 1408)
                     }
-                    player.sins.clickables["envy"] = true
-                    player.sins.sinUsed[0] = true
                 }
             },
             style() {
@@ -88,9 +91,12 @@ addLayer("sins", {
                         }
 
                         layers.hpw.powerReset(0)
+                        
+                        player.sins.clickables["wrath"] = true
+                        player.sins.sinUsed[1] = true
+                        if (!hasAchievement("achievements", 1404)) completeAchievement("achievements", 1404)
+                        if (!hasAchievement("achievements", 1408) && player.sins.sinUsed.every(item => item === true)) completeAchievement("achievements", 1408)
                     }
-                    player.sins.clickables["wrath"] = true
-                    player.sins.sinUsed[1] = true
                 }
             },
             style() {
@@ -114,9 +120,12 @@ addLayer("sins", {
                         }
 
                         layers.hpw.powerReset(0)
+                        
+                        player.sins.clickables["lust"] = true
+                        player.sins.sinUsed[2] = true
+                        if (!hasAchievement("achievements", 1404)) completeAchievement("achievements", 1404)
+                        if (!hasAchievement("achievements", 1408) && player.sins.sinUsed.every(item => item === true)) completeAchievement("achievements", 1408)
                     }
-                    player.sins.clickables["lust"] = true
-                    player.sins.sinUsed[2] = true
                 }
             },
             style() {
@@ -140,9 +149,12 @@ addLayer("sins", {
                         }
 
                         layers.hpw.powerReset(0)
+                        
+                        player.sins.clickables["gluttony"] = true
+                        player.sins.sinUsed[3] = true
+                        if (!hasAchievement("achievements", 1404)) completeAchievement("achievements", 1404)
+                        if (!hasAchievement("achievements", 1408) && player.sins.sinUsed.every(item => item === true)) completeAchievement("achievements", 1408)
                     }
-                    player.sins.clickables["gluttony"] = true
-                    player.sins.sinUsed[3] = true
                 }
             },
             style() {
@@ -166,9 +178,12 @@ addLayer("sins", {
                         }
 
                         layers.hpw.powerReset(0)
+
+                        player.sins.clickables["sloth"] = true
+                        player.sins.sinUsed[4] = true
+                        if (!hasAchievement("achievements", 1404)) completeAchievement("achievements", 1404)
+                        if (!hasAchievement("achievements", 1408) && player.sins.sinUsed.every(item => item === true)) completeAchievement("achievements", 1408)
                     }
-                    player.sins.clickables["sloth"] = true
-                    player.sins.sinUsed[4] = true
                 }
             },
             style() {
@@ -192,9 +207,12 @@ addLayer("sins", {
                         }
 
                         layers.hpw.powerReset(0)
+                        
+                        player.sins.clickables["greed"] = true
+                        player.sins.sinUsed[5] = true
+                        if (!hasAchievement("achievements", 1404)) completeAchievement("achievements", 1404)
+                        if (!hasAchievement("achievements", 1408) && player.sins.sinUsed.every(item => item === true)) completeAchievement("achievements", 1408)
                     }
-                    player.sins.clickables["greed"] = true
-                    player.sins.sinUsed[5] = true
                 }
             },
             style() {
@@ -218,9 +236,12 @@ addLayer("sins", {
                         }
 
                         layers.hpw.powerReset(0)
+                        
+                        player.sins.clickables["pride"] = true
+                        player.sins.sinUsed[6] = true
+                        if (!hasAchievement("achievements", 1404)) completeAchievement("achievements", 1404)
+                        if (!hasAchievement("achievements", 1408) && player.sins.sinUsed.every(item => item === true)) completeAchievement("achievements", 1408)
                     }
-                    player.sins.clickables["pride"] = true
-                    player.sins.sinUsed[6] = true
                 }
             },
             style() {

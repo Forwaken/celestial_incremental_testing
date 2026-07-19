@@ -236,6 +236,7 @@ addLayer("hpw", {
             canClick() { return player.hbl.blessings.gte(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage))},
             unlocked: true,
             onClick() {
+                if (!hasAchievement("achievements", 1403) && player.h.stage.eq(7)) completeAchievement("achievements", 1403)
                 player.hpw.power = player.hpw.power.add(player.hpw.powerGain)
                 player.hpw.totalPower = player.hpw.totalPower.add(player.hpw.powerGain)
                 layers.hpw.powerReset(0)
@@ -1131,7 +1132,10 @@ addLayer("hpw", {
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
-            onPurchase() {player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1},
+            onPurchase() {
+                if (!hasAchievement("achievements", 1407)) completeAchievement("achievements", 1407)
+                player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1
+            },
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
@@ -1145,7 +1149,10 @@ addLayer("hpw", {
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
-            onPurchase() {player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1},
+            onPurchase() {
+                if (!hasAchievement("achievements", 1407)) completeAchievement("achievements", 1407)
+                player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1
+            },
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
@@ -1162,7 +1169,10 @@ addLayer("hpw", {
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
-            onPurchase() {player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1},
+            onPurchase() {
+                if (!hasAchievement("achievements", 1407)) completeAchievement("achievements", 1407)
+                player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1
+            },
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
@@ -1178,7 +1188,10 @@ addLayer("hpw", {
             branches: [141],
             cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
             canAfford() { return hasUpgrade("hpw", 141)},
-            onPurchase() {player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1},
+            onPurchase() {
+                if (!hasAchievement("achievements", 1407)) completeAchievement("achievements", 1407)
+                player.hpw.upgScale[15] = player.hpw.upgScale[15] + 1
+            },
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",

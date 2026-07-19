@@ -668,6 +668,7 @@ addLayer("tera", {
             unlocked: true,
             onClick() {
                 if (Decimal.lte(player.tera.clickables[106], 0)) {
+                    if (!hasAchievement("achievements", 1410)) completeAchievement("achievements", 1410)
                     layers.tera.teraReset()
                     player.h.stage = new Decimal(6)
                     player.tera.clickables[106] = new Decimal(2)
@@ -728,6 +729,8 @@ addLayer("tera", {
             onClick() {
                 if (player.tera.trueHex.gte(6)) player.tera.trueHex = player.tera.trueHex.add(player.tera.trueHexGain)
                 else player.tera.trueHex = player.tera.trueHex.add(1)
+                if (!hasAchievement("achievements", 1411) && player.tera.trueHept.gte(2)) completeAchievement("achievements", 1411)
+                if (!hasAchievement("achievements", 1412) && player.tera.trueHex.add(player.tera.trueHept).gte(6)) completeAchievement("achievements", 1412)
 
                 layers.tera.teraReset()
             },
@@ -761,6 +764,8 @@ addLayer("tera", {
             onClick() {
                 if (player.tera.trueHept.gte(7)) player.tera.trueHept = player.tera.trueHept.add(player.tera.trueHeptGain)
                 else player.tera.trueHept = player.tera.trueHept.add(1)
+                if (!hasAchievement("achievements", 1409)) completeAchievement("achievements", 1409)
+                if (!hasAchievement("achievements", 1412) && player.tera.trueHex.add(player.tera.trueHept).gte(6)) completeAchievement("achievements", 1412)
 
                 layers.tera.teraReset()
             },
@@ -1254,6 +1259,7 @@ addLayer("tera", {
                     Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Energy"
             },
             buy() {
+                if (!hasAchievement("achievements", 1405)) completeAchievement("achievements", 1405)
                 player.tera.buyables["hexEnergyBuff"] = new Decimal(0)
                 player.tera.buyables["hexEnergyCap"] = new Decimal(0)
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
@@ -1718,9 +1724,9 @@ addLayer("tera", {
             }
         },
         "hept3": {
-            fullDisplay() {return "<h3>Familiar Feeling</h3><br>Unlock Rage in " + player.h.stageName[0] + " of Power<br>[NOT IMPLEMENTED]<br><br>Req: 70 Purities<br><small>[REQ BEING IN HEPT]</small>"},
+            fullDisplay() {return "<h3>Familiar Feeling</h3><br>Unlock Rage in " + player.h.stageName[0] + " of Power<br>[NOT IMPLEMENTED]<br><br>Req: 42 Purities<br><small>[REQ BEING IN HEPT]</small>"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
-            canAfford() { return player.h.stage.eq(7) && player.hpu.totalPurity.add(player.hpu.keptPurity).gte(70)},
+            canAfford() { return player.h.stage.eq(7) && player.hpu.totalPurity.gte(42)},
             style() {
                 let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -1739,10 +1745,10 @@ addLayer("tera", {
             }
         },
         "hept5": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e35 Holy Power<br><small>[REQ BEING IN HEPT]</small>"},
+            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e14 Holy Power<br><small>[REQ BEING IN HEPT]</small>"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
-            canAfford() { return player.h.stage.eq(7) && player.hsa.holyPower.gte("1e35")},
-            pay() {player.hsa.holyPower = player.hsa.holyPower.sub("1e35")},
+            canAfford() { return player.h.stage.eq(7) && player.hsa.holyPower.gte("1e14")},
+            pay() {player.hsa.holyPower = player.hsa.holyPower.sub("1e14")},
             style() {
                 let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"

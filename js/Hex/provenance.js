@@ -253,6 +253,8 @@ addLayer("hpr", {
             unlocked: true,
             onClick() {
                 player.hpr.rank[6] = player.hpr.rank[6].add(player.hpr.rankGain[6])
+                if (!hasAchievement("achievements", 1402)) completeAchievement("achievements", 1402)
+                if (!hasAchievement("achievements", 1406) && player.hpr.rank[6].gte(2)) completeAchievement("achievements", 1406)
 
                 // RESET CODE
                 for (let i = 0; i < 6; i++) {
