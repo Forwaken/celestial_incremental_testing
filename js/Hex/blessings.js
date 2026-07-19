@@ -114,6 +114,7 @@ addLayer("hbl", {
         if (hasMilestone("hbl", 4)) player.hbl.boonsGain = player.hbl.boonsGain.mul(2)
         if (hasMilestone("hbl", 4) || inChallenge("hrm", 12)) player.hbl.boonsGain = player.hbl.boonsGain.mul(player.hpu.purifiers[1].effect)
         player.hbl.boonsGain = player.hbl.boonsGain.mul(player.h.prePowerMult)
+        player.hbl.boonsGain = player.hbl.boonsGain.mul(player.tera.virtueEffects[2][2])
 
         // POWER AND AUTOMATION
         if (inChallenge("hrm", 12)) player.hbl.boonsGain = player.hbl.boonsGain.pow(Decimal.div(3.6, player.h.stage.max(4)))
