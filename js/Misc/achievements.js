@@ -996,17 +996,19 @@ addLayer("achievements", {
         1405: {
             name: "Energized",
             image: "resources/achievements/14_05.png",
-            tooltip: "<h3>Energized</h3><hr style='margin-bottom:4px'>Prestige your hex energy<br>buyables for the first time",
+            tooltip: "<h3>Energized</h3><hr style='margin-bottom:4px'>Prestige your hex energy<br>buyables for the first time<br><br>Reward: x2 Hex Essence",
             color: "#85ade6",
             complete() {return getBuyableAmount("tera", "hexEnergyPrestige").gt(0)},
             unlocked: true,
+            marked: true,
         },
         1406: {
             name: "Harsh Scaling",
             image: "resources/achievements/14_06.png",
-            tooltip: "<h3>Harsh Scaling</h3><hr style='margin-bottom:4px'>Obtain second η-Provenance",
+            tooltip: "<h3>Harsh Scaling</h3><hr style='margin-bottom:4px'>Obtain second η-Provenance<br><br>Reward: x1.2 Provenance Effects",
             color: "#85ade6",
             unlocked: true,
+            marked: true,
         },
         1407: {
             name: "Big Split",

@@ -147,6 +147,7 @@ addLayer("tera", {
         player.tera.trueHexEffect = player.tera.trueHex.gte(10) ? Decimal.pow(7/6, player.tera.trueHex.sub(5)) : new Decimal(1)
 
         player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).add(1).pow(buyableEffect("tera", "hexOpacity")).sub(1) : new Decimal(0)
+        if (hasAchievement("achievements", 1405)) player.tera.hexEssencePerSecond = player.tera.hexEssencePerSecond.mul(2)
 
         let softcapStart = new Decimal(1e6)
         if (hasUpgrade("tera", "hex12")) softcapStart = softcapStart.mul(upgradeEffect("tera", "hex12"))

@@ -42,13 +42,13 @@ addLayer("hpr", {
             6: new Decimal(7), 7: new Decimal(64), 8: new Decimal(729), 9: new Decimal(10000), 10: new Decimal(161051), 11: new Decimal(2985984)}
 
         let alphaDiv = new Decimal(1)
-        if (hasAchievement("achievements", 121)) alphaDiv = alphaDiv.mul(2)
+        if (hasAchievement("achievements", 121)) alphaDiv = alphaDiv.mul(Decimal.pow(2, player.h.externalRaise))
 
         player.hpr.rankReq[0] = player.hpr.rank[0].add(1).pow(player.hpr.rank[0].add(1).log(Decimal.div(30, player.h.stage).add(1))).mul(player.h.stage.pow(2)).div(player.hpr.divider.mul(alphaDiv))
         player.hpr.rankGain[0] = Decimal.pow(Decimal.div(30, player.h.stage).add(1), player.h.hexPoint.max(1).div(player.h.stage.pow(2)).mul(player.hpr.divider.mul(alphaDiv)).log(Decimal.div(30, player.h.stage).add(1)).pow(0.5)).floor().sub(player.hpr.rank[0])
 
         let betaDiv = new Decimal(1)
-        if (hasAchievement("achievements", 110)) betaDiv = betaDiv.mul(1.2)
+        if (hasAchievement("achievements", 110)) betaDiv = betaDiv.mul(Decimal.pow(1.2, player.h.externalRaise))
 
         player.hpr.rankReq[1] = layers.h.hexReq(player.hpr.rank[1], player.h.stage, Decimal.div(player.h.stage, 4.3), player.hpr.divider.mul(betaDiv))
         player.hpr.rankGain[1] = layers.h.hexGain(player.hpr.rank[0], player.h.stage, Decimal.div(player.h.stage, 4.3), player.hpr.divider.mul(betaDiv)).sub(player.hpr.rank[1])
@@ -87,6 +87,7 @@ addLayer("hpr", {
         if (hasMilestone("hbl", 5)) player.hpr.effectMult = player.hpr.effectMult.mul(player.h.stage.div(20).add(1))
         if (hasUpgrade("hpw", 101)) player.hpr.effectMult = player.hpr.effectMult.mul(upgradeEffect("hpw", 101))
         player.hpr.effectMult = player.hpr.effectMult.mul(player.tera.virtueEffects[0][2])
+        if (hasAchievement("achievements", 1406)) player.hpr.effectMult = player.hpr.effectMult.mul(Decimal.pow(1.2, player.h.externalRaise))
 
         // Disable effects
         if (inChallenge("hrm", 16)) player.hpr.effectMult = new Decimal(0)
