@@ -309,6 +309,7 @@ function completeAchievement(layer, id) {
 
 function updateCutscenes() {
 	for (id in layers.c.cutscenes) {
+		if (player.c.cutscenes[id] == 2) continue
 		if (player.c.cutscenes[id] == 0 || (player.c.cutscenes[id] == 1 && layers.c.cutscenes[id].trigger())) {
 			if (layers.c.cutscenes[id].onStart) layers.c.cutscenes[id].onStart()
 			let options = {}

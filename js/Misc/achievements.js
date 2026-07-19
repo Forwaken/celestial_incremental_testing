@@ -973,16 +973,18 @@ addLayer("achievements", {
         1402: {
             name: "Beyond Six",
             image: "resources/achievements/14_02.png",
-            tooltip: "<h3>Beyond Six</h3><hr style='margin-bottom:4px'>Obtain your first η-Provenance",
+            tooltip() {return "<h3>Beyond Six</h3><hr style='margin-bottom:4px'>Obtain your first η-Provenance<br><br>Reward: ^1.01 " + player.h.stageName[0] + " Points"},
             color: "#85ade6",
             unlocked: true,
+            marked: true,
         },
         1403: {
             name: "Powered Again",
             image: "resources/achievements/14_03.png",
-            tooltip: "<h3>Powered Again</h3><hr style='margin-bottom:4px'>Do your first power reset<br>... again",
+            tooltip: "<h3>Powered Again</h3><hr style='margin-bottom:4px'>Do your first power reset<br>... again<br><br>Reward: x2 Pre-Power Resources",
             color: "#85ade6",
             unlocked: true,
+            marked: true,
         },
         1404: {
             name: "Sinful",
@@ -1009,9 +1011,10 @@ addLayer("achievements", {
         1407: {
             name: "Big Split",
             image: "resources/achievements/14_07.png",
-            tooltip: "<h3>Big Split</h3><hr style='margin-bottom:4px'>Buy a row 16 might",
+            tooltip: "<h3>Big Split</h3><hr style='margin-bottom:4px'>Buy a row 16 might<br><br>Reward: Improve Might 8:1's<br>formula<hr style='margin-bottom:4px'>(Mights/5)+1<br>↓<br>(Mights*(0.2+(Mights/100)))+1",
             color: "#85ade6",
             unlocked: true,
+            marked: true,
         },
         1408: {
             name: "Sinmaxxing",

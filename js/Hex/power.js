@@ -750,7 +750,11 @@ addLayer("hpw", {
                 if (hasUpgrade("hpw", 164)) return "Boost pre-power resources based on mights."
                 return "Boost blessings based on mights."
             },
-            tooltip() {return "(Mights/5)+1"},
+            tooltip() {
+                let str = hasAchievement("achievements", 1407) ? "(Mights*(0.2+(Mights/100)))+1" : "(Mights/5)+1"
+                if (upgradeEffect(this.layer, this.id).gt(player.h.stage.mul(10))) str = str.concat("<br><small>[SOFTCAP: /" + formatWhole(player.h.stage.mul(10)) + " ^0.5 x" + formatWhole(player.h.stage.mul(10)) + "]</small>")
+                return str
+            },
             branches: [61, 62],
             cost() {return new Decimal(player.h.stage.div(2).pow(11)).pow(player.hpw.upgScale[7]).floor()},
             canAfford() { return hasUpgrade("hpw", 61) || hasUpgrade("hpw", 62)},
@@ -759,9 +763,15 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return new Decimal(0.2).mul(player.hpw.upgTotal).add(1)
+                let eff = new Decimal(0.2).mul(player.hpw.upgTotal).add(1)
+                if (hasAchievement("achievements", 1407)) eff = new Decimal(0.2).add(player.hpw.upgTotal.div(100)).mul(player.hpw.upgTotal).add(1)
+                if (eff.gt(player.h.stage.mul(10))) eff = eff.div(player.h.stage.mul(10)).pow(0.5).mul(player.h.stage.mul(10))
+                return eff
             },
-            effectDisplay() { return format(upgradeEffect(this.layer, this.id), 1) + "x" }, // Add formatting to the effect
+            effectDisplay() {
+                if (upgradeEffect(this.layer, this.id).gt(player.h.stage.mul(10))) return format(upgradeEffect(this.layer, this.id), 1) + "x <small style='color:red'>[SOFTCAPPED]</small>"
+                return format(upgradeEffect(this.layer, this.id), 1) + "x"
+            }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         72: {

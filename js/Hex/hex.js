@@ -112,7 +112,6 @@ addLayer("h", {
                 player.h.hexPointGain = player.i.bestPoints.add(1).log(player.h.stage.max(2).sub(1).div(buyableEffect("hte", 11)).add(1)).mul(player.h.stage.max(1).mul(buyableEffect("hte", 12))).pow(Decimal.div(3.6, player.h.stage.max(4)).mul(buyableEffect("hte", 13)))
             }
         }
-        if (hasAchievement("achievements", 303)) player.h.hexPointGain = player.h.hexPointGain.mul(1.5)
         for (let i = 0; i < 6; i++) {
             player.h.hexPointGain = player.h.hexPointGain.mul(player.hpr.rankEffect[i][1])
         }
@@ -135,6 +134,7 @@ addLayer("h", {
         externalHex = externalHex.mul(buyableEffect("ta", 48))
         if (player.pol.pollinatorEffects.ant.enabled) externalHex = externalHex.mul(player.pol.pollinatorEffects.ant.effects[2])
         externalHex = externalHex.mul(levelableEffect("pu", 209)[1])
+        if (hasAchievement("achievements", 303)) externalHex = externalHex.mul(1.5)
 
         externalHex = externalHex.pow(player.h.externalRaise)
         player.h.hexPointGain = player.h.hexPointGain.mul(externalHex)
@@ -154,6 +154,7 @@ addLayer("h", {
         // EXTERNAL POWER
         let externalPow = new Decimal(1)
         externalPow = externalPow.mul(levelableEffect("car", 304)[0])
+        if (hasAchievement("achievements", 1402)) externalPow = externalPow.mul(1.01)
 
         externalPow = externalPow.pow(player.h.externalRaise)
         player.h.hexPointGain = player.h.hexPointGain.pow(externalPow)
@@ -187,6 +188,7 @@ addLayer("h", {
         externalPre = externalPre.mul(levelableEffect("pu", 107)[1])
         externalPre = externalPre.mul(levelableEffect("pet", 1106)[0])
         externalPre = externalPre.mul(buyableEffect("al", 106))
+        if (hasAchievement("achievements", 1403)) externalPre = externalPre.mul(2)
 
         externalPre = externalPre.pow(player.h.externalRaise)
         player.h.prePowerMult = player.h.prePowerMult.mul(externalPre)
