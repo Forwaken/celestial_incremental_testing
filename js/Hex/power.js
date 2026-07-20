@@ -121,7 +121,8 @@ addLayer("hpw", {
         player.hrm.dreamTimer = new Decimal(60)
         
         // TEMP POWER
-        player.hpw.sincePower = new Decimal(0)
+        if (player.tera.virtueUnlocks[4]) player.hpw.sincePower = player.tera.trueHex.mul(60)
+        else player.hpw.sincePower = new Decimal(0)
 
         // PURITY
         player.hpu.purity = new Decimal(0)
@@ -1137,10 +1138,13 @@ addLayer("hpw", {
         },
         151: {
             title: "Might 16:1",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description() {return "Unlock " + player.h.stageName[0] + " of Tempering."},
             branches: [141],
-            cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(150)).pow(player.hpw.upgScale[15]).floor()
+                return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 141)},
             onPurchase() {
                 if (!hasAchievement("achievements", 1407)) completeAchievement("achievements", 1407)
@@ -1153,11 +1157,14 @@ addLayer("hpw", {
         },
         152: {
             title: "Might 16:2",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Gain free purities based on blessings.",
             tooltip() {return "Floor(log" + formatSimple(Decimal.pow10(player.h.stage.div(2))) + "(Blessings+1)^0.5)"},
             branches: [141],
-            cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(150)).pow(player.hpw.upgScale[15]).floor()
+                return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 141)},
             onPurchase() {
                 if (!hasAchievement("achievements", 1407)) completeAchievement("achievements", 1407)
@@ -1174,10 +1181,13 @@ addLayer("hpw", {
         },
         153: {
             title: "Might 16:3",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Increase the effective of vexes on vex effects by ^1.2.",
             branches: [141],
-            cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(150)).pow(player.hpw.upgScale[15]).floor()
+                return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 141)},
             onPurchase() {
                 if (!hasAchievement("achievements", 1407)) completeAchievement("achievements", 1407)
@@ -1190,13 +1200,16 @@ addLayer("hpw", {
         },
         154: {
             title: "Might 16:4",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Raise external effects based on α-provenance.",
             tooltip() {
                 return "(log" + formatWhole(player.h.stage) + "(α-Provenance+1)/100)+1"
             },
             branches: [141],
-            cost() {return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(150)).pow(player.hpw.upgScale[15]).floor()
+                return new Decimal(player.h.stage.div(2).pow(22)).pow(player.hpw.upgScale[15]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 141)},
             onPurchase() {
                 if (!hasAchievement("achievements", 1407)) completeAchievement("achievements", 1407)
@@ -1215,11 +1228,14 @@ addLayer("hpw", {
         },
         161: {
             title: "Might 17:1",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description() {return "Divide provenance req's based on " + player.h.stageName[1] + " points."},
             tooltip() {return "((log" + formatWhole(player.h.stage) + "(" + player.h.stageName[0] + " Points+1)^0.7)/100)+1"},
             branches: [151],
-            cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(180)).pow(player.hpw.upgScale[16]).floor()
+                return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 151)},
             onPurchase() {player.hpw.upgScale[16] = player.hpw.upgScale[16] + 1},
             currencyLocation() { return player.hpw },
@@ -1233,10 +1249,13 @@ addLayer("hpw", {
         },
         162: {
             title: "Might 17:2",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Unlock new graces.",
             branches: [152],
-            cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(180)).pow(player.hpw.upgScale[16]).floor()
+                return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 152)},
             onPurchase() {player.hpw.upgScale[16] = player.hpw.upgScale[16] + 1},
             currencyLocation() { return player.hpw },
@@ -1246,10 +1265,13 @@ addLayer("hpw", {
         },
         163: {
             title: "Might 17:3",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Improve Γ-Jinx formula.",
             branches: [153],
-            cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(180)).pow(player.hpw.upgScale[16]).floor()
+                return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 153)},
             onPurchase() {player.hpw.upgScale[16] = player.hpw.upgScale[16] + 1},
             currencyLocation() { return player.hpw },
@@ -1259,10 +1281,13 @@ addLayer("hpw", {
         },
         164: {
             title: "Might 17:4",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Replace 8:1's effect with one that boosts pre-power resources.",
             branches: [154],
-            cost() {return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(180)).pow(player.hpw.upgScale[16]).floor()
+                return new Decimal(player.h.stage.div(2).pow(24)).pow(player.hpw.upgScale[16]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 154)},
             onPurchase() {player.hpw.upgScale[16] = player.hpw.upgScale[16] + 1},
             currencyLocation() { return player.hpw },
@@ -1325,10 +1350,13 @@ addLayer("hpw", {
         },
         171: {
             title: "Might 18:1",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Boost refiner 3's first effect.",
             branches: [161],
-            cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(210)).pow(player.hpw.upgScale[17]).floor()
+                return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 161)},
             onPurchase() {player.hpw.upgScale[17] = player.hpw.upgScale[17] + 1},
             currencyLocation() { return player.hpw },
@@ -1338,11 +1366,14 @@ addLayer("hpw", {
         },
         172: {
             title: "Might 18:2",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Boost blessings based on time spent in this tera reset.",
             tooltip() {return "((Since Tera^0.4)/" + formatSimple(player.h.stage.div(2)) + ")+1"},
             branches: [162],
-            cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(210)).pow(player.hpw.upgScale[17]).floor()
+                return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 162)},
             onPurchase() {player.hpw.upgScale[17] = player.hpw.upgScale[17] + 1},
             currencyLocation() { return player.hpw },
@@ -1356,10 +1387,13 @@ addLayer("hpw", {
         },
         173: {
             title: "Might 18:3",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Unlock vex buyables.",
             branches: [163],
-            cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(210)).pow(player.hpw.upgScale[17]).floor()
+                return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 163)},
             onPurchase() {player.hpw.upgScale[17] = player.hpw.upgScale[17] + 1},
             currencyLocation() { return player.hpw },
@@ -1369,10 +1403,13 @@ addLayer("hpw", {
         },
         174: {
             title: "Might 18:4",
-            unlocked() {return player.h.stage.gte(7)},
+            unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Triple Uni-Alpha tickspeed.",
             branches: [164],
-            cost() {return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()},
+            cost() {
+                if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(210)).pow(player.hpw.upgScale[17]).floor()
+                return new Decimal(player.h.stage.div(2).pow(26)).pow(player.hpw.upgScale[17]).floor()
+            },
             canAfford() { return hasUpgrade("hpw", 164)},
             onPurchase() {player.hpw.upgScale[17] = player.hpw.upgScale[17] + 1},
             currencyLocation() { return player.hpw },
