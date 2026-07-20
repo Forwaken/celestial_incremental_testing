@@ -48,6 +48,7 @@ addLayer("hsa", {
         if (hasUpgrade("hsa", 11)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(2)
         if (hasUpgrade("hsa", 16)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(upgradeEffect("hsa", 16))
         if (hasUpgrade("hpw", 168)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(upgradeEffect("hpw", 168))
+        player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.tera.virtueEffects[5][2])
 
         if (hasUpgrade("hsa", 13)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.pow(upgradeEffect("hsa", 13))
 

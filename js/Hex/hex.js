@@ -75,6 +75,7 @@ addLayer("h", {
         player.h.externalRaise = player.h.externalRaise.mul(player.hpu.purifiers[6].effect)
         if (hasUpgrade("hpw", 154)) player.h.externalRaise = player.h.externalRaise.mul(upgradeEffect("hpw", 154))
         if (hasUpgrade("tera", "hept1")) player.h.externalRaise = player.h.externalRaise.mul(upgradeEffect("tera", "hept1"))
+        player.h.externalRaise = player.h.externalRaise.mul(player.tera.virtueEffects[6][2])
 
         player.h.preNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.preNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
@@ -181,6 +182,7 @@ addLayer("h", {
         if (hasUpgrade("hpw", 71) && hasUpgrade("hpw", 164)) player.h.prePowerMult = player.h.prePowerMult.mul(upgradeEffect("hpw", 71))
         player.h.prePowerMult = player.h.prePowerMult.mul(buyableEffect("hpw", 15))
         if (hasUpgrade("hve", 71)) player.h.prePowerMult = player.h.prePowerMult.mul(upgradeEffect("hve", 71))
+        player.h.prePowerMult = player.h.prePowerMult.mul(player.tera.virtueEffects[4][2])
         player.h.prePowerMult = player.h.prePowerMult.div(player.hrm.challengeSoftcap)
         player.h.prePowerMult = player.h.prePowerMult.div(player.h.preNerf)
 
