@@ -124,7 +124,8 @@ addLayer("hsa", {
         player.hsa.prayerTime = player.hsa.prayerTime.add(buyableEffect("hsa", 1).sub(1).mul(player.hsa.prayerSpeed).mul(player.h.tickspeed).mul(delta))
         if (player.hsa.praying) {
             player.hsa.prayerTime = player.hsa.prayerTime.add(Decimal.mul(delta, player.hsa.prayerSpeed.mul(player.h.tickspeed)))
-        } else if (player.hsa.prayerTime.gt(0)) {
+        }
+        if (player.hsa.prayerTime.gt(0)) {
             player.hsa.prayerTime = player.hsa.prayerTime.sub(player.hsa.prayerDecay.mul(delta)).max(0)
         }
 
