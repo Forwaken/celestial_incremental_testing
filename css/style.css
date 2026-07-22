@@ -1281,7 +1281,23 @@ button > * {
 }
 
 .ghost {
+	transition-duration: 0s !important;
 	visibility: hidden
+}
+
+.ghost * {
+	transition-duration: 0s !important;
+	visibility: hidden
+}
+
+.ghost2 {
+	transition-duration: 0s !important;
+	display: none !important;
+}
+
+.ghost2 * {
+	transition-duration: 0s !important;
+	display: none !important;
 }
 
 .story {

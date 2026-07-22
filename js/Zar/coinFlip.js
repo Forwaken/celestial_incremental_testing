@@ -63,7 +63,6 @@
             "border-color": "#f5b678ff",
             "color": "#241b12ff",
             borderRadius: "4px",
-            transform: "translateX(-50px)"
         }
     },
     tooltip: "Coin Flip",

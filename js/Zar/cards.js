@@ -37,7 +37,6 @@
             "border-color": "rgb(182, 0, 0)",
             "color": "white",
             borderRadius: "4px",
-            transform: "translateX(50px)"
         }
     },
     tooltip: "Cards",

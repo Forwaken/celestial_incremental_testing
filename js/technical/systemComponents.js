@@ -68,7 +68,7 @@ var systemComponents = {
 				tabNode: true,
 				smallNode: size == 'small',
 				[layer]: true,
-				ghost: tmp[layer].layerShown == 'ghost',
+				ghost2: tmp[layer].layerShown == 'ghost',
 				hidden: !tmp[layer].layerShown,
 				locked: tmp[layer].isLayer ? !(player[layer].unlocked || tmp[layer].canReset) : !(tmp[layer].canClick),
 				notify: tmp[layer].notify && player[layer].unlocked,

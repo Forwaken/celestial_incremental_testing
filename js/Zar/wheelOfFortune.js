@@ -47,7 +47,6 @@
             "border-color": "#5fc79cff",
             "color": "#5fc79cff",
             borderRadius: "4px",
-            transform: "translateX(50px)"
         }
     },
     tooltip: "Wheel of Fortune",

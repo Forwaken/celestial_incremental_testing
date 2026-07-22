@@ -42,7 +42,6 @@
             "border-color": "#3466acff",
             "color": "#3466acff",
             borderRadius: "4px",
-            transform: "translateX(-50px)",
         }
     },
     tooltip: "Check Back Shrine",
