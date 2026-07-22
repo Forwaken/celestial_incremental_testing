@@ -793,7 +793,7 @@
             canAfford() {return this.currency().gte(this.cost())},
             display() {
                 return "<h3>ZC-A5</h3> (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/20)\n\
-                    Extend the start of \"Multipurpose I\"'s effect softcap\n\
+                    Extend the start of \"Multipurpose I\"'s active effect softcap\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + "<br>Zar Chips"
             },

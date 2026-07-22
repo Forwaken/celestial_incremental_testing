@@ -170,6 +170,7 @@ addLayer("tera", {
             player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement)).max(0.001)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement)).max(0.001)).add(1)
         }
         
+        if (player.tera.hexEnergyGain.gte(60)) player.tera.hexEnergyGain = player.tera.hexEnergyGain.div(60).pow(0.6).mul(60)
         if (player.tera.clickables["bewitchSpell"]) player.tera.hexEnergyGain = player.tera.hexEnergyGain.sub(Decimal.div(0.3, buyableEffect("tera", "bewitchCost")))
         if (player.tera.trueHex.gte(1)) player.tera.hexEnergy = player.tera.hexEnergy.add(player.tera.hexEnergyGain.mul(delta)).min(player.tera.hexEnergyCap).max(0)
 
@@ -427,8 +428,11 @@ addLayer("tera", {
                 borderRadius: "20px 20px 0 0",
             },
             display() {
-                if (player.tera.hexEnergyGain.lt(0)) return formatSimple(player.tera.hexEnergy, 2) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy<br><small>[-" + formatSimple(player.tera.hexEnergyGain.abs(), 2) + "/s]</small>"
-                return formatSimple(player.tera.hexEnergy, 2) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy<br><small>[" + formatSimple(player.tera.hexEnergyGain, 2) + "/s]</small>"
+                let str = formatSimple(player.tera.hexEnergy, 2) + "/" + formatSimple(player.tera.hexEnergyCap) + " Hex Energy"
+                if (player.tera.hexEnergyGain.lt(0)) str = str.concat("<br><small>[-" + formatSimple(player.tera.hexEnergyGain.abs(), 2) + "/s]</small>")
+                else str = str.concat("<br><small>[" + formatSimple(player.tera.hexEnergyGain, 2) + "/s]</small>")
+                if (player.tera.hexEnergyGain.gte(60)) str = str.concat(" <small style='color:red'>[SOFTCAPPED]</small>")
+                return str
             },
         },
     },
@@ -678,14 +682,15 @@ addLayer("tera", {
             canClick() {return player.h.stage.neq(6) && player.tera.virtueUnlocks[0]},
             unlocked: true,
             onClick() {
-                if (Decimal.lte(player.tera.clickables[106], 0)) {
-                    if (!hasAchievement("achievements", 1410)) completeAchievement("achievements", 1410)
-                    layers.tera.teraReset()
-                    player.h.stage = new Decimal(6)
-                    player.tera.clickables[106] = new Decimal(2)
-                } else {
-                    player.tera.clickables[106] = new Decimal(0)
-
+                if (confirm("Are you sure you want to do a tera reset?")) {
+                    if (Decimal.lte(player.tera.clickables[106], 0)) {
+                        if (!hasAchievement("achievements", 1410)) completeAchievement("achievements", 1410)
+                        layers.tera.teraReset()
+                        player.h.stage = new Decimal(6)
+                        player.tera.clickables[106] = new Decimal(2)
+                    } else {
+                        player.tera.clickables[106] = new Decimal(0)
+                    }
                 }
             },
             style() {
@@ -699,13 +704,14 @@ addLayer("tera", {
             canClick() {return player.h.stage.neq(7)},
             unlocked: true,
             onClick() {
-                if (Decimal.lte(player.tera.clickables[107], 0)) {
-                    layers.tera.teraReset()
-                    player.h.stage = new Decimal(7)
-                    player.tera.clickables[107] = new Decimal(2)
-                } else {
-                    player.tera.clickables[107] = new Decimal(0)
-
+                if (confirm("Are you sure you want to do a tera reset?")) {
+                    if (Decimal.lte(player.tera.clickables[107], 0)) {
+                        layers.tera.teraReset()
+                        player.h.stage = new Decimal(7)
+                        player.tera.clickables[107] = new Decimal(2)
+                    } else {
+                        player.tera.clickables[107] = new Decimal(0)
+                    }
                 }
             },
             style() {
@@ -2331,11 +2337,11 @@ addLayer("tera", {
                                 ["style-row", [["raw-html", "7,000,000", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "Unlock hex of sacrifice<br>permanently in hex universe."}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", lineHeight: "0.75", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[5].lt(7e6) || player.tera.virtueUnlocks[5]) {look.background = "#bf8f8f"};return look}],
-                            ["style-row", [ // Boost to holy power
+                            ["style-row", [
                                 ["style-row", [["raw-html", "1e12", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "Holy Power: x" + formatSimple(player.tera.virtueEffects[5][2], 2)}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[5].lt(1e12)) {look.background = "#bf8f8f"};return look}],
-                            ["style-row", [
+                            ["style-row", [ // Buy Max Boosters
                                 ["style-row", [["raw-html", "1e20", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "[NOT IMPLEMENTED]"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[5].lt(1e20)) {look.background = "#bf8f8f"};return look}],

@@ -52,7 +52,7 @@ addLayer("hsa", {
 
         if (hasUpgrade("hsa", 13)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.pow(upgradeEffect("hsa", 13))
 
-        if (tmp.hsa.layerShown) player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(player.h.tickspeed).mul(delta))
+        if (tmp.hsa.layerShown) player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(delta))
 
         if (player.hsa.autoSac == true && ((player.h.stage.lte(6) && player.hpr.rank[1].gte(1)) || player.hpr.rank[5].gte(1))) {
             player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
@@ -475,6 +475,7 @@ addLayer("hsa", {
             },
             display() {
                 return "which are granting you +" + formatWhole(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100)) + "% holy power per second.\n\
+                    [UNEFFECTED BY UNI-ALPHA TICKSPEED]\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Holy Power"
             },
             buy(mult) {

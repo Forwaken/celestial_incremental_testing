@@ -112,6 +112,10 @@ addLayer("hpr", {
 
         player.hpr.rankEffect[6][0] = player.hpr.rank[6].div(player.h.provenanceDiv).mul(player.hpr.effectMult).add(1).log(player.h.stage).div(150)
         player.hpr.rankEffect[6][1] = player.hpr.rank[6].div(player.h.provenanceDiv).mul(player.hpr.effectMult).add(1).log(player.h.stage).div(100)
+        for (let i = 0; i < 2; i++) {
+            if (player.hpr.rankEffect[6][i].gte(0.1)) player.hpr.rankEffect[6][i] = player.hpr.rankEffect[6][i].sub(0.1).add(1).log(player.h.stage).add(0.1)
+            if (player.hpr.rankEffect[6][i].gte(player.h.stage.div(10))) player.hpr.rankEffect[6][i] = player.hpr.rankEffect[6][i].div(player.h.stage.div(10)).pow(0.3).mul(player.h.stage.div(10))
+        }
 
         if (hasUpgrade("tad", 1001)) {
             for (let i = 0; i < 6; i++) {
