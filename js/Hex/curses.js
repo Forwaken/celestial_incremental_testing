@@ -627,6 +627,7 @@ addLayer("hcu", {
             },
             effect(x) {
                 let eff = Decimal.pow(Decimal.add(1.2, buyableEffect("hcu", 112)), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))
+                if (hasUpgrade("tera", "hept10")) Decimal.pow(Decimal.mul(1.2, buyableEffect("hcu", 112)), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))
                 if (eff.gte(Decimal.pow10(player.h.stage.mul(1.5)))) eff = eff.div(Decimal.pow10(player.h.stage.mul(1.5))).pow(Decimal.div(player.h.stage, 20)).mul(Decimal.pow10(player.h.stage.mul(1.5)))
                 return eff
             },
@@ -644,6 +645,7 @@ addLayer("hcu", {
             title() { return "Ι-Jinx" },
             display() {
                 let str = "Negative infinity points are multiplied by " + format(buyableEffect("hcu", 112).add(1.2))
+                if (hasUpgrade("tera", "hept10")) str = "Negative infinity points are multiplied by " + format(buyableEffect("hcu", 112).mul(1.2))
                 if (player.hrm.activeChallenge) str = str.concat("<br><small style='color:red'>[UNBUYABLE IN REALM CHALLENGES]</small>")
                 return str },
             total() {
@@ -799,7 +801,10 @@ addLayer("hcu", {
                 amt = amt.add(player.hcu.jinxedJinxEffects[2])
                 return amt
             },
-            effect(x) { return Decimal.mul(0.1, getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount)) },
+            effect(x) {
+                if (hasUpgrade("tera", "hept10")) return Decimal.pow(Decimal.pow10(player.h.stage), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))
+                return Decimal.mul(0.1, getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))
+            },
             unlocked() { return hasUpgrade("bi", 13) },
             cost(x = getBuyableAmount(this.layer, this.id)) {
                 if (x.lt(player.h.stage.mul(2))) {
@@ -814,6 +819,7 @@ addLayer("hcu", {
             title() { return "Μ-Jinx" },
             display() {
                 let str = "Increase Ι-Jinx's effect by +0.1x"
+                if (hasUpgrade("tera", "hept10")) str = "Increase Ι-Jinx's effect by x" + formatShortSimple(Decimal.pow10(player.h.stage))
                 if (player.hrm.activeChallenge) str = str.concat("<br><small style='color:red'>[UNBUYABLE IN REALM CHALLENGES]</small>")
                 return str
             },

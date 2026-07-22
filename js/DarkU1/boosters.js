@@ -8,6 +8,7 @@
         unlocked: true,
 
         bestBoosters: new Decimal(0),
+        bestBoosters2: new Decimal(0),
         boosters: new Decimal(0),
         boosterEffect: new Decimal(0),
         boosterReq: new Decimal(1e9),
@@ -51,8 +52,10 @@
 
         player.db.boosterEffect = Decimal.pow(5, player.db.boosters)
 
-        if (player.db.boosters.gt(player.db.bestBoosters)) { 
+        if (player.pet.legPetTimers[0].active && player.db.boosters.gt(player.db.bestBoosters)) { 
             player.db.bestBoosters = player.db.boosters
+        } else if (!player.pet.legPetTimers[0].active && player.db.boosters.gt(player.db.bestBoosters2)) {
+            player.db.bestBoosters2 = player.db.boosters
         }
 
         player.db.milestone1Effect = Decimal.pow(100, player.db.boosters.pow(0.75))
@@ -60,6 +63,8 @@
         player.db.milestone4Effect = player.db.boosters.add(1).pow(1.2).div(3).add(1)
 
         player.db.permaMilestone4Effect = player.db.bestBoosters.add(1).pow(0.35).div(10).add(1)
+
+        if (tmp.db.layerShown && player.db.clickables[12] && player.du.points.gte(player.db.boosterReq)) player.db.boosters = player.db.boosters.add(1)
     },
     bars: {},
     clickables: {
@@ -80,13 +85,23 @@
                 return look
             }
         },
+        12: {
+            title() {return player.db.clickables[12] ? "<h2>Auto-Booster Button<br>[ON]</h3><br>[Added for testing purposes]" : "<h2>Auto-Booster Button<br>[OFF]</h2><br>[Added for testing purposes]"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.db.clickables[12]) player.db.clickables[12] = false
+                else player.db.clickables[12] = true
+            },
+            style: {width: "300px", minHeight: "100px", borderRadius: "15px", background: "black", color: "white", border: "2px solid #6e64c4", margin: "1px"},
+        },
     },
     upgrades: {},
     buyables: {},
     milestones: {
         11: {
             requirementDescription: "<h3>1 Booster",
-            effectDescription() { return "Boosters divide the eclipse shard requirement<br>Currently: /" + format(player.db.milestone1Effect) + "." },
+            effectDescription() { return "Boosters divide the universe requirement<br>Currently: /" + format(player.db.milestone1Effect) + "." },
             done() { return player.db.boosters.gte(1) },
             style() {
                 let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #6e64c4", borderRadius: "10px", margin: "-1.5px"}
@@ -198,11 +213,17 @@
                 content: [
                     ['blank', '25px'],
                     ["raw-html", () => {return "You have <h3>" + formatWhole(player.db.boosters) + "</h3> boosters"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                    ["raw-html", () => {return "(Best boosters: " + formatWhole(player.db.bestBoosters) + ")"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                    ["raw-html", () => {
+                        if (!player.tera.virtueUnlocks2[0]) return "(Best boosters: " + formatWhole(player.db.bestBoosters) + ")"
+                        else if (player.pet.legPetTimers[0].active) return "(Best boosters [EC]: " + formatWhole(player.db.bestBoosters) + ")"
+                        else return "(Best boosters [SMA]: " + formatWhole(player.db.bestBoosters2) + ")"
+                    }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ["raw-html", () => {return "Boosts point gain by x" + format(player.db.boosterEffect)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                     ['blank', '25px'],
                     ["row", [["clickable", 11]]],
                     ['blank', '25px'],
+                    ["clickable", 12],
+                    ["blank", "25px"],
                 ]
             },
             "Milestones": {
@@ -241,7 +262,7 @@
         ["raw-html", () => { return player.pet.legPetTimers[0].current.gt(0) ? "ECLIPSE IS ACTIVE: " + formatTime(player.pet.legPetTimers[0].current) + "." : ""}, {color: "#FEEF5F", fontSize: "20px", fontFamily: "monospace"}],
         ["microtabs", "stuff", { 'border-width': '0px' }],
     ],
-    layerShown() { return hasUpgrade("le", 101) },
+    layerShown() { return hasUpgrade("le", 101) || player.dotf.penumbral },
     deactivated() { return !player.sma.inStarmetalChallenge},
     hotkeys: [
         {

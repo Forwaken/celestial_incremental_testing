@@ -989,9 +989,10 @@ addLayer("achievements", {
         1404: {
             name: "Sinful",
             image: "resources/achievements/14_04.png",
-            tooltip: "<h3>Sinful</h3><hr style='margin-bottom:4px'>Equip your first sin",
+            tooltip: "<h3>Sinful</h3><hr style='margin-bottom:4px'>Equip your first sin<br><br>Reward: x1.7 Hex Energy",
             color: "#85ade6",
             unlocked: true,
+            marked: true,
         },
         1405: {
             name: "Energized",

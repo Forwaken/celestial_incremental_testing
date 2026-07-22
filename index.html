@@ -51,6 +51,7 @@
  				<button class="uniButton" v-if="uniShown('U3')" v-bind:style="universes.U3.nodeStyle()" :disabled="uniPaused('U3')" onclick="player.universe='U3'"><span class="buttonText">3</span></button>
 				<button class="uniButton" v-if="uniShown('UB')" v-bind:style="universes.UB.nodeStyle()" :disabled="uniPaused('UB')" onclick="player.universe='UB'"><span class="buttonText">β</span></button>
  				<button class="uniButton" v-if="uniShown('D1')" v-bind:style="universes.D1.nodeStyle()" onclick="player.universe='D1'"><span class="buttonText">D1</span></button>
+ 				<button class="uniButton" v-if="uniShown('DA')" v-bind:style="universes.DA.nodeStyle()" onclick="player.universe='DA'"><span class="buttonText">Dα</span></button>
 				<button class="uniButton" v-if="uniShown('CH')" v-bind:style="universes.CH.nodeStyle()" onclick="player.universe='CH'"><span class="buttonText">γ</span></button>
 				<button class="uniButton" v-if="uniShown('DS')" v-bind:style="universes.DS.nodeStyle()" :disabled="uniPaused('DS')" onclick="player.universe='DS'"><span class="buttonText">ε</span></button>
 				<button class="uniButton" v-if="uniShown('UZ')" v-bind:style="universes.UZ.nodeStyle()" :disabled="uniPaused('UZ')" onclick="player.universe='UZ'"><span class="buttonText">ζ</span></button>
@@ -77,6 +78,10 @@
 				<button class="miscButton" v-if="!player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge" :disabled="!(hasUpgrade('i', 21) || hasUpgrade('ad', 13))" onclick="showTab('po');player.subtabs['po']['stuff'] = 'Otherworldly Features'" style="border-left:0px">
 					<img class="miscImg" src="resources/ui/universe.png" v-if="hasUpgrade('i', 21) || hasUpgrade('ad', 13)"></img>
 					<div class="miscText" v-if="!(hasUpgrade('i', 21) || hasUpgrade('ad', 13))">?</div>
+				</button>
+				<button class="miscButton" v-if="player.sma.inStarmetalChallenge && player.tera.virtueUnlocks2[0]" :disabled="!hasUpgrade('le', 150)" onclick="showTab('dotf')" style="border-left:0px">
+					<img class="miscImg" src="resources/ui/universe.png" v-if="hasUpgrade('le', 150)"></img>
+					<div class="miscText" v-if="!hasUpgrade('le', 150)">?</div>
 				</button>
 				<button class="miscButton" v-if="!player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge" :disabled="!tmp.po.microtabs.stuff.Halter.unlocked" onclick="showTab('po');player.subtabs['po']['stuff'] = 'Halter'">
 					<img class="miscImg" src="resources/ui/halter.png" v-if="tmp.po.microtabs.stuff.Halter.unlocked"></img>

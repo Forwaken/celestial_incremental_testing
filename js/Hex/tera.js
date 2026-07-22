@@ -1,15 +1,15 @@
 addNode("piositySpell", {
     name() {return "<h2>🙏</h2>"},
     symbol() {return "🙏"},
-    tooltip() {return "<h3>Piosity</h3><br>Increases blessings by +" + formatWhole(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))) + "x during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
-    tooltipLocked() {return "<h3>Piosity</h3><br>Increases blessings by +" + formatWhole(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))) + "x during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
+    tooltip() {return "<h3>Piosity</h3><br>Increases blessings by +" + formatWhole(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))) + "x during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
+    tooltipLocked() {return "<h3>Piosity</h3><br>Increases blessings by +" + formatWhole(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))) + "x during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(player.tera.hexEnergy) + "/" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
     canClick() {return player.tera.hexEnergy.gte(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))},
     layerShown() {return player.tera.clickables["piosityPin"]},
     onClick() {
         if (this.canClick()) {
             player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))
-                if (player.tera.trueHex.gte(15)) player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))).add(1).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))).add(1)
-                else player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))).add(1)
+                if (player.tera.trueHex.gte(15)) player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))).add(1).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))).add(1)
+                else player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))).add(1)
         }
     },
     nodeStyle() {
@@ -53,8 +53,8 @@ addNode("bewitchSpell", {
 addNode("chronotachysisSpell", {
     name() {return "<h2>⏳</h2>"},
     symbol() {return "⏳"},
-    tooltip() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow10(player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow10(player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
-    tooltipLocked() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow10(player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow10(player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
+    tooltip() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(3, player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(3, player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
+    tooltipLocked() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(3, player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(3, player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
     canClick() {return player.tera.hexEnergy.gte(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))},
     layerShown() {return player.tera.clickables["chronotachysisPin"]},
     onClick() {
@@ -161,12 +161,13 @@ addLayer("tera", {
         player.tera.hexEnergyCap = new Decimal(9).add(buyableEffect("tera", "hexEnergyCap"))
         player.tera.hexEnergyGain = Decimal.pow(2, player.tera.trueHex.sub(1)).div(100).mul(buyableEffect("tera", "hexEnergyBuff")).mul(player.tera.hexEssenceEffect)
         if (hasUpgrade("tera", "hex8")) player.tera.hexEnergyGain = player.tera.hexEnergyGain.mul(upgradeEffect("tera", "hex8"))
+        if (hasAchievement("achievements", 1404)) player.tera.hexEnergyGain = player.tera.hexEnergyGain.mul(1.7)
 
         if (getBuyableAmount("tera", "piosityAuto").gt(0)) player.tera.piosityAuto = player.tera.piosityAuto.sub(delta)
 
         if (player.tera.piosityAuto.lte(0)) {
             player.tera.piosityAuto = buyableEffect("tera", "piosityAuto")
-            player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement)).max(0.001)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement)).max(0.001)).add(1)
+            player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement)).max(0.001)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement)).max(0.001)).add(1)
         }
         
         if (player.tera.clickables["bewitchSpell"]) player.tera.hexEnergyGain = player.tera.hexEnergyGain.sub(Decimal.div(0.3, buyableEffect("tera", "bewitchCost")))
@@ -786,14 +787,14 @@ addLayer("tera", {
             },
         },
         "piositySpell": {
-            title() {return "<h3>Piosity</h3><br>Increases blessings by +" + formatWhole(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))) + "x during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
+            title() {return "<h3>Piosity</h3><br>Increases blessings by +" + formatWhole(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))) + "x during this tera run<br>Currently: x" + formatSimple(player.tera.piositySpell) + " Blessings<br><br>" + formatSimple(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
             tooltip: "Benefits slightly decay over increased use.",
             canClick() {return player.tera.hexEnergy.gte(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))},
             unlocked: true,
             onClick() {
                 player.tera.hexEnergy = player.tera.hexEnergy.sub(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))
-                if (player.tera.trueHex.gte(15)) player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))).add(1).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))).add(1)
-                else player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow10(player.tera.spellEnhancement))).add(1)
+                if (player.tera.trueHex.gte(15)) player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))).add(1).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))).add(1)
+                else player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement))).add(1)
             },
             style() {
                 let look = {width: "180px", minHeight: "120px", fontSize: "8px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0"}
@@ -858,7 +859,7 @@ addLayer("tera", {
             },
         },
         "chronotachysisSpell": {
-            title() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow10(player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow10(player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
+            title() {return "<h3>Chronotachysis</h3><br>Increases uni-alpha tickspeed by x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(3, player.tera.spellEnhancement))) + " for " + formatTime(Decimal.add(60, buyableEffect("tera", "chronotachysisDuration").sub(1))) + "<br>Currently: x" + formatSimple(buyableEffect("tera", "chronotachysisBuff").mul(Decimal.pow(3, player.tera.chronotachysisSpell[1]))) + " for " + formatTime(player.tera.chronotachysisSpell[0]) + "<br><br>" + formatSimple(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement))) + " Hex-Energy"},
             canClick() {return player.tera.hexEnergy.gte(Decimal.div(10, buyableEffect("tera", "chronotachysisCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))},
             unlocked: true,
             onClick() {
@@ -1705,7 +1706,7 @@ addLayer("tera", {
 
         "hept1": {
             fullDisplay() {return "<h3>Sinergy</h3><br>Boost external effects based on sins equipped<br>Currently: ^" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e70 Blessings<br><small>[REQ BEING IN HEPT]</small>"},
-            tooltip: "(Sins Equiped/50)+1",
+            tooltip: "(Sins Equipped/50)+1",
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hbl.blessings.gte("1e70")},
             pay() {player.hbl.blessings = player.hbl.blessings.sub("1e70")},
@@ -1744,10 +1745,10 @@ addLayer("tera", {
             }
         },
         "hept4": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 70 η-Provenance<br><small>[REQ BEING IN HEPT]</small>"},
+            fullDisplay() {return "<h3>Crystalized Tiers</h3><br>Remove crystal effect's hardcap<br><br>Cost: 140 η-Provenance<br><small>[REQ BEING IN HEPT]</small>"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
-            canAfford() { return player.h.stage.eq(7) && player.hpr.rank[6].gte(70)},
-            pay() {player.hpr.rank[6] = player.hpr.rank[6].sub(70)},
+            canAfford() { return player.h.stage.eq(7) && player.hpr.rank[6].gte(140)},
+            pay() {player.hpr.rank[6] = player.hpr.rank[6].sub(140)},
             style() {
                 let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -1814,7 +1815,7 @@ addLayer("tera", {
             }
         },
         "hept10": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e14 Hept Essence"},
+            fullDisplay() {return "<h3>Negative Jinxed</h3><br>Massively improve Μ-Jinx effect<br><br>Cost: 1e14 Hept Essence"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(1e14)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(1e14)},
@@ -1847,18 +1848,10 @@ addLayer("tera", {
             }
         },
         // HEPT UPGRADES
-        // Reduce external penalty based on equipped sins
-        // Unlock rage in power (In all universes, but a few unique buyables while in sins)
-        // 
-        // Unlock dark OTFs
-        // EXTERNAL UNLOCK/BUFF x2
-
         // Slightly reduce T2 provenance cost scaling
-        // 
-        //
-        // EXTERNAL UNLOCK/BUFF x3
+        // New grass studies (cause 7 rows harhar)
 
-        // Remove crystal effect hardcap
+        // FUTURE POTENTIAL UPGRADES
         // More Pent Milestones Maybe?
         // Miasmic Shadow (hex shadow evo)
         // Unlock Rocket Parts (you can equip only one rocket part at a time at first, but there are three potential slots in total. You will start with just one that makes common pets not reset when sent up to space)
@@ -1946,14 +1939,15 @@ addLayer("tera", {
                     ["style-row", [
                         ["style-column", [
                             ["raw-html", "Spell Enhancement", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                            ["raw-html", "Improves the power of instant spells", {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                            ["raw-html", "Improves the power of spells", {color: "white", fontSize: "14px", fontFamily: "monospace"}],
                         ], {width: "262px", height: "60px", lineHeight: "1", background: "#425673", borderRadius: "0 0 0 17px", borderRight: "3px solid #85ade6"}],
                         ["clickable", "enhancementDown"],
                         ["style-column", [
                             ["raw-html", () => {return "Enhancement Lv" + formatWhole(player.tera.spellEnhancement)}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return "Increases spell power by x" + formatWhole(Decimal.pow10(player.tera.spellEnhancement))}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "Increases instant spell power by x" + formatWhole(Decimal.pow(12, player.tera.spellEnhancement))}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "Increases duration spell power by x" + formatWhole(Decimal.pow(3, player.tera.spellEnhancement))}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
                             ["raw-html", () => {return "Increases spell costs by x" + formatWhole(Decimal.pow10(player.tera.spellEnhancement))}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
-                        ], {width: "314px", height: "60px", lineHeight: "1", borderLeft: "3px solid #85ade6", borderRight: "3px solid #85ade6"}],
+                        ], {width: "314px", height: "60px", lineHeight: "0.8", borderLeft: "3px solid #85ade6", borderRight: "3px solid #85ade6"}],
                         ["clickable", "enhancementUp"],
                     ], () => {return player.tera.trueHex.gte(3) ? {width: "705px", height: "60px", background: "#273345", border: "3px solid #85ade6", marginTop: "-3px", borderRadius: "0 0 20px 20px"} : {display: "none !important"}}],
                     ["style-row", [], () => {return player.tera.trueHex.lt(3) ? {width: "705px", height: "20px", background: "#273345", border: "3px solid #85ade6", marginTop: "-3px", borderRadius: "0 0 20px 20px"} : {display: "none !important"}}],
@@ -2138,7 +2132,7 @@ addLayer("tera", {
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[0].lt(1e7)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "1e12", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "Unlock ??? <small>[NOT IMPLEMENTED]</small>"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                                ["style-row", [["raw-html", () => {return "Unlock a new DU1 upgrade"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[0] && player.tera.virtueEssence[0].lt(1e12)) {look.background = "#bf8f8f"};return look}],
                         ], {width: "398px", height: "194px", borderLeft: "3px solid #95A6DD", userSelect: "none"}],
                     ], {width: "576px", height: "194px", border: "3px solid #95A6DD", background: "#719671"}],

@@ -32,7 +32,7 @@
 		"Check Back/diamondDust.js", "Check Back/treasureRoom.js",
 		"Puzzle World/akash.js", "Puzzle World/elements.js", 
 		"Puzzle World/Puzzle Fighting/puzzleFighting.js",
-		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js",
+		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js", "DarkU1/darkOTF.js",
 		"Ordinal/ordinal.js", "Ordinal/markup.js",
 	],
 
@@ -290,6 +290,9 @@ function updateStyles() {
 		case "du": case "le": case "dr": case "dp": case "dg":
 		case "dgr": case "dn": case "db": case "dv": case "ds": case "pu": case "rp":
 			layerBG = "black"
+			break;
+		case "dotf":
+			layerBG = "linear-gradient(45deg, #140019, #000e26)"
 			break;
 		case "ch":
 			layerBG = "linear-gradient(90deg, #260b36, #0920b5)"
@@ -673,6 +676,9 @@ function updateStyles() {
 				break;
 			case "D1":
 				sideBG = "black"
+				break;
+			case "DA":
+				sideBG = "#100404"
 				break;
 			case "A2":
 				sideBG = "radial-gradient(circle, #151230, #000000)"

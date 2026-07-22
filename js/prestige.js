@@ -161,7 +161,7 @@
             player.p.crystalEffect = player.p.crystalEffect.min(1.5)
         } else {
             if (player.p.crystalEffect.gte(1.5)) player.p.crystalEffect = player.p.crystals.plus(1).log("1e100").pow(0.7).mul(0.01).add(1.41)
-            player.p.crystalEffect = player.p.crystalEffect.min(2)
+            if (!hasUpgrade("tera", "hept4")) player.p.crystalEffect = player.p.crystalEffect.min(2)
         }
     },
     prestigeReset()
@@ -778,7 +778,7 @@
                     ["raw-html", "(Gain based on Tetr)", { color: "#b6658c", fontSize: "16px", fontFamily: "monospace" }],
                     ["row", [
                         ["raw-html", () => {return "Boosts ranks, tiers, tetr, and pent effect by <h3>^" + format(player.p.crystalEffect, 5) + "</h3>."}, {color: "#b6658c", fontSize: "16px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return (!hasUpgrade("cs", 304) && player.p.crystalEffect.gte(1.5)) || player.p.crystalEffect.gte(2) ? "<small style='margin-left:8px'>[HARDCAPPED]</small>" : hasUpgrade("cs", 304) && player.p.crystalEffect.gte(1.5) ? "<small style='margin-left:8px'>[SOFTCAPPED]</small>" : ""}, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return (!hasUpgrade("cs", 304) && player.p.crystalEffect.gte(1.5)) || (player.p.crystalEffect.gte(2) && !hasUpgrade("tera", "hept4")) ? "<small style='margin-left:8px'>[HARDCAPPED]</small>" : hasUpgrade("cs", 304) && player.p.crystalEffect.gte(1.5) ? "<small style='margin-left:8px'>[SOFTCAPPED]</small>" : ""}, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
                     ]],
                     ["blank", "25px"],
                     ["row", [["clickable", 12]]],

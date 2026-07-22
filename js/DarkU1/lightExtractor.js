@@ -44,6 +44,7 @@
             buyUpgrade("le", 24, false)
             buyUpgrade("le", 101, false)
             buyUpgrade("le", 102, false)
+            buyUpgrade("le", 150, false)
         }
     },
     nodeStyle() {
@@ -65,6 +66,10 @@
             player.le.timeSinceReset = player.le.timeSinceReset.add(delta)
         }
 
+        // Universe Dividers
+        let uniDiv = new Decimal(1)
+        uniDiv = uniDiv.mul(player.db.milestone1Effect)
+
         // Starmetal Alloy
         player.le.starmetalAlloyReq = Decimal.pow(1e1, player.le.resetAmount.add(1).pow(1.5).floor()).mul(1e2)
         if (player.le.resetAmount.gte(3)) player.le.starmetalAlloyReq = Decimal.pow(1e1, player.le.resetAmount.add(1).pow(2.5).floor()).mul(1e2)
@@ -73,6 +78,7 @@
         player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(levelableEffect("st", 208)[0])
         player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(buyableEffect("funify", 12))
         if (getLevelableTier("pu", 100, true)) player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(levelableEffect("pu", 100)[0])
+        player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(uniDiv)
         if (getLevelableTier("pu", 401, true)) player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.pow(buyableEffect("bl", 21))
 
 
@@ -107,9 +113,9 @@
         player.le.eclipseShardsReq = Decimal.pow(1e1, player.le.resetAmount.add(1).pow(1.7).floor()).mul(1e3)
         if (player.le.resetAmount.gte(3)) player.le.eclipseShardsReq = Decimal.pow(1e1, player.le.resetAmount.add(1).pow(2.5).floor()).mul(1e3)
         if (player.le.resetAmount.gte(8)) player.le.eclipseShardsReq = Decimal.pow(1e1, player.le.resetAmount.add(1).pow(2.6).floor()).mul(1e3)
-        player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(player.db.milestone1Effect)
         if (hasUpgrade("sma", 210)) player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(upgradeEffect("sma", 210))
         if (getLevelableTier("pu", 200, true)) player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(levelableEffect("pu", 200)[1])
+        player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(uniDiv)
 
         player.le.eclipseShardsToGetToGet = player.le.resetAmount.add(1)
         player.le.eclipseShardsToGetTrue = player.le.eclipseShardsToGet
@@ -704,6 +710,11 @@
         player.funify.buyables[16] = new Decimal(0)
 
         player.du.noPunchcards = true
+
+        player.dotf.slotsUsed = 0
+        player.dotf.featureScaling = new Decimal(1)
+        player.dotf.penumbral = false
+        player.dotf.miasmata = false
     },
     upgrades: {
         11: {
@@ -917,6 +928,22 @@
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "rgb(51, 54, 0)" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
                 return look
             },
+        },
+
+        // Stays During This Run
+        150: {
+            title: "Dark OTF's",
+            unlocked() { return player.tera.virtueUnlocks2[0] },
+            description: "Unlock Dark OTF's.",
+            cost: new Decimal("1e1500"),
+            currencyLocation() { return player.du },
+            currencyDisplayName: "Dark Celestial Points",
+            currencyInternalName: "points",
+            style() {
+                let look = {borderRadius: "15px", color: "white", border: "2px solid #384166", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
+                return look
+            }
         },
 
         //permanent
@@ -1154,7 +1181,7 @@
                         ["blank", "5px"],
                         ["style-row", [["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15], ["upgrade", 16],
                             ["upgrade", 17], ["upgrade", 101], ["upgrade", 18], ["upgrade", 19], ["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 102], 
-                            ["upgrade", 202], ["upgrade", 24], ["upgrade", 201]], {maxWidth: "755px"}],
+                            ["upgrade", 202], ["upgrade", 24], ["upgrade", 201], ["upgrade", 150]], {maxWidth: "755px"}],
                         ["blank", "5px"],
                     ], {width: "755px", backgroundColor: "#0e1019", border: "2px solid #384166", borderRadius: "15px"}],
                     ["blank", "25px"],

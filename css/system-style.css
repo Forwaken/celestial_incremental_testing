@@ -248,13 +248,16 @@
 		margin-left: 25px;
 	}
 	.treeNode {
-		margin: 5px 0px 5px 0px !important;
+		margin: 2px 0px 2px 0px !important;
 	}
 	.treeRow {
 		max-height: 290px;
 		display: flex !important;
 		flex-flow: column wrap !important;
 		margin: 0 10px 0px 10px !important;
+	}
+	.treeRow:has(> :nth-child(4)) {
+		width: 150px
 	}
 	.tabHolder {
 		display: inline-flex;
@@ -311,6 +314,9 @@
 		display: flex !important;
 		flex-flow: column wrap !important;
 		margin: 0px 4px 0px 7px !important;
+	}
+	.gridRow:has(> :nth-child(4)) {
+		width: 170px
 	}
 	.gridCol {
 		display: inline-flex;

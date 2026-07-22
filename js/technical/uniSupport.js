@@ -251,6 +251,27 @@ addUniverse("D1", {
     uniShown() { return player.startedGame && player.sma.inStarmetalChallenge},
 })
 
+addUniverse("DA", {
+    name: "Dark Universe α<br>Miasmic Wasteland",
+    symbol: "Dα",
+    tree: [[]],
+    nodeStyle() {
+        let style = {
+            background: "linear-gradient(145deg, #361010 0%, #111 100%)",
+			backgroundOrigin: "border-box",
+			color: "#ffffff",
+			borderColor: "#4d1d1d",
+        }
+        if (player.universe=="DA") {
+            style.outline = "2px solid white"
+            style.outlineOffset = "-2px"
+            style.borderWidth = "5px"
+        }
+        return style
+    },
+    uniShown() { return player.startedGame && player.sma.inStarmetalChallenge && player.dotf.miasmata},
+})
+
 addUniverse("CB", {
     name: "Check Back",
     symbol: "CB",
