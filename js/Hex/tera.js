@@ -2350,7 +2350,7 @@ addLayer("tera", {
                     ["style-row", [
                         ["top-column", [
                             ["style-column", [
-                                ["raw-html", "Humilty", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", "Humility", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "169px", height: "33px", lineHeight: "1", border: "3px solid rgba(0,0,0,0.5)"}],
                             ["style-column", [], {width: "175px", height: "3px", background: "#95A6DD"}],
                             ["style-column", [
@@ -2362,8 +2362,8 @@ addLayer("tera", {
                         ], {width: "175px", height: "194px"}],
                         ["top-column", [
                             ["tooltip-row", [
-                                ["raw-html", () => {return formatSimple(player.tera.virtueEssence[6]) + " Essence of Humilty (+" + formatSimple(player.tera.virtueEssenceGain[6], 2) + "/s)"}, {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
-                                ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>Humilty^1.18</small></div>"],
+                                ["raw-html", () => {return formatSimple(player.tera.virtueEssence[6]) + " Essence of Humility (+" + formatSimple(player.tera.virtueEssenceGain[6], 2) + "/s)"}, {color: "rgba(0,0,0,0.7)", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", "<div class='bottomTooltip'>Base Formula<hr><small>Humility^1.18</small></div>"],
                             ], {width: "392px", height: "33px", border: "3px solid rgba(0,0,0,0.5)"}],
                             ["style-column", [], {width: "398px", height: "3px", background: "#95A6DD"}],
                             ["style-row", [
