@@ -678,19 +678,19 @@ addLayer("tera", {
             },
         },
         106: {
-            title() {return !player.tera.virtueUnlocks[0] ? "<h2>CURRENTLY SEALED</h2><br><h3>[Perhaps a virtuous power could break this seal?]</h3>" : player.h.stage.neq(6) ? (Decimal.gt(player.tera.clickables[106], 0) ? "<h2>Are you sure?</h2><br><h3>[Resets ALL previous Uni-α content]</h3>" : "<h2>Switch to Hex Universe</h2><br><h3>[Resets ALL previous Uni-α content]</h3>") : "<h2>Switch to Hex Universe</h2><br><h3>[ALREADY IN HEX UNIVERSE]</h3>"},
+            title() {return !player.tera.virtueUnlocks[0] ? "<h2>CURRENTLY SEALED</h2><br>[Perhaps a virtuous power could break this seal?]" : player.h.stage.neq(6) ? (Decimal.gt(player.tera.clickables[106], 0) ? "<h2>Are you sure?</h2><br><h3>[Resets ALL previous Uni-α content]</h3>" : "<h2>Switch to Hex Universe</h2><br><h3>[Resets ALL previous Uni-α content]</h3>") : "<h2>Switch to Hex Universe</h2><br><h3>[ALREADY IN HEX UNIVERSE]</h3>"},
             canClick() {return player.h.stage.neq(6) && player.tera.virtueUnlocks[0]},
             unlocked: true,
             onClick() {
-                if (confirm("Are you sure you want to do a tera reset?")) {
-                    if (Decimal.lte(player.tera.clickables[106], 0)) {
+                if (Decimal.gte(player.tera.clickables[106], 0)) {
+                    if (confirm("Are you sure you want to do a tera reset?")) {
                         if (!hasAchievement("achievements", 1410)) completeAchievement("achievements", 1410)
                         layers.tera.teraReset()
                         player.h.stage = new Decimal(6)
-                        player.tera.clickables[106] = new Decimal(2)
-                    } else {
                         player.tera.clickables[106] = new Decimal(0)
                     }
+                } else {
+                    player.tera.clickables[106] = new Decimal(3)
                 }
             },
             style() {
@@ -704,14 +704,14 @@ addLayer("tera", {
             canClick() {return player.h.stage.neq(7)},
             unlocked: true,
             onClick() {
-                if (confirm("Are you sure you want to do a tera reset?")) {
-                    if (Decimal.lte(player.tera.clickables[107], 0)) {
+                if (Decimal.gte(player.tera.clickables[107], 0)) {
+                    if (confirm("Are you sure you want to do a tera reset?")) {
                         layers.tera.teraReset()
                         player.h.stage = new Decimal(7)
-                        player.tera.clickables[107] = new Decimal(2)
-                    } else {
                         player.tera.clickables[107] = new Decimal(0)
                     }
+                } else {
+                    player.tera.clickables[107] = new Decimal(3)
                 }
             },
             style() {
