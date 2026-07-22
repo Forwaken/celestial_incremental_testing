@@ -153,8 +153,8 @@ addLayer("hpu", {
         if (hasUpgrade("hpw", 152)) addPure = addPure.add(upgradeEffect("hpw", 152))
         if (addPure.gt(player.hpu.keptPurity) && player.hpu.purity.add(player.hpu.puritySpent).lt(player.hpu.totalPurity.sub(player.hpu.keptPurity).add(addPure))) {
             player.hpu.purity = player.hpu.purity.add(addPure.sub(player.hpu.keptPurity))
+            player.hpu.keptPurity = addPure
         }
-        player.hpu.keptPurity = addPure
     },
     clickables: {
         1: {
