@@ -905,6 +905,7 @@ let changelog = `<h1>Changelog:</h1><br>
 			- Added the star accumulator.<br><br>
 		Minor Changes:<br>
 			- Improved the challenge components UI.<br>
+			- Added new cante beaten perks.<br>
 			- Added bulk realm challenge completion.<br>
 			- Clarified that purifier respeccing doesn't reset anything.<br>
 			- Made things that power reset give you power you would have gained if you meet the req.<br>
