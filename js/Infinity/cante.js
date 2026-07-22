@@ -92,6 +92,7 @@
         player.ca.replicantiMult = player.ca.replicantiMult.add(buyableEffect("ca", 18))
         player.ca.replicantiMult = player.ca.replicantiMult.mul(buyableEffect("g", 26))
         player.ca.replicantiMult = player.ca.replicantiMult.mul(levelableEffect("pet", 108)[0])
+        if (player.ca.defeatedCante) player.ca.replicantiMult = player.ca.replicantiMult.mul(2)
         if (hasUpgrade("ep0", 11)) player.ca.replicantiMult = player.ca.replicantiMult.mul(upgradeEffect("ep0", 11))
         if (hasUpgrade("bi", 117)) player.ca.replicantiMult = player.ca.replicantiMult.mul(3)
         if (hasUpgrade("hpw", 1062) || player.tera.realmMastery[5]) player.ca.replicantiMult = player.ca.replicantiMult.mul(3)
@@ -1243,12 +1244,21 @@
                 content: [
                     ["blank", "25px"],
                     ["style-column", [
-                        ["raw-html", "Perks for defeating Cante", {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
+                        ["raw-html", "Perks for defeating Cante", {color: "rgba(0,0,0,0.7)", fontSize: "24px", fontFamily: "monospace"}],
                     ], {width: "800px", border: "3px solid #0f354c", backgroundImage: "linear-gradient(45deg, #0a82b9 0%, #7dd3f9 100%)", borderBottom: "5px", paddingTop: "5px", paddingBottom: "5px", borderRadius: "15px 15px 0px 0px"}],
                     ["style-column", [
-                        ["raw-html", "<u>Unlocks</u>", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", "Universe 3: Domain of Singularity.", {color: "rgba(0,0,0,0.6)", fontSize: "18px", fontFamily: "monospace"}],
-                        ["raw-html", "Singularity, and the ability to reset for singularity points.", {color: "rgba(0,0,0,0.6)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "<u>Unlocks</u>", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", "Universe 3: Domain of Singularity.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "Singularity, and the ability to reset for singularity points.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "<u>Buffs</u>", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", "No longer require proto memory time to generate proto memories.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "x3 Pre-Power Resources.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "x3 Infinities.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "x2 Replicanti Mult.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "x2 T1 Alternate Infinities.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "x1.5 T2 Alternate Infinities.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "x2 Checkback XP.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "x1.2 XPBoost.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
                     ], {width: "800px", border: "3px solid #0f354c", backgroundImage: "linear-gradient(45deg, #0a82b9 0%, #7dd3f9 100%)", paddingTop: "5px", paddingBottom: "5px", borderRadius: "0px 0px 15px 15px"}]
                 ]
             }

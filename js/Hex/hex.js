@@ -187,6 +187,7 @@ addLayer("h", {
         player.h.prePowerMult = player.h.prePowerMult.div(player.h.preNerf)
 
         let externalPre = new Decimal(1)
+        if (player.ca.defeatedCante) externalPre = externalPre.mul(3)
         externalPre = externalPre.mul(levelableEffect("pu", 107)[1])
         externalPre = externalPre.mul(levelableEffect("pet", 1106)[0])
         externalPre = externalPre.mul(buyableEffect("al", 106))

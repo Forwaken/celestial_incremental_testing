@@ -442,6 +442,7 @@ addLayer("tad", {
         t1Mult = t1Mult.mul(buyableEffect("om", 13))
         t1Mult = t1Mult.mul(levelableEffect("pet", 208)[2])
         t1Mult = t1Mult.mul(levelableEffect("pet", 1101)[2])
+        if (player.ca.defeatedCante) t1Mult = t1Mult.mul(2)
         if (hasUpgrade("tad", 144)) t1Mult = t1Mult.mul(1.2)
         if (player.tad.altInfinities.infested.milestone.gte(2)) t1Mult = t1Mult.mul(player.tad.altInfinities.infested.effect2)
         t1Mult = t1Mult.mul(buyableEffect("tad", 213))
@@ -453,6 +454,7 @@ addLayer("tad", {
 
         let t2Mult = new Decimal(1)
         t2Mult = t2Mult.mul(levelableEffect("pet", 1101)[2])
+        if (player.ca.defeatedCante) t2Mult = t2Mult.mul(1.5)
         if (hasUpgrade("tad", 144)) t2Mult = t2Mult.mul(1.2)
         if (player.tad.altInfinities.distorted.milestone.gte(1)) t2Mult = t2Mult.mul(player.tad.altInfinities.distorted.effect1)
         if (player.tad.altInfinities.infested.milestone.gte(2)) t2Mult = t2Mult.mul(player.tad.altInfinities.infested.effect2)

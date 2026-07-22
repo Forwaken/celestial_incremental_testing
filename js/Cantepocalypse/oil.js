@@ -113,14 +113,16 @@
         if (!hasUpgrade("depth2", 203)) player.oi.protoMemoriesPerSecond = player.oi.protoMemoriesPerSecond.mul(buyableEffect("oi", 24))
         player.oi.protoMemoriesPerSecond = player.oi.protoMemoriesPerSecond.mul(player.fu.funEffect2)
         if (!inChallenge("fu", 12)) player.oi.protoMemoriesPerSecond = player.oi.protoMemoriesPerSecond.mul(levelableEffect("pet", 403)[2])
+        if (hasUpgrade("fu", 14)) player.oi.protoMemoriesPerSecond = player.oi.protoMemoriesPerSecond.mul(upgradeEffect("fu", 14))
 
         // POWER RAISERS
         if (hasUpgrade("depth2", 203)) player.oi.protoMemoriesPerSecond = player.oi.protoMemoriesPerSecond.pow(buyableEffect("oi", 24))
 
         player.oi.protoMemorySecondsToGet = player.cp.replicantiPoints.plus(1).log10().mul(8).pow(0.5)
-        if (hasUpgrade("fu", 14)) player.oi.protoMemorySecondsToGet = player.oi.protoMemorySecondsToGet.mul(upgradeEffect("fu", 14))
 
-        if (player.oi.protoMemorySeconds.gt(0)) {
+        if (player.ca.defeatedCante) {
+            player.oi.protoMemories = player.oi.protoMemories.add(player.oi.protoMemoriesPerSecond.mul(delta))
+        } else if (player.oi.protoMemorySeconds.gt(0)) {
             player.oi.protoMemories = player.oi.protoMemories.add(player.oi.protoMemoriesPerSecond.mul(delta))
             player.oi.protoMemorySeconds = player.oi.protoMemorySeconds.sub(onepersec.mul(delta))
         } else {
@@ -235,7 +237,7 @@
                 }
             },
             canClick() { return player.cp.replicantiPoints.gte(1e60) && player.oi.linkerBought },
-            unlocked() { return true },
+            unlocked() { return !player.ca.defeatedCante },
             onClick() {
                 player.oi.protoMemorySeconds = player.oi.protoMemorySeconds.add(player.oi.protoMemorySecondsToGet)
                 player.oi.oilPause = new Decimal(4)
@@ -248,7 +250,7 @@
                 player.oi.linkingPower[5] = new Decimal(0)
             },
             style() {
-                let look = { width: '600px', "min-height": '120px', border: "3px solid rgba(0,0,0,0.5)", borderRadius: '15px' }
+                let look = { width: '600px', "min-height": '120px', border: "3px solid rgba(0,0,0,0.5)", borderRadius: '15px', margin: "25px"}
                 look.backgroundColor = this.canClick() ? "#e0ffff" : "#bf8f8f"
                 return look
             },
@@ -847,13 +849,11 @@
                     ], {width: "825px", borderLeft: "3px solid #0c1a36", borderRight: "3px solid #0c1a36", borderBottom: "3px solid #0c1a36"}],
                     ["blank", "25px"],
                     ["raw-html", function () { return "You have <h3>" + format(player.oi.protoMemories) + "</h3> proto memories." }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],
-                    ["raw-html", function () { return player.oi.protoMemorySeconds.gt(0) ? "You are gaining <h3>" + format(player.oi.protoMemoriesPerSecond) + "</h3> proto memories per second. (based on total linking power)" : "You currently have no proto memory production time." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
+                    ["raw-html", function () { return player.oi.protoMemorySeconds.gt(0) || player.ca.defeatedCante ? "You are gaining <h3>" + format(player.oi.protoMemoriesPerSecond) + "</h3> proto memories per second. (based on total linking power)" : "You currently have no proto memory production time." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
                     ["blank", "25px"],
-                    ["raw-html", function () { return "You have <h3>" + formatTime(player.oi.protoMemorySeconds) + "</h3> to produce proto memories." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
-                    ["raw-html", function () { return "You will gain <h3>" + formatTime(player.oi.protoMemorySecondsToGet) + "</h3> of proto memory production on reset." }, { "color": "white", "font-size": "16px", "font-family": "monospace" }],
-                    ["blank", "25px"],
+                    ["raw-html", function () { return !player.ca.defeatedCante ? "You have <h3>" + formatTime(player.oi.protoMemorySeconds) + "</h3> to produce proto memories." : "" }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
+                    ["raw-html", function () { return !player.ca.defeatedCante ? "You will gain <h3>" + formatTime(player.oi.protoMemorySecondsToGet) + "</h3> of proto memory production on reset." : "" }, { "color": "white", "font-size": "16px", "font-family": "monospace" }],
                     ["row", [["clickable", 14]]],
-                    ["blank", "25px"],
                     ["style-row", [["ex-buyable", 21], ["ex-buyable", 22], ["ex-buyable", 23], ["ex-buyable", 24]], {maxWidth: "1200px"}],
                 ]
             },

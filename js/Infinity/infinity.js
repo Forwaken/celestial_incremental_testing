@@ -180,6 +180,7 @@
         player.in.infinitiesToGet = player.in.infinitiesToGet.mul(buyableEffect("p", 15))
         player.in.infinitiesToGet = player.in.infinitiesToGet.mul(levelableEffect("pet", 1101)[0])
         if (hasMilestone("ip", 28)) player.in.infinitiesToGet = player.in.infinitiesToGet.mul(player.points.add(1).log("1.79e308").pow(0.7).max(1))
+        if (player.ca.defeatedCante) player.in.infinitiesToGet = player.in.infinitiesToGet.mul(3)
         if (hasUpgrade("ep2", 14)) player.in.infinitiesToGet = player.in.infinitiesToGet.mul(upgradeEffect("ep2", 14))
         player.in.infinitiesToGet = player.in.infinitiesToGet.mul(player.co.cores.infinity.effect[2])
         if (hasMilestone("fa", 13)) player.in.infinitiesToGet = player.in.infinitiesToGet.mul(player.fa.milestoneEffect[2])

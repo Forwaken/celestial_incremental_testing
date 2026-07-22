@@ -744,7 +744,7 @@
         14: {
             title: "Fun Upgrade IV",
             unlocked() { return hasUpgrade("fu", 13) },
-            description: "Boost proto memory production seconds based on time played.",
+            description: "Boost proto memory production based on time played.",
             cost: new Decimal(70000),
             currencyLocation() { return player.fu },
             currencyDisplayName: "Fun",
