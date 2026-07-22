@@ -1,6 +1,7 @@
 ﻿addLayer("bl", {
     name: "Blood", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "BL", // This appears on the layer's node. Default is the id with the first letter capitalized
+    universe: "D1",
     row: 1,
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
@@ -34,7 +35,7 @@
         };
     },
     tooltip: "Blood",
-    branches: [["le", "#f57171ff"]],
+    branches: [["le", "#309"]],
     color: "#4f1818ff",
     update(delta) {
         let onepersec = new Decimal(1)
@@ -721,6 +722,9 @@
                             ["blank", "25px"],
                             ["layer-proxy", ["bl", [
                                 ["clickable", 11],
+                            ]]],
+                            ["layer-proxy", ["ir", [
+                                ["clickable", 21], //geroa
                             ]]],
                             ["blank", "25px"],
                             ["raw-html", function () { return "You have " + formatWhole(player.bl.bloodStones) + " blood stones." }, { "color": "white", "font-size": "24px", "font-family": "monospace" }],

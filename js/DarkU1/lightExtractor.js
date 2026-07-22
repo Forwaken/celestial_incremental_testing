@@ -53,10 +53,11 @@
             backgroundOrigin: "border-box",
             borderColor: "#8ca3ff",
             color: "#f5f7ff",
+            // borderRadius: "0px"
         };
     },
     tooltip: "Light Extractor",
-    branches: ["in"],
+    branches: [["dg", "#309"],["dgr", "#309"],["db", "#309"]],
     color: "black",
     update(delta) {
         let onepersec = new Decimal(1)
