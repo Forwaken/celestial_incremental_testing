@@ -32,7 +32,7 @@
 		"Check Back/diamondDust.js", "Check Back/treasureRoom.js",
 		"Puzzle World/akash.js", "Puzzle World/elements.js", 
 		"Puzzle World/Puzzle Fighting/puzzleFighting.js",
-		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js", "DarkU1/darkOTF.js",
+		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js", "DarkU1/darkOTF.js", "DarkUA/sourceEnergy.js", "darkUA/meridians.js",
 		"Ordinal/ordinal.js", "Ordinal/markup.js",
 	],
 
@@ -294,6 +294,9 @@ function updateStyles() {
 		case "dotf":
 			layerBG = "linear-gradient(45deg, #140019, #000e26)"
 			break;
+		case "mse": case "mme":
+			layerBG = "linear-gradient(0deg, #111, #361010)"
+			break;
 		case "ch":
 			layerBG = "linear-gradient(90deg, #260b36, #0920b5)"
 			break;
@@ -544,6 +547,57 @@ function updateStyles() {
     	// Remove the eclipse overlay if not in challenge
 	    const eclipse = document.getElementById("solar-eclipse-bg");
     	if (eclipse) eclipse.remove();
+	}
+	if (!options.performanceMode && (player.tab == "mse" || player.tab == "mme")) {
+	    if (!document.getElementById("miasma-background")) {
+    	    // Create embers background container
+	        const miasmaBg = document.createElement("div");
+        	miasmaBg.id = "miasma-background";
+    	    miasmaBg.style.position = "fixed";
+	        miasmaBg.style.top = "0";
+        	miasmaBg.style.left = "0";
+    	    miasmaBg.style.width = "100vw";
+	        miasmaBg.style.height = "100vh";
+        	miasmaBg.style.pointerEvents = "none";
+    	    miasmaBg.style.zIndex = "-2002";
+	        miasmaBg.style.overflow = "hidden";
+        	document.body.appendChild(miasmaBg);
+
+    	    // Add floating embers throughout the screen
+	        for (let i = 0; i < 100; i++) {
+            	const miasma = document.createElement("div");
+        	    miasma.className = "miasma-float";
+    	        miasma.style.position = "absolute";
+	            miasma.style.left = `${Math.random() * 100}vw`;
+            	miasma.style.top = `${-(Math.random() * 20) -1 }vh`;
+        	    const size = Math.random() * 8 + 4;
+    	        miasma.style.width = `${size}px`;
+	            miasma.style.height = `${size}px`;
+            	miasma.style.background = "radial-gradient(circle, #F80010 0%, #962126 60%, #5E2C32 100%)";
+        	    miasma.style.borderRadius = "50%";
+    	        miasma.style.opacity = Math.random() * 0.4 + 0.4;
+	            miasma.style.filter = "blur(1.5px)";
+            	miasma.style.pointerEvents = "none";
+        	    miasma.style.zIndex = "1";
+    	        // Animate miasma floating in random directions
+	            const duration = 6 + Math.random() * 6;
+            	const xMove = (Math.random() - 0.5) * 60;
+            	const yMove = 60 + Math.random() * 60;
+            	miasma.animate([
+        	        { transform: "translate(0,0)", opacity: miasma.style.opacity },
+    	            { transform: `translate(${xMove}px, ${yMove}vh)`, opacity: 0.1 }
+	            ], {
+            	    duration: duration * 1000,
+        	        iterations: Infinity,
+    	            delay: Math.random() * 4 * 1000
+	            });
+            	miasmaBg.appendChild(miasma);
+        	}
+    	}
+	} else {
+    	// Remove miasma background if not in DUA
+    	const miasmaBg = document.getElementById("miasma-background");
+    	if (miasmaBg) miasmaBg.remove();
 	}
 
 	if (player.musuniverse == "DS" && hasUpgrade("za", 16) && false) { //keep false for now
