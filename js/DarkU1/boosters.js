@@ -218,7 +218,7 @@
                         else if (player.pet.legPetTimers[0].active) return "(Best boosters [EC]: " + formatWhole(player.db.bestBoosters) + ")"
                         else return "(Best boosters [SMA]: " + formatWhole(player.db.bestBoosters2) + ")"
                     }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                    ["raw-html", () => {return "Boosts point gain by x" + format(player.db.boosterEffect)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return player.pet.legPetTimers[0].active ? "Boosts point gain by x" + format(player.db.boosterEffect) : "Extends unavoidable point softcap<sup>2</sup> by x" + format(player.db.boosterEffect)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                     ['blank', '25px'],
                     ["row", [["clickable", 11]]],
                     ['blank', '25px'],

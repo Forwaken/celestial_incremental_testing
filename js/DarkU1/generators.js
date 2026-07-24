@@ -361,7 +361,7 @@
                         ["raw-html", () => {return (player.dg.generatorPowerPerSecond.gte(1e250)) ? "[SOFTCAPPED]" : ""}, {color: "red", fontSize: "18px", fontFamily: "monospace", marginLeft: "10px"}],
                     ]],
                     ["row", [
-                        ["raw-html", () => {return "Boosts point gain by x" + format(player.dg.generatorPowerEffect)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return !player.pet.legPetTimers[0].active ? "Boosts point gain by x" + format(player.dg.generatorPowerEffect) : "Extends unavoidable point softcap<sup>2</sup> by x" + format(player.dg.generatorPowerEffect)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                         ["raw-html", () => {
                             if (player.dg.generatorPower.lt(1e9)) {
                                 return ""

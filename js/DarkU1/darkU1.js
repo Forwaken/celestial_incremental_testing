@@ -41,7 +41,7 @@
         player.du.pointGain = player.du.pointGain.mul(player.dr.tetrEffect)
         player.du.pointGain = player.du.pointGain.mul(player.dr.pentEffect)
         player.du.pointGain = player.du.pointGain.mul(player.dr.rankPointsEffect)
-        player.du.pointGain = player.du.pointGain.mul(player.dg.generatorPowerEffect)
+        if (!player.pet.legPetTimers[0].active) player.du.pointGain = player.du.pointGain.mul(player.dg.generatorPowerEffect)
         player.du.pointGain = player.du.pointGain.mul(buyableEffect("dg", 11))
         if (hasUpgrade("sma", 13)) player.du.pointGain = player.du.pointGain.mul(upgradeEffect("sma", 13))
         if (getLevelableTier("pu", 101, true)) player.du.pointGain = player.du.pointGain.mul(levelableEffect("pu", 101)[0])
@@ -51,7 +51,7 @@
         if (getLevelableTier("pu", 307, true)) player.du.pointGain = player.du.pointGain.mul(levelableEffect("pu", 307)[0])
         player.du.pointGain = player.du.pointGain.mul(buyableEffect("dgr", 14))
         player.du.pointGain = player.du.pointGain.mul(levelableEffect("st", 101)[0])
-        player.du.pointGain = player.du.pointGain.mul(player.db.boosterEffect)
+        if (player.pet.legPetTimers[0].active) player.du.pointGain = player.du.pointGain.mul(player.db.boosterEffect)
         if (hasMilestone("db", 12)) player.du.pointGain = player.du.pointGain.mul(player.db.milestone2Effect)
         if (hasMilestone("dgj", 12)) player.du.pointGain = player.du.pointGain.mul(player.dgj.milestone2Effect)
         player.du.pointGain = player.du.pointGain.mul(buyableEffect("dgj", 11))
@@ -76,6 +76,8 @@
         player.du.secondSoftcapStart = new Decimal(1.79e308)
         player.du.secondSoftcapStart = player.du.secondSoftcapStart.pow(player.ds.spaceEnergyEffect)
         if (getLevelableTier("pu", 306, true)) player.du.secondSoftcapStart = player.du.secondSoftcapStart.mul(levelableEffect("pu", 306)[1])
+        if (!player.pet.legPetTimers[0].active) player.du.secondSoftcapStart = player.du.secondSoftcapStart.mul(player.db.boosterEffect)
+        if (player.pet.legPetTimers[0].active) player.du.secondSoftcapStart = player.du.secondSoftcapStart.mul(player.dg.generatorPowerEffect)
 
         // =-- SOFTCAP 2 END --=
         if (player.du.pointGain.gte(player.du.secondSoftcapStart)) player.du.pointGain = player.du.pointGain.div(player.du.secondSoftcapStart).pow(player.du.pointSoftcap2).mul(player.du.secondSoftcapStart)
