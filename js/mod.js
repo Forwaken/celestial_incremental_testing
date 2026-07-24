@@ -32,7 +32,7 @@
 		"Check Back/diamondDust.js", "Check Back/treasureRoom.js",
 		"Puzzle World/akash.js", "Puzzle World/elements.js", 
 		"Puzzle World/Puzzle Fighting/puzzleFighting.js",
-		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js", "DarkU1/darkOTF.js", "DarkUA/sourceEnergy.js", "darkUA/meridians.js",
+		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js", "DarkU1/darkOTF.js", "DarkUA/sourceEnergy.js", "DarkUA/meridians.js",
 		"Ordinal/ordinal.js", "Ordinal/markup.js",
 	],
 

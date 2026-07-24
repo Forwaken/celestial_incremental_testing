@@ -44,7 +44,7 @@ function pauseUniverseAll(exemptions, type = "toggle", temp = false) {
     		for (row in tree) {
 	    		for (thing in tree[row]) {
                     if (tree[row][thing] == "bh" && universe == "U3") continue
-                    if (layers[tree[row][thing]].update) layers[tree[row][thing]].update(time)
+                    if (layers[tree[row][thing]] && layers[tree[row][thing]].update) layers[tree[row][thing]].update(time)
                 }
             }
             if (!temp) {
