@@ -1,5 +1,5 @@
 addLayer("mme", {
-    name: "Meridians", // This is optional, only used in a few places, If absent it just uses the layer id.
+    name: "Meridian", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "ME", // This appears on the layer's node. Default is the id with the first letter capitalized
     universe: "DA",
     row: 1,
@@ -16,7 +16,7 @@ addLayer("mme", {
             color: "rgba(0,0,0,0.6)",
         };
     },
-    tooltip: "Meridians",
+    tooltip: "Meridian",
     branches: [],
     color: "#be6eec",
     update(delta) {
