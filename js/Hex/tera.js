@@ -1951,7 +1951,7 @@ addLayer("tera", {
                         ["style-column", [
                             ["raw-html", () => {return "Enhancement Lv" + formatWhole(player.tera.spellEnhancement)}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                             ["raw-html", () => {return "Increases instant spell power by x" + formatWhole(Decimal.pow(12, player.tera.spellEnhancement))}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return "Increases duration spell power by x" + formatWhole(Decimal.pow(3, player.tera.spellEnhancement))}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "Increases timed spell power by x" + formatWhole(Decimal.pow(3, player.tera.spellEnhancement))}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
                             ["raw-html", () => {return "Increases spell costs by x" + formatWhole(Decimal.pow10(player.tera.spellEnhancement))}, {color: "white", fontSize: "12px", fontFamily: "monospace"}],
                         ], {width: "314px", height: "60px", lineHeight: "0.8", borderLeft: "3px solid #85ade6", borderRight: "3px solid #85ade6"}],
                         ["clickable", "enhancementUp"],

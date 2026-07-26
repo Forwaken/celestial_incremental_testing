@@ -28,8 +28,19 @@ addLayer("mme", {
                 ["raw-html", () => {return layers.mse.effects()}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
             ], {width: "350px", height: "40px", lineHeight: "0.8", background: "#1b2a29", border: "3px solid #283f3e", borderRightWidth: "2px", borderRadius: "20px 0 0 20px"}],
             ["layer-proxy", ["mse", [["bar", "miasmaBar"]]]],
-        ], {width: "800px", height: "46px"}],
-        ["blank", "10px"],
+        ], {width: "710px", height: "46px"}],
+        ["blank", "25px"],
+        ["style-column", [
+            ["style-column", [
+
+            ], {width: "700px", height: "197px", background: "#ff77c922", borderBottom: "3px solid #854da5", borderRadius: "17px 17px 0 0"}],
+            ["always-scroll-column", [
+
+            ], {width: "700px", height: "560px", background: "#be6eec22"}],
+            ["style-column", [
+
+            ], {width: "700px", height: "37px", background: "#ff77c922", borderTop: "3px solid #854da5", borderRadius: "0 0 17px 17px"}],
+        ], {width: "700px", height: "800px", border: "3px solid #854da5", borderRadius: "20px"}],
         ["blank", "25px"],
     ],
     layerShown() { return player.sma.inStarmetalChallenge },

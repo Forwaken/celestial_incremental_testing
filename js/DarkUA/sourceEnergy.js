@@ -59,7 +59,7 @@ addLayer("mse", {
                 ["raw-html", () => {return layers.mse.effects()}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
             ], {width: "350px", height: "40px", lineHeight: "0.8", background: "#1b2a29", border: "3px solid #283f3e", borderRightWidth: "2px", borderRadius: "20px 0 0 20px"}],
             ["bar", "miasmaBar"],
-        ], {width: "800px", height: "46px"}],
+        ], {width: "710px", height: "46px"}],
         ["blank", "10px"],
         ["blank", "25px"],
     ],

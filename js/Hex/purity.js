@@ -211,7 +211,7 @@ addLayer("hpu", {
         },
         3: {
             title() {
-                let str = "<h3>Purified Provenances</h3><br>Lv." + formatWhole(player.hpu.purifiers[0].amount) + "<br>^" + format(player.hpu.purifiers[0].effect) + " Refiner 2's Effects"
+                let str = "<h3>Purified Provenances</h3><br>Lv." + formatWhole(player.hpu.purifiers[0].amount) + "<br>^" + format(player.hpu.purifiers[0].effect, 3) + " Refiner 2's Effects"
                 if (player.hpu.purifiers[0].effect.gt(Decimal.div(player.hpu.purifierSoftcap, 10).add(1))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -262,7 +262,7 @@ addLayer("hpu", {
         },
         5: {
             title() {
-                let str = "<h3>Elevated Exponent</h3><br>Lv." + formatWhole(player.hpu.purifiers[2].amount) + "<br>^" + format(player.hpu.purifiers[2].effect) + " Non-" + player.h.stageName[0] + " Refiner Effects"
+                let str = "<h3>Elevated Exponent</h3><br>Lv." + formatWhole(player.hpu.purifiers[2].amount) + "<br>^" + format(player.hpu.purifiers[2].effect, 3) + " Non-" + player.h.stageName[0] + " Refiner Effects"
                 if (player.hpu.purifiers[2].effect.gt(Decimal.div(player.hpu.purifierSoftcap, 10).add(1))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -285,8 +285,8 @@ addLayer("hpu", {
         },
         6: {
             title() {
-                let str = "<h3>Healed Hexes</h3><br>Lv." + formatWhole(player.hpu.purifiers[3].amount) + "<br>^" + format(player.hpu.purifiers[3].effect) + " " + player.h.stageName[0] + " Point Booster"
-                if (inChallenge("hrm", 12)) str = "<h3>Healed Hexes</h3><br>Lv." + formatWhole(player.hpu.purifiers[3].amount) + "<br>^" + format(player.hpu.purifiers[3].effect) + " 1st Refiners Effects"
+                let str = "<h3>Healed Hexes</h3><br>Lv." + formatWhole(player.hpu.purifiers[3].amount) + "<br>^" + format(player.hpu.purifiers[3].effect, 3) + " " + player.h.stageName[0] + " Point Booster"
+                if (inChallenge("hrm", 12)) str = "<h3>Healed Hexes</h3><br>Lv." + formatWhole(player.hpu.purifiers[3].amount) + "<br>^" + format(player.hpu.purifiers[3].effect, 3) + " 1st Refiners Effects"
                 if (player.hpu.purifiers[3].effect.gt(Decimal.div(player.hpu.purifierSoftcap, 10).add(1))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -335,8 +335,8 @@ addLayer("hpu", {
         },
         8: {
             title() {
-                let str = "<h3>Cleansed Curses</h3><br>Lv." + formatWhole(player.hpu.purifiers[5].amount) + "<br>^" + format(player.hpu.purifiers[5].effect) + " Grace 4's Effect"
-                if (inChallenge("hrm", 12)) str = "<h3>Cleansed Curses</h3><br>Lv." + formatWhole(player.hpu.purifiers[5].amount) + "<br>^" + format(player.hpu.purifiers[5].effect) + " Base Α-Jinx Effect"
+                let str = "<h3>Cleansed Curses</h3><br>Lv." + formatWhole(player.hpu.purifiers[5].amount) + "<br>^" + format(player.hpu.purifiers[5].effect, 3) + " Grace 4's Effect"
+                if (inChallenge("hrm", 12)) str = "<h3>Cleansed Curses</h3><br>Lv." + formatWhole(player.hpu.purifiers[5].amount) + "<br>^" + format(player.hpu.purifiers[5].effect, 3) + " Base Α-Jinx Effect"
                 if (player.hpu.purifiers[5].effect.gt(Decimal.mul(player.hpu.purifierSoftcap, 0.15).add(1)) || (inChallenge("hrm", 12) && player.hpu.purifiers[5].effect.gt(Decimal.div(player.hpu.purifierSoftcap, 10).add(1)))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -359,7 +359,7 @@ addLayer("hpu", {
         },
         9: {
             title() {
-                let str = "<h3>External Expansion</h3><br>Lv." + formatWhole(player.hpu.purifiers[6].amount) + "<br>^" + format(player.hpu.purifiers[6].effect) + " External Effects"
+                let str = "<h3>External Expansion</h3><br>Lv." + formatWhole(player.hpu.purifiers[6].amount) + "<br>^" + format(player.hpu.purifiers[6].effect, 3) + " External Effects"
                 if (player.hpu.purifiers[6].effect.gt(Decimal.div(player.hpu.purifierSoftcap, 50).add(1))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
