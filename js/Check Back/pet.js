@@ -762,7 +762,7 @@ addLayer("pet", {
             player.subtabs.pu["stuff"] = "Collection"
             changeTheme()
 
-            pauseUniverseAll(["D1", "U3", "A2"], "unpause", true)
+            pauseUniverseAll(["D1", "DA", "U3", "A2"], "unpause", true)
 
             layers.pu.generateSelection();
         }
@@ -1051,7 +1051,7 @@ addLayer("pet", {
                 player.subtabs.le["stuff"] = "Shards"
                 player.subtabs.pu["stuff"] = "Selection"   
                 
-                pauseUniverseAll(["D1", "U3", "A2"], "pause", true)
+                pauseUniverseAll(["D1", "DA", "U3", "A2"], "pause", true)
             },
             style() {
                 let look = {width: '125px', minHeight: '40px', borderRadius: '0px', fontSize: '8px'}
