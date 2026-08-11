@@ -186,6 +186,19 @@ td {
 	overflow-x: scroll !important;
 }
 
+.upgDraggableScrollRow {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	cursor: grab;
+  	touch-action: none;
+  	user-select: none;
+  	-webkit-user-select: none;  
+}
+
+.upgDraggableScrollRow.active {
+	cursor: grabbing;
+}
+
 .upgAlign {
 	vertical-align: 0
 }
@@ -1909,4 +1922,10 @@ button > * {
 	border:5px solid rgba(0,0,0,0.3);
 	margin:0;
 	padding:0;
+}
+
+.innerContainer {
+	display:flex;
+	align-items:center;
+	justify-content:center;
 }

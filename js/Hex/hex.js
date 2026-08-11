@@ -41,6 +41,7 @@ addLayer("h", {
         jinxDiv: new Decimal(1),
         purifierDiv: new Decimal(1),
         provenanceDiv: new Decimal(1),
+        blessingRaise: new Decimal(1),
         refinementScale: new Decimal(1),
     }},
     nodeStyle() { return {color: "white", backgroundColor: "black", borderColor: "#0061ff"}},
@@ -80,7 +81,7 @@ addLayer("h", {
         player.h.preNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.preNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
         player.h.preNerf = player.h.preNerf.mul(player.hrm.challengeSoftcap)
-        if (player.sins.clickables["pride"]) player.h.preNerf = player.h.preNerf.mul(77)
+        if (player.sins.clickables["wrath"]) player.h.preNerf = player.h.preNerf.mul(Decimal.div(77, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1))
 
         player.h.powNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.powNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
@@ -90,7 +91,7 @@ addLayer("h", {
         if (hasUpgrade("hpw", 76)) player.h.provenanceDiv = player.h.provenanceDiv.div(upgradeEffect("hpw", 76))
 
         player.h.jinxDiv = new Decimal(1)
-        if (player.sins.clickables["wrath"]) player.h.jinxDiv = player.h.jinxDiv.mul(Decimal.div(0.6, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1).add(1))
+        if (player.sins.clickables["pride"]) player.h.jinxDiv = player.h.jinxDiv.mul(Decimal.div(3, hasUpgrade("hpw", 2008) ? upgradeEffect("hpw", 2008) : 1))
         if (hasUpgrade("hpw", 46)) player.h.jinxDiv = player.h.jinxDiv.div(upgradeEffect("hpw", 46))
         player.h.jinxDiv = player.h.jinxDiv.div(player.hcu.jinxedJinxEffects[1])
 
@@ -102,6 +103,9 @@ addLayer("h", {
         if (player.sins.clickables["gluttony"]) player.h.refinementScale = player.h.refinementScale.mul(Decimal.div(0.6, hasUpgrade("hpw", 2005) ? upgradeEffect("hpw", 2005) : 1).add(1))
         player.h.refinementScale = player.h.refinementScale.div(player.hve.vexEffects[3])
         if (hasUpgrade("hbl", 106)) player.h.refinementScale = player.h.refinementScale.div(upgradeEffect("hbl", 106))
+
+        player.h.blessingRaise = new Decimal(1)
+        if (player.sins.clickables["greed"]) player.h.blessingRaise = player.h.blessingRaise.mul(0.9)
 
         // START OF HEX POINT GAIN
         player.h.hexPointGain = new Decimal(0)
@@ -216,6 +220,8 @@ addLayer("h", {
         if (player.h.jinxDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Jinx caps are multiplied by x" + formatSimple(Decimal.div(1, player.h.jinxDiv), 2) + "</span><br>")
         if (player.h.purifierDiv.gt(1)) str = str.concat("Purifier Efficiency is divided by /" + formatSimple(player.h.purifierDiv, 2) + "<br>")
         if (player.h.purifierDiv.lt(1)) str = str.concat("<span style='color:#8f8'>Purifier Efficiency is multiplied by x" + formatSimple(Decimal.div(1, player.h.purifierDiv), 2) + "</span><br>")
+        if (player.h.blessingRaise.lt(1)) str = str.concat("Blessings are raised by ^" + formatSimple(player.h.blessingRaise, 3) + "<br>")
+        if (player.h.blessingRaise.gt(1)) str = str.concat("<span style='color:#8f8'>Blessings are raised by ^" + formatSimple(player.h.blessingRaise, 3) + "</span><br>")
         if (player.h.preNerf.neq(1)) str = str.concat("Pre-power resources are divided by /" + formatSimple(player.h.preNerf) + "<br>")
         if (player.h.powNerf.neq(1)) str = str.concat("Power is divided by /" + formatSimple(player.h.powNerf) + "<br>")
         return str

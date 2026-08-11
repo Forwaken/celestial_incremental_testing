@@ -15,7 +15,6 @@ addLayer("hpw", {
         vigor: 0,
         sincePower: new Decimal(0),
         softcap: new Decimal(1),
-        softcap2: new Decimal(1),
         rowAuto: 1,
     }},
     update(delta) {
@@ -65,12 +64,6 @@ addLayer("hpw", {
         // POWER SOFTCAP CALC
         let amt = player.hpw.powerGain.gt(player.hpw.power) && player.hpw.powerGain.gte(Decimal.pow10(player.h.stage.mul(10)).mul(2)) ? player.hpw.powerGain : player.hpw.power
         player.hpw.softcap = amt.gte(Decimal.pow10(player.h.stage.mul(10))) ? amt.div(Decimal.pow10(player.h.stage.mul(10))).pow(0.15).div(player.h.stage).add(1) : new Decimal(1)
-
-        // POWER SOFTCAP 2
-        if (player.hpw.powerGain.gte(Decimal.pow10(player.h.stage.mul(14)))) {
-            player.hpw.softcap2 = Decimal.pow(0.9, player.hpw.powerGain.div(Decimal.pow10(player.h.stage.mul(14))).add(1).log(Decimal.pow10(player.h.stage))).mul(0.3)
-            player.hpw.powerGain = player.hpw.powerGain.div(Decimal.pow10(player.h.stage.mul(14))).pow(player.hpw.softcap2).mul(Decimal.pow10(player.h.stage.mul(14)))
-        } else player.hpw.softcap2 = new Decimal(1)
 
         if (hasUpgrade("hpw", 106)) player.hpw.power = player.hpw.power.add(player.hpw.powerGain.div(100).mul(player.h.tickspeed).mul(delta))
         player.hpw.powerGain = player.hpw.powerGain.floor().max(1) // To keep power to whole numbers
@@ -1953,14 +1946,14 @@ addLayer("hpw", {
         2008: {
             title: "Might S:6",
             unlocked() {return player.h.stage.eq(7)},
-            description() {return "Reduce greed's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            description() {return "Reduce pride's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
             branches: [131],
-            cost() {return new Decimal(1.4e21)},
+            cost() {return new Decimal(1e24)},
             canAfford() { return hasUpgrade("hpw", 131)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            effect() {return new Decimal(2)},
+            effect() {return new Decimal(1.5)},
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         2009: {
@@ -2563,7 +2556,6 @@ addLayer("hpw", {
             }],
         ]],
         ["raw-html", () => {return player.hpw.softcap.gt(1) ? "UNAVOIDABLE SOFTCAP: /" + format(player.hpw.softcap) + " to gain before exponents." : ""}, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
-        ["raw-html", () => {return player.hpw.softcap2.lt(1) ? "UNAVOIDABLE SOFTCAP<sup>2</sup>: ^" + formatSimple(player.hpw.softcap2, 3) + " to gain after " + formatWhole(Decimal.pow10(player.h.stage.mul(14))) + " power": ""}, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["clickable", 1],
         ["blank", "5px"],

@@ -32,7 +32,8 @@
 		"Check Back/diamondDust.js", "Check Back/treasureRoom.js",
 		"Puzzle World/akash.js", "Puzzle World/elements.js", 
 		"Puzzle World/Puzzle Fighting/puzzleFighting.js",
-		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js", "DarkU1/darkOTF.js", "DarkUA/sourceEnergy.js", "DarkUA/meridian.js",
+		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js",
+		"DarkU1/darkOTF.js", "DarkUA/sourceEnergy.js", "DarkUA/meridian.js", "DarkUA/deepBreathing.js", "DarkUA/cleansing.js",
 		"Ordinal/ordinal.js", "Ordinal/markup.js",
 	],
 
@@ -294,7 +295,7 @@ function updateStyles() {
 		case "dotf":
 			layerBG = "linear-gradient(45deg, #140019, #000e26)"
 			break;
-		case "mse": case "mme":
+		case "mse": case "mme": case "mdb": case "mcl":
 			layerBG = "linear-gradient(0deg, #111, #361010)"
 			break;
 		case "ch":
@@ -548,7 +549,7 @@ function updateStyles() {
 	    const eclipse = document.getElementById("solar-eclipse-bg");
     	if (eclipse) eclipse.remove();
 	}
-	if (!options.performanceMode && (player.tab == "mse" || player.tab == "mme")) {
+	if (!options.performanceMode && (player.tab == "mse" || player.tab == "mme" || player.tab == "mdb" || player.tab == "mcl")) {
 	    if (!document.getElementById("miasma-background")) {
     	    // Create embers background container
 	        const miasmaBg = document.createElement("div");
@@ -823,6 +824,9 @@ function updateStyles() {
 			break;
 		case "za": case "cf": case "wof": case "sm": case "cbs": case "car": case "zd":
             player.musuniverse = "DS"
+			break;
+		case "mse": case "mme": case "mdb": case "mcl":
+			player.musuniverse = "DA"
 			break;
 	}
 
@@ -1940,13 +1944,13 @@ let winText = `Congratulations! You have completed the entirety of Celestial Inc
 // (The ones here are examples, all official functions are already taken care of)
 var doNotCallTheseFunctionsEveryTick = [
 	"blowUpEverything", "startCutscene1","startCutscene2", "startCutscene3", "rankReset",
-	"tierReset", "tetrReset", "prestigeReset",
+	"tierReset", "tetrReset", "prestigeReset", "tooltipDisplay",
 	"pentReset", "grasshopReset", "codeExperienceReset",
 	"levelToXP", "xpToLevel", "levelup", "petButton1", "petButton2",
 	"resetPrices", "addDiceEffect", "diceRoll", "evoCutscenes", "rocketFuelReset",
 	"rocketFuelAbility", "petButton3","bigCrunch", "startCutscene4", "startCutscene5",
 	"dimBoostReset", "startCutscene6", "galaxyReset", "startCutscene7", "startCutscene8",
-	"petButton4", "hexReq", "hexGain",
+	"petButton4", "hexReq", "hexGain", "resetCheck",
 	"startCutscene9", "startCutscene10", "startCutscene11","crunch", "startCutscene12",
 	"startCutscene13", "startCutscene14", "negativeInfinityReset", "reverseCrunch",
 	"startCutscene15", "startCutscene16", "startCutscene17", "startCutscene18", "breakInfinities",

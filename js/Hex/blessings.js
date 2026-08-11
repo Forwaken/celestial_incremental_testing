@@ -10,6 +10,7 @@ addLayer("hbl", {
         blessings: new Decimal(0),
         blessingsGain: new Decimal(0),
         blessingPerSec: new Decimal(0),
+        blessingsSoftcap: new Decimal(1),
         boons: new Decimal(0),
         boonsGain: new Decimal(0),
         blessAutomation: false,
@@ -83,7 +84,6 @@ addLayer("hbl", {
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.h.prePowerMult)
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.tera.piositySpell)
         if (hasUpgrade("hpw", 13)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 13))
-        if (player.sins.clickables["greed"]) player.hbl.blessingsGain = player.hbl.blessingsGain.div(Decimal.div(77, hasUpgrade("hpw", 2008) ? upgradeEffect("hpw", 2008) : 1))
         if (hasUpgrade("hbl", 104)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hbl", 104))
         if (hasUpgrade("hpw", 172)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 172))
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(buyableEffect("hpw", 11))
@@ -92,6 +92,12 @@ addLayer("hbl", {
         // POWER AND AUTOMATION
         if (hasUpgrade("hve", 62)) player.hbl.blessingsGain = player.hbl.blessingsGain.pow(1.03)
         player.hbl.blessingsGain = player.hbl.blessingsGain.pow(buyableEffect("hve", 12))
+        player.hbl.blessingsGain = player.hbl.blessingsGain.pow(player.h.blessingRaise)
+
+        // SOFTCAP
+        let softcapStart = Decimal.pow10(player.h.stage.mul(20))
+        player.hbl.blessingsSoftcap = Decimal.div(0.5, player.hbl.blessingsGain.div(softcapStart).add(1).log(softcapStart).div(player.h.stage).add(1))
+        if (player.hbl.blessingsGain.gte(softcapStart)) player.hbl.blessingsGain = player.hbl.blessingsGain.div(softcapStart).pow(player.hbl.blessingsSoftcap).mul(softcapStart)
 
         let bps = new Decimal(0)
         if (!inChallenge("hrm", 11)) bps = player.hpu.purifiers[4].effect
@@ -233,7 +239,7 @@ addLayer("hbl", {
         },
         2: {
             title() {
-                let str = "<h3>" + player.h.stageName[0] + " Point Booster <small>Lv." + formatWhole(player.hbl.boosters[0].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[0].xp) + "/" + formatWhole(player.hbl.boosters[0].req) + ")<br>x" + format(player.hbl.boosters[0].effect) + " " + player.h.stageName[0] + " Points<br><small>(Hold to deposit boons)</small>"
+                let str = "<h3>" + player.h.stageName[0] + " Point Booster <small>Lv." + formatShortestWhole(player.hbl.boosters[0].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[0].xp) + "/" + formatWhole(player.hbl.boosters[0].req) + ")<br>x" + format(player.hbl.boosters[0].effect) + " " + player.h.stageName[0] + " Points<br><small>(Hold to deposit boons)</small>"
                 if (player.hbl.boosters[0].effect.pow(Decimal.div(1, player.hpu.purifiers[3].effect)).gte(Decimal.pow10(player.h.stage.mul(1.5)))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -257,7 +263,7 @@ addLayer("hbl", {
             },
         },
         3: {
-            title() { return "<h3>Boon Booster <small>Lv." + formatWhole(player.hbl.boosters[1].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[1].xp) + "/" + formatWhole(player.hbl.boosters[1].req) + ")<br>x" + format(player.hbl.boosters[1].effect) + " Boons<br><small>(Hold to deposit boons)</small>" },
+            title() { return "<h3>Boon Booster <small>Lv." + formatShortestWhole(player.hbl.boosters[1].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[1].xp) + "/" + formatWhole(player.hbl.boosters[1].req) + ")<br>x" + format(player.hbl.boosters[1].effect) + " Boons<br><small>(Hold to deposit boons)</small>" },
             canClick: true,
             unlocked: true,
             onClick() {this.onHold()},
@@ -279,7 +285,7 @@ addLayer("hbl", {
         },
         4: {
             title() {
-                let str = "<h3>IP Booster <small>Lv." + formatWhole(player.hbl.boosters[2].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[2].xp) + "/" + formatWhole(player.hbl.boosters[2].req) + ")<br>x" + format(player.hbl.boosters[2].effect) + " Infinity Points<br><small>(Hold to deposit boons)</small>"
+                let str = "<h3>IP Booster <small>Lv." + formatShortestWhole(player.hbl.boosters[2].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[2].xp) + "/" + formatWhole(player.hbl.boosters[2].req) + ")<br>x" + format(player.hbl.boosters[2].effect) + " Infinity Points<br><small>(Hold to deposit boons)</small>"
                 if (player.hbl.boosters[2].effect.gte(Decimal.pow10(player.h.stage.mul(1.5)))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -305,7 +311,7 @@ addLayer("hbl", {
         },
         5: {
             title() {
-                let str = "<span style='font-size:17px'>Refiner Req Booster <small>Lv." + formatWhole(player.hbl.boosters[3].level) + "</small></span><br>(" + formatWhole(player.hbl.boosters[3].xp) + "/" + formatWhole(player.hbl.boosters[3].req) + ")<br>/" + format(player.hbl.boosters[3].effect) + " Refinement Req<br><small>(Hold to deposit boons)</small>"
+                let str = "<span style='font-size:17px'>Refiner Req Booster <small>Lv." + formatShortestWhole(player.hbl.boosters[3].level) + "</small></span><br>(" + formatWhole(player.hbl.boosters[3].xp) + "/" + formatWhole(player.hbl.boosters[3].req) + ")<br>/" + format(player.hbl.boosters[3].effect) + " Refinement Req<br><small>(Hold to deposit boons)</small>"
                 if (player.hbl.boosters[3].effect.gte(Decimal.pow10(player.h.stage.mul(2)))) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -329,7 +335,7 @@ addLayer("hbl", {
             },
         },
         6: {
-            title() { return "<h3>Blessing Booster <small>Lv." + formatWhole(player.hbl.boosters[4].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[4].xp) + "/" + formatWhole(player.hbl.boosters[4].req) + ")<br>x" + format(player.hbl.boosters[4].effect) + " Blessings<br><small>(Hold to deposit boons)</small>" },
+            title() { return "<h3>Blessing Booster <small>Lv." + formatShortestWhole(player.hbl.boosters[4].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[4].xp) + "/" + formatWhole(player.hbl.boosters[4].req) + ")<br>x" + format(player.hbl.boosters[4].effect) + " Blessings<br><small>(Hold to deposit boons)</small>" },
             canClick: true,
             unlocked() {return hasUpgrade("ta", 15)},
             onClick() {this.onHold()},
@@ -351,7 +357,7 @@ addLayer("hbl", {
         },
         7: {
             title() {
-                let str = "<h3>IP Booster Booster <small>Lv." + formatWhole(player.hbl.boosters[5].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[5].xp) + "/" + formatWhole(player.hbl.boosters[5].req) + ")<br>x" + format(player.hbl.boosters[5].effect) + " IP Booster Base<br><small>(Hold to deposit boons)</small>"
+                let str = "<h3>IP Booster Booster <small>Lv." + formatShortestWhole(player.hbl.boosters[5].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[5].xp) + "/" + formatWhole(player.hbl.boosters[5].req) + ")<br>x" + format(player.hbl.boosters[5].effect) + " IP Booster Base<br><small>(Hold to deposit boons)</small>"
                 if (player.hbl.boosters[5].effect.gte(16)) str = str.concat("<br><small style='color:darkred'>[SOFTCAPPED]</small>")
                 return str
             },
@@ -375,7 +381,7 @@ addLayer("hbl", {
             },
         },
         8: {
-            title() { return "<h3>Booster Booster <small>Lv." + formatWhole(player.hbl.boosters[6].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[6].xp) + "/" + formatWhole(player.hbl.boosters[6].req) + ")<br>^" + formatSimple(player.hbl.boosters[6].effect, 3) + " 1st-6th Booster Effects<br><small>(Hold to deposit boons)</small>" },
+            title() { return "<h3>Booster Booster <small>Lv." + formatShortestWhole(player.hbl.boosters[6].level) + "</small></h3><br>(" + formatWhole(player.hbl.boosters[6].xp) + "/" + formatWhole(player.hbl.boosters[6].req) + ")<br>^" + formatSimple(player.hbl.boosters[6].effect, 3) + " 1st-6th Booster Effects<br><small>(Hold to deposit boons)</small>" },
             canClick: true,
             unlocked() {return player.h.stage.gte(7)},
             onClick() {this.onHold()},
@@ -858,6 +864,7 @@ addLayer("hbl", {
                 return str + ")^" + formatSimple(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hte", 33)), 3) + "</small></div>"
             }],
         ]],
+        ["raw-html", () => {return player.hbl.blessingsGain.gte(Decimal.pow10(player.h.stage.mul(20))) ? "Gain past " + formatSimple(Decimal.pow10(player.h.stage.mul(20))) + " is raised by ^" + formatSimple(player.hbl.blessingsSoftcap, 3) : ""}, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => {return inChallenge("hrm", 11) ? "Bless resets used: " + formatWhole(player.hrm.blessLimit) + "/" + formatWhole(player.h.stage) : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["clickable", 1],

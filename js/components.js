@@ -215,6 +215,55 @@ function loadVue() {
 		`
 	})
 
+	// data = an array of Components to be displayed in a row
+	// look = Object that defines style
+	Vue.component('centered-draggable-scroll-row', {
+		props: ['layer', 'data', 'look'],
+		computed: {
+			key() {return this.$vnode.key}
+		},
+		template: `
+		<div id="scrCon" class="upgScrollRowTable upgDraggableScrollRow scrollCentered instant" ref='scrollable' @pointerdown='startDragging' @pointerleave='stopDragging' @pointerup='stopDragging' @pointermove='move'>
+			<div class="upgScrollRow" v-bind:style="look" >
+				<div style="margin:0" v-for="(item, index) in data">
+					<div v-if="!Array.isArray(item)" v-bind:is="item" :layer= "layer" v-bind:style="tmp[layer].componentStyles[item]" :key="key + '-' + index"></div>
+					<div v-else-if="item.length==3" v-bind:style="[tmp[layer].componentStyles[item[0]], (item[2] ? item[2] : {})]" v-bind:is="item[0]" :layer= "layer" :data= "item[1]" :key="key + '-' + index"></div>
+					<div v-else-if="item.length==2" v-bind:is="item[0]" :layer= "layer" :data= "item[1]" v-bind:style="tmp[layer].componentStyles[item[0]]" :key="key + '-' + index"></div>
+				</div>
+			</div>
+		</div>
+		`,
+		data() { return { mouseDown: false, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 }},
+		mounted() {
+			let c = this.$refs.scrollable
+        	c.scrollLeft = (c.scrollWidth - c.clientWidth ) / 2;
+        	c.scrollTop = (c.scrollHeight - c.clientHeight ) / 2;
+		},
+		methods: {
+			startDragging(e) {
+				let c = this.$refs.scrollable
+			  	this.mouseDown = true;
+			  	e.preventDefault();
+			  	this.startX = e.pageX - c.offsetLeft;
+			  	this.startY = e.pageY - c.offsetTop;
+			  	this.scrollLeft = c.scrollLeft;
+			  	this.scrollTop = c.scrollTop;
+			},
+			stopDragging() {
+			  	this.mouseDown = false;
+			},
+			move(e) {
+			  	if (!this.mouseDown) return; 
+				let c = this.$refs.scrollable
+			  	e.preventDefault();
+			  	const scrollX = e.pageX - c.offsetLeft - this.startX;
+			  	const scrollY = e.pageY - c.offsetTop - this.startY;
+			  	c.scrollLeft = this.scrollLeft - scrollX;
+			  	c.scrollTop = this.scrollTop - scrollY;
+			}
+		}
+	})
+
 	// data = an array of Components to be displayed in a column
 	// look = Object that defines style
 	Vue.component('scroll-column', {
@@ -465,8 +514,7 @@ function loadVue() {
 				<span v-if="layers[layer].upgrades[data].effectDisplay"><br>Currently: <span v-html="run(layers[layer].upgrades[data].effectDisplay, layers[layer].upgrades[data])"></span></span>
 				<br><br>Cost: {{ formatWhole(tmp[layer].upgrades[data].cost) }} {{(tmp[layer].upgrades[data].currencyDisplayName ? tmp[layer].upgrades[data].currencyDisplayName : tmp[layer].resource)}}
 			</span>
-			<div class='bottomTooltip' v-if="layers[layer].upgrades[data].tooltip" v-html="run(layers[layer].upgrades[data].tooltip, layers[layer].upgrades[data])"></div>
-
+			<bt-tooltip v-if="layers[layer].upgrades[data].tooltip" :text="run(layers[layer].upgrades[data].tooltip, layers[layer].upgrades[data])"></bt-tooltip>
 			</button>
 		`
 	})
@@ -973,7 +1021,7 @@ function loadVue() {
 			<span v-if= "layers[layer].clickables[data].title" v-bind:style="{'transition-duration': '0s'}"><h2 v-html="run(layers[layer].clickables[data].title, layers[layer].clickables[data])" v-bind:style="{'transition-duration': '0s'}"></h2><br></span>
 			<span v-bind:style="{'white-space': 'pre-line','transition-duration': '0s'}" v-html="run(layers[layer].clickables[data].display, layers[layer].clickables[data])"></span>
 			<node-mark :layer='layer' :data='tmp[layer].clickables[data].marked'></node-mark>
-			<div class='bottomTooltip' v-if="layers[layer].clickables[data].tooltip" v-html="run(layers[layer].clickables[data].tooltip, layers[layer].clickables[data])"></div>
+			<bt-tooltip v-if="layers[layer].clickables[data].tooltip" :text="run(layers[layer].clickables[data].tooltip, layers[layer].clickables[data])"></bt-tooltip>
 
 		</button>
 		`,
@@ -1566,6 +1614,7 @@ function loadVue() {
 	Vue.component('info-tab', systemComponents['info-tab'])
 	Vue.component('options-tab', systemComponents['options-tab'])
 	Vue.component('tooltip', systemComponents['tooltip'])
+	Vue.component('bt-tooltip', systemComponents['bt-tooltip'])
 	Vue.component('particle', systemComponents['particle'])
 	Vue.component('bg', systemComponents['bg'])
 

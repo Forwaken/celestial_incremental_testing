@@ -249,6 +249,12 @@ var systemComponents = {
 		`
 	},
 
+	'bt-tooltip': {
+		props: ['text'],
+		template: `<div class='bottomTooltip' v-html="text" v-bind:style="text == '' ? {display: 'none !important'} : {}"></div>
+		`
+	},
+
 	'node-mark': {
 		props: { 'layer': {}, data: {}, offset: { default: 0 }, scale: { default: 1 } },
 		template: `<div v-if='data'>
