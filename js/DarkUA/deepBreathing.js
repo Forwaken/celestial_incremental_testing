@@ -33,7 +33,7 @@ addLayer("mdb", {
         player.mdb.focusGain = new Decimal(1)
         if (hasUpgrade("mdb", 11)) player.mdb.focusGain = player.mdb.focusGain.mul(upgradeEffect("mdb", 11))
 
-        player.mdb.focusEffect = player.mdb.focus.pow(0.2).add(1)
+        player.mdb.focusEffect = player.mdb.focus.pow(0.2).div(2).add(1)
         player.mdb.focusActive = hasUpgrade("mdb", 12) ? new Decimal(2) : new Decimal(1)
 
         if (player.mdb.active.gt(0)) {

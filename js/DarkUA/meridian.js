@@ -16,7 +16,7 @@ const MERIDIANS = {
             "<br>^" + formatSimple(eff[1], 3) + " Ki<small> [Next: ^" + formatSimple(Decimal.pow(1.01, player.mme.meridian[0].level.add(player.mme.meridian[0].gain)), 3) + "]</small>"
         },
         mBase: new Decimal(1),
-        mScale: new Decimal(2), // mult increase per
+        mScale: new Decimal(10), // mult increase per
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -32,7 +32,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[1].level.pow(1.1).div(3).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[1].level.add(player.mme.meridian[1].gain).pow(1.1).div(3).add(1), 2) + "]"},
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005),
+        mScale: new Decimal(1.1),
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -47,7 +47,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[2].level.pow(1.12).div(2).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[2].level.add(player.mme.meridian[2].gain).pow(1.12).div(2).add(1), 2) + "]"},
         mBase: new Decimal(0.2),
-        mScale: new Decimal(0.006), // mult increase per magnitude
+        mScale: new Decimal(1.12), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -64,7 +64,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[3].level.div(20).add(1)},
         effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Penalty<small> [Next: /" + formatSimple(player.mme.meridian[3].level.add(player.mme.meridian[3].gain).div(20).add(1), 2) + "]"},
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(1.15), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -97,7 +97,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[5].level.pow(1.08).div(4).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[5].level.add(player.mme.meridian[5].gain).pow(1.08).div(4).add(1), 2) + "]"},
         mBase: new Decimal(0.15),
-        mScale: new Decimal(0.006), // mult increase per magnitude
+        mScale: new Decimal(1.08), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -112,7 +112,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[6].level.pow(1.14).div(1.5).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[6].level.add(player.mme.meridian[6].gain).pow(1.14).div(1.5).add(1), 2) + "]"},
         mBase: new Decimal(0.3),
-        mScale: new Decimal(0.007), // mult increase per magnitude
+        mScale: new Decimal(1.14), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -129,7 +129,7 @@ const MERIDIANS = {
         resource() {return [player.mme.meridian[6].level]},
         resourceName: ["TB:P Levels"],
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(1.15), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -146,7 +146,7 @@ const MERIDIANS = {
         resource() {return [player.mme.meridian[7].level, player.mme.meridian[9].level]},
         resourceName: ["Pe:V Levels", "SI:P Levels"],
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(1.2), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -165,7 +165,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[9].level.pow(1.16).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[9].level.add(player.mme.meridian[9].gain).pow(1.16).add(1), 2) + "]"},
         mBase: new Decimal(0.4),
-        mScale: new Decimal(0.008), // mult increase per magnitude
+        mScale: new Decimal(1.16), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -184,7 +184,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[10].level.pow(1.18).mul(1.3).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[10].level.add(player.mme.meridian[10].gain).pow(1.18).mul(1.3).add(1), 2) + "]"},
         mBase: new Decimal(0.45),
-        mScale: new Decimal(0.008), // mult increase per magnitude
+        mScale: new Decimal(1.18), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -203,7 +203,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[11].level.pow(1.2).mul(1.6).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[11].level.add(player.mme.meridian[11].gain).pow(1.2).mul(1.6).add(1), 2) + "]"},
         mBase: new Decimal(0.5),
-        mScale: new Decimal(0.009), // mult increase per magnitude
+        mScale: new Decimal(1.2), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -222,7 +222,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[12].level.pow(1.06).div(5).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[9].level.add(player.mme.meridian[9].gain).pow(1.06).div(5).add(1), 2) + "]"},
         mBase: new Decimal(0.5),
-        mScale: new Decimal(0.01), // mult increase per magnitude
+        mScale: new Decimal(1.06), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -237,7 +237,7 @@ const MERIDIANS = {
         effect() {return player.mme.meridian[11].level.pow(1.22).mul(2).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[9].level.add(player.mme.meridian[9].gain).pow(1.22).mul(2).add(1), 2) + "]"},
         mBase: new Decimal(0.6),
-        mScale: new Decimal(0.011), // mult increase per magnitude
+        mScale: new Decimal(1.22), // mult increase per magnitude
     },
     14: {
         name: "Yin Linking Vessel",
@@ -246,7 +246,7 @@ const MERIDIANS = {
         resource() {return [player.mme.meridian[11].level]},
         resourceName: ["Sp:P Levels"],
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(2), // mult increase per magnitude
     },
     15: {
         name: "Yin Heel Vessel",
@@ -255,7 +255,7 @@ const MERIDIANS = {
         resource() {return [player.mme.meridian[14].level]},
         resourceName: ["YiL:V Levels"],
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(2.5), // mult increase per magnitude
     },
     16: {
         name: "Gall Bladder Point",
@@ -264,7 +264,7 @@ const MERIDIANS = {
         resource() {return [player.mme.meridian[13].level]},
         resourceName: ["Lr:P Levels"],
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(1.3), // mult increase per magnitude
     },
     17: {
         name: "Conception Vessel",
@@ -273,7 +273,7 @@ const MERIDIANS = {
         resource() {return [player.mme.meridian[16].level]},
         resourceName: ["GB:P Levels"],
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(1.3), // mult increase per magnitude
     },
     18: {
         name: "Urinary Bladder Point",
@@ -282,7 +282,7 @@ const MERIDIANS = {
         resource() {return [player.mme.meridian[16].level]},
         resourceName: ["GB:P Levels"],
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(1.3), // mult increase per magnitude
     },
     19: {
         name: "Governing Vessel",
@@ -291,7 +291,7 @@ const MERIDIANS = {
         resource() {return [player.mme.meridian[18].level]},
         resourceName: ["UB:P Levels"],
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(1.3), // mult increase per magnitude
     },
     20: {
         name: "Stomach Point",
@@ -300,7 +300,7 @@ const MERIDIANS = {
         resource() {return [player.mme.meridian[18].level]},
         resourceName: ["UB:P Levels"],
         mBase: new Decimal(0.1),
-        mScale: new Decimal(0.005), // mult increase per magnitude
+        mScale: new Decimal(1.3), // mult increase per magnitude
     },
 }
 addLayer("mme", {
@@ -472,7 +472,7 @@ addLayer("mme", {
         if (MERIDIANS[index].exponential) {
             player.mse.miasma = player.mse.miasma.add(Decimal.sumGeometricSeries(player.mme.meridian[index].gain.mul(player.mme.meridianDiv), MERIDIANS[index].mBase, MERIDIANS[index].mScale, player.mme.meridian[index].level).div(player.mme.penaltyDiv))
         } else {
-            player.mse.miasma = player.mse.miasma.add(Decimal.sumArithmeticSeries(player.mme.meridian[index].gain.mul(player.mme.meridianDiv), MERIDIANS[index].mBase, MERIDIANS[index].mScale, player.mme.meridian[index].level).div(player.mme.penaltyDiv))
+            player.mse.miasma = player.mse.miasma.add(player.mme.meridian[index].level.add(player.mme.meridian[index].gain).pow(MERIDIANS[index].mScale).mul(MERIDIANS[index].mBase).sub(player.mme.meridian[index].level.pow(MERIDIANS[index].mScale).mul(MERIDIANS[index].mBase)).div(player.mme.penaltyDiv))
         }
         player.mme.meridian[index].level = player.mme.meridian[index].level.add(player.mme.meridian[index].gain)
         if (!layers.mse.resetCheck() && MERIDIANS[index].reset) MERIDIANS[index].reset()
@@ -491,7 +491,7 @@ addLayer("mme", {
             if (MERIDIANS[index].base[2]) str = str.concat(",<br>" + formatSimple(layers.h.hexReq(player.mme.meridian[index].level.add(player.mme.meridian[index].gain), MERIDIANS[index].base[2], MERIDIANS[index].scale[2], player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[2])
         }
         if (MERIDIANS[index].exponential) str = str.concat("<br>Penalty: +" + formatSimple(Decimal.sumGeometricSeries(player.mme.meridian[index].gain, MERIDIANS[index].mBase, MERIDIANS[index].mScale, player.mme.meridian[index].level).div(player.mme.penaltyDiv), 2) + " Miasma")
-        else str = str.concat("<br>Penalty: +" + formatSimple(Decimal.sumArithmeticSeries(player.mme.meridian[index].gain, MERIDIANS[index].mBase, MERIDIANS[index].mScale, player.mme.meridian[index].level).div(player.mme.penaltyDiv), 2) + " Miasma")
+        else str = str.concat("<br>Penalty: +" + formatSimple(player.mme.meridian[index].level.add(player.mme.meridian[index].gain).pow(MERIDIANS[index].mScale).mul(MERIDIANS[index].mBase).sub(player.mme.meridian[index].level.pow(MERIDIANS[index].mScale).mul(MERIDIANS[index].mBase)).div(player.mme.penaltyDiv), 2) + " Miasma")
         return str
     },
     clickables: {
@@ -1068,7 +1068,7 @@ addLayer("mme", {
                     ]],
                     ["raw-html", () => {
                         if (MERIDIANS[player.mme.meridianSelect].exponential) return "Penalty: +" + formatSimple(Decimal.sumGeometricSeries(player.mme.meridian[player.mme.meridianSelect].gain, MERIDIANS[player.mme.meridianSelect].mBase, MERIDIANS[player.mme.meridianSelect].mScale, player.mme.meridian[player.mme.meridianSelect].level).div(player.mme.penaltyDiv), 2) + " Miasma"
-                        else return "Penalty: +" + formatSimple(Decimal.sumArithmeticSeries(player.mme.meridian[player.mme.meridianSelect].gain, MERIDIANS[player.mme.meridianSelect].mBase, MERIDIANS[player.mme.meridianSelect].mScale, player.mme.meridian[player.mme.meridianSelect].level).div(player.mme.penaltyDiv), 2) + " Miasma"
+                        else return "Penalty: +" + formatSimple(player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain).pow(MERIDIANS[player.mme.meridianSelect].mScale).mul(MERIDIANS[player.mme.meridianSelect].mBase).sub(player.mme.meridian[player.mme.meridianSelect].level.pow(MERIDIANS[player.mme.meridianSelect].mScale).mul(MERIDIANS[player.mme.meridianSelect].mBase)).div(player.mme.penaltyDiv), 2) + " Miasma"
                     }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                 ], {width: "700px", height: "50px"}],
             ], {width: "700px", height: "157px", background: "#ff77c922", borderBottom: "3px solid #853D89", borderRadius: "17px 17px 0 0"}],

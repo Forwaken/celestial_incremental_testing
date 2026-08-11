@@ -48,7 +48,7 @@ addLayer("mse", {
         player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mme.meridian[11].effect)
         player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mme.meridian[12].effect)
 
-        player.mse.kiPerSec = player.mse.kiPerSec.pow(player.mme.meridian[0].effect[1])
+        player.mse.kiPerSec = player.mse.kiPerSec.pow(Decimal.pow(1.01, player.mme.meridian[0].level))
 
         if (player.sma.inStarmetalChallenge && player.dotf.miasmata) player.mse.ki = player.mse.ki.add(player.mse.kiPerSec.mul(delta))
 
@@ -58,7 +58,7 @@ addLayer("mse", {
         player.mse.sourceEnergyGain = player.mse.sourceEnergyBase
         player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(player.mse.kiMult)
         player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(player.mme.meridianEffect)
-        player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(player.mme.meridian[0].effect[0])
+        player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(Decimal.pow(1.5, player.mme.meridian[0].level))
 
         player.mse.miasmaCap = new Decimal(5)
         if (player.mse.tempMiasma.gt(0) && player.mdb.active.lte(0)) {
@@ -72,7 +72,7 @@ addLayer("mse", {
             player.mse.sourceEnergyGain = player.mse.sourceEnergyBase
             player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(player.mse.kiMult)
             player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(player.mme.meridianEffect)
-            player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(player.mme.meridian[0].effect[0])
+            player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(Decimal.pow(1.5, player.mme.meridian[0].level))
 
             // Gain Special Resources
             player.mse.sourceEnergy = player.mse.sourceEnergy.add(player.mse.sourceEnergyGain)
