@@ -102,7 +102,7 @@
         }
         }
 
-        if (player.sme.autoEnterToggle) {
+        if (player.sme.autoEnterToggle && !player.sma.inStarmetalChallenge) {
             player.sma.inStarmetalChallenge = true
             player.universe = "D1"
             player.tab = "le"

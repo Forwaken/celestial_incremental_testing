@@ -140,6 +140,6 @@ addLayer("mdb", {
             ["upgrade", 11], ["upgrade", 12],
         ], {width: "700px", height: "120px", background: "#55556688", border: "3px solid #555566", borderRadius: "0 0 20px 20px", marginTop: "-3px"}],
     ],
-    layerShown() { return player.sma.inStarmetalChallenge },
+    layerShown() { return getBuyableAmount("mse", 3).gt(0) ? true : 'ghost' },
     deactivated() { return !player.sma.inStarmetalChallenge},
 });

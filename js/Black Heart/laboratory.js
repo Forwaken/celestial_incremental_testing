@@ -295,7 +295,7 @@ addLayer("laboratory", {
         23: {
             fullDisplay() {
                 if (!this.canAfford()) return "<h3>Requires another sides upgrade.</h3>"
-                return "<h3>MF-03</h3><br>Vespasian's \"Overdrive\" skill now nerfs regen by 90% instead of negating it.<br><br>Cost: 100,000 Matos Fragments"
+                return "<h3>MF-03</h3><br>Vespasian's \"Overdrive\" skill now nerfs regen by 80% instead of negating it.<br><br>Cost: 100,000 Matos Fragments"
             },
             unlocked() {return player.laboratory.highestCombo.gt(10)},
             cost: new Decimal(100000),
@@ -304,7 +304,7 @@ addLayer("laboratory", {
             currencyDisplayName: "Matos Fragments",
             currencyInternalName: "matosFragment",
             style() {
-                let look = {minHeight: "100px", borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
+                let look = {minHeight: "100px", borderRadius: "15px", lineHeight: "1", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#250121"
                 if (!this.canAfford()) {look.background = "black";look.borderColor = "#250121"}
                 return look

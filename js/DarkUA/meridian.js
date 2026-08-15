@@ -25,13 +25,13 @@ const MERIDIANS = {
     },
     1: {
         name: "Lung Point",
-        base: [new Decimal(1)],
+        base: () => [new Decimal(1).div(buyableEffect("mse", 112))],
         scale: [new Decimal(1.5)],
         resource() {return [player.mse.ki]},
         resourceName: ["Ki"],
-        effect() {return player.mme.meridian[1].level.pow(1.1).div(3).add(1)},
-        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[1].level.add(player.mme.meridian[1].gain.min(player.mme.meridianCap)).pow(1.1).div(3).add(1), 2) + "]"},
-        mBase: new Decimal(0.1),
+        effect() {return player.mme.meridian[1].level.pow(1.1).div(3).add(1).pow(buyableEffect("mse", 111))},
+        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[1].level.add(player.mme.meridian[1].gain.min(player.mme.meridianCap)).pow(1.1).div(3).add(1).pow(buyableEffect("mse", 111)), 2) + "]"},
+        mBase: () => new Decimal(0.1).div(buyableEffect("mse", 113)),
         mScale: new Decimal(1.1),
         reset() {
             player.mse.ki = new Decimal(0)
@@ -40,13 +40,13 @@ const MERIDIANS = {
     },
     2: {
         name: "Heart Point",
-        base: [new Decimal(3)],
+        base: () => [new Decimal(3).div(buyableEffect("mse", 122))],
         scale: [new Decimal(1.45)],
         resource() {return [player.mme.meridian[1].level]},
         resourceName: ["Lu:P Levels"],
-        effect() {return player.mme.meridian[2].level.pow(1.12).div(2).add(1)},
-        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[2].level.add(player.mme.meridian[2].gain.min(player.mme.meridianCap)).pow(1.12).div(2).add(1), 2) + "]"},
-        mBase: new Decimal(0.2),
+        effect() {return player.mme.meridian[2].level.pow(1.12).div(2).add(1).pow(buyableEffect("mse", 121))},
+        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[2].level.add(player.mme.meridian[2].gain.min(player.mme.meridianCap)).pow(1.12).div(2).add(1).pow(buyableEffect("mse", 121)), 2) + "]"},
+        mBase: () => new Decimal(0.2).div(buyableEffect("mse", 123)),
         mScale: new Decimal(1.12), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
@@ -57,13 +57,13 @@ const MERIDIANS = {
     },
     3: {
         name: "Yang Linking Vessel",
-        base: [new Decimal(10)],
+        base: () => [new Decimal(10).div(buyableEffect("mse", 142))],
         scale: [new Decimal(2.5)],
         resource() {return [player.mme.meridian[2].level]},
         resourceName: ["He:P Levels"],
-        effect() {return player.mme.meridian[3].level.div(20).add(1)},
-        effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Penalty<small> [Next: /" + formatSimple(player.mme.meridian[3].level.add(player.mme.meridian[3].gain.min(player.mme.meridianCap)).div(20).add(1), 2) + "]"},
-        mBase: new Decimal(0.1),
+        effect() {return player.mme.meridian[3].level.div(20).add(1).pow(buyableEffect("mse", 141))},
+        effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Penalty<small> [Next: /" + formatSimple(player.mme.meridian[3].level.add(player.mme.meridian[3].gain.min(player.mme.meridianCap)).div(20).add(1).pow(buyableEffect("mse", 141)), 2) + "]"},
+        mBase: () => new Decimal(0.1).div(buyableEffect("mse", 143)),
         mScale: new Decimal(1.15), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
@@ -74,13 +74,13 @@ const MERIDIANS = {
     4: {
         name: "Yang Heel Vessel",
         exponential: true,
-        base: [new Decimal(27)],
+        base: () => [new Decimal(27).div(buyableEffect("mse", 152))],
         scale: [new Decimal(3)],
         resource() {return [player.mme.meridian[3].level]},
         resourceName: ["YaL:V Levels"],
-        effect() {return player.mme.meridian[4].level.div(50).add(1)},
-        effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Reqs<small> [Next: /" + formatSimple(player.mme.meridian[4].level.add(player.mme.meridian[4].gain.min(player.mme.meridianCap)).div(50).add(1), 2) + "]"},
-        mBase: new Decimal(3),
+        effect() {return player.mme.meridian[4].level.div(50).add(1).pow(buyableEffect("mse", 151))},
+        effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Reqs<small> [Next: /" + formatSimple(player.mme.meridian[4].level.add(player.mme.meridian[4].gain.min(player.mme.meridianCap)).div(50).add(1).pow(buyableEffect("mse", 151)), 2) + "]"},
+        mBase: () => new Decimal(3).div(buyableEffect("mse", 153)),
         mScale: new Decimal(1.5), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
@@ -90,13 +90,13 @@ const MERIDIANS = {
     },
     5: {
         name: "Pericardium Point",
-        base: [new Decimal(100)],
+        base: () => [new Decimal(100).div(buyableEffect("mse", 132))],
         scale: [new Decimal(1.6)],
         resource() {return [player.mse.ki]},
         resourceName: ["Ki"],
-        effect() {return player.mme.meridian[5].level.pow(1.08).div(4).add(1)},
-        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[5].level.add(player.mme.meridian[5].gain.min(player.mme.meridianCap)).pow(1.08).div(4).add(1), 2) + "]"},
-        mBase: new Decimal(0.15),
+        effect() {return player.mme.meridian[5].level.pow(1.08).div(4).add(1).pow(buyableEffect("mse", 131))},
+        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[5].level.add(player.mme.meridian[5].gain.min(player.mme.meridianCap)).pow(1.08).div(4).add(1).pow(buyableEffect("mse", 131)), 2) + "]"},
+        mBase: () => new Decimal(0.15).div(buyableEffect("mse", 133)),
         mScale: new Decimal(1.08), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
@@ -486,13 +486,13 @@ addLayer("mme", {
         if (MERIDIANS[index].effectDisplay) str = str.concat(run(MERIDIANS[index].effectDisplay, MERIDIANS[index]) + "<hr>")
         str = str.concat("Next Req:")
         if (MERIDIANS[index].exponential) {
-            if (MERIDIANS[index].base[0]) str = str.concat(" " + formatSimple(Decimal.pow(MERIDIANS[index].scale[0], player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap))).mul(MERIDIANS[index].base[0]).div(player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[0])
-            if (MERIDIANS[index].base[1]) str = str.concat(",<br>" + formatSimple(Decimal.pow(MERIDIANS[index].scale[1], player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap))).mul(MERIDIANS[index].base[1]).div(player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[1])
-            if (MERIDIANS[index].base[2]) str = str.concat(",<br>" + formatSimple(Decimal.pow(MERIDIANS[index].scale[2], player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap))).mul(MERIDIANS[index].base[2]).div(player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[2])
+            if (MERIDIANS[index].base[0]) str = str.concat(" " + formatSimple(Decimal.pow(run(MERIDIANS[index].scale, MERIDIANS[index])[0], player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap))).mul(run(MERIDIANS[index].base, MERIDIANS[index])[0]).div(player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[0])
+            if (MERIDIANS[index].base[1]) str = str.concat(",<br>" + formatSimple(Decimal.pow(run(MERIDIANS[index].scale, MERIDIANS[index])[1], player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap))).mul(run(MERIDIANS[index].base, MERIDIANS[index])[1]).div(player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[1])
+            if (MERIDIANS[index].base[2]) str = str.concat(",<br>" + formatSimple(Decimal.pow(run(MERIDIANS[index].scale, MERIDIANS[index])[2], player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap))).mul(run(MERIDIANS[index].base, MERIDIANS[index])[2]).div(player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[2])
         } else {
-            if (MERIDIANS[index].base[0]) str = str.concat(" " + formatSimple(layers.h.hexReq(player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap)), MERIDIANS[index].base[0], MERIDIANS[index].scale[0], player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[0])
-            if (MERIDIANS[index].base[1]) str = str.concat(",<br>" + formatSimple(layers.h.hexReq(player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap)), MERIDIANS[index].base[1], MERIDIANS[index].scale[1], player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[1])
-            if (MERIDIANS[index].base[2]) str = str.concat(",<br>" + formatSimple(layers.h.hexReq(player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap)), MERIDIANS[index].base[2], MERIDIANS[index].scale[2], player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[2])
+            if (MERIDIANS[index].base[0]) str = str.concat(" " + formatSimple(layers.h.hexReq(player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap)), run(MERIDIANS[index].base, MERIDIANS[index])[0], run(MERIDIANS[index].scale, MERIDIANS[index])[0], player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[0])
+            if (MERIDIANS[index].base[1]) str = str.concat(",<br>" + formatSimple(layers.h.hexReq(player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap)), run(MERIDIANS[index].base, MERIDIANS[index])[1], run(MERIDIANS[index].scale, MERIDIANS[index])[1], player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[1])
+            if (MERIDIANS[index].base[2]) str = str.concat(",<br>" + formatSimple(layers.h.hexReq(player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap)), run(MERIDIANS[index].base, MERIDIANS[index])[2], run(MERIDIANS[index].scale, MERIDIANS[index])[2], player.mme.meridianDiv)) + " " + MERIDIANS[index].resourceName[2])
         }
         if (MERIDIANS[index].exponential) str = str.concat("<br>Penalty: +" + formatSimple(Decimal.sumGeometricSeries(player.mme.meridian[index].gain.min(player.mme.meridianCap), MERIDIANS[index].mBase, MERIDIANS[index].mScale, player.mme.meridian[index].level).div(player.mme.penaltyDiv), 2) + " Miasma")
         else str = str.concat("<br>Penalty: +" + formatSimple(player.mme.meridian[index].level.add(player.mme.meridian[index].gain.min(player.mme.meridianCap)).pow(MERIDIANS[index].mScale).mul(MERIDIANS[index].mBase).sub(player.mme.meridian[index].level.pow(MERIDIANS[index].mScale).mul(MERIDIANS[index].mBase)).div(player.mme.penaltyDiv), 2) + " Miasma")
@@ -529,7 +529,7 @@ addLayer("mme", {
             },
             style() {
                 let look = {width: "100px", minHeight: "37px", color: "white", lineHeight: "1", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "0px"}
-                player.mme.clickables[3] ? look.backgroundColor = "#562744" : look.backgroundColor = "#441f36"
+                player.mme.clickables[2] ? look.backgroundColor = "#562744" : look.backgroundColor = "#441f36"
                 return look
             },
         },
@@ -1057,20 +1057,20 @@ addLayer("mme", {
                     ["row", [
                         ["raw-html", () => {
                             if (MERIDIANS[player.mme.meridianSelect].base[0]) {
-                                if (MERIDIANS[player.mme.meridianSelect].exponential) return "Next Req: " + formatSimple(Decimal.pow(MERIDIANS[player.mme.meridianSelect].scale[0], player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap))).mul(MERIDIANS[player.mme.meridianSelect].base[0]).div(player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[0]
-                                else return "Next Req: " + formatSimple(layers.h.hexReq(player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap)), MERIDIANS[player.mme.meridianSelect].base[0], MERIDIANS[player.mme.meridianSelect].scale[0], player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[0]
+                                if (MERIDIANS[player.mme.meridianSelect].exponential) return "Next Req: " + formatSimple(Decimal.pow(run(MERIDIANS[player.mme.meridianSelect].scale, MERIDIANS[player.mme.meridianSelect])[0], player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap))).mul(MERIDIANS[player.mme.meridianSelect].base[0]).div(player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[0]
+                                else return "Next Req: " + formatSimple(layers.h.hexReq(player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap)), run(MERIDIANS[player.mme.meridianSelect].base, MERIDIANS[player.mme.meridianSelect])[0], run(MERIDIANS[player.mme.meridianSelect].scale, MERIDIANS[player.mme.meridianSelect])[0], player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[0]
                             } else return "Next Req: "
                         }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ["raw-html", () => {
                             if (MERIDIANS[player.mme.meridianSelect].base[1]) {
-                                if (MERIDIANS[player.mme.meridianSelect].exponential) return ", " + formatSimple(Decimal.pow(MERIDIANS[player.mme.meridianSelect].scale[1], player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap))).mul(MERIDIANS[player.mme.meridianSelect].base[1]).div(player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[1]
-                                else return ", " + formatSimple(layers.h.hexReq(player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap)), MERIDIANS[player.mme.meridianSelect].base[1], MERIDIANS[player.mme.meridianSelect].scale[1], player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[1]
+                                if (MERIDIANS[player.mme.meridianSelect].exponential) return ", " + formatSimple(Decimal.pow(run(MERIDIANS[player.mme.meridianSelect].scale, MERIDIANS[player.mme.meridianSelect])[1], player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap))).mul(MERIDIANS[player.mme.meridianSelect].base[1]).div(player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[1]
+                                else return ", " + formatSimple(layers.h.hexReq(player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap)), run(MERIDIANS[player.mme.meridianSelect].base, MERIDIANS[player.mme.meridianSelect])[1], run(MERIDIANS[player.mme.meridianSelect].scale, MERIDIANS[player.mme.meridianSelect])[1], player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[1]
                             } else return ""
                         }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ["raw-html", () => {
                             if (MERIDIANS[player.mme.meridianSelect].base[2]) {
-                                if (MERIDIANS[player.mme.meridianSelect].exponential) return ", " + formatSimple(Decimal.pow(MERIDIANS[player.mme.meridianSelect].scale[2], player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap))).mul(MERIDIANS[player.mme.meridianSelect].base[2]).div(player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[2]
-                                else return ", " + formatSimple(layers.h.hexReq(player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap)), MERIDIANS[player.mme.meridianSelect].base[2], MERIDIANS[player.mme.meridianSelect].scale[2], player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[2]
+                                if (MERIDIANS[player.mme.meridianSelect].exponential) return ", " + formatSimple(Decimal.pow(run(MERIDIANS[player.mme.meridianSelect].scale, MERIDIANS[player.mme.meridianSelect])[2], player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap))).mul(MERIDIANS[player.mme.meridianSelect].base[2]).div(player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[2]
+                                else return ", " + formatSimple(layers.h.hexReq(player.mme.meridian[player.mme.meridianSelect].level.add(player.mme.meridian[player.mme.meridianSelect].gain.min(player.mme.meridianCap)), run(MERIDIANS[player.mme.meridianSelect].base, MERIDIANS[player.mme.meridianSelect])[2], run(MERIDIANS[player.mme.meridianSelect].scale, MERIDIANS[player.mme.meridianSelect])[2], player.mme.meridianDiv)) + " " + MERIDIANS[player.mme.meridianSelect].resourceName[2]
                             } else return ""
                         }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ]],

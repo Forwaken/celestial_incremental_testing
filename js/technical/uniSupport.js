@@ -21,9 +21,13 @@ function pauseUniverse(universe, type = "toggle", temp = false) {
             player.uni[universe].paused = false
         } else {
             player.uni[universe].paused = player.uni[universe].lastPaused
+            player.tempPaused = false
         }
     } else {
-        if (temp) player.uni[universe].lastPaused = player.uni[universe].paused
+        if (temp) {
+            player.uni[universe].lastPaused = player.uni[universe].paused
+            player.tempPaused = true
+        }
         player.uni[universe].pauseTime = Date.now()
         if (player.universe == universe) player.universe = 0
         player.uni[universe].paused = true
@@ -51,9 +55,13 @@ function pauseUniverseAll(exemptions, type = "toggle", temp = false) {
                 player.uni[universe].paused = false
             } else {
                 player.uni[universe].paused = player.uni[universe].lastPaused
+                player.tempPaused = false
             }
         } else {
-            if (temp) player.uni[universe].lastPaused = player.uni[universe].paused
+            if (temp) {
+                player.uni[universe].lastPaused = player.uni[universe].paused
+                player.tempPaused = true
+            }
             player.uni[universe].pauseTime = Date.now()
             if (player.universe == universe) player.universe = 0
             player.uni[universe].paused = true

@@ -732,7 +732,7 @@ addLayer("ir", {
                 }
                 localStorage.setItem('arenaActive', 'false');
 
-                pauseUniverseAll(["A2", "DS"], "unpause", true)
+                if (player.tempPaused) pauseUniverseAll(["A2", "DS"], "unpause", true)
 
                 player.ir.timers[player.ir.shipType].current = player.ir.timers[player.ir.shipType].max
 

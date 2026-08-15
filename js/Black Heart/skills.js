@@ -378,7 +378,7 @@ BHA.nav_magicMissle = {
     method: "magic",
     properties: {
         "multi-hit"() {
-            if (hasUpgrade("sp", 22)) return [2, 100]
+            if (hasUpgrade("sp", 22)) return [2, 200]
             return [1, 200]
         }, // Amount / Delay
     },
@@ -995,7 +995,7 @@ BHA.vespasian_overdrive = {
         "agilityMult"() {return new Decimal(1.5).add(player.bh.skillData["vespasian_overdrive"].level.div(10))},
         "defenseAdd"() {return new Decimal(-25).sub(player.bh.skillData["vespasian_overdrive"].level.mul(5))},
         "regenMult"(char) {
-            if (hasUpgrade("laboratory", 22)) return char.regen.gt(0) ? new Decimal(0.1) : new Decimal(1)
+            if (hasUpgrade("laboratory", 22)) return char.regen.gt(0) ? new Decimal(0.2) : new Decimal(1)
             return char.regen.gt(0) ? new Decimal(0) : new Decimal(1)
         },
     },
@@ -1126,7 +1126,7 @@ BHA.diceFive_luckyLift = {
     effects: {
         "luckMult"() {return new Decimal(1.8).add(player.bh.skillData["diceFive_luckyLift"].level.mul(0.1))}, // Multiplicative Effect
         "attributes"() {
-            if (hasUpgrade("zd", 16)) return {"hazy": new Decimal(0.1)}
+            if (hasUpgrade("zd", 16)) return {"haze": new Decimal(0.1)}
             return {}
         },
     },

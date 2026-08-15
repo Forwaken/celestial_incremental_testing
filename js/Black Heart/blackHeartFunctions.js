@@ -506,7 +506,7 @@ function bhAttributes(index, slot, receive) {
     }
     if (attribute == undefined) attribute = {}
 
-    if (typeof attribute["haze"] !== "undefined" && Decimal.gte(action.properties["haze"].div(2), Math.random())) {
+    if (typeof attribute["haze"] !== "undefined" && Decimal.gte(attribute["haze"].div(2), Math.random())) {
         let attStr = "<span style='color:#C4BDC9'>[HAZE] </span>"
         if (index == 3) {
             bhLog(attStr + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " missed.")
@@ -533,7 +533,7 @@ function bhAttack(damage, index, slot, target, str = "", method = "none", attr =
         }
         if (attribute == undefined) attribute = {}
 
-        if (typeof attribute["haze"] !== "undefined" && Decimal.gte(action.properties["haze"], Math.random())) {
+        if (typeof attribute["haze"] !== "undefined" && Decimal.gte(attribute["haze"], Math.random())) {
             let attStr = "<span style='color:#C4BDC9'>[HAZE] </span>"
             if (index == 3) {
                 bhLog(attStr + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " missed.")
@@ -628,7 +628,7 @@ function bhHeal(heal, index, slot, target, str = "") {
         }
         if (attribute == undefined) attribute = {}
 
-        if (typeof attribute["haze"] !== "undefined" && Decimal.gte(action.properties["haze"].div(2), Math.random())) {
+        if (typeof attribute["haze"] !== "undefined" && Decimal.gte(attribute["haze"].div(2), Math.random())) {
             let attStr = "<span style='color:#C4BDC9'>[HAZE] </span>"
             if (index == 3) {
                 bhLog(attStr + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " missed.")

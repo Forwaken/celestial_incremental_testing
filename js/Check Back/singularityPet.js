@@ -93,7 +93,7 @@ addLayer("sp", {
         12: {
             title: "Focused Fury",
             unlocked() { return hasUpgrade("depth2", 101)},
-            description: "Decreases \"Berserker\" skill penalty from 20%->10%",
+            description: "Decreases \"Berserker\" skill penalty from<br>20%->10%",
             cost: new Decimal(10000),
             currencyLocation() { return player.sp },
             currencyDisplayName: "Kres Points",
@@ -127,7 +127,7 @@ addLayer("sp", {
             currencyDisplayName: "Nav Points",
             currencyInternalName: "navPoints",
             style() {
-                let look = {borderRadius: "15px", color: "black", border: "3px solid #380548", margin: "2px"}
+                let look = {borderRadius: "15px", color: "black", lineHeight: "1.1", border: "3px solid #380548", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#710a91"
                 return look
             },

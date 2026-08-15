@@ -248,7 +248,7 @@ addLayer("depth2", {
             title: "Proto Power",
             unlocked() {return player.depth2.lowestCombo.lt(0)},
             description: "Proto memory buyables are vastly more powerful and expensive.",
-            tooltip: "Buying this resets proto memory buyables, and keeps proto memories on reset",
+            tooltip: "Buying this resets proto memory buyables",
             cost: new Decimal(300000),
             onPurchase() {
                 player.oi.buyables[21] = new Decimal(0)
@@ -721,7 +721,9 @@ BHS.depth2 = {
                 if (combo >= 100) cel.push("minorLambda")
                 if (combo >= 150) cel.push("minorMu")
                 if (combo >= 200) cel.push("minorNu")
-                if (combo < 0) cel = ["minorEnas", "minorPente", "minorDeka", "minorHekaton", "minorKhilioi", "minorMyrioi"]
+                if (combo < 0) cel = ["minorEnas", "minorPente", "minorDeka", "minorHekaton", "minorKhilioi", "minorMyrioi", "minorDva", "minorTri"]
+                if (combo <= -25) cel.push("minorTessera")
+                if (combo <= -50) cel.push("minorExi")
                 return cel[Math.floor(Math.random()*cel.length)]
         }
     },
@@ -1515,6 +1517,201 @@ BHC.minorMyrioi = {
             if (Math.random() < 0.5) gain.hazyUmbrite = new Decimal(2)
             if (Math.random() < 0.4) gain.darkEther = new Decimal(1)
         }
+        return gain
+    },
+}
+
+BHC.minorDva = {
+    name: "Celestialite Minor Dva",
+    symbol: "⬇д",
+    style: {
+        background: "linear-gradient(90deg, #8F0E6E, #A30D40)",
+        color: "black",
+        borderColor: "#4A0014",
+    },
+    health: new Decimal(1500),
+    damage: new Decimal(20),
+    attributes: {
+        "haze": new Decimal(0.3),
+    },
+    actions: {
+        0: {
+            name: "Quick Shot",
+            instant: true,
+            type: "damage",
+            target: "randomPlayer",
+            method: "ranged",
+            value: new Decimal(1),
+            cooldown: new Decimal(3),
+        },
+        1: {
+            name: "Charged Shot",
+            instant: true,
+            type: "damage",
+            target: "randomPlayer",
+            method: "ranged",
+            value: new Decimal(3),
+            cooldown: new Decimal(20),
+            stun: ["soft", new Decimal(5), 1],
+        },
+    },
+    reward() {
+        let gain = {}
+        gain.faintUmbrite = new Decimal(350)
+        gain.clearUmbrite = new Decimal(125)
+        if (Math.random() < 0.3) gain.hazyUmbrite = new Decimal(2)
+        if (Math.random() < 0.3) gain.darkEther = new Decimal(1)
+        return gain
+    },
+}
+
+BHC.minorTri = {
+    name: "Celestialite Minor Tri",
+    symbol: "⬇т",
+    style: {
+        background: "linear-gradient(90deg, #8F0E6E, #A30D40)",
+        color: "black",
+        borderColor: "#4A0014",
+    },
+    health: new Decimal(1600),
+    damage: new Decimal(20),
+    mending: new Decimal(20),
+    attributes: {
+        "anima": new Decimal(0.2),
+    },
+    actions: {
+        0: {
+            name: "Pebble Toss",
+            instant: true,
+            type: "damage",
+            target: "randomPlayer",
+            method: "ranged",
+            value: new Decimal(0.3),
+            cooldown: new Decimal(1),
+        },
+        1: {
+            name: "Magic Missiles",
+            instant: true,
+            type: "damage",
+            target: "randomPlayer",
+            method: "magic",
+            properties: {"multi-hit": [2, 200]},
+            value: new Decimal(1),
+            cooldown: new Decimal(5),
+        },
+        2: {
+            name: "Mending Bandage",
+            instant: true,
+            type: "heal",
+            target: "celestialite",
+            value: new Decimal(25),
+            cooldown: new Decimal(12),
+
+            active: true,
+            constantType: "effect",
+            constantTarget: "celestialite",
+            effects: {
+                "regenAdd": new Decimal(5)
+            },
+            duration: new Decimal(5),
+        },
+    },
+    reward() {
+        let gain = {}
+        gain.faintUmbrite = new Decimal(400)
+        gain.clearUmbrite = new Decimal(150)
+        if (Math.random() < 0.35) gain.hazyUmbrite = new Decimal(2)
+        if (Math.random() < 0.35) gain.darkEther = new Decimal(1)
+        return gain
+    },
+}
+
+BHC.minorTessera = {
+    name: "Celestialite Minor Tessera",
+    symbol: "⬇Τ",
+    style: {
+        background: "linear-gradient(90deg, #8F0E6E, #A30D40)",
+        color: "black",
+        borderColor: "#4A0014",
+    },
+    health: new Decimal(1750),
+    damage: new Decimal(30),
+    regen: new Decimal(5),
+    actions: {
+        0: {
+            name: "Critical Bat",
+            instant: true,
+            type: "damage",
+            target: "randomPlayer",
+            method: "physical",
+            properties: {"crit": [0.2, 2], "stun": [new Decimal(0.5), "soft", new Decimal(1)]},
+            value: new Decimal(1),
+            cooldown: new Decimal(3),
+        },
+        1: {
+            name: "Trolls Blood",
+            active: true,
+            constantType: "effect",
+            constantTarget: "celestialite",
+            effects: {
+                "regenMult": new Decimal(10)
+            },
+            duration: new Decimal(2),
+            cooldown: new Decimal(10),
+        },
+    },
+    reward() {
+        let gain = {}
+        gain.faintUmbrite = new Decimal(450)
+        gain.clearUmbrite = new Decimal(175)
+        if (Math.random() < 0.4) gain.hazyUmbrite = new Decimal(2)
+        if (Math.random() < 0.4) gain.darkEther = new Decimal(1)
+        return gain
+    },
+}
+
+BHC.minorExi = {
+    name: "Celestialite Minor Exi",
+    symbol: "⬇έ",
+    style: {
+        background: "linear-gradient(90deg, #8F0E6E, #A30D40)",
+        color: "black",
+        borderColor: "#4A0014",
+    },
+    health: new Decimal(1900),
+    damage: new Decimal(35),
+    attributes: {
+        "air": new Decimal(0.2), // Resistance DMG Mult
+        "warded": new Decimal(0.2), // Resistance DMG Mult
+    },
+    actions: {
+        0: {
+            name: "Pebble Flurry",
+            instant: true,
+            type: "damage",
+            target: "randomPlayer",
+            method: "ranged",
+            properties: {"multi-hit": [3, 100]},
+            value: new Decimal(0.3),
+            cooldown: new Decimal(1),
+        },
+        1: {
+            name: "Boulder Toss",
+            instant: true,
+            type: "damage",
+            target: "randomPlayer",
+            method: "ranged",
+            properties: {"crit": [0.5, 2], "stun": [new Decimal(1), "soft", new Decimal(1)]},
+            value: new Decimal(2),
+            cooldown: new Decimal(6),
+        },
+    },
+    reward() {
+        let gain = {}
+        gain.faintUmbrite = new Decimal(500)
+        gain.clearUmbrite = new Decimal(200)
+        if (Math.random() < 0.45) gain.hazyUmbrite = new Decimal(2)
+        if (Math.random() < 0.45) gain.darkEther = new Decimal(1)
         return gain
     },
 }

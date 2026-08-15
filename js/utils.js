@@ -370,7 +370,7 @@ document.onkeydown = function (e) {
 	if (ctrlDown && hotkeys[key]) e.preventDefault()
 		
 	let k = undefined
-	if(hotkeys[player.universe][key])
+	if(hotkeys[player.universe] && hotkeys[player.universe][key])
 		k = hotkeys[player.universe][key]
 	if(hotkeys.global[key])
 		k = hotkeys.global[key]

@@ -32,7 +32,7 @@
 		"Check Back/diamondDust.js", "Check Back/treasureRoom.js",
 		"Puzzle World/akash.js", "Puzzle World/elements.js", 
 		"Puzzle World/Puzzle Fighting/puzzleFighting.js",
-		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js",
+		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js", "Black Heart/bulletHellNeo.js",
 		"DarkU1/darkOTF.js", "DarkUA/sourceEnergy.js", "DarkUA/meridian.js", "DarkUA/deepBreathing.js", "DarkUA/cleansing.js",
 		"Ordinal/ordinal.js", "Ordinal/markup.js",
 	],
@@ -2007,6 +2007,7 @@ function addedPlayerData() { return {
 	universe: "U1",
 	musuniverse: "U1",
 	hideMenu: true,
+	tempPaused: false,
 }}
 
 // Display extra things at the top of the page
