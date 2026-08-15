@@ -22,6 +22,7 @@ class BulletHell {
         this.centerY = values.centerY || window.innerHeight / 2
         this.timer = values.timer || false
         this.timerTime = values.timerTime || 0
+        this.duration = values.duration || -1
 
         // Sub-arena Variables
         this.subArena = values.subArena || false
@@ -114,7 +115,7 @@ class BulletHell {
                     }
                 }
             }
-            info.carve(0, 0);
+            this.carve(0, 0);
         }
         this.goalStart = values.goalStart || false
         this.goalSize = values.goalSize || 50
@@ -127,7 +128,7 @@ class BulletHell {
         // Player Variables
         this.soul = values.soul || "red"
         this.invTime = 0.2
-        this.pStart = values.pStart || "center"
+        this.pStart = values.pStart || (this.cellSize ? "maze" : "center")
         let curWidth = this.subArena ? this.subWidth : this.width
         let curHeight = this.subArena ? this.subHeight : this.height
         switch (this.pStart) {
@@ -253,7 +254,7 @@ class BulletHell {
         if (this.running == false) {
             if (player.bh.celestialite.health.lte(0)) return
             player.subtabs["bh"]["stuff"] = "bullet";
-            if (!player.uni.CH.paused) pauseUniverseAll(["BH"], "pause", true)
+            if (!player.tempPaused) pauseUniverseAll(["BH"], "pause", true)
             options.fullscreen = true
         }
 
@@ -262,7 +263,7 @@ class BulletHell {
         this.loop = setInterval(() => this.update(), 1000 / 60)
     }
 
-    removeArena(damage = false) {
+    removeArena(damage = false, dead = false) {
         this.running = false;
         clearInterval(this.loop);
         if (!options.bhKeyboard) {
@@ -275,7 +276,8 @@ class BulletHell {
             window.removeEventListener('click', this.clickHandler);
         }
         if (this.overlay) document.body.removeChild(this.overlay)
-        player.subtabs["bh"]["stuff"] = "battle"
+        if (!dead) player.subtabs["bh"]["stuff"] = "battle"
+        else player.subtabs["bh"]["stuff"] = "dead"
         if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
         player.universe = "U3"
         options.fullscreen = this.prevScreenState
@@ -367,7 +369,11 @@ class BulletHell {
         let now = Date.now()
         this.delta = (now - this.time) / 1e3
         this.time = now
-        
+
+        // Check and end arena early if celestialite or all characters are dead
+        if (player.bh.celestialite.id == "none" || (player.bh.celestialite.health.lte(0) && !BHC[player.bh.celestialite.id].immortal)) this.removeArena()
+        if (this.allCharactersDead()) this.removeArena(false, true)
+
         // Update arena position coordinates
         this.boxLeft = this.arenaCanvas.getBoundingClientRect().left
         this.boxTop = this.arenaCanvas.getBoundingClientRect().top
@@ -385,7 +391,7 @@ class BulletHell {
         // Player Movement Code
         switch (this.soul) {
             case "blue":
-                // Horizontal movement influenced by mouse X (info.pos.x) and keyboard arrows
+                // Horizontal movement influenced by mouse X (this.pos.x) and keyboard arrows
                 let targetX = this.pos.x || this.px;
                 if (options.bhKeyboard) {
                     targetX = this.px
@@ -442,13 +448,13 @@ class BulletHell {
                 if (dx < -3 || dx > 3 || dy < -3 || dy > 3) {
                     let speed = this.keys.shift ? this.pSpeed / 2 : this.pSpeed
                     if (this.cellSize) {
-                        let npx = this.px + Math.cos(angle) * this.speed, npy = this.py + Math.sin(angle) * this.speed;
+                        let npx = this.px + Math.cos(angle) * speed, npy = this.py + Math.sin(angle) * speed;
                         // Try moving in both axes, then x only, then y only
-                        if (canMoveTo(npx, npy)) {
+                        if (this.canMoveTo(npx, npy)) {
                             this.px = npx; this.py = npy
-                        } else if (canMoveTo(npx, this.py)) {
+                        } else if (this.canMoveTo(npx, this.py)) {
                             this.px = npx;
-                        } else if (canMoveTo(this.px, npy)) {
+                        } else if (this.canMoveTo(this.px, npy)) {
                             this.py = npy
                         }
                     } else {
@@ -492,7 +498,7 @@ class BulletHell {
                         break;
                 }
                 if (this.goalAmt <= 1) {
-                    if (this.goalEnd == "end") {this.removeArena()}
+                    if (this.goalEnd == "leave") {this.removeArena()}
                     else {this.goalStart = null; this.goal = null}
                 } else {
                     this.goalAmt -= 1
@@ -604,6 +610,12 @@ class BulletHell {
             if (this.timerTime > 0) Math.max(this.timerTime -= this.delta, 0)
         }
 
+        // Duration Stuff
+        if (this.duration >= 0) {
+            if (this.duration <= 0) this.removeArena()
+            if (this.duration > 0) Math.max(this.duration -= this.delta, 0)
+        }
+
         this.draw()
     }
 
@@ -650,8 +662,8 @@ class BulletHell {
         // Draw maze
         if (this.cellSize) {
             this.arenaCtx.save();
-            this.arenaCtx.strokeStyle = "#fff";
-            this.arenaCtx.lineWidth = 3;
+            this.arenaCtx.strokeStyle = this.soul == "blue" ? "#888" : "#fff";
+            this.arenaCtx.lineWidth = this.soul == "blue" ? 2 : 3;
             for (let y = 0; y < this.mazeRows; y++) {
                 for (let x = 0; x < this.mazeCols; x++) {
                     const cell = this.maze[y][x];
@@ -758,6 +770,15 @@ class BulletHell {
         this.arenaCtx.fill()
         this.arenaCtx.stroke()
         this.arenaCtx.restore()
+    }
+
+    // Function that figures out if death is yes
+    allCharactersDead = () => {
+        if (!player || !player.bh || !player.bh.characters) return true;
+        for (let i = 0; i < 3; i++) {
+            if (player.bh.characters[i].id != "none" && Decimal.gt(player.bh.characters[i].health, 0)) return false
+        }
+        return true;
     }
 
     // Function to position the goal
@@ -869,5 +890,331 @@ class BulletHell {
             if (rightCell.walls[3]) return false;
         }
         return true;
+    }
+
+    // Function to shoot a bullet that goes towards the player at coordinates
+    shootAtPlayer = (bx, by, id, speed = 5) => {
+        // Calculate direction from boss to player (relative to the box)
+        let playerGlobalX = this.boxLeft + this.px;
+        let playerGlobalY = this.boxTop + this.py;
+        if (this.subArena && options.bhKeyboard) {
+            playerGlobalX += this.subx
+            playerGlobalY += this.suby
+        }
+        const dx = playerGlobalX - bx;
+        const dy = playerGlobalY - by;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const bulletRadius = this.actions[id].bulletRadius ?? 10
+        if (dist === 0) return;
+        this.bullets.push({
+            x: bx,
+            y: by,
+            vx: (dx / dist) * speed,
+            vy: (dy / dist) * speed,
+            r: bulletRadius,
+            draw(b, bossCtx) {
+                bossCtx.beginPath();
+                bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
+                bossCtx.fillStyle = "#fff";
+                bossCtx.fill();
+            },
+        });
+    }
+
+    // Function to fire a radial burst at coordinates
+    fireRadialBurst = (bx, by, id) => {
+        for (let i = 0; i < this.actions[id].bulletsPerBurst; i++) {
+            const angle = (2 * Math.PI * i) / this.actions[id].bulletsPerBurst;
+            this.bullets.push({
+                x: bx,
+                y: by,
+                vx: Math.cos(angle) * this.actions[id].bulletSpeed,
+                vy: Math.sin(angle) * this.actions[id].bulletSpeed,
+                r: 12,
+                draw(b, bossCtx) {
+                    bossCtx.beginPath();
+                    bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
+                    bossCtx.fillStyle = "#fff";
+                    bossCtx.fill();
+                },
+            });
+        }
+    }
+
+    // Function to fire a radial burst of spikes at coordinates
+    fireDiceSpikeRadialBurst = (bx, by, id) => {
+        for (let i = 0; i < this.actions[id].bulletsPerBurst; i++) {
+            const angle = (2 * Math.PI * i) / this.actions[id].bulletsPerBurst;
+            this.bullets.push({
+                x: bx,
+                y: by,
+                vx: Math.cos(angle) * this.actions[id].bulletSpeed,
+                vy: Math.sin(angle) * this.actions[id].bulletSpeed,
+                r: 30,
+                // triangular spike that points along velocity
+                color: Math.random() < 0.5 ? '#000' : '#fff',
+                draw(b, bossCtx) {
+                    const angle = Math.atan2(b.vy, b.vx);
+                    bossCtx.save();
+                    bossCtx.translate(b.x, b.y);
+                    bossCtx.rotate(angle);
+                    // triangle
+                    bossCtx.beginPath();
+                    bossCtx.moveTo(b.r, 0);
+                    bossCtx.lineTo(-b.r * 0.6, b.r * 0.7);
+                    bossCtx.lineTo(-b.r * 0.6, -b.r * 0.7);
+                    bossCtx.closePath();
+                    bossCtx.fillStyle = b.color;
+                    bossCtx.fill();
+                    bossCtx.lineWidth = 2;
+                    bossCtx.strokeStyle = (b.color === '#000') ? '#fff' : '#000';
+                    bossCtx.stroke();
+                    bossCtx.restore();
+                }
+            });
+        }
+    }
+
+    // Function that shoots spread of bullets at coordinates
+    shootSpreadAtPlayer = (bx, by, id) => {
+        let dx = this.px - bx + this.boxLeft;
+        let dy = this.py - by + this.boxTop;
+        let baseAngle = Math.atan2(dy, dx);
+        for (let i = 0; i < this.actions[id].spreadCount; i++) {
+            let angle = baseAngle + (i - (this.actions[id].spreadCount - 1) / 2) * (this.actions[id].spreadAngle / (this.actions[id].spreadCount - 1));
+            let vx = Math.cos(angle) * this.actions[id].bulletSpeed;
+            let vy = Math.sin(angle) * this.actions[id].bulletSpeed;
+            this.bullets.push({
+                x: bx,
+                y: by,
+                r: 12,
+                vx: vx,
+                vy: vy,
+                draw(b, bossCtx) {
+                    bossCtx.beginPath();
+                    bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
+                    bossCtx.fillStyle = "#fff";
+                    bossCtx.fill();
+                }
+            });
+        }
+    }
+
+    // Function that shoots spiral from coordinates
+    spawnSpiralProjectile = (bx, by, br, id) => {
+        // Alternate between bullet and knife
+        let isKnife = this.actions[id].spiralKnives && (!this.actions[id].spiralBullets || (Math.floor(this.actions[id].spiralAngle/(Math.PI*2)) % 2 === 0));
+        let angle = this.actions[id].spiralAngle;
+        let speed = this.actions[id].bulletSpeed;
+        let x = bx + Math.cos(angle) * br;
+        let y = by + Math.sin(angle) * br;
+        if (isKnife) {
+            let bname = "knife"
+            if (this.actions[id].knifeLength >= 100 || this.actions[id].knifeWidth >= 25) bname = "bigKnife"
+            this.bullets.push({
+                name: bname,
+                x: x,
+                y: y,
+                r: this.actions[id].knifeLength,
+                width: this.actions[id].knifeWidth,
+                angle: angle,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                draw(b, bossCtx) {
+                    // Draw path line (red, thin)
+                    bossCtx.save();
+                    bossCtx.strokeStyle = '#f22';
+                    bossCtx.lineWidth = 2;
+                    bossCtx.beginPath();
+                    bossCtx.moveTo(b.x, b.y);
+                    // Draw line in the direction of the knife, long enough to cross the arena
+                    let farX = b.x + Math.cos(b.angle) * (this.width + this.height);
+                    let farY = b.y + Math.sin(b.angle) * (this.width + this.height);
+                    bossCtx.lineTo(farX, farY);
+                    bossCtx.stroke();
+                    bossCtx.restore();
+                    // Draw knife
+                    bossCtx.save();
+                    bossCtx.translate(b.x, b.y);
+                    bossCtx.rotate(b.angle);
+                    bossCtx.beginPath();
+                    bossCtx.moveTo(-b.r / 2, -b.width / 2);
+                    bossCtx.lineTo(b.r / 2, 0);
+                    bossCtx.lineTo(-b.r / 2, b.width / 2);
+                    bossCtx.closePath();
+                    bossCtx.fillStyle = '#ccc';
+                    if (!options.performanceMode) bossCtx.shadowColor = '#fff';
+                    if (!options.performanceMode) bossCtx.shadowBlur = 6;
+                    bossCtx.fill();
+                    bossCtx.restore();
+                },
+            })
+        } else {
+            this.bullets.push({
+                x: x,
+                y: y,
+                r: 12,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                draw(b, bossCtx) {
+                    bossCtx.beginPath();
+                    bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
+                    bossCtx.fillStyle = "#fff";
+                    bossCtx.fill();
+                },
+            })
+        }
+    }
+
+    // Function that spawns a knife at arena border
+    spawnKnife = (id) => {
+        // Pick a random edge and a random point on that edge
+        const edge = Math.floor(Math.random() * 4); // 0=top, 1=right, 2=bottom, 3=left
+        let bx, by, angle;
+        if (edge === 0) { // top
+            bx = Math.random() * this.width;
+            by = -this.actions[id].knifeLength;
+            angle = Math.random() * Math.PI + Math.PI / 2; // downwards, but can be angled
+        } else if (edge === 1) { // right
+            bx = this.width + this.actions[id].knifeLength;
+            by = Math.random() * this.height;
+            angle = Math.random() * Math.PI + Math.PI; // leftwards
+        } else if (edge === 2) { // bottom
+            bx = Math.random() * this.width;
+            by = this.height + this.actions[id].knifeLength;
+            angle = Math.random() * Math.PI - Math.PI / 2; // upwards
+        } else { // left
+            bx = -this.actions[id].knifeLength;
+            by = Math.random() * this.height;
+            angle = Math.random() * Math.PI; // rightwards
+        }
+        // Optionally, bias angle toward player
+        if (Math.random() < 0.7) {
+            let dx = this.px - bx;
+            let dy = this.py - by;
+            if (this.subArena && options.bhKeyboard) {
+                dx += this.subx
+                dy += this.suby
+            }
+            angle = Math.atan2(dy, dx);
+        }
+        // Store initial spawn for path line
+        let bname = "knife"
+        if (this.actions[id].knifeLength >= 100 || this.actions[id].knifeWidth >= 25) bname = "bigKnife"
+        this.bullets.push({
+            name: bname,
+            boxRender: true, // RENDER IN BOX
+            x: bx,
+            y: by,
+            angle: angle,
+            r: this.actions[id].knifeLength,
+            width: this.actions[id].knifeWidth,
+            vx: Math.cos(angle) * this.actions[id].enemySpeed,
+            vy: Math.sin(angle) * this.actions[id].enemySpeed,
+            draw(b, bossCtx) {
+                // Draw path line (red, thin)
+                bossCtx.save();
+                bossCtx.strokeStyle = '#f22';
+                bossCtx.lineWidth = 2;
+                bossCtx.beginPath();
+                bossCtx.moveTo(b.x, b.y);
+                // Draw line in the direction of the knife, long enough to cross the arena
+                let farX = b.x + Math.cos(b.angle) * (this.width + this.height);
+                let farY = b.y + Math.sin(b.angle) * (this.width + this.height);
+                bossCtx.lineTo(farX, farY);
+                bossCtx.stroke();
+                bossCtx.restore();
+                // Draw knife
+                bossCtx.save();
+                bossCtx.translate(b.x, b.y);
+                bossCtx.rotate(b.angle);
+                bossCtx.beginPath();
+                bossCtx.moveTo(-b.r / 2, -b.width / 2);
+                bossCtx.lineTo(b.r / 2, 0);
+                bossCtx.lineTo(-b.r / 2, b.width / 2);
+                bossCtx.closePath();
+                bossCtx.fillStyle = '#ccc';
+                if (!options.performanceMode) bossCtx.shadowColor = '#fff';
+                if (!options.performanceMode) bossCtx.shadowBlur = 6;
+                bossCtx.fill();
+                bossCtx.restore();
+            }
+        })
+    }
+
+    // Function that fires a knife burst at player from arena borders
+    fireKnifeBurst = (id) => {
+        // Knives are thrown from far outside the arena, all aimed at the current player position
+        let centerX = this.px;
+        let centerY = this.py;
+        if (this.subArena && options.bhKeyboard) {
+            centerX += this.subx
+            centerY += this.suby
+        }
+        const spawnRadius = Math.max(this.width, this.height) * 0.75 + 200; // farther than arena edge
+        for (let i = 0; i < this.actions[id].bulletsPerBurst; i++) {
+            const angle = (2 * Math.PI * i) / this.actions[id].bulletsPerBurst;
+            // Spawn far away in a ring
+            const spawnX = centerX + Math.cos(angle) * spawnRadius;
+            const spawnY = centerY + Math.sin(angle) * spawnRadius;
+            // Aim at the current player position
+            const dx = centerX - spawnX;
+            const dy = centerY - spawnY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const knifeAngle = Math.atan2(dy, dx);
+            let bname = "knife"
+            if (this.actions[id].knifeLength >= 100 || this.actions[id].knifeWidth >= 25) bname = "bigKnife"
+            this.bullets.push({
+                name: bname,
+                boxRender: true, // RENDER IN BOX
+                offScreen: true, // Bullets can be off screen
+                x: spawnX,
+                y: spawnY,
+                angle: knifeAngle,
+                r: this.actions[id].knifeLength,
+                width: this.actions[id].knifeWidth,
+                vx: (dx / dist) * this.actions[id].enemySpeed,
+                vy: (dy / dist) * this.actions[id].enemySpeed,
+                timer: Date.now() - 500,
+                draw(b, bossCtx) {
+                    // Draw path line (red, thin) if knife is on screen, or if it left within the last 500ms
+                    let knifeOnScreen = (
+                        b.x > 0 && b.x < this.width &&
+                        b.y > 0 && b.y < this.height
+                    );
+                    if (knifeOnScreen) {
+                        b.timer = Date.now();
+                    }
+                    if (Date.now() - b.timer < 500) {
+                        // Draw path line (red, thin)
+                        bossCtx.save();
+                        bossCtx.strokeStyle = '#f22';
+                        bossCtx.lineWidth = 2;
+                        bossCtx.beginPath();
+                        bossCtx.moveTo(b.x, b.y);
+                        // Draw line in the direction of the knife, long enough to cover the screen
+                        let farX = b.x + Math.cos(b.angle) * 5000;
+                        let farY = b.y + Math.sin(b.angle) * 5000;
+                        bossCtx.lineTo(farX, farY);
+                        bossCtx.stroke();
+                        bossCtx.restore();
+                    }
+                    // Draw knife
+                    bossCtx.save();
+                    bossCtx.translate(b.x, b.y);
+                    bossCtx.rotate(b.angle);
+                    bossCtx.beginPath();
+                    bossCtx.moveTo(-b.r / 2, -b.width / 2);
+                    bossCtx.lineTo(b.r / 2, 0);
+                    bossCtx.lineTo(-b.r / 2, b.width / 2);
+                    bossCtx.closePath();
+                    bossCtx.fillStyle = '#ccc';
+                    if (!options.performanceMode) bossCtx.shadowColor = '#fff';
+                    if (!options.performanceMode) bossCtx.shadowBlur = 6;
+                    bossCtx.fill();
+                    bossCtx.restore();
+                }
+            });
+        }
     }
 }
