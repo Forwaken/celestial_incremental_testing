@@ -103,7 +103,7 @@ addLayer("tera", {
 
         piositySpell: new Decimal(1),
         piosityAuto: new Decimal(0),
-        chronotachysisSpell: [new Decimal(0), new Decimal(2)], // Duration / Multiplier
+        chronotachysisSpell: [new Decimal(0), new Decimal(0)], // Duration / Multiplier
         spellEnhancement: new Decimal(0),
 
         realmMastery: [false, false, false, false, false, false],
@@ -1088,8 +1088,8 @@ addLayer("tera", {
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
             effect(x) {
-                if (getBuyableAmount(this.layer, this.id).gte(20)) return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id).div(20).pow(0.6).mul(20))
-                return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id))
+                if (getBuyableAmount(this.layer, this.id).gte(18)) return Decimal.pow(1.06, getBuyableAmount(this.layer, this.id).div(18).pow(0.6).mul(18))
+                return Decimal.pow(1.06, getBuyableAmount(this.layer, this.id))
             },
             unlocked: true,
             cost(x) {
@@ -1123,8 +1123,8 @@ addLayer("tera", {
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
             effect(x) {
-                if (getBuyableAmount(this.layer, this.id).gte(20)) return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id).div(20).pow(0.6).mul(20))
-                return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id))
+                if (getBuyableAmount(this.layer, this.id).gte(18)) return Decimal.pow(1.06, getBuyableAmount(this.layer, this.id).div(18).pow(0.6).mul(18))
+                return Decimal.pow(1.06, getBuyableAmount(this.layer, this.id))
             },
             unlocked: true,
             cost(x) {
@@ -1189,7 +1189,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(255) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.02, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(50).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -2571,7 +2571,7 @@ addLayer("tera", {
                             player.tera.hexEssencePerSecond.gt(0) ? look.color = "white" : look.color = "gray"
                             return look
                         }],
-                        ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>(((6*Red)<sup>(True Hex*Green)-1</sup>)*Blue/60)<sup>Opacity</sup></small></div>"}],
+                        ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>((((6*Red)<sup>(True Hex*Green)-1</sup>)*Blue/60)+1)<sup>Opacity</sup>-1</small></div>"}],
                     ]],
                     ["raw-html", () => {
                         let softcapStart = hasUpgrade("tera", "hex12") ? Decimal.mul(1e6, upgradeEffect("tera", "hex12")) : new Decimal(1e6)
