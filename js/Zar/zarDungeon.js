@@ -149,10 +149,11 @@
         }
     },
     endGame(winner) {
-        if (!player.zd.gameOver)
-        {
+        if (!player.zd.gameOver) {
+            let referencePoint = document.getElementById("clickable-zd-13").getBoundingClientRect()
+            let particleCoord = [referencePoint.x - 170, referencePoint.y - 40]
             if (winner == 'dealer') {
-                makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 940, y: 580, text: "You lost..."})
+                makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: particleCoord[0], y: particleCoord[1], text: "You lost..."})
             } else if (winner == 'player') {
                 player.cb.evolutionShards = player.cb.evolutionShards.add(player.zd.gameCost)
 
@@ -160,15 +161,15 @@
                 if (random < buyableEffect("zd", 16)) 
                 {
                     player.zd.zarChips = player.zd.zarChips.add(player.zd.zarChipsToGet.mul(3))
-                    makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 940, y: 580, text: "[TRIPLE] You win!<br><h5>Evolution shards returned."})
+                    makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: particleCoord[0], y: particleCoord[1], text: "[TRIPLE] You win!<br><h5>Evolution shards returned."})
                 }
                 else 
                 {
                     player.zd.zarChips = player.zd.zarChips.add(player.zd.zarChipsToGet)
-                    makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 940, y: 580, text: "You win!<br><h5>Evolution shards returned."})
+                    makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: particleCoord[0], y: particleCoord[1], text: "You win!<br><h5>Evolution shards returned."})
                 }
             } else if (winner == 'push') {
-                makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: 940, y: 580, text: "It's a tie!<br><h5>Evolution shards returned."})
+                makeShinies(GOLDEN_EFFECT_TEXT, 1, {x: particleCoord[0], y: particleCoord[1], text: "It's a tie!<br><h5>Evolution shards returned."})
                 player.cb.evolutionShards = player.cb.evolutionShards.add(player.zd.gameCost)
             }
         }
