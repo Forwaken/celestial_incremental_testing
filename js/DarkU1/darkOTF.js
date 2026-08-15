@@ -36,15 +36,10 @@ addLayer("dotf", {
                 player.dotf.penumbral = true
                 player.pu.storedSelections = player.pu.storedSelections.sub(new Decimal(3).pow(player.dotf.featureScaling).floor())
             },
-            style: {
-                width: '250px',
-                minHeight: '75px',
-                maxHeight: '75px',
-                backgroundColor: "#fff",
-                "background-origin": "border-box",
-                border: "3px solid #0000003f",
-                fontSize: '20px',
-                borderRadius: "0px 0px 10px 10px",
+            style() {
+                let look = {width: '250px', minHeight: '75px', maxHeight: '75px', backgroundOrigin: "border-box", border: "3px solid #0000003f", fontSize: '20px', borderRadius: "0px 0px 10px 10px"}
+                look.background = player.dotf.penumbral ? "#bbb" : this.canClick() ? "#fff" : "#bf8f8f"
+                return look
             },
         },
         12: {
@@ -57,15 +52,10 @@ addLayer("dotf", {
                 player.dotf.miasmata = true
                 player.pu.storedSelections = player.pu.storedSelections.sub(new Decimal(5).pow(player.dotf.featureScaling).floor())
             },
-            style: {
-                width: '250px',
-                minHeight: '75px',
-                maxHeight: '75px',
-                backgroundColor: "#fff",
-                "background-origin": "border-box",
-                border: "3px solid #0000003f",
-                fontSize: '20px',
-                borderRadius: "0px 0px 10px 10px",
+            style() {
+                let look = {width: '250px', minHeight: '75px', maxHeight: '75px', backgroundOrigin: "border-box", border: "3px solid #0000003f", fontSize: '20px', borderRadius: "0px 0px 10px 10px"}
+                look.background = player.dotf.miasmata ? "#bbb" : this.canClick() ? "#fff" : "#bf8f8f"
+                return look
             },
         },
     },
