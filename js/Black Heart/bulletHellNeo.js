@@ -14,12 +14,14 @@ class BulletHell {
         this.overlay = null
         this.enemyCanvas = null
         this.arenaCanvas = null
-        this.arenaType = values.arenaType || "normal"
+        this.arenaType = values.arenaType || "normal" // used for clickthrough arena
         this.arenaTransparent = false
         this.width = values.width || 700
         this.height = values.height || 500
         this.centerX = values.centerX || window.innerWidth / 2
         this.centerY = values.centerY || window.innerHeight / 2
+        this.timer = values.timer || false
+        this.timerTime = values.timerTime || 0
 
         // Sub-arena Variables
         this.subArena = values.subArena || false
@@ -117,47 +119,14 @@ class BulletHell {
         this.goalStart = values.goalStart || false
         this.goalSize = values.goalSize || 50
         this.goalAmt = values.goalAmt || 1
-        this.goalBehavior = values.goalBehavior || "end"
-        switch (this.goalStart) {
-            case false:
-                break;
-            case "maze":
-                this.goal = {x: this.mazeCols - 1, y: this.mazeRows - 1, d: this.cellSize}
-                this.goalRadius = this.cellSize / 2 - 6
-                break;
-            case "custom":
-                this.goal = {x: values.goalx || this.goalSize, y: values.goaly || this.goalSize, d: this.goalSize}
-                this.goalRadius = this.goalSize / 2 - 6
-                break;
-            case "left":
-                this.goal = {x: this.goalSize, y: this.height / 2, d: this.goalSize}
-                this.goalRadius = this.goalSize / 2 - 6
-                break;
-            case "right":
-                this.goal = {x: this.width - (this.goalSize*2), y: this.height / 2, d: this.goalSize}
-                this.goalRadius = this.goalSize / 2 - 6
-                break;
-            case "top":
-                this.goal = {x: this.width / 2, y: this.goalSize, d: this.goalSize}
-                this.goalRadius = this.goalSize / 2 - 6
-                break;
-            case "bottom":
-                this.goal = {x: this.width / 2, y: this.height - (this.goalSize*2), d: this.goalSize}
-                this.goalRadius = this.goalSize / 2 - 6
-                break;
-            case "center":
-                this.goal = {x: this.width / 2, y: this.height / 2, d: this.goalSize}
-                this.goalRadius = this.goalSize / 2 - 6
-                break;
-            default:
-                this.goal = {x: (Math.random() * (this.width - (this.goalSize*2)) + this.goalSize), y: (Math.random() * (this.height - (this.goalSize*2)) + this.goalSize), d: this.goalSize}
-                this.goalRadius = this.goalSize / 2 - 6
-                break;
-        }
+        this.goalAmtShow = values.goalAmtShow || false
+        this.goalBehavior = values.goalBehavior || "normal"
+        this.goalEnd = values.goalEnd || "leave"
+        this.positionGoal()
 
         // Player Variables
         this.soul = values.soul || "red"
-        this.invTime = 0
+        this.invTime = 0.2
         this.pStart = values.pStart || "center"
         let curWidth = this.subArena ? this.subWidth : this.width
         let curHeight = this.subArena ? this.subHeight : this.height
@@ -266,7 +235,7 @@ class BulletHell {
             if (BHB[i].moveFunc) this.actions[i].moveFunc = BHB[i].moveFunc
             this.actions[i].lastTime = false
 
-            if (this.actions[i].codeFunc) info = this.actions[i].codeFunc(this, i)
+            if (this.actions[i].codeFunc) this.actions[i].codeFunc(this, i)
         }
 
         // Event Listeners
@@ -293,7 +262,7 @@ class BulletHell {
         this.loop = setInterval(() => this.update(), 1000 / 60)
     }
 
-    removeArena() {
+    removeArena(damage = false) {
         this.running = false;
         clearInterval(this.loop);
         if (!options.bhKeyboard) {
@@ -310,6 +279,7 @@ class BulletHell {
         if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
         player.universe = "U3"
         options.fullscreen = this.prevScreenState
+        if (damage) bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer")
     }
 
     updatePos(e, touch = false) {
@@ -397,6 +367,10 @@ class BulletHell {
         let now = Date.now()
         this.delta = (now - this.time) / 1e3
         this.time = now
+        
+        // Update arena position coordinates
+        this.boxLeft = this.arenaCanvas.getBoundingClientRect().left
+        this.boxTop = this.arenaCanvas.getBoundingClientRect().top
 
         // Move sub-arena (with DVD bounce logic)
         if (this.subArena) {
@@ -467,8 +441,16 @@ class BulletHell {
                 let angle = Math.atan2(dy, dx)
                 if (dx < -3 || dx > 3 || dy < -3 || dy > 3) {
                     let speed = this.keys.shift ? this.pSpeed / 2 : this.pSpeed
-                    if (false) {
-
+                    if (this.cellSize) {
+                        let npx = this.px + Math.cos(angle) * this.speed, npy = this.py + Math.sin(angle) * this.speed;
+                        // Try moving in both axes, then x only, then y only
+                        if (canMoveTo(npx, npy)) {
+                            this.px = npx; this.py = npy
+                        } else if (canMoveTo(npx, this.py)) {
+                            this.px = npx;
+                        } else if (canMoveTo(this.px, npy)) {
+                            this.py = npy
+                        }
                     } else {
                         this.px += (Math.cos(angle) * speed * 60 * this.delta)
                         this.py += (Math.sin(angle) * speed * 60 * this.delta)
@@ -491,7 +473,37 @@ class BulletHell {
 
         // Check for reaching goal
         if (this.goalStart) {
-            
+            if (this.goalStart == "maze") {
+                this.distToGoal = Math.sqrt((this.px - (this.goal.x * this.goal.d + this.goal.d / 2)) ** 2 + (this.py - (this.goal.y * this.goal.d + this.goal.d / 2)) ** 2);
+            } else {
+                if (this.subArena) {
+                    this.distToGoal = Math.sqrt((this.px + this.subx - this.goal.x) ** 2 + (this.py + this.suby - this.goal.y) ** 2);
+                } else {
+                    this.distToGoal = Math.sqrt((this.px - this.goal.x) ** 2 + (this.py - this.goal.y) ** 2);
+                }
+            }
+            if (this.distToGoal < this.goalRadius) {
+                switch (this.goalBehavior) {
+                    case "heal":
+                        bhHeal(player.bh.celestialite.damage, 3, 0, "randomPlayer")
+                        break;
+                    case "damage":
+                        bhAttack(player.bh.celestialite.damage.mul(0.5), 3, 0, "randomPlayer")
+                        break;
+                }
+                if (this.goalAmt <= 1) {
+                    if (this.goalEnd == "end") {this.removeArena()}
+                    else {this.goalStart = null; this.goal = null}
+                } else {
+                    this.goalAmt -= 1
+                    this.positionGoal()
+                }
+            }
+        }
+
+        // Action update functions
+        for (let i in this.actions) {
+            if (this.actions[i].moveFunc) this.actions[i].moveFunc(this, this.delta, i)
         }
 
         // Move bullets
@@ -511,6 +523,86 @@ class BulletHell {
             }
             return b.x > -b.r && b.x < window.innerWidth + b.r && b.y > -b.r && b.y < window.innerHeight + b.r
         });
+
+        // Only call takeDamage once per frame if hit
+        let playerHit = false;
+        let hitByBigKnife = false;
+
+        // Check collision between player and each bullet
+        for (let b of this.bullets) {
+            let playerX = this.px
+            let playerY = this.py
+            if (this.subArena) {playerX += this.subx; playerY += this.suby}
+            if (b.name && b.name == "knife") {
+                // Knife is a rectangle, check if player is within knife's rectangle (approximate as line segment + width)
+                const cx = b.x + Math.cos(b.angle) * b.r / 2;
+                const cy = b.y + Math.sin(b.angle) * b.r / 2;
+                const dx = Math.cos(b.angle), dy = Math.sin(b.angle);
+                // Project player onto knife axis
+                const t = ((playerX - b.x) * dx + (playerY - b.y) * dy);
+                if (t >= -b.r+this.pr && t <= b.r - this.pr) {
+                    // Perpendicular distance
+                    const perp = Math.abs((playerX - b.x) * dy - (playerY - b.y) * dx);
+                    if (perp < this.pr + b.width / 2) {
+                        playerHit = true;
+                        break;
+                    }
+                }
+            } else if (b.name && b.name == "bigKnife") {
+                const playerGlobalX = this.boxLeft + playerX;
+                const playerGlobalY = this.boxTop + playerY;
+                const x1 = (Math.cos(b.angle) * (-(b.r + this.pr) / 2)) - (Math.sin(b.angle) * (-(b.width + this.pr) / 2)) + b.x;
+                const y1 = (Math.sin(b.angle) * (-(b.r + this.pr) / 2)) + (Math.cos(b.angle) * (-(b.width + this.pr) / 2)) + b.y;
+                const x2 = (Math.cos(b.angle) * ((b.r + this.pr) / 2)) + b.x;
+                const y2 = (Math.sin(b.angle) * ((b.r + this.pr) / 2)) + b.y;
+                const x3 = (Math.cos(b.angle) * (-(b.r + this.pr) / 2)) - (Math.sin(b.angle) * ((b.width + this.pr) / 2)) + b.x;
+                const y3 = (Math.sin(b.angle) * (-(b.r + this.pr) / 2)) + (Math.cos(b.angle) * ((b.width + this.pr) / 2)) + b.y;
+                const dist = this.pointToTriangleDistance(playerGlobalX, playerGlobalY, x1, y1, x2, y2, x3, y3);
+                if (dist <= this.pr) {
+                    playerHit = true;
+                    hitByBigKnife = true;
+                    break;
+                }
+            } else if (b.boxRender) {
+                const dx = playerX - b.x;
+                const dy = playerY - b.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist <= (this.pr + b.r)) {
+                    playerHit = true;
+                    break;
+                }
+            } else {
+                const dx = (this.boxLeft + playerX) - b.x;
+                const dy = (this.boxTop + playerY) - b.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist <= (this.pr + b.r)) {
+                    playerHit = true;
+                    break;
+                }
+            }
+        }
+
+        // Consider platform/spike hits set by attacks
+        if (this.platformHit) {
+            playerHit = true;
+            this.platformHit = false;
+        }
+
+        // Take damage (only when in a BH stage)
+        if (playerHit && player && player.bh && player.bh.currentStage && player.bh.currentStage != "none" && this.invTime <= 0) {
+            this.invTime = 0.2
+            bhAttack(player.bh.celestialite.damage.mul(0.25), 3, 0, "randomPlayer")
+        }
+        if (this.invTime > 0) Math.max(this.invTime -= this.delta, 0)
+
+        // Timer Stuff
+        if (this.timer) {
+            if (this.timerTime <= 0) {
+                if (this.timer == "endDamage") this.removeArena(true)
+                if (this.timer == "end") this.removeArena()
+            }
+            if (this.timerTime > 0) Math.max(this.timerTime -= this.delta, 0)
+        }
 
         this.draw()
     }
@@ -555,6 +647,83 @@ class BulletHell {
             this.arenaCtx.restore()
         }
 
+        // Draw maze
+        if (this.cellSize) {
+            this.arenaCtx.save();
+            this.arenaCtx.strokeStyle = "#fff";
+            this.arenaCtx.lineWidth = 3;
+            for (let y = 0; y < this.mazeRows; y++) {
+                for (let x = 0; x < this.mazeCols; x++) {
+                    const cell = this.maze[y][x];
+                    const sx = x * this.cellSize, sy = y * this.cellSize;
+                    if (cell.walls[0]) { // top
+                        this.arenaCtx.beginPath(); this.arenaCtx.moveTo(sx, sy); this.arenaCtx.lineTo(sx + this.cellSize, sy); this.arenaCtx.stroke();
+                    }
+                    if (cell.walls[1]) { // right
+                        this.arenaCtx.beginPath(); this.arenaCtx.moveTo(sx + this.cellSize, sy); this.arenaCtx.lineTo(sx + this.cellSize, sy + this.cellSize); this.arenaCtx.stroke();
+                    }
+                    if (cell.walls[2]) { // bottom
+                        this.arenaCtx.beginPath(); this.arenaCtx.moveTo(sx + this.cellSize, sy + this.cellSize); this.arenaCtx.lineTo(sx, sy + this.cellSize); this.arenaCtx.stroke();
+                    }
+                    if (cell.walls[3]) { // left
+                        this.arenaCtx.beginPath(); this.arenaCtx.moveTo(sx, sy + this.cellSize); this.arenaCtx.lineTo(sx, sy); this.arenaCtx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Draw Goal
+        if (this.goalStart) {
+            if (this.goalStart == "maze") {
+                this.arenaCtx.save();
+                this.arenaCtx.beginPath();
+                this.arenaCtx.arc(this.goal.x * this.goal.d + this.goal.d / 2, this.goal.y * this.goal.d + this.goal.d / 2, this.goalRadius, 0, 2 * Math.PI);
+                this.arenaCtx.fillStyle = "#2f4";
+                if (!options.performanceMode) this.arenaCtx.shadowColor = "#2f4";
+                if (!options.performanceMode) this.arenaCtx.shadowBlur = 16;
+                this.arenaCtx.fill();
+                this.arenaCtx.restore();
+            } else {
+                this.arenaCtx.save();
+                this.arenaCtx.beginPath();
+                this.arenaCtx.arc(this.goal.x, this.goal.y, this.goalRadius, 0, 2 * Math.PI);
+                let goalColor = "#2f4"
+                if (this.goalBehavior == "heal") goalColor = "#8f8"
+                if (this.goalBehavior == "damage") goalColor = "#cfc"
+                this.arenaCtx.fillStyle = goalColor;
+                if (!options.performanceMode) this.arenaCtx.shadowColor = goalColor;
+                if (!options.performanceMode) this.arenaCtx.shadowBlur = 16;
+                this.arenaCtx.fill();
+                this.arenaCtx.restore();
+            }
+            if (this.goalAmtShow) {
+                this.arenaCtx.save();
+                this.arenaCtx.font = 'bold 24px monospace';
+                this.arenaCtx.textAlign = 'left';
+                this.arenaCtx.textBaseline = 'top';
+                this.arenaCtx.fillStyle = '#fff';
+                if (!options.performanceMode) this.arenaCtx.shadowColor = '#000';
+                if (!options.performanceMode) this.arenaCtx.shadowBlur = 6;
+                this.arenaCtx.fillText(`Goals: ${this.goalAmtShow - this.goalAmt}/${this.goalAmtShow}`, 10, 10);
+                this.arenaCtx.restore();
+                this.arenaCtx.restore();
+            }
+        }
+        
+        // Draw Timer
+        if (this.timer) {
+            this.arenaCtx.save();
+            this.arenaCtx.font = 'bold 32px monospace';
+            this.arenaCtx.textAlign = 'center';
+            this.arenaCtx.textBaseline = 'top';
+            this.arenaCtx.fillStyle = this.timerTime <= 3 ? '#f44' : '#fff';
+            if (!options.performanceMode) this.arenaCtx.shadowColor = '#000';
+            if (!options.performanceMode) this.arenaCtx.shadowBlur = 6;
+            this.arenaCtx.fillText(`Time Left: ${this.timerTime}s`, this.width / 2, 10);
+            this.arenaCtx.restore();
+            this.arenaCtx.restore();
+        }
+
         // Draw arena bullets
         this.arenaCtx.save()
         for (let b of this.bullets) {
@@ -589,5 +758,116 @@ class BulletHell {
         this.arenaCtx.fill()
         this.arenaCtx.stroke()
         this.arenaCtx.restore()
+    }
+
+    // Function to position the goal
+    positionGoal() {
+        switch (this.goalStart) {
+            case false:
+                break;
+            case "maze":
+                this.goal = {x: this.mazeCols - 1, y: this.mazeRows - 1, d: this.cellSize}
+                this.goalRadius = this.cellSize / 2 - 6
+                break;
+            case "custom":
+                this.goal = {x: values.goalx || this.goalSize, y: values.goaly || this.goalSize, d: this.goalSize}
+                this.goalRadius = this.goalSize / 2 - 6
+                break;
+            case "left":
+                this.goal = {x: this.goalSize, y: this.height / 2, d: this.goalSize}
+                this.goalRadius = this.goalSize / 2 - 6
+                break;
+            case "right":
+                this.goal = {x: this.width - (this.goalSize*2), y: this.height / 2, d: this.goalSize}
+                this.goalRadius = this.goalSize / 2 - 6
+                break;
+            case "top":
+                this.goal = {x: this.width / 2, y: this.goalSize, d: this.goalSize}
+                this.goalRadius = this.goalSize / 2 - 6
+                break;
+            case "bottom":
+                this.goal = {x: this.width / 2, y: this.height - (this.goalSize*2), d: this.goalSize}
+                this.goalRadius = this.goalSize / 2 - 6
+                break;
+            case "center":
+                this.goal = {x: this.width / 2, y: this.height / 2, d: this.goalSize}
+                this.goalRadius = this.goalSize / 2 - 6
+                break;
+            default:
+                this.goal = {x: (Math.random() * (this.width - (this.goalSize*2)) + this.goalSize), y: (Math.random() * (this.height - (this.goalSize*2)) + this.goalSize), d: this.goalSize}
+                this.goalRadius = this.goalSize / 2 - 6
+                break;
+        }
+    }
+
+    // Functions to calculate accurate triangle collision
+    triangleArea = (x1, y1, x2, y2, x3, y3) => {
+        return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2);
+    }
+    isPointInTriangle = (px, py, x1, y1, x2, y2, x3, y3) => {
+        const originalArea = this.triangleArea(x1, y1, x2, y2, x3, y3);
+
+        const area1 = this.triangleArea(px, py, x2, y2, x3, y3);
+        const area2 = this.triangleArea(x1, y1, px, py, x3, y3);
+        const area3 = this.triangleArea(x1, y1, x2, y2, px, py);
+
+        return Math.abs(originalArea - (area1 + area2 + area3)) < 10;
+    }
+    pointToSegmentDist = (px, py, x1, y1, x2, y2) => {
+        const vx = x2 - x1, vy = y2 - y1;
+        const wx = px - x1, wy = py - y1;
+        const c = (vx * wx + vy * wy) / (vx * vx + vy * vy || 1);
+        const t = Math.max(0, Math.min(1, c));
+        const qx = x1 + vx * t, qy = y1 + vy * t;
+        const dx = px - qx, dy = py - qy;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+    pointToTriangleDistance = (px, py, x1, y1, x2, y2, x3, y3) => {
+        if (this.isPointInTriangle(px, py, x1, y1, x2, y2, x3, y3)) return 0;
+        const d1 = this.pointToSegmentDist(px, py, x1, y1, x2, y2);
+        const d2 = this.pointToSegmentDist(px, py, x2, y2, x3, y3);
+        const d3 = this.pointToSegmentDist(px, py, x3, y3, x1, y1);
+        return Math.min(d1, d2, d3);
+    }
+
+    // Function for pixel-perfect wall collision in maze
+    canMoveTo(nx, ny) {
+        // nx,ny: new player center (float, px)
+        if (nx - this.pr < 0 || nx + this.pr > this.width || ny - this.pr < 0 || ny + this.pr > this.height) return false;
+        // Find which cell the center is in
+        let cx = Math.floor(nx / this.cellSize), cy = Math.floor(ny / this.cellSize);
+        if (cx < 0 || cy < 0 || cx >= this.mazeCols || cy >= this.mazeRows) return false;
+        const cell = this.maze[cy][cx];
+        // Check each direction for wall collision
+        // Top wall
+        if (cell.walls[0] && ny - this.pr < cy * this.cellSize) return false;
+        // Bottom wall
+        if (cell.walls[2] && ny + this.pr > (cy + 1) * this.cellSize) return false;
+        // Left wall
+        if (cell.walls[3] && nx - this.pr < cx * this.cellSize) return false;
+        // Right wall
+        if (cell.walls[1] && nx + this.pr > (cx + 1) * this.cellSize) return false;
+        // Also check adjacent cells if overlapping their walls
+        // Up
+        if (ny - this.pr < cy * this.cellSize && cy > 0) {
+            const upCell = this.maze[cy - 1][cx];
+            if (upCell.walls[2]) return false;
+        }
+        // Down
+        if (ny + this.pr > (cy + 1) * this.cellSize && cy < this.mazeRows - 1) {
+            const downCell = this.maze[cy + 1][cx];
+            if (downCell.walls[0]) return false;
+        }
+        // Left
+        if (nx - this.pr < cx * this.cellSize && cx > 0) {
+            const leftCell = this.maze[cy][cx - 1];
+            if (leftCell.walls[1]) return false;
+        }
+        // Right
+        if (nx + this.pr > (cx + 1) * this.cellSize && cx < this.mazeCols - 1) {
+            const rightCell = this.maze[cy][cx + 1];
+            if (rightCell.walls[3]) return false;
+        }
+        return true;
     }
 }
