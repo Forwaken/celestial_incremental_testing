@@ -164,8 +164,8 @@
                 }
             },
             style() {
-                let look = {width: "400px", minHeight: "60px", fontSize: "18px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (player.bi.IACtoggle) {look.backgroundColor = "#ffbf00"} else {look.backgroundColor = "#b28500"}
+                let look = {width: "400px", minHeight: "54px", color: "rgba(0,0,0,0.7)", fontSize: "18px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0 0 12px 12px"}
+                if (player.bi.IACtoggle) {look.backgroundColor = "#b28500"} else {look.backgroundColor = "#7f5f00"}
                 return look
             },
         },
@@ -177,8 +177,8 @@
                 player.bi.IACtype = false
             },
             style() {
-                let look = {width: "200px", minHeight: "40px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (player.bi.IACtype) {look.backgroundColor = "#ffbf00"} else {look.backgroundColor = "#bf8f8f"}
+                let look = {width: "199px", minHeight: "40px", color: "white", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
+                if (player.bi.IACtype) {look.backgroundColor = "#997200"} else {look.backgroundColor = "#332600"}
                 return look
             },
         },
@@ -190,8 +190,8 @@
                 player.bi.IACtype = true
             },
             style() {
-                let look = {width: "200px", minHeight: "40px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (!player.bi.IACtype) {look.backgroundColor = "#ffbf00"} else {look.backgroundColor = "#bf8f8f"}
+                let look = {width: "198px", minHeight: "40px", color: "white", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
+                if (!player.bi.IACtype) {look.backgroundColor = "#997200"} else {look.backgroundColor = "#332600"}
                 return look
             },
         },
@@ -207,8 +207,8 @@
                 }
             },
             style() {
-                let look = {width: "400px", minHeight: "60px", fontSize: "18px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (player.bi.NACtoggle) {look.backgroundColor = "#b2d8d8"} else {look.backgroundColor = "#7c9797"}
+                let look = {width: "400px", minHeight: "54px", color: "rgba(0,0,0,0.7)", fontSize: "18px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0 0 12px 12px"}
+                if (player.bi.NACtoggle) {look.backgroundColor = "#7c9797"} else {look.backgroundColor = "#596c6c"}
                 return look
             },
         },
@@ -220,8 +220,8 @@
                 player.bi.NACtype = false
             },
             style() {
-                let look = {width: "200px", minHeight: "40px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (player.bi.NACtype) {look.backgroundColor = "#b2d8d8"} else {look.backgroundColor = "#bf8f8f"}
+                let look = {width: "199px", minHeight: "40px", color: "white", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
+                if (player.bi.NACtype) {look.backgroundColor = "#6a8181"} else {look.backgroundColor = "#232b2b"}
                 return look
             },
         },
@@ -233,8 +233,8 @@
                 player.bi.NACtype = true
             },
             style() {
-                let look = {width: "200px", minHeight: "40px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (!player.bi.NACtype) {look.backgroundColor = "#b2d8d8"} else {look.backgroundColor = "#bf8f8f"}
+                let look = {width: "198px", minHeight: "40px", color: "white", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
+                if (!player.bi.NACtype) {look.backgroundColor = "#6a8181"} else {look.backgroundColor = "#232b2b"}
                 return look
             },
         },
@@ -616,7 +616,7 @@
                 unlocked() { return hasMilestone("ip", 27) || (player.s.highestSingularityPoints.gt(0) && player.ev.evolutionsUnlocked[3]) },
                 content: [
                     ["blank", "25px"],
-                    ["style-row", [
+                    ["row", [
                         ["style-column", [
                             ["style-column", [
                                 ["row", [
@@ -627,18 +627,17 @@
                                         return look
                                     }],
                                 ]],
-                            ], {width: "400px", height: "30px", backgroundColor: "#7f5f00"}],
+                            ], {width: "400px", height: "30px", backgroundColor: "#7f5f00", borderRadius: "12px 12px 0 0"}],
                             ["style-column", [
                                 ["raw-html", () => {return player.bi.IACtype ? "Auto-Crunch Time" : "Auto-Crunch Amount"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
                                 ["raw-html", () => {return player.bi.IACtype ? formatTime(player.bi.IACtime) + "/" + formatTime(player.bi.IACamount) + " until reset." : formatWhole(player.bi.IACamount) + " IP on reset."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "400px", height: "70px"}],
                             ["text-input", "IACinput", {width: "350px", height: "50px", backgroundColor: "#332600", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
                             ["style-column", [
-                                ["row", [["clickable", 15], ["clickable", 16]]],
+                                ["style-row", [["clickable", 15], ["style-row", [], {width: "3px", height: "40px", background: "#ffbf00"}], ["clickable", 16]], {width: "400px", borderBottom: "3px solid #ffbf00"}],
                                 ["clickable", 14],
-                            ], {width: "400px", height: "100px"}],
-                        ], {width: "400px", height: "250px", backgroundColor: "#664c00"}],
-                        ["style-column", [], {width: "3px", height: "250px", backgroundColor: "#ccc"}],
+                            ], {width: "400px", height: "97px", borderTop: "3px solid #ffbf00"}],
+                        ], {width: "400px", height: "250px", backgroundColor: "#664c00", border: "3px solid #ffbf00", borderRadius: "15px"}],
                         ["style-column", [
                             ["style-column", [
                                 ["row", [
@@ -649,18 +648,18 @@
                                         return look
                                     }],
                                 ]],
-                            ], {width: "400px", height: "30px", backgroundColor: "#596c6c"}],
+                            ], {width: "400px", height: "30px", backgroundColor: "#596c6c", borderRadius: "12px 12px 0 0"}],
                             ["style-column", [
                                 ["raw-html", () => {return player.bi.NACtype ? "Auto-Rev-Crunch Time" : "Auto-Rev-Crunch Amount"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
                                 ["raw-html", () => {return player.bi.NACtype ? formatTime(player.bi.NACtime) + "/" + formatTime(player.bi.NACamount) + " until reset." : formatWhole(player.bi.NACamount) + " NIP on reset."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "400px", height: "70px"}],
                             ["text-input", "NACinput", {width: "350px", height: "50px", backgroundColor: "#232b2b", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
                             ["style-column", [
-                                ["row", [["clickable", 18], ["clickable", 19]]],
+                                ["style-row", [["clickable", 18], ["style-row", [], {width: "3px", height: "40px", background: "#b2d8d8"}], ["clickable", 19]], {width: "400px", borderBottom: "3px solid #b2d8d8"}],
                                 ["clickable", 17],
-                            ], {width: "400px", height: "100px"}],
-                        ], {width: "400px", height: "250px", backgroundColor: "#475656"}],
-                    ], {width: "803px", height: "250px", border: "3px solid #ccc"}],
+                            ], {width: "400px", height: "97px", borderTop: "3px solid #b2d8d8"}],
+                        ], {width: "400px", height: "250px", backgroundColor: "#475656", border: "3px solid #b2d8d8", borderRadius: "15px", marginLeft: "50px"}],
+                    ]],
                 ]
             },
         },

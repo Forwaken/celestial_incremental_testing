@@ -82,7 +82,7 @@
     },
     clickables: {
         11: {
-            title() {return player.sme.starmetalResetToggle ? "Auto Starmetal Resets On" : "Auto Starmetal Resets Off"},
+            title() {return player.sme.starmetalResetToggle ? "Auto Starmetal Resets<br>[ON]" : "Auto Starmetal Resets<br>[OFF]"},
             canClick: true,
             unlocked: true,
             onClick() {
@@ -93,13 +93,17 @@
                 }
             },
             style() {
-                let look = {width: "133px", minHeight: "100px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (player.sme.starmetalResetToggle) {look.backgroundColor = "#d460eb"} else {look.backgroundColor = "#a94cbc"}
+                let look = {width: "131px", minHeight: "97px", fontSize: "12px", color: "white", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "0 0 0 12px"}
+                if (player.sma.inStarmetalChallenge) {
+                    if (player.sme.starmetalResetToggle) {look.backgroundColor = "#2c3451"} else {look.backgroundColor = "#21273d"}
+                } else {
+                    if (player.sme.starmetalResetToggle) {look.backgroundColor = "#6a3075"} else {look.backgroundColor = "#54265e"}
+                }
                 return look
             },
         },
         12: {
-            title() {return player.sme.autoLeaveToggle ? "Auto Leave DU1 On" : "Auto Leave DU1 Off"},
+            title() {return player.sme.autoLeaveToggle ? "Auto Leave DU1<br>[ON]" : "Auto Leave DU1<br>[OFF]"},
             canClick: true,
             unlocked: true,
             onClick() {
@@ -110,13 +114,17 @@
                 }
             },
             style() {
-                let look = {width: "133px", minHeight: "100px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (player.sme.autoLeaveToggle) {look.backgroundColor = "#d460eb"} else {look.backgroundColor = "#a94cbc"}
+                let look = {width: "131px", minHeight: "97px", fontSize: "12px", color: "white", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "0px"}
+                if (player.sma.inStarmetalChallenge) {
+                    if (player.sme.autoLeaveToggle) {look.backgroundColor = "#2c3451"} else {look.backgroundColor = "#21273d"}
+                } else {
+                    if (player.sme.autoLeaveToggle) {look.backgroundColor = "#6a3075"} else {look.backgroundColor = "#54265e"}
+                }
                 return look
             },
         },
         13: {
-            title() {return player.sme.autoEnterToggle ? "Auto Enter DU1 On" : "Auto Enter DU1 Off"},
+            title() {return player.sme.autoEnterToggle ? "Auto Enter DU1<br>[ON]" : "Auto Enter DU1<br>[OFF]"},
             canClick: true,
             unlocked: true,
             onClick() {
@@ -127,8 +135,12 @@
                 }
             },
             style() {
-                let look = {width: "133px", minHeight: "100px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (player.sme.autoEnterToggle) {look.backgroundColor = "#d460eb"} else {look.backgroundColor = "#a94cbc"}
+                let look = {width: "131px", minHeight: "97px", fontSize: "12px", color: "white", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "0 0 12px 0"}
+                if (player.sma.inStarmetalChallenge) {
+                    if (player.sme.autoEnterToggle) {look.backgroundColor = "#2c3451"} else {look.backgroundColor = "#21273d"}
+                } else {
+                    if (player.sme.autoEnterToggle) {look.backgroundColor = "#6a3075"} else {look.backgroundColor = "#54265e"}
+                }
                 return look
             },
         },
@@ -2210,26 +2222,6 @@
                         if (player.alephsChamber.milestone[25] > 0) look.height = "1420px"
                         return look
                     }],
-                ]
-            },
-            "Starmetal Automation": {
-                buttonStyle() {return {color: "white", borderRadius: "10px"}},
-                unlocked: true,
-                content: [
-                    ["blank", "25px"],  
-                    ["style-column", [
-                        ["style-row", [
-                            ["raw-html", () => {return format(player.sma.starmetalAlloy) + " SMA"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
-                        ], {width: "400px", height: "30px", backgroundColor: "#6a3075"}],
-                        ["style-column", [
-                            ["raw-html", () => {return "Autoleave amount"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return formatWhole(player.sme.leaveAmount) + " SMA."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ], {width: "400px", height: "70px"}],
-                        ["text-input", "leaveInput", {width: "350px", height: "50px", backgroundColor: "#3f1c46", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
-                        ["style-row", [
-                            ["clickable", 11], ["clickable", 12], ["clickable", 13],
-                        ], {width: "400px", height: "100px"}],
-                    ], {width: "400px", height: "250px", backgroundColor: "#54265e", border: "3px solid #ccc"}],
                 ]
             },
         },

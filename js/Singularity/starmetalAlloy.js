@@ -182,8 +182,8 @@
                 }
             },
             style() {
-                let look = {width: "400px", minHeight: "60px", fontSize: "18px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (player.sma.toggle) {look.backgroundColor = "#AA0000"} else {look.backgroundColor = "#760000"}
+                let look = {width: "400px", minHeight: "54px", color: "white", fontSize: "18px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "0 0 12px 12px"}
+                if (player.sma.toggle) {look.backgroundColor = "#990000"} else {look.backgroundColor = "#440000"}
                 return look
             },
         },
@@ -195,8 +195,8 @@
                 player.sma.type = false
             },
             style() {
-                let look = {width: "200px", minHeight: "40px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (player.sma.type) {look.backgroundColor = "#AA0000"} else {look.backgroundColor = "#bf8f8f"}
+                let look = {width: "199px", minHeight: "40px", color: "white", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "0px"}
+                if (player.sma.type) {look.backgroundColor = "#660000"} else {look.backgroundColor = "#330000"}
                 return look
             },
         },
@@ -208,8 +208,8 @@
                 player.sma.type = true
             },
             style() {
-                let look = {width: "200px", minHeight: "40px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
-                if (!player.sma.type) {look.backgroundColor = "#AA0000"} else {look.backgroundColor = "#bf8f8f"}
+                let look = {width: "198px", minHeight: "40px", color: "white", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "0px"}
+                if (!player.sma.type) {look.backgroundColor = "#660000"} else {look.backgroundColor = "#330000"}
                 return look
             },
         },
@@ -977,31 +977,49 @@
                 embedLayer: 'pu',
             },
             "Auto Singularity": {
+                title() {return player.matosLair.milestone[25] > 0 ? "Automation" : "Auto Singularity"},
                 buttonStyle() {return {color: "white", borderRadius: "10px"}},
                 unlocked() { return hasUpgrade("sma", 104) },
                 content: [
                     ["blank", "25px"],
-                    ["style-column", [
+                    ["row", [
                         ["style-column", [
-                            ["row", [
-                                ["raw-html", () => {return format(player.s.singularityPoints) + " SP"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
-                                ["raw-html", () => {return "(+" + format(player.s.singularityPointsToGet) + ")"}, () => {
-                                    let look = {fontSize: "18px", fontFamily: "monospace", marginLeft: "10px"}
-                                    if (player.in.infinityPoints.gte(1e40)) {look.color = "white"} else {look.color = "gray"} 
-                                    return look
-                                }],
-                            ]],
-                        ], {width: "400px", height: "30px", backgroundColor: "#550000"}],
-                        ["style-column", [
-                            ["raw-html", () => {return player.sma.type ? "Auto-Crunch Time" : "Auto-Crunch Amount"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                            ["raw-html", () => {return player.sma.type ? formatTime(player.sma.time) + "/" + formatTime(player.sma.amount) + " until reset." : formatWhole(player.sma.amount) + " SP on reset."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ], {width: "400px", height: "70px"}],
-                        ["text-input", "input", {width: "350px", height: "50px", backgroundColor: "#220000", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
-                        ["style-column", [
-                            ["row", [["clickable", 14], ["clickable", 15]]],
-                            ["clickable", 13],
-                        ], {width: "400px", height: "100px"}],
-                    ], {width: "400px", height: "250px", backgroundColor: "#440000", border: "3px solid #ccc"}],
+                            ["style-column", [
+                                ["row", [
+                                    ["raw-html", () => {return format(player.s.singularityPoints) + " SP"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                                    ["raw-html", () => {return "(+" + format(player.s.singularityPointsToGet) + ")"}, () => {
+                                        let look = {fontSize: "18px", fontFamily: "monospace", marginLeft: "10px"}
+                                        if (player.in.infinityPoints.gte(1e40)) {look.color = "white"} else {look.color = "gray"} 
+                                        return look
+                                    }],
+                                ]],
+                            ], {width: "400px", height: "30px", backgroundColor: "#550000", borderRadius: "12px 12px 0 0"}],
+                            ["style-column", [
+                                ["raw-html", () => {return player.sma.type ? "Auto-Crunch Time" : "Auto-Crunch Amount"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return player.sma.type ? formatTime(player.sma.time) + "/" + formatTime(player.sma.amount) + " until reset." : formatWhole(player.sma.amount) + " SP on reset."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "400px", height: "70px"}],
+                            ["text-input", "input", {width: "350px", height: "50px", backgroundColor: "#110000", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
+                            ["style-column", [
+                                ["style-row", [["clickable", 14], ["style-row", [], {width: "3px", height: "40px", background: "#b00"}], ["clickable", 15]], {width: "400px", borderBottom: "3px solid #b00"}],
+                                ["clickable", 13],
+                            ], {width: "400px", height: "97px", borderTop: "3px solid #b00"}],
+                        ], {width: "400px", height: "250px", backgroundColor: "#330000", border: "3px solid #b00", borderRadius: "15px"}],
+                        ["layer-proxy", ["sme", [
+                            ["style-column", [
+                                ["style-row", [
+                                    ["raw-html", () => {return format(player.sma.starmetalAlloy) + " SMA"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                                ], {width: "400px", height: "30px", backgroundColor: "#3f1c46", borderRadius: "12px 12px 0 0"}],
+                                ["style-column", [
+                                    ["raw-html", () => {return "Autoleave amount"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+                                    ["raw-html", () => {return formatWhole(player.sme.leaveAmount) + " SMA."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ], {width: "400px", height: "70px"}],
+                                ["text-input", "leaveInput", {width: "350px", height: "50px", backgroundColor: "#150917", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
+                                ["style-row", [
+                                    ["clickable", 11], ["style-row", [], {width: "3px", height: "97px", background: "#a94cbc"}], ["clickable", 12], ["style-row", [], {width: "3px", height: "97px", background: "#a94cbc"}], ["clickable", 13],
+                                ], {width: "400px", height: "97px", borderTop: "3px solid #a94cbc"}],
+                            ], () => {return player.matosLair.milestone[25] > 0 ? {width: "400px", height: "250px", backgroundColor: "#2a132f", border: "3px solid #a94cbc", borderRadius: "15px", marginLeft: "50px"} : {display: "none !important"}}],
+                        ]]],
+                    ]],
                 ]
             },
             "Eclipse Shop": {

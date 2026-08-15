@@ -186,7 +186,7 @@
                 player.le.starmetalAlloyToGet = player.le.starmetalAlloyToGet.add(player.le.starmetalAlloyToGetToGet)
             },
             style() {
-                let look = {width: "400px", minHeight: "100px", fontSize: "9px", borderRadius: "15px", color: "white", border: "2px solid #384166"}
+                let look = {width: "400px", minHeight: "100px", fontSize: "9px", borderRadius: "15px", color: "white", border: "3px solid #384166"}
                 !this.canClick() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
                 return look
             }
@@ -222,7 +222,7 @@
                 layers.pu.generateSelection();
             },
             style() {
-                let look = {width: "400px", minHeight: "100px", fontSize: "9px", borderRadius: "15px", color: "white", border: "2px solid #384166"}
+                let look = {width: "400px", minHeight: "100px", fontSize: "9px", borderRadius: "15px", color: "white", border: "3px solid #384166"}
                 !this.canClick() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
                 return look
             }
@@ -242,7 +242,7 @@
             },
             onHold() { clickClickable(this.layer, this.id) },
             style() {
-                let look = {width: "400px", minHeight: "100px", fontSize: "9px", borderRadius: "15px", color: "white", border: "2px solid #384166"}
+                let look = {width: "400px", minHeight: "100px", fontSize: "9px", borderRadius: "15px", color: "white", border: "3px solid #384166"}
                 !this.canClick() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
                 return look
             }
@@ -281,20 +281,7 @@
                 player.pet.legendaryPetAbilityCooldowns[0] = player.pet.legendaryPetAbilityCooldownsMax[0]
             },
             style() {
-                let look = {width: "400px", minHeight: "100px", fontSize: "9px", borderRadius: "15px", color: "white", border: "2px solid #384166"}
-                !this.canClick() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
-                return look
-            }
-        },
-        15: {
-            title() { return "<h2>Disable Auto-Enter." },
-            canClick() { return true },
-            unlocked() { return player.sme.autoEnterToggle },
-            onClick() {
-                player.sme.autoEnterToggle = false
-            },
-            style() {
-                let look = {width: "400px", minHeight: "100px", fontSize: "9px", borderRadius: "15px", color: "white", border: "2px solid #384166"}
+                let look = {width: "400px", minHeight: "100px", fontSize: "9px", borderRadius: "15px", color: "white", border: "3px solid #384166"}
                 !this.canClick() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
                 return look
             }
@@ -1137,8 +1124,21 @@
                     ["raw-html", () => { return "Empty your stored starmetal alloy,<br>gaining +" + formatWhole(player.le.starmetalAlloyToGetTrue) + " starmetal alloy when you leave." }, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
                     ["blank", "10px"],
                     ["row", [["clickable", 12]]],
-                    ["blank", "25px"],                   
-                    ["row", [["clickable", 15]]],
+                    ["layer-proxy", ["sme", [
+                        ["style-column", [
+                            ["style-row", [
+                                ["raw-html", () => {return format(player.sma.starmetalAlloy) + " SMA"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                            ], {width: "400px", height: "30px", backgroundColor: "#21273d", borderRadius: "12px 12px 0 0"}],
+                            ["style-column", [
+                                ["raw-html", () => {return "Autoleave amount"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return formatWhole(player.sme.leaveAmount) + " SMA."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ], {width: "400px", height: "70px"}],
+                            ["text-input", "leaveInput", {width: "350px", height: "50px", backgroundColor: "black", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
+                            ["style-row", [
+                                ["clickable", 11], ["style-row", [], {width: "3px", height: "97px", background: "#384166"}], ["clickable", 12], ["style-row", [], {width: "3px", height: "97px", background: "#384166"}], ["clickable", 13],
+                            ], {width: "400px", height: "97px", borderTop: "3px solid #384166"}],
+                        ], () => {return player.matosLair.milestone[25] > 0 ? {width: "400px", height: "250px", backgroundColor: "#10131e", border: "3px solid #384166", borderRadius: "15px", marginTop: "50px"} : {display: "none !important"}}],
+                    ]]],
                 ]
             },
             "Shards": {
@@ -1184,7 +1184,7 @@
                             ["upgrade", 17], ["upgrade", 101], ["upgrade", 18], ["upgrade", 19], ["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 102], 
                             ["upgrade", 202], ["upgrade", 24], ["upgrade", 201], ["upgrade", 150]], {maxWidth: "755px"}],
                         ["blank", "5px"],
-                    ], {width: "755px", backgroundColor: "#0e1019", border: "2px solid #384166", borderRadius: "15px"}],
+                    ], {width: "755px", backgroundColor: "#0e1019", border: "3px solid #384166", borderRadius: "15px"}],
                     ["blank", "25px"],
                     ["layer-proxy", ["sma", [
                         ["style-column", [
@@ -1194,7 +1194,7 @@
                             ["style-row", [["upgrade", 10], ["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15], ["upgrade", 16],
                                 ["upgrade", 17], ["upgrade", 18], ["upgrade", 19], ["upgrade", 20], ["upgrade", 21]], {maxWidth: "800px"}],
                             ["blank", "5px"],
-                        ], {width: "800px", background: "linear-gradient(120deg, #171708 0%, #130f05 25%, #17090b 50%, #150917, 75%, #091417 100%)", border: "2px solid #384166", borderRadius: "15px"}],
+                        ], {width: "800px", background: "linear-gradient(120deg, #171708 0%, #130f05 25%, #17090b 50%, #150917, 75%, #091417 100%)", border: "3px solid #384166", borderRadius: "15px"}],
                     ]]],
                 ]
             },
