@@ -923,7 +923,7 @@
             title: "Dark OTF's",
             unlocked() { return player.tera.virtueUnlocks2[0] },
             description: "Unlock Dark OTF's.",
-            cost: new Decimal("1e1500"),
+            cost() {return player.pet.legPetTimers[0].active ? new Decimal("1e450") : new Decimal("1e1500")},
             currencyLocation() { return player.du },
             currencyDisplayName: "Dark Celestial Points",
             currencyInternalName: "points",

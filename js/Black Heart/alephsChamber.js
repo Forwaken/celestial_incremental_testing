@@ -650,11 +650,10 @@ BHC.ma3 = {
 BHC.aleph = {
     name: "Aleph",
     icon: "resources/aleph.png",
-    health: new Decimal(9000),
+    health: new Decimal(10000),
     damage: new Decimal(25),
     noRandomStats: true,
     immortal: true,
-    timer: new Decimal(250),
     actions: {
         0: {
             name() {
@@ -708,21 +707,22 @@ BHC.aleph = {
             cooldown: new Decimal(4),
         },
         1: {
-            name: "Buzzing Barrier",
-            instant: true,
-            type: "shield",
-            target: "celestialite",
-            value: new Decimal(3),
-            cooldown: new Decimal(12),
-            stun: ["soft", new Decimal(1), 3],
-
-            active: true,
-            constantType: "effect",
-            constantTarget: "celestialite",
-            effects: {
-                "defenseAdd": new Decimal(25),
+            name() {
+                let poison = 0
+                if (player.bh.celestialite.actions[1].variables.poison) poison = (Date.now() - player.bh.celestialite.actions[1].variables.poison) / -100000
+                return "Draining Poison<br>[" + formatSimple(poison) + "/s]"
             },
-            duration: new Decimal(3),
+            passive: true,
+            constantType: "effect",
+            constantTarget: "allPlayer",
+            effects: {
+                "regenAdd"() {
+                    let poison = 0
+                    if (player.bh.celestialite.actions[1].variables.poison) poison = (Date.now() - player.bh.celestialite.actions[1].variables.poison) / -100000
+                    return new Decimal(poison)
+                }, // Add to regen stat
+            },
+            cooldown: new Decimal(Infinity),
         },
         2: {
             name: "Binding Bandage",
@@ -746,63 +746,113 @@ BHC.aleph = {
             constantType: "function",
             constantTarget: "randomPlayer",
             onPassive(index, slot, target) {
-                if (!player.bh.celestialite.actions[3].variables.attacks) player.bh.celestialite.actions[3].variables.attacks = 0
-                // MESSAGES ARE PLACEHOLDERS
-                if (player.bh.celestialite.health.lt(7500) && player.bh.celestialite.attackID == 0) {
-                    bulletHell({"chargingBee": {beeAmount: 5, radius: 20, enemySpeed: 5, lastTick: false}}, {width: 300, height: 300, duration: 10})
-                    player.bh.celestialite.attackID = 1
+                if (!player.bh.celestialite.actions[1].variables.poison) player.bh.celestialite.actions[1].variables.poison = Date.now()
+                
+                if (player.bh.celestialite.health.lt(8750) && player.bh.celestialite.attackID == 0) {
+                    if (player.tab == "bh" && !options.bulletHellOff) {
+                        bulletHell({"chargingBee": {beeAmount: 5, radius: 20, enemySpeed: 5, lastTick: false}}, {width: 300, height: 300, duration: 10}, () => {player.bh.celestialite.attackID = 2})
+                        player.bh.celestialite.attackID = 1
+                    } else {
+                        bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                        player.bh.celestialite.attackID = 2
+                    }
                 }
-                if (player.bh.celestialite.health.lt(6000) && player.bh.celestialite.attackID == 1 && player.tab != "c" && player.c.cutscenes['Hive-Chamber-Fight-Mid1'] >= 2) {
-                    bulletHell({"shootBee": {beesPerSec: 1.5, radius: 20, enemySpeed: 5}}, {width: 400, height: 400, duration: 10})
-                    player.bh.celestialite.attackID = 2
+                if (player.bh.celestialite.health.lt(7500) && player.bh.celestialite.attackID == 2 && player.tab != "c" && player.c.cutscenes['Hive-Chamber-Fight-Mid1'] >= 2) {
+                    if (player.tab == "bh" && !options.bulletHellOff) {
+                        bulletHell({"shootBee": {beesPerSec: 1.5, radius: 20, enemySpeed: 5}}, {width: 400, height: 400, duration: 10}, () => {player.bh.celestialite.attackID = 4})
+                        player.bh.celestialite.attackID = 3
+                    } else {
+                        bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                        player.bh.celestialite.attackID = 4
+                    }
                 }
-                if (player.bh.celestialite.health.lt(4500) && player.bh.celestialite.attackID == 2) {
-                    bulletHell({"bouncingBees": {beeAmount: 10, radius: 20, enemySpeed: 3, chargeMult: 1.5, lastTick: false}}, {duration: 10})
-                    player.bh.celestialite.attackID = 3
+                if (player.bh.celestialite.health.lt(6250) && player.bh.celestialite.attackID == 4) {
+                    if (player.tab == "bh" && !options.bulletHellOff) {
+                        bulletHell({"bouncingBees": {beeAmount: 10, radius: 15, enemySpeed: 3, chargeMult: 1.5, lastTick: false}}, {duration: 10}, () => {player.bh.celestialite.attackID = 6})
+                        player.bh.celestialite.attackID = 5
+                    } else {
+                        bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                        player.bh.celestialite.attackID = 6
+                    }
                 }
-                if (player.bh.celestialite.health.lt(3000) && player.bh.celestialite.attackID == 3 && player.tab != "c" && player.c.cutscenes['Hive-Chamber-Fight-Mid2'] >= 2) {
-                    bulletHell({"chargingBee": {beeAmount: 3, radius: 40, enemySpeed: 6, lastTick: false}}, {width: 300, height: 300, duration: 10})
-                    player.bh.celestialite.attackID = 4
+                if (player.bh.celestialite.health.lt(5000) && player.bh.celestialite.attackID == 6) {
+                    if (player.tab == "bh" && !options.bulletHellOff) {
+                        bulletHell({"singularBee": {radius: 250, enemySpeed: 0.5, shooting: true, bulletRadius: 20}}, {width: 700, height: 500, duration: 10}, () => {player.bh.celestialite.attackID = 8})
+                        player.bh.celestialite.attackID = 7
+                    } else {
+                        bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                        player.bh.celestialite.attackID = 8
+                    }
                 }
-                if (player.bh.celestialite.health.lt(1500) && player.bh.celestialite.attackID == 4) {
-                    bulletHell({"waveBees": {beeRate: 5, radius: 20, gapStart: 0, gap: 200, enemySpeed: 6, waveSpeed: 4}, "shootBee": {beesPerSec: 1, radius: 20, enemySpeed: 4}}, {duration: 10})
-                    player.bh.celestialite.attackID = 5
+                if (player.bh.celestialite.health.lt(3750) && player.bh.celestialite.attackID == 8) {
+                    if (player.tab == "bh" && !options.bulletHellOff) {
+                        bulletHell({"chargingBee": {beeAmount: 3, radius: 30, enemySpeed: 6, lastTick: false}}, {width: 300, height: 300, duration: 10}, () => {player.bh.celestialite.attackID = 10})
+                        player.bh.celestialite.attackID = 9
+                    } else {
+                        bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                        player.bh.celestialite.attackID = 10
+                    }
                 }
-                if (player.bh.celestialite.health.lt(50) && player.bh.celestialite.attackID == 5 && player.bh.celestialite.actions[3].variables.attacks == 0) {
-                    player.bh.celestialite.attackTimeout = [6, new Decimal(5)]
-                    bulletHell({"shootBee": {beesPerSec: 2, radius: 15, enemySpeed: 6}}, {width: 400, height: 400, duration: 5})
-                    player.bh.celestialite.actions[3].variables.attacks = 1
+                if (player.bh.celestialite.health.lt(2500) && player.bh.celestialite.attackID == 10 && player.tab != "c" && player.c.cutscenes['Hive-Chamber-Fight-Mid2'] >= 2) {
+                    if (player.tab == "bh" && !options.bulletHellOff) {
+                        bulletHell({"firingBees": {beeAmount: 5, radius: 25, intervalDiv: 0.4, enemySpeed: 3, lastTick: false}}, {width: 400, height: 400, duration: 10}, () => {player.bh.celestialite.attackID = 12})
+                        player.bh.celestialite.attackID = 11
+                    } else {
+                        bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                        player.bh.celestialite.attackID = 12
+                    }
                 }
-                if (player.bh.celestialite.attackID == 6 && player.bh.celestialite.actions[3].variables.attacks == 1) {
-                    screenFlash("", 200)
-                    setTimeout(() => {
-                        player.bh.celestialite.attackTimeout = [7, new Decimal(5)]
-                        bulletHell({"shootBee": {beesPerSec: 1, radius: 15, enemySpeed: 6}, "chargingBee": {beeAmount: 8, radius: 20, enemySpeed: 5, lastTick: false}}, {width: 400, height: 400, duration: 5, saveContent: true})
-                    }, 200)
-                    player.bh.celestialite.actions[3].variables.attacks = 2
+                if (player.bh.celestialite.health.lt(1250) && player.bh.celestialite.attackID == 12) {
+                    if (player.tab == "bh" && !options.bulletHellOff) {
+                        bulletHell({"waveBees": {beeRate: 5, radius: 20, gapStart: 0, gap: 250, enemySpeed: 6, waveSpeed: 4}, "shootBee": {beesPerSec: 1, radius: 20, enemySpeed: 4}}, {duration: 10}, () => {player.bh.celestialite.attackID = 14})
+                        player.bh.celestialite.attackID = 13
+                    } else {
+                        bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                        player.bh.celestialite.attackID = 14
+                    }
                 }
-                if (player.bh.celestialite.attackID == 7 && player.bh.celestialite.actions[3].variables.attacks == 2) {
-                    screenFlash("", 200)
-                    setTimeout(() => {
-                        player.bh.celestialite.attackTimeout = [8, new Decimal(5)]
-                        bulletHell({"shootBee": {beesPerSec: 0.5, radius: 15, enemySpeed: 6}, "chargingBee": {beeAmount: 5, radius: 20, enemySpeed: 4, lastTick: false}, "bouncingBees": {beeAmount: 3, radius: 30, enemySpeed: 4, chargeMult: 1.5, lastTick: false}}, {width: 400, height: 400, duration: 5, saveContent: true})
-                    }, 200)
-                    player.bh.celestialite.actions[3].variables.attacks = 3
+                if (player.bh.celestialite.health.lt(50) && player.bh.celestialite.attackID == 14) {
+                    if (player.tab == "bh" && !options.bulletHellOff) {
+                        bulletHell({"shootBee": {beesPerSec: 2, radius: 15, enemySpeed: 4}}, {width: 300, height: 300, duration: 40})
+                        setTimeout(() => {
+                            bulletHellNeo.actions["shootBee"].beesPerSec = 1.8
+                            bulletHell({"chargingBee": {beeAmount: 5, radius: 20, enemySpeed: 5, lastTick: false}}, {width: 400, height: 400, duration: 32})
+                        }, 8000)
+                        setTimeout(() => {
+                            bulletHellNeo.actions["shootBee"].beesPerSec = 1.5
+                            bulletHellNeo.actions["chargingBee"].enemySpeed = 4
+                            bulletHell({"waveBees": {beeRate: 3, radius: 20, gapStart: 0, gap: 400, enemySpeed: 4, waveSpeed: 4}}, {width: 500, height: 500, duration: 24})
+                        }, 16000)
+                        setTimeout(() => {
+                            bulletHellNeo.actions["shootBee"].beesPerSec = 1.2
+                            bulletHellNeo.actions["chargingBee"].enemySpeed = 3
+                            bulletHellNeo.actions["waveBees"].gap = 450
+                            bulletHell({"firingBees": {beeAmount: 1, radius: 25, intervalDiv: 0.5, lastTick: false}}, {width: 600, height: 600, duration: 16})
+                        }, 24000)
+                        setTimeout(() => {
+                            bulletHellNeo.actions["shootBee"].beesPerSec = 1
+                            bulletHellNeo.actions["chargingBee"].enemySpeed = 2
+                            bulletHellNeo.actions["waveBees"].gap = 500
+                            bulletHell({"singularBee": {radius: 250, enemySpeed: 0.5, shooting: true, interval: 2000, bulletRadius: 20}}, {width: 700, height: 700, duration: 8}, () => {player.bh.celestialite.attackID = 16})
+                        }, 32000)
+                        player.bh.celestialite.attackID = 15
+                    } else {
+                        console.log("ye")
+                        player.bh.celestialite.health = new Decimal(50)
+                        if (player.bh.characters[0].id != "none") player.bh.characters[0].stun = ["hard", new Decimal(5)]
+                        if (player.bh.characters[1].id != "none") player.bh.characters[1].stun = ["hard", new Decimal(5)]
+                        if (player.bh.characters[2].id != "none") player.bh.characters[2].stun = ["hard", new Decimal(5)]
+                        for (let i = 0; i < 10; i++) {
+                            setTimeout(() => {
+                                bhAttack(Decimal.mul(player.bh.celestialite.damage, 1), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                                if (i == 9) player.bh.celestialite.attackID = 16
+                            }, i*300)
+                        }
+                        player.bh.celestialite.attackID += 1
+                    }
                 }
-                if (player.bh.celestialite.attackID == 8 && player.bh.celestialite.actions[3].variables.attacks == 3) {
-                    screenFlash("", 200)
-                    setTimeout(() => {
-                        player.bh.celestialite.attackTimeout = [9, new Decimal(5)]
-                        bulletHell({"chargingBee": {beeAmount: 4, radius: 20, enemySpeed: 4, lastTick: false}, "bouncingBees": {beeAmount: 2, radius: 30, enemySpeed: 4, chargeMult: 1.5, lastTick: false}, "waveBees": {beeRate: 3, radius: 20, gapStart: 0, gap: 350, enemySpeed: 6, waveSpeed: 4}}, {width: 400, height: 400, duration: 5, saveContent: true})
-                    }, 200)
-                    player.bh.celestialite.actions[3].variables.attacks = 4
-                }
-                if (player.bh.celestialite.attackID == 9 && player.bh.celestialite.actions[3].variables.attacks == 4) {
+                if (player.bh.celestialite.attackID >= 16) {
                     celestialiteDeath()
-                }
-                if (player.bh.celestialite.health.lt(-500)) {
-                    screenFlash("", 200)
-                    setTimeout(() => {celestialiteDeath()}, 200)
                 }
             },
             cooldown: new Decimal(Infinity),

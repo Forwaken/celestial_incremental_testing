@@ -682,7 +682,7 @@ BHC.staticEpsilon = {
             onTrigger(index, slot, target, magnitude) {
                 let random = Math.random()
                 if (random < 0.5) {
-                    bulletHell({"knifeThrow": {knifeLength: 64, knifeWidth: 16, enemySpeed: 6, knifePerSec: 1+(magnitude/5)}}, {duration: 10+(magnitude*2), start: "left", subArena: true, subWidth: 250, subHeight: 500, subMove: "right", subSpeed: 0.5})
+                    bulletHell({"knifeThrow": {knifeLength: 64, knifeWidth: 16, enemySpeed: 6, knifePerSec: 1+(magnitude/5)}}, {duration: 10+(magnitude*2), subArena: true, subStart: "left", subWidth: 250, subHeight: 500, subMove: "right", subSpeed: 0.5})
                 } else {
                     bulletHell({"knifeThrow": {knifeLength: 64, knifeWidth: 16, enemySpeed: 5, knifePerSec: 1+(magnitude/5)}}, {duration: 10+(magnitude*2), subArena: true, subWidth: 250, subHeight: 250, subSpeed: 0.5})
                 }

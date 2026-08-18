@@ -3280,7 +3280,7 @@
             type: "normal",
             background: "#cccccc",
             portrait: "resources/secret.png",
-            trigger() {return player.bh.currentStage == "alephsChamber" && Decimal.eq(player.bh.combo, 24) && player.bh.celestialite.health.lte(6000)},
+            trigger() {return player.bh.currentStage == "alephsChamber" && Decimal.eq(player.bh.combo, 24) && player.bh.celestialite.health.lte(7500)},
             onStart() {player.bh.bhPause = true},
             dialogue: [
                 { text: "You are brought into a flashback."},
@@ -3319,7 +3319,7 @@
             type: "normal",
             background: "#cccccc",
             portrait: "resources/secret.png",
-            trigger() {return player.bh.currentStage == "alephsChamber" && Decimal.eq(player.bh.combo, 24) && player.bh.celestialite.health.lte(3000)},
+            trigger() {return player.bh.currentStage == "alephsChamber" && Decimal.eq(player.bh.combo, 24) && player.bh.celestialite.health.lte(2500)},
             onStart() {player.bh.bhPause = true},
             dialogue: [
                 { text: "I've had a glimpse of your past, Aleph.", portrait: "resources/player.png"},

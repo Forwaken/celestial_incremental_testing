@@ -920,14 +920,16 @@ function celestialiteSpawn() {
 
     if (BHC[player.bh.celestialite.id].onSpawn) BHC[player.bh.celestialite.id].onSpawn()
 
-    if (player.bh.celestialite.id == "matos") {
-        screenFlash("-Matos, Celestial of Machinery-", 1200)
-    }
-    if (player.bh.celestialite.id == "aleph") {
-        screenFlash("-Aleph, Celestial of the Swarms-", 1200)
-    }
-    if (player.bh.celestialite.id == "zar") {
-        screenFlash("-Zar, Celestial of Chance-", 1200)
+    if (player.tab == "bh") {
+        if (player.bh.celestialite.id == "matos") {
+            screenFlash("-Matos, Celestial of Machinery-", 1200)
+        }
+        if (player.bh.celestialite.id == "aleph") {
+            screenFlash("-Aleph, Celestial of the Swarms-", 1200)
+        }
+        if (player.bh.celestialite.id == "zar") {
+            screenFlash("-Zar, Celestial of Chance-", 1200)
+        }
     }
 }
 

@@ -1,6 +1,6 @@
 //bulletHell(700, 500, 12, 500, 275)
 //bulletHellBlue({"bulletRain": {bulletPerSec: 8, bulletRadius: 12, enemySpeed: 4}}, {width:800, height:600, duration:15, gravity:0.2, jumpStrength:-12})
-function bulletHell(actions, values = {}, exitAction = () => {}) {
+function bulletHellOld(actions, values = {}, exitAction = () => {}) {
     let info = {}
     info.width = values.width || 700
     info.height = values.height || 500
@@ -853,6 +853,9 @@ function bulletHell(actions, values = {}, exitAction = () => {}) {
         for (let b of info.bullets) {
             b.x += b.vx;
             b.y += b.vy;
+            if (b.bouncy) {
+
+            }
         }
 
         // Remove bullets that go off screen
@@ -886,7 +889,7 @@ function bulletHell(actions, values = {}, exitAction = () => {}) {
         for (let b of info.bullets) {
             let playerX = info.px
             let playerY = info.py
-            if (info.subArena) {playerX += info.subx; playerY += info.suby}
+            if (info.subArena && options.bhKeyboard) {playerX += info.subx; playerY += info.suby}
             if (b.name && b.name == "knife") {
                 // Knife is a rectangle, check if player is within knife's rectangle (approximate as line segment + width)
                 const cx = b.x + Math.cos(b.angle) * b.r / 2;
@@ -1280,23 +1283,25 @@ if (storedInfo && storedInfo != "") {
     }
 }
 
+BHB.none = {}
+
 BHB.diamondAttack = {
     //bulletHell({"diamondAttack": {diamondAmount: 2, intervalDiv: 1}}, {duration: 10})
-    codeFunc(info, id) {
-        const diamondRadius = info.actions[id].diamondRadius ?? 40;
-        for (let i = 0; i < info.actions[id].diamondAmount; i++) {
-            let angleOffset = (2 * Math.PI * i) / info.actions[id].diamondAmount;
-            info.bullets.push({
+    codeFunc() {
+        const diamondRadius = bulletHellNeo.actions["diamondAttack"].diamondRadius ?? 40;
+        for (let i = 0; i < bulletHellNeo.actions["diamondAttack"].diamondAmount; i++) {
+            let angleOffset = (2 * Math.PI * i) / bulletHellNeo.actions["diamondAttack"].diamondAmount;
+            bulletHellNeo.bullets.push({
                 name: "diamond",
-                x: info.boxLeft + info.px + 200 * Math.cos(angleOffset),
-                y: info.boxTop + info.py + 200 * Math.sin(angleOffset),
+                x: bulletHellNeo.boxLeft + bulletHellNeo.px + 200 * Math.cos(angleOffset),
+                y: bulletHellNeo.boxTop + bulletHellNeo.py + 200 * Math.sin(angleOffset),
                 vx: 0,
                 vy: 0,
                 r: diamondRadius,
                 orbitRadius: 200,
                 orbitAngle: angleOffset,
                 orbitSpeed: 0.015 + 0.003 * i, // slightly different speeds
-                shootInterval: (500 + Math.floor(Math.random() * 600) + i * 150) / (info.actions[id].intervalDiv || 1), // each diamond has a different interval
+                shootInterval: (500 + Math.floor(Math.random() * 600) + i * 150) / (bulletHellNeo.actions["diamondAttack"].intervalDiv || 1), // each diamond has a different interval
                 lastShotTime: 0,
                 draw(b, bossCtx) {
                     bossCtx.translate(b.x, b.y);
@@ -1315,50 +1320,48 @@ BHB.diamondAttack = {
                 }
             });
         }
-        return info
     },
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Update each diamond's orbit and position, and handle shooting
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "diamond") {
                 b.orbitAngle += b.orbitSpeed;
-                const playerGlobalX = info.boxLeft + info.px;
-                const playerGlobalY = info.boxTop + info.py;
+                const playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.px;
+                const playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.py;
                 const targetBx = playerGlobalX + b.orbitRadius * Math.cos(b.orbitAngle);
                 const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
                 // Smoothly move boss towards target position (lerp)
                 const lerpFactor = 0.05;
-                b.x += (targetBx - b.x) * lerpFactor;
-                b.y += (targetBy - b.y) * lerpFactor;
+                b.x += (targetBx - b.x) * lerpFactor * 60 * bulletHellNeo.delta;
+                b.y += (targetBy - b.y) * lerpFactor * 60 * bulletHellNeo.delta;
 
                 // Each diamond shoots at its own interval
-                const speed = info.actions[id].enemySpeed ?? 5
-                if (!b.lastShotTime) b.lastShotTime = ticks;
-                if (ticks - b.lastShotTime > b.shootInterval) {
-                    info.shootAtPlayer(b.x, b.y, id, speed);
-                    b.lastShotTime = ticks;
+                const speed = bulletHellNeo.actions["diamondAttack"].enemySpeed ?? 5
+                if (!b.lastShotTime) b.lastShotTime = Date.now();
+                if (Date.now() - b.lastShotTime > b.shootInterval) {
+                    bulletHellNeo.shootAtPlayer(b.x, b.y, "diamondAttack", speed);
+                    b.lastShotTime = Date.now();
                 }
             }
         }
-        return info
     },
 }
 
 BHB.rotatingCircleRadialBurst = {
     //bulletHell({"rotatingCircleRadialBurst": {locX: 250, locY: 250, circleAmount: 4, burstInterval: 1200, orbitSpeed: 0.015, orbitRadius: 400, bulletsPerBurst: 6, enemySpeed: 6, bulletSpeed: 5}}, {width: 500, duration: 12})
-    codeFunc(info, id) {
-        for (let i = 0; i < info.actions[id].circleAmount; i++) {
-            let angleOffset = (2 * Math.PI * i) / info.actions[id].circleAmount;
-            info.bullets.push({
+    codeFunc() {
+        for (let i = 0; i < bulletHellNeo.actions["rotatingCircleRadialBurst"].circleAmount; i++) {
+            let angleOffset = (2 * Math.PI * i) / bulletHellNeo.actions["rotatingCircleRadialBurst"].circleAmount;
+            bulletHellNeo.bullets.push({
                 name: "circle",
-                x: info.boxLeft + info.actions[id].locX + 200 * Math.cos(angleOffset),
-                y: info.boxTop + info.actions[id].locY + 200 * Math.sin(angleOffset),
+                x: bulletHellNeo.boxLeft + bulletHellNeo.actions["rotatingCircleRadialBurst"].locX + 200 * Math.cos(angleOffset),
+                y: bulletHellNeo.boxTop + bulletHellNeo.actions["rotatingCircleRadialBurst"].locY + 200 * Math.sin(angleOffset),
                 vx: 0,
                 vy: 0,
                 r: 40,
-                orbitRadius: info.actions[id].orbitRadius,
+                orbitRadius: bulletHellNeo.actions["rotatingCircleRadialBurst"].orbitRadius,
                 orbitAngle: angleOffset,
-                orbitSpeed: info.actions[id].orbitSpeed, // slightly different speeds
+                orbitSpeed: bulletHellNeo.actions["rotatingCircleRadialBurst"].orbitSpeed, // slightly different speeds
                 lastBurstTime: 0,
                 draw(b, ctx) {
                     ctx.beginPath();
@@ -1370,18 +1373,17 @@ BHB.rotatingCircleRadialBurst = {
                 }
             });
         }
-        return info
     },
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Ensure sensible defaults so bursts actually spawn
-        info.actions[id].bulletsPerBurst = info.actions[id].bulletsPerBurst || 12;
-        info.actions[id].bulletSpeed = info.actions[id].bulletSpeed || 5;
+        bulletHellNeo.actions["rotatingCircleRadialBurst"].bulletsPerBurst = bulletHellNeo.actions["rotatingCircleRadialBurst"].bulletsPerBurst || 12;
+        bulletHellNeo.actions["rotatingCircleRadialBurst"].bulletSpeed = bulletHellNeo.actions["rotatingCircleRadialBurst"].bulletSpeed || 5;
 
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "circle") {
                 b.orbitAngle += b.orbitSpeed;
-                const playerGlobalX = info.boxLeft + info.actions[id].locX;
-                const playerGlobalY = info.boxTop + info.actions[id].locY;
+                const playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.actions["rotatingCircleRadialBurst"].locX;
+                const playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.actions["rotatingCircleRadialBurst"].locY;
                 const targetBx = playerGlobalX + b.orbitRadius * Math.cos(b.orbitAngle);
                 const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
                 // Smoothly move boss towards target position (lerp)
@@ -1391,64 +1393,61 @@ BHB.rotatingCircleRadialBurst = {
 
                 // Burst
                 if (!b.lastBurstTime) b.lastBurstTime = Date.now()
-                if (Date.now() - b.lastBurstTime > info.actions[id].burstInterval) {
-                    info.fireRadialBurst(b.x, b.y, id)
+                if (Date.now() - b.lastBurstTime > bulletHellNeo.actions["rotatingCircleRadialBurst"].burstInterval) {
+                    bulletHellNeo.fireRadialBurst(b.x, b.y, "rotatingCircleRadialBurst")
                     b.lastBurstTime = Date.now()
                 }
             }
         }
-        return info
     },
 }
 
 BHB.bulletRain = {
     //bulletHell({"bulletRain": {bulletPerSec: 10}}, {duration: 12})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Rain Bullets
-        const bulletRadius = info.actions[id].bulletRadius ?? 12;
-        const bulletSpeed = info.actions[id].enemySpeed ?? 4;
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const bulletsToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
+        const bulletRadius = bulletHellNeo.actions["bulletRain"].bulletRadius ?? 12;
+        const bulletSpeed = bulletHellNeo.actions["bulletRain"].enemySpeed ?? 4;
+        if (!bulletHellNeo.actions["bulletRain"].lastTime) bulletHellNeo.actions["bulletRain"].lastTime = Date.now();
+        const bulletsToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions["bulletRain"].lastTime) / 1000) * bulletHellNeo.actions["bulletRain"].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
         for (let i = 0; i < bulletsToSpawn; i++) {
-            let bx = Math.random() * info.width + info.boxLeft;
+            let bx = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by = -bulletRadius;
             let bul = {x: bx, y: by, vx: 0, vy: bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}}
-            info.bullets.push(bul);
+            bulletHellNeo.bullets.push(bul);
         }
-        if (bulletsToSpawn > 0) info.actions[id].lastTime = ticks;
-        return info
+        if (bulletsToSpawn > 0) bulletHellNeo.actions["bulletRain"].lastTime = Date.now();
     },
 }
 
 BHB.inverseRain = {
     //bulletHell({"inverseRain": {bulletPerSec: 10}}, {duration: 12})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Rain Bullets
-        const bulletRadius = info.actions[id].bulletRadius ?? 12;
+        const bulletRadius = bulletHellNeo.actions["inverseRain"].bulletRadius ?? 12;
         const bulletSpeed = 4;
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const bulletsToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
+        if (!bulletHellNeo.actions["inverseRain"].lastTime) bulletHellNeo.actions["inverseRain"].lastTime = Date.now();
+        const bulletsToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions["inverseRain"].lastTime) / 1000) * bulletHellNeo.actions["inverseRain"].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
         for (let i = 0; i < bulletsToSpawn; i++) {
-            let bx = Math.random() * info.width + info.boxLeft;
+            let bx = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by = window.innerHeight + bulletRadius;
             let bul = {x: bx, y: by, vx: 0, vy: -bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}}
-            info.bullets.push(bul);
+            bulletHellNeo.bullets.push(bul);
         }
-        if (bulletsToSpawn > 0) info.actions[id].lastTime = ticks;
-        return info
+        if (bulletsToSpawn > 0) bulletHellNeo.actions["inverseRain"].lastTime = Date.now();
     },
 }
 
 BHB.movingCircleRadialBurstAttack = {
     //bulletHell({"movingCircleRadialBurstAttack": {circleAmount: 1, burstInterval: 1200, bulletsPerBurst: 18, enemySpeed: 6, bulletSpeed: 5}}, {duration: 12})
-    codeFunc(info, id) {
-        for (let i = 0; i < info.actions[id].circleAmount; i++) {
-            info.bullets.push({
+    codeFunc() {
+        for (let i = 0; i < bulletHellNeo.actions["movingCircleRadialBurstAttack"].circleAmount; i++) {
+            bulletHellNeo.bullets.push({
                 name: "circle",
-                x: Math.random() * (info.width - 120) + 60 + info.boxLeft,
-                y: Math.random() * (info.height - 120) + 60 + info.boxTop,
-                vx: (Math.random() - 0.5) * info.actions[id].enemySpeed * 2,
-                vy: (Math.random() - 0.5) * info.actions[id].enemySpeed * 2,
+                x: Math.random() * (bulletHellNeo.width - 120) + 60 + bulletHellNeo.boxLeft,
+                y: Math.random() * (bulletHellNeo.height - 120) + 60 + bulletHellNeo.boxTop,
+                vx: (Math.random() - 0.5) * bulletHellNeo.actions["movingCircleRadialBurstAttack"].enemySpeed * 2,
+                vy: (Math.random() - 0.5) * bulletHellNeo.actions["movingCircleRadialBurstAttack"].enemySpeed * 2,
                 r: 40,
                 lastBurstTime: 0,
                 draw(b, ctx) {
@@ -1461,65 +1460,62 @@ BHB.movingCircleRadialBurstAttack = {
                 }
             });
         }
-        return info
     },
-    moveFunc(info, ticks, id) {
-        for (let b of info.bullets) {
+    moveFunc() {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "circle") {
                 // Bounce off walls
-                if (b.x < b.r + info.boxLeft) {b.x = b.r + info.boxLeft; b.vx *= -1}
-                if (b.x > info.width - b.r + info.boxLeft) {b.x = info.width - b.r + info.boxLeft; b.vx *= -1}
-                if (b.y < b.r + info.boxTop) {b.y = b.r + info.boxTop; b.vy *= -1}
-                if (b.y > info.height - b.r + info.boxTop) {b.y = info.height - b.r + info.boxTop; b.vy *= -1}
+                if (b.x < b.r + bulletHellNeo.boxLeft) {b.x = b.r + bulletHellNeo.boxLeft; b.vx *= -1}
+                if (b.x > bulletHellNeo.width - b.r + bulletHellNeo.boxLeft) {b.x = bulletHellNeo.width - b.r + bulletHellNeo.boxLeft; b.vx *= -1}
+                if (b.y < b.r + bulletHellNeo.boxTop) {b.y = b.r + bulletHellNeo.boxTop; b.vy *= -1}
+                if (b.y > bulletHellNeo.height - b.r + bulletHellNeo.boxTop) {b.y = bulletHellNeo.height - b.r + bulletHellNeo.boxTop; b.vy *= -1}
 
                 // Burst
                 if (!b.lastBurstTime) b.lastBurstTime = Date.now()
-                if (Date.now() - b.lastBurstTime > info.actions[id].burstInterval) {
-                    info.fireRadialBurst(b.x, b.y, id)
+                if (Date.now() - b.lastBurstTime > bulletHellNeo.actions["movingCircleRadialBurstAttack"].burstInterval) {
+                    bulletHellNeo.fireRadialBurst(b.x, b.y, "movingCircleRadialBurstAttack")
                     b.lastBurstTime = Date.now()
                 }
             }
         }
-        return info
     },
 }
 
 BHB.knifeThrow = {
     //bulletHell({"knifeThrow": {knifeLength: 64, knifeWidth: 16, enemySpeed: 6, knifePerSec: 1.2}}, {width: 500, height: 300, duration: 15})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Spawn knives
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const knivesToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].knifePerSec);
+        if (!bulletHellNeo.actions["knifeThrow"].lastTime) bulletHellNeo.actions["knifeThrow"].lastTime = Date.now();
+        const knivesToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions["knifeThrow"].lastTime) / 1000) * bulletHellNeo.actions["knifeThrow"].knifePerSec);
         for (let i = 0; i < knivesToSpawn; i++) {
-            info.spawnKnife(id);
+            bulletHellNeo.spawnKnife("knifeThrow");
         }
-        if (knivesToSpawn > 0) info.actions[id].lastTime = ticks;
-
-        return info
+        if (knivesToSpawn > 0) bulletHellNeo.actions["knifeThrow"].lastTime = Date.now();
     },
 }
 
 BHB.bouncingDiamond = {
     //bulletHell({"bouncingDiamond": {diamondCount: 6, enemySpeed: 3}}, {duration: 15})
-    codeFunc(info, id) {
+    codeFunc() {
         const br = 25;
-        for (let i = 0; i < info.actions[id].diamondCount; i++) {
+        for (let i = 0; i < bulletHellNeo.actions["bouncingDiamond"].diamondCount; i++) {
             // Random position, not too close to player
             let angle = Math.random() * 2 * Math.PI;
-            let dist = Math.random() * (info.width / 2 - br - info.pr) + br + info.pr + 10;
-            let bx = info.width / 2 + Math.cos(angle) * dist + info.boxLeft;
-            let by = info.height / 2 + Math.sin(angle) * dist + info.boxTop;
+            let dist = Math.random() * (bulletHellNeo.width / 2 - br - bulletHellNeo.pr) + br + bulletHellNeo.pr + 10;
+            let bx = bulletHellNeo.width / 2 + Math.cos(angle) * dist + bulletHellNeo.boxLeft;
+            let by = bulletHellNeo.height / 2 + Math.sin(angle) * dist + bulletHellNeo.boxTop;
             // Random velocity
             let theta = Math.random() * 2 * Math.PI;
-            let vx = Math.cos(theta) * info.actions[id].enemySpeed;
-            let vy = Math.sin(theta) * info.actions[id].enemySpeed;
-            info.bullets.push({
+            let vx = Math.cos(theta) * bulletHellNeo.actions["bouncingDiamond"].enemySpeed;
+            let vy = Math.sin(theta) * bulletHellNeo.actions["bouncingDiamond"].enemySpeed;
+            bulletHellNeo.bullets.push({
                 name: "diamond",
                 x: bx,
                 y: by,
                 vx: vx,
                 vy: vy,
                 r: br,
+                bouncy: true,
                 draw(b, bossCtx) {
                     bossCtx.translate(b.x, b.y);
                     bossCtx.rotate(Math.PI / 2); // 90deg
@@ -1537,35 +1533,18 @@ BHB.bouncingDiamond = {
                 },
             });
         }
-
-        return info
     },
-    moveFunc(info, ticks, id) {
-        for (let b of info.bullets) {
-            if (b.name && b.name == "diamond") {
-                // Bounce off walls
-                if (b.x < b.r + info.boxLeft) {b.x = b.r + info.boxLeft; b.vx *= -1}
-                if (b.x > info.width - b.r + info.boxLeft) {b.x = info.width - b.r + info.boxLeft; b.vx *= -1}
-                if (b.y < b.r + info.boxTop) {b.y = b.r + info.boxTop; b.vy *= -1}
-                if (b.y > info.height - b.r + info.boxTop) {b.y = info.height - b.r + info.boxTop; b.vy *= -1}
-            }
-        }
-
-        return info
-    }
 }
 
 BHB.radialKnifeBurstAttack = {
     //bulletHell({"radialKnifeBurstAttack": {knifeLength: 64, knifeWidth: 16, burstInterval: 1500, bulletsPerBurst: 5, enemySpeed: 8}}, {duration: 12, width: 500})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Fire knife burst
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = Date.now();
-        if (Date.now() - info.actions[id].lastTime > info.actions[id].burstInterval) {
-            info.fireKnifeBurst(id);
-            info.actions[id].lastTime = Date.now();
+        if (!bulletHellNeo.actions["radialKnifeBurstAttack"].lastTime) bulletHellNeo.actions["radialKnifeBurstAttack"].lastTime = Date.now();
+        if (Date.now() - bulletHellNeo.actions["radialKnifeBurstAttack"].lastTime > bulletHellNeo.actions["radialKnifeBurstAttack"].burstInterval) {
+            bulletHellNeo.fireKnifeBurst("radialKnifeBurstAttack");
+            bulletHellNeo.actions["radialKnifeBurstAttack"].lastTime = Date.now();
         }
-
-        return info
     },
 }
 
@@ -1578,20 +1557,20 @@ BHB.radialKnifeBurstAttack = {
 
 BHB.bombAttack = {
     //bulletHell({"bombAttack": {bombsPerSecond: 1, bombFallSpeed: 4, miniBombCount: 3, miniBombSpeed: 5, miniBombDelay: 600, bulletCount: 5, bulletSpeed: 3}}, {duration: 15})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Spawn bombs
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const bombsToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].bombsPerSecond);
+        if (!bulletHellNeo.actions["bombAttack"].lastTime) bulletHellNeo.actions["bombAttack"].lastTime = Date.now();
+        const bombsToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions["bombAttack"].lastTime) / 1000) * bulletHellNeo.actions["bombAttack"].bombsPerSecond);
         for (let i = 0; i < bombsToSpawn; i++) {
-            let x = 60 + Math.random() * (info.width - 120);
-            info.bullets.push({
+            let x = 60 + Math.random() * (bulletHellNeo.width - 120);
+            bulletHellNeo.bullets.push({
                 name: "bomb",
                 boxRender: true, // RENDER IN BOX
                 x: x,
                 y: -24,
                 r: 24,
                 vx: 0,
-                vy: info.actions[id].bombFallSpeed,
+                vy: bulletHellNeo.actions["bombAttack"].bombFallSpeed,
                 exploded: false,
                 explodeTime: null,
                 draw(b, bossCtx) {
@@ -1604,26 +1583,26 @@ BHB.bombAttack = {
                 },
             });
         }
-        if (bombsToSpawn > 0) info.actions[id].lastTime = ticks;
+        if (bombsToSpawn > 0) bulletHellNeo.actions["bombAttack"].lastTime = Date.now();
 
         // Move bombs
-        for (let b of info.bullets) {
-            if (b.name == "bomb" && !b.exploded && b.y > info.height * 0.7) {
+        for (let b of bulletHellNeo.bullets) {
+            if (b.name == "bomb" && !b.exploded && b.y > bulletHellNeo.height * 0.7) {
                 b.exploded = true
                 b.explodeTime = Date.now()
                 // Spawn mini-bullets in a radial pattern
-                for (let j = 0; j < info.actions[id].miniBombCount; j++) {
-                    let angle = (2 * Math.PI * j) / info.actions[id].miniBombCount
-                    info.bullets.push({
+                for (let j = 0; j < bulletHellNeo.actions["bombAttack"].miniBombCount; j++) {
+                    let angle = (2 * Math.PI * j) / bulletHellNeo.actions["bombAttack"].miniBombCount
+                    bulletHellNeo.bullets.push({
                         name: "minibomb",
                         boxRender: true, // RENDER IN BOX
                         x: b.x,
                         y: b.y,
                         r: 12,
-                        vx: Math.cos(angle) * info.actions[id].miniBombSpeed,
-                        vy: Math.sin(angle) * info.actions[id].miniBombSpeed,
+                        vx: Math.cos(angle) * bulletHellNeo.actions["bombAttack"].miniBombSpeed,
+                        vy: Math.sin(angle) * bulletHellNeo.actions["bombAttack"].miniBombSpeed,
                         exploded: false,
-                        explodeTime: Date.now() + info.actions[id].miniBombDelay,
+                        explodeTime: Date.now() + bulletHellNeo.actions["bombAttack"].miniBombDelay,
                         draw(b, bossCtx) {
                             bossCtx.beginPath();
                             bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
@@ -1638,15 +1617,15 @@ BHB.bombAttack = {
             if (b.name == "minibomb" && !b.exploded && Date.now() >= b.explodeTime) {
                 b.exploded = true
                 // Spawn bullets in a radial pattern
-                for (let k = 0; k < info.actions[id].bulletCount; k++) {
-                    let angle = (2 * Math.PI * k) / info.actions[id].bulletCount;
-                    info.bullets.push({
+                for (let k = 0; k < bulletHellNeo.actions["bombAttack"].bulletCount; k++) {
+                    let angle = (2 * Math.PI * k) / bulletHellNeo.actions["bombAttack"].bulletCount;
+                    bulletHellNeo.bullets.push({
                         boxRender: true, // RENDER IN BOX
                         x: b.x,
                         y: b.y,
                         r: 8,
-                        vx: Math.cos(angle) * info.actions[id].bulletSpeed,
-                        vy: Math.sin(angle) * info.actions[id].bulletSpeed,
+                        vx: Math.cos(angle) * bulletHellNeo.actions["bombAttack"].bulletSpeed,
+                        vy: Math.sin(angle) * bulletHellNeo.actions["bombAttack"].bulletSpeed,
                         draw(b, bossCtx) {
                             bossCtx.beginPath();
                             bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
@@ -1659,8 +1638,6 @@ BHB.bombAttack = {
                 }
             }
         }
-
-        return info
     },
 }
 
@@ -1668,68 +1645,62 @@ BHB.bombAttack = {
 
 BHB.centerSpiralAttack = {
     //bulletHell({"centerSpiralAttack": {spiralAngle: 0, spiralRate: 0.325, spiralInterval: 30, radialStart: 64, bulletSpeed: 7, spiralKnives: true, knifeLength: 64, knifeWidth: 16}}, {width: window.innerWidth, height: window.innerHeight, duration: 15})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Spiral fire
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        if (ticks - info.actions[id].lastTime > info.actions[id].spiralInterval) {
-            let spiX = info.width / 2 + info.boxLeft
-            let spiY = info.height / 2 + info.boxTop
-            if (info.actions[id].locX) spiX = info.actions[id].locX + info.boxLeft
-            if (info.actions[id].locY) spiY = info.actions[id].locY + info.boxTop
-            info.spawnSpiralProjectile(spiX, spiY, info.actions[id].radialStart, id)
-            info.actions[id].spiralAngle += info.actions[id].spiralRate;
-            info.actions[id].lastTime = ticks;
+        if (!bulletHellNeo.actions["centerSpiralAttack"].lastTime) bulletHellNeo.actions["centerSpiralAttack"].lastTime = Date.now();
+        if (Date.now() - bulletHellNeo.actions["centerSpiralAttack"].lastTime > bulletHellNeo.actions["centerSpiralAttack"].spiralInterval) {
+            let spiX = bulletHellNeo.width / 2 + bulletHellNeo.boxLeft
+            let spiY = bulletHellNeo.height / 2 + bulletHellNeo.boxTop
+            if (bulletHellNeo.actions["centerSpiralAttack"].locX) spiX = bulletHellNeo.actions["centerSpiralAttack"].locX + bulletHellNeo.boxLeft
+            if (bulletHellNeo.actions["centerSpiralAttack"].locY) spiY = bulletHellNeo.actions["centerSpiralAttack"].locY + bulletHellNeo.boxTop
+            bulletHellNeo.spawnSpiralProjectile(spiX, spiY, bulletHellNeo.actions["centerSpiralAttack"].radialStart, "centerSpiralAttack")
+            bulletHellNeo.actions["centerSpiralAttack"].spiralAngle += bulletHellNeo.actions["centerSpiralAttack"].spiralRate;
+            bulletHellNeo.actions["centerSpiralAttack"].lastTime = Date.now();
         }
-
-        return info
     },
 }
 
 BHB.centerSpreadAttack = {
     //bulletHell({"centerSpreadAttack": {bulletSpeed: 6, spreadInterval: 1000, spreadCount: 7, spreadAngle: Math.PI/3}}, {width: window.innerWidth, height: window.innerHeight, duration: 15})
-    moveFunc(info, ticks, id) {
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        if (ticks - info.actions[id].lastTime > info.actions[id].spreadInterval) {
-            info.shootSpreadAtPlayer(info.width / 2 + info.boxLeft, info.height / 2 + info.boxTop, id);
-            info.actions[id].lastTime = ticks;
+    moveFunc() {
+        if (!bulletHellNeo.actions["centerSpreadAttack"].lastTime) bulletHellNeo.actions["centerSpreadAttack"].lastTime = Date.now();
+        if (Date.now() - bulletHellNeo.actions["centerSpreadAttack"].lastTime > bulletHellNeo.actions["centerSpreadAttack"].spreadInterval) {
+            bulletHellNeo.shootSpreadAtPlayer(bulletHellNeo.width / 2 + bulletHellNeo.boxLeft, bulletHellNeo.height / 2 + bulletHellNeo.boxTop, "centerSpreadAttack");
+            bulletHellNeo.actions["centerSpreadAttack"].lastTime = Date.now();
         }
-
-        return info
     },
 }
 
 BHB.centerSingleAttack = {
     //bulletHell({"centerSingleAttack": {bulletSpeed: 6, shootInterval: 1000}}, {width: window.innerWidth, height: window.innerHeight, duration: 15})
-    moveFunc(info, ticks, id) {
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        if (ticks - info.actions[id].lastTime > info.actions[id].shootInterval) {
-            info.shootAtPlayer(info.width / 2 + info.boxLeft, info.height / 2 + info.boxTop, id, info.actions[id].bulletSpeed);
-            info.actions[id].lastTime = ticks;
+    moveFunc() {
+        if (!bulletHellNeo.actions["centerSingleAttack"].lastTime) bulletHellNeo.actions["centerSingleAttack"].lastTime = Date.now();
+        if (Date.now() - bulletHellNeo.actions["centerSingleAttack"].lastTime > bulletHellNeo.actions["centerSingleAttack"].shootInterval) {
+            bulletHellNeo.shootAtPlayer(bulletHellNeo.width / 2 + bulletHellNeo.boxLeft, bulletHellNeo.height / 2 + bulletHellNeo.boxTop, "centerSingleAttack", bulletHellNeo.actions["centerSingleAttack"].bulletSpeed);
+            bulletHellNeo.actions["centerSingleAttack"].lastTime = Date.now();
         }
-
-        return info
     },
 }
 
 BHB.centerIcon = {
     //bulletHell({"centerIcon": {radius: 64, fillColor: "#fff", strokeColor: "#e22", symbol: "⊘"}}, {width: window.innerWidth, height: window.innerHeight, duration: 15})
-    codeFunc(info, id) {
-        let curX = info.width / 2 + info.boxLeft
-        let curY = info.height / 2 + info.boxTop
-        if (info.actions[id].locX) curX = info.actions[id].locX
-        if (info.actions[id].locY) curY = info.actions[id].locY
-        info.bullets.push({
+    codeFunc() {
+        let curX = bulletHellNeo.width / 2 + bulletHellNeo.boxLeft
+        let curY = bulletHellNeo.height / 2 + bulletHellNeo.boxTop
+        if (bulletHellNeo.actions["centerIcon"].locX) curX = bulletHellNeo.actions["centerIcon"].locX
+        if (bulletHellNeo.actions["centerIcon"].locY) curY = bulletHellNeo.actions["centerIcon"].locY
+        bulletHellNeo.bullets.push({
             name: "symbol",
             boxRender: true,
-            symbol: info.actions[id].symbol,
-            fill: info.actions[id].fillColor,
-            stroke: info.actions[id].strokeColor,
+            symbol: bulletHellNeo.actions["centerIcon"].symbol,
+            fill: bulletHellNeo.actions["centerIcon"].fillColor,
+            stroke: bulletHellNeo.actions["centerIcon"].strokeColor,
             angle: 0,
             x: curX,
             y: curY,
             vx: 0,
             vy: 0,
-            r: info.actions[id].radius,
+            r: bulletHellNeo.actions["centerIcon"].radius,
             draw(b, bossCtx) {
                 // Draw big symbol (⊘)
                 bossCtx.save();
@@ -1738,7 +1709,7 @@ BHB.centerIcon = {
                 bossCtx.textAlign = 'center';
                 bossCtx.textBaseline = 'middle';
                 bossCtx.globalAlpha = 0.92;
-                if (!options.performanceMode) bossCtx.shadowColor = '#fff';
+                if (!options.performanceMode) bossCtx.shadowColor = b.fillColor;
                 if (!options.performanceMode) bossCtx.shadowBlur = 32;
                 bossCtx.fillStyle = b.fill;
                 bossCtx.fillText(b.symbol, 0, 0);
@@ -1764,17 +1735,13 @@ BHB.centerIcon = {
                 */
             },
         })
-
-        return info
     },
-    moveFunc(info, ticks, id) {
-        for (let b of info.bullets) {
+    moveFunc() {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "symbol") {
                 b.angle += 1.44
             }
         }
-
-        return info
     },
 }
 
@@ -1782,26 +1749,27 @@ BHB.centerIcon = {
 
 BHB.finalMatosAttack = {
     //bulletHell({"finalMatosAttack": {radius: 64, fillColor: "#fff", strokeColor: "#e22", symbol: "⊘", burstBullets: 8, burstViolence: 0.5, lungeTimer: 0, lungeCooldown: 0, explosionBurstTimer: 0, explosionBurstCount: 0, lastTick: false}, "bulletRain": {bulletPerSec: 12, duration: 15}, "knifeThrow": {knifeLength: 64, knifeWidth: 16, enemySpeed: 8, knifePerSec: 1.2, duration: 15}}, {width: window.innerWidth, height: window.innerHeight, duration: 19, transparent: true, saveContent: true})
-    codeFunc(info, id) {
-        info.bullets = info.bullets.filter(b => {
+    codeFunc() {
+        bulletHellNeo.bullets = bulletHellNeo.bullets.filter(b => {
             if (b.name && (b.name == "diamond" || b.name == "symbol")) return false
         });
 
-        info.bullets.push({
-            name: "symbol",
+        bulletHellNeo.bullets.push({
+            name: "movingSymbol",
             boxRender: true,
-            symbol: info.actions[id].symbol,
-            fill: info.actions[id].fillColor,
-            stroke: info.actions[id].strokeColor,
-            x: info.width / 2,
-            y: info.height / 2,
-            r: info.actions[id].radius,
+            symbol: bulletHellNeo.actions["finalMatosAttack"].symbol,
+            fill: bulletHellNeo.actions["finalMatosAttack"].fillColor,
+            stroke: bulletHellNeo.actions["finalMatosAttack"].strokeColor,
+            x: bulletHellNeo.width / 2,
+            y: bulletHellNeo.height / 2,
+            r: bulletHellNeo.actions["finalMatosAttack"].radius,
             vx: 0,
             vy: 0,
             pulse: 0,
             pulsingRed: false,
             visible: true,
             burst: false,
+            startTime: Date.now(),
             draw(b, bossCtx) {
                 if (b.visible) {
                     // Draw big symbol (⊘)
@@ -1826,39 +1794,37 @@ BHB.finalMatosAttack = {
                 }
             },
         })
-
-        return info
     },
-    moveFunc(info, ticks, id) {
-        let dt = ticks - (info.actions[id].lastTick || ticks);
-        info.actions[id].lastTick = ticks;
-        for (let b of info.bullets) {
-            if (b.name && b.name == "symbol") {
-                if (b.visible && Date.now() > info.startTime + 15000) {
+    moveFunc() {
+        let dt = Date.now() - (bulletHellNeo.actions["finalMatosAttack"].lastTick || Date.now());
+        bulletHellNeo.actions["finalMatosAttack"].lastTick = Date.now();
+        for (let b of bulletHellNeo.bullets) {
+            if (b.name && b.name == "movingSymbol") {
+                if (b.visible && Date.now() > b.startTime + 15000) {
                     b.visible = false
                 }
                 
                 // Phase 4: Symbol lunges, pulses, shoots in bursts, throws knives
                 if (b.visible) {
                     // Lunge logic
-                    if (!b.pulsingRed && info.actions[id].lungeCooldown <= 0) {
-                        info.actions[id].lungeTimer = 1200;
-                        let dx = info.px - b.x;
-                        let dy = info.py - b.y;
+                    if (!b.pulsingRed && bulletHellNeo.actions["finalMatosAttack"].lungeCooldown <= 0) {
+                        bulletHellNeo.actions["finalMatosAttack"].lungeTimer = 1200;
+                        let dx = bulletHellNeo.px - b.x;
+                        let dy = bulletHellNeo.py - b.y;
                         let dist = Math.hypot(dx, dy);
                         b.vx = (dx / dist) * 7;
                         b.vy = (dy / dist) * 7;
                         b.pulsingRed = true;
                     } else if (!b.pulsingRed) {
-                        info.actions[id].lungeCooldown -= dt;
+                        bulletHellNeo.actions["finalMatosAttack"].lungeCooldown -= dt;
                     }
                     if (b.pulsingRed) {
-                        info.actions[id].lungeTimer -= dt;
-                        if (info.actions[id].lungeTimer <= 0) {
+                        bulletHellNeo.actions["finalMatosAttack"].lungeTimer -= dt;
+                        if (bulletHellNeo.actions["finalMatosAttack"].lungeTimer <= 0) {
                             b.vx = 0;
                             b.vy = 0;
                             b.pulsingRed = false;
-                            info.actions[id].lungeCooldown = 1200 + Math.random() * 800;
+                            bulletHellNeo.actions["finalMatosAttack"].lungeCooldown = 1200 + Math.random() * 800;
                         }
                     }
 
@@ -1866,67 +1832,65 @@ BHB.finalMatosAttack = {
                     b.pulse += dt * 0.008
 
                     // Shoot burst at player
-                    if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-                    if (ticks - info.actions[id].lastTime > 650) {
-                        let dx = info.px - b.x;
-                        let dy = info.py - b.y;
+                    if (!bulletHellNeo.actions["finalMatosAttack"].lastTime) bulletHellNeo.actions["finalMatosAttack"].lastTime = Date.now();
+                    if (Date.now() - bulletHellNeo.actions["finalMatosAttack"].lastTime > 650) {
+                        let dx = bulletHellNeo.px - b.x;
+                        let dy = bulletHellNeo.py - b.y;
                         let baseAngle = Math.atan2(dy, dx);
-                        for (let i = 0; i < info.actions[id].burstBullets; i++) {
-                            let spread = (i - (info.actions[id].burstBullets - 1) / 2) * info.actions[id].burstViolence;
+                        for (let i = 0; i < bulletHellNeo.actions["finalMatosAttack"].burstBullets; i++) {
+                            let spread = (i - (bulletHellNeo.actions["finalMatosAttack"].burstBullets - 1) / 2) * bulletHellNeo.actions["finalMatosAttack"].burstViolence;
                             let angle = baseAngle + spread + (Math.random() - 0.5) * 0.18;
                             let vx = Math.cos(angle) * 8 * (0.9 + Math.random() * 0.3);
                             let vy = Math.sin(angle) * 8 * (0.9 + Math.random() * 0.3);
-                            info.bullets.push({x: b.x, y: b.y, r: 12, vx, vy, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}});
+                            bulletHellNeo.bullets.push({x: b.x, y: b.y, r: 12, vx, vy, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}});
                         }
                         // Randomize next burst
-                        info.actions[id].burstBullets = 7 + Math.floor(Math.random() * 4);
-                        info.actions[id].burstViolence = 0.25 + Math.random() * 0.5;
+                        bulletHellNeo.actions["finalMatosAttack"].burstBullets = 7 + Math.floor(Math.random() * 4);
+                        bulletHellNeo.actions["finalMatosAttack"].burstViolence = 0.25 + Math.random() * 0.5;
 
-                        info.actions[id].lastTime = ticks;
+                        bulletHellNeo.actions["finalMatosAttack"].lastTime = Date.now();
                     }
                 } else {
                     if (!b.burst) {
-                        info.actions[id].explosionBurstTimer += dt;
-                        if (info.actions[id].explosionBurstCount < 4 && info.actions[id].explosionBurstTimer > 220) {
+                        bulletHellNeo.actions["finalMatosAttack"].explosionBurstTimer += dt;
+                        if (bulletHellNeo.actions["finalMatosAttack"].explosionBurstCount < 4 && bulletHellNeo.actions["finalMatosAttack"].explosionBurstTimer > 220) {
                             let N = 32;
                             let baseAngle = Math.random() * Math.PI * 2;
                             for (let i = 0; i < N; i++) {
                                 let angle = baseAngle + (2 * Math.PI * i) / N;
                                 let vx = Math.cos(angle) * 8 * (1.1 + Math.random() * 0.3);
                                 let vy = Math.sin(angle) * 8 * (1.1 + Math.random() * 0.3);
-                                info.bullets.push({x: b.x, y: b.y, r: 12, vx, vy, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}});
+                                bulletHellNeo.bullets.push({x: b.x, y: b.y, r: 12, vx, vy, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}});
                             }
-                            info.actions[id].explosionBurstCount++;
-                            info.actions[id].explosionBurstTimer = 0;
+                            bulletHellNeo.actions["finalMatosAttack"].explosionBurstCount++;
+                            bulletHellNeo.actions["finalMatosAttack"].explosionBurstTimer = 0;
                         }
-                        if (info.actions[id].explosionBurstCount >= 4) {
+                        if (bulletHellNeo.actions["finalMatosAttack"].explosionBurstCount >= 4) {
                             b.burst = true;
                         }
                     }
                 }
             }
         }
-
-        return info
     },
 }
 
 BHB.chargingIcon = {
     //bulletHell({"chargingIcon": {locX: 600, locY: 250, radius: 64, fillColor: "#0091DC", strokeColor: "#094394", symbol: "⧖", enemySpeed: 5, bulletSpeed: 5, shootInterval: 1, burstBullets: 3, burstViolence: 0.5, lungeTimer: 0, lungeCooldown: 0, lastTick: false}}, {duration: 12})
-    codeFunc(info, id) {
-        let curX = info.width / 2 + info.boxLeft
-        let curY = info.height / 2 + info.boxTop
-        if (info.actions[id].locX) curX = info.actions[id].locX
-        if (info.actions[id].locY) curY = info.actions[id].locY
-        info.bullets.push({
+    codeFunc() {
+        let curX = bulletHellNeo.width / 2 + bulletHellNeo.boxLeft
+        let curY = bulletHellNeo.height / 2 + bulletHellNeo.boxTop
+        if (bulletHellNeo.actions["chargingIcon"].locX) curX = bulletHellNeo.actions["chargingIcon"].locX
+        if (bulletHellNeo.actions["chargingIcon"].locY) curY = bulletHellNeo.actions["chargingIcon"].locY
+        bulletHellNeo.bullets.push({
             name: "symbol",
             boxRender: true,
-            symbol: info.actions[id].symbol,
-            fill: info.actions[id].fillColor,
-            stroke: info.actions[id].strokeColor,
+            symbol: bulletHellNeo.actions["chargingIcon"].symbol,
+            fill: bulletHellNeo.actions["chargingIcon"].fillColor,
+            stroke: bulletHellNeo.actions["chargingIcon"].strokeColor,
             x: curX,
             y: curY,
-            r: info.actions[id].radius,
+            r: bulletHellNeo.actions["chargingIcon"].radius,
             vx: 0,
             vy: 0,
             pulse: 0,
@@ -1953,33 +1917,31 @@ BHB.chargingIcon = {
                 bossCtx.restore();
             },
         })
-
-        return info
     },
-    moveFunc(info, ticks, id) {
-        let dt = ticks - (info.actions[id].lastTick || ticks);
-        info.actions[id].lastTick = ticks;
-        for (let b of info.bullets) {
+    moveFunc() {
+        let dt = Date.now() - (bulletHellNeo.actions["chargingIcon"].lastTick || Date.now());
+        bulletHellNeo.actions["chargingIcon"].lastTick = Date.now();
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "symbol") {
                 // Lunge logic
-                if (!b.pulsingRed && info.actions[id].lungeCooldown <= 0) {
-                    info.actions[id].lungeTimer = 1200;
-                    let dx = info.px - b.x;
-                    let dy = info.py - b.y;
+                if (!b.pulsingRed && bulletHellNeo.actions["chargingIcon"].lungeCooldown <= 0) {
+                    bulletHellNeo.actions["chargingIcon"].lungeTimer = 1200;
+                    let dx = bulletHellNeo.px - b.x;
+                    let dy = bulletHellNeo.py - b.y;
                     let dist = Math.hypot(dx, dy);
-                    b.vx = (dx / dist) * info.actions[id].enemySpeed;
-                    b.vy = (dy / dist) * info.actions[id].enemySpeed;
+                    b.vx = (dx / dist) * bulletHellNeo.actions["chargingIcon"].enemySpeed;
+                    b.vy = (dy / dist) * bulletHellNeo.actions["chargingIcon"].enemySpeed;
                     b.pulsingRed = true;
                 } else if (!b.pulsingRed) {
-                    info.actions[id].lungeCooldown -= dt;
+                    bulletHellNeo.actions["chargingIcon"].lungeCooldown -= dt;
                 }
                 if (b.pulsingRed) {
-                    info.actions[id].lungeTimer -= dt;
-                    if (info.actions[id].lungeTimer <= 0) {
+                    bulletHellNeo.actions["chargingIcon"].lungeTimer -= dt;
+                    if (bulletHellNeo.actions["chargingIcon"].lungeTimer <= 0) {
                         b.vx = 0;
                         b.vy = 0;
                         b.pulsingRed = false;
-                        info.actions[id].lungeCooldown = 1200 + Math.random() * 800;
+                        bulletHellNeo.actions["chargingIcon"].lungeCooldown = 1200 + Math.random() * 800;
                     }
                 }
 
@@ -1987,54 +1949,54 @@ BHB.chargingIcon = {
                 b.pulse += dt * 0.008
 
                 // Shoot burst at player
-                let shootSpeed = 1000 / (info.actions[id].shootInterval || 1.5)
-                if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-                if (ticks - info.actions[id].lastTime > shootSpeed) {
-                    let dx = info.px - b.x;
-                    let dy = info.py - b.y;
+                let shootSpeed = 1000 / (bulletHellNeo.actions["chargingIcon"].shootInterval || 1.5)
+                if (!bulletHellNeo.actions["chargingIcon"].lastTime) bulletHellNeo.actions["chargingIcon"].lastTime = Date.now();
+                if (Date.now() - bulletHellNeo.actions["chargingIcon"].lastTime > shootSpeed) {
+                    let dx = bulletHellNeo.px - b.x;
+                    let dy = bulletHellNeo.py - b.y;
                     let baseAngle = Math.atan2(dy, dx);
-                    let speed = info.actions[id].bulletSpeed || 8
-                    for (let i = 0; i < info.actions[id].burstBullets; i++) {
-                        let spread = (i - (info.actions[id].burstBullets - 1) / 2) * info.actions[id].burstViolence;
+                    let speed = bulletHellNeo.actions["chargingIcon"].bulletSpeed || 8
+                    for (let i = 0; i < bulletHellNeo.actions["chargingIcon"].burstBullets; i++) {
+                        let spread = (i - (bulletHellNeo.actions["chargingIcon"].burstBullets - 1) / 2) * bulletHellNeo.actions["chargingIcon"].burstViolence;
                         let angle = baseAngle + spread + (Math.random() - 0.5) * 0.18;
                         let vx = Math.cos(angle) * speed * (0.9 + Math.random() * 0.3);
                         let vy = Math.sin(angle) * speed * (0.9 + Math.random() * 0.3);
-                        info.bullets.push({x: b.x + info.boxLeft, y: b.y + info.boxTop, r: 12, vx, vy, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}});
+                        bulletHellNeo.bullets.push({x: b.x + bulletHellNeo.boxLeft, y: b.y + bulletHellNeo.boxTop, r: 12, vx, vy, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}});
                     }
                     // Randomize next burst
-                    info.actions[id].burstViolence = 0.25 + Math.random() * 0.5;
+                    bulletHellNeo.actions["chargingIcon"].burstViolence = 0.25 + Math.random() * 0.5;
 
-                    info.actions[id].lastTime = ticks;
+                    bulletHellNeo.actions["chargingIcon"].lastTime = Date.now();
                 }
             }
         }
-        return info
     },
 }
 
 BHB.bouncingIcon = {
     //bulletHell({"bouncingIcon": {locX: 600, locY: 250, radius: 64, fillColor: "#0091DC", strokeColor: "#094394", symbol: "⧖", enemySpeed: 6, shootInterval: 400}}, {duration: 12})
-    codeFunc(info, id) {
-        let curX = info.width / 2 + info.boxLeft
-        let curY = info.height / 2 + info.boxTop
-        if (info.actions[id].locX) curX = info.actions[id].locX
-        if (info.actions[id].locY) curY = info.actions[id].locY
+    codeFunc() {
+        let curX = bulletHellNeo.width / 2 + bulletHellNeo.boxLeft
+        let curY = bulletHellNeo.height / 2 + bulletHellNeo.boxTop
+        if (bulletHellNeo.actions["bouncingIcon"].locX) curX = bulletHellNeo.actions["bouncingIcon"].locX
+        if (bulletHellNeo.actions["bouncingIcon"].locY) curY = bulletHellNeo.actions["bouncingIcon"].locY
         // Random velocity
         let theta = Math.random() * 2 * Math.PI;
-        let vx = Math.cos(theta) * info.actions[id].enemySpeed;
-        let vy = Math.sin(theta) * info.actions[id].enemySpeed;
-        info.bullets.push({
+        let vx = Math.cos(theta) * bulletHellNeo.actions["bouncingIcon"].enemySpeed;
+        let vy = Math.sin(theta) * bulletHellNeo.actions["bouncingIcon"].enemySpeed;
+        bulletHellNeo.bullets.push({
             name: "symbol",
             boxRender: true,
-            symbol: info.actions[id].symbol,
-            fill: info.actions[id].fillColor,
-            stroke: info.actions[id].strokeColor,
+            symbol: bulletHellNeo.actions["bouncingIcon"].symbol,
+            fill: bulletHellNeo.actions["bouncingIcon"].fillColor,
+            stroke: bulletHellNeo.actions["bouncingIcon"].strokeColor,
             x: curX,
             y: curY,
-            r: info.actions[id].radius,
+            r: bulletHellNeo.actions["bouncingIcon"].radius,
             vx: vx,
             vy: vy,
-            shootInterval: info.actions[id].shootInterval,
+            bouncy: true,
+            shootInterval: bulletHellNeo.actions["bouncingIcon"].shootInterval,
             lastShotTime: 0,
             draw(b, bossCtx) {
                 // Draw big symbol (⊘)
@@ -2056,42 +2018,33 @@ BHB.bouncingIcon = {
                 bossCtx.restore();
             },
         })
-
-        return info
     },
-    moveFunc(info, ticks, id) {
-        for (let b of info.bullets) {
+    moveFunc() {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "symbol") {
-                // Bounce off walls
-                if (b.x < b.r) {b.x = b.r; b.vx *= -1}
-                if (b.x > info.width - b.r) {b.x = info.width - b.r; b.vx *= -1}
-                if (b.y < b.r) {b.y = b.r; b.vy *= -1}
-                if (b.y > info.height - b.r) {b.y = info.height - b.r; b.vy *= -1}
-
                 // Shoot at player
-                if (!b.lastShotTime) b.lastShotTime = ticks;
-                if (ticks - b.lastShotTime > b.shootInterval) {
-                    info.shootAtPlayer(b.x + info.boxLeft, b.y + info.boxTop, id);
-                    b.lastShotTime = ticks;
+                if (!b.lastShotTime) b.lastShotTime = Date.now();
+                if (Date.now() - b.lastShotTime > b.shootInterval) {
+                    bulletHellNeo.shootAtPlayer(b.x + bulletHellNeo.boxLeft, b.y + bulletHellNeo.boxTop, "bouncingIcon");
+                    b.lastShotTime = Date.now();
                 }
             }
         }
-        return info
     },
 }
 
 BHB.chargingBee = {
     //bulletHell({"chargingBee": {beeAmount: 5, radius: 20, enemySpeed: 5, lastTick: false}}, {width: 300, height: 300, duration: 10})
-    codeFunc(info, id) {
-        for (let i = 0; i < info.actions[id].beeAmount; i++) {
-            info.bullets.push({
+    codeFunc() {
+        for (let i = 0; i < bulletHellNeo.actions["chargingBee"].beeAmount; i++) {
+            bulletHellNeo.bullets.push({
                 name: "chargeBee",
                 boxRender: true,
                 offScreen: true, // Bullets can be off screen
                 angle: 0,
-                x: Math.random() * info.width,
+                x: Math.random() * bulletHellNeo.width,
                 y: -50,
-                r: info.actions[id].radius,
+                r: bulletHellNeo.actions["chargingBee"].radius,
                 vx: 0,
                 vy: 0,
                 pulsingRed: false,
@@ -2101,7 +2054,7 @@ BHB.chargingBee = {
                     bossCtx.translate(b.x, b.y);
                     bossCtx.rotate(b.angle);
                     bossCtx.strokeStyle = "#000";
-                    bossCtx.lineWidth = info.actions[id].radius/10;
+                    bossCtx.lineWidth = b.r/10;
                     if (!options.performanceMode) bossCtx.shadowColor = b.pulsingRed ? '#e22' : "#fff";
                     if (!options.performanceMode) bossCtx.shadowBlur = 2;
                     // Wings
@@ -2166,22 +2119,20 @@ BHB.chargingBee = {
                 },
             })
         }
-
-        return info
     },
-    moveFunc(info, ticks, id) {
-        let dt = ticks - (info.actions[id].lastTick || ticks);
-        info.actions[id].lastTick = ticks;
-        for (let b of info.bullets) {
+    moveFunc() {
+        let dt = Date.now() - (bulletHellNeo.actions["chargingBee"].lastTick || Date.now());
+        bulletHellNeo.actions["chargingBee"].lastTick = Date.now();
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "chargeBee") {
                 // Lunge logic
                 if (!b.pulsingRed && b.lungeCooldown <= 0) {
                     b.lungeTimer = 750;
-                    let dx = info.px - b.x - 50 + (Math.random()*100);
-                    let dy = info.py - b.y - 50 + (Math.random()*100);
+                    let dx = bulletHellNeo.px - b.x - 50 + (Math.random()*100);
+                    let dy = bulletHellNeo.py - b.y - 50 + (Math.random()*100);
                     let dist = Math.hypot(dx, dy);
-                    b.vx = (dx / dist) * info.actions[id].enemySpeed;
-                    b.vy = (dy / dist) * info.actions[id].enemySpeed;
+                    b.vx = (dx / dist) * bulletHellNeo.actions["chargingBee"].enemySpeed;
+                    b.vy = (dy / dist) * bulletHellNeo.actions["chargingBee"].enemySpeed;
                     b.angle = Math.atan2(dy, dx) + Math.PI/2
                     b.pulsingRed = true;
                 } else if (!b.pulsingRed) {
@@ -2198,56 +2149,55 @@ BHB.chargingBee = {
                 }
             }
         }
-        return info
     },
 }
 
 BHB.shootBee = {
     //bulletHell({"shootBee": {beesPerSec: 2, radius: 20, enemySpeed: 5}}, {width: 400, height: 400, duration: 10})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Spawn knives
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const beesToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].beesPerSec);
+        if (!bulletHellNeo.actions["shootBee"].lastTime) bulletHellNeo.actions["shootBee"].lastTime = Date.now();
+        const beesToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions["shootBee"].lastTime) / 1000) * bulletHellNeo.actions["shootBee"].beesPerSec);
         for (let i = 0; i < beesToSpawn; i++) {
             // Pick a random edge and a random point on that edge
             const edge = Math.floor(Math.random() * 4); // 0=top, 1=right, 2=bottom, 3=left
             let bx, by, angle;
             if (edge === 0) { // top
-                bx = Math.random() * info.width;
-                by = -info.actions[id].radius;
+                bx = Math.random() * bulletHellNeo.width;
+                by = -bulletHellNeo.actions["shootBee"].radius;
             } else if (edge === 1) { // right
-                bx = info.width + info.actions[id].radius;
-                by = Math.random() * info.height;
+                bx = bulletHellNeo.width + bulletHellNeo.actions["shootBee"].radius;
+                by = Math.random() * bulletHellNeo.height;
             } else if (edge === 2) { // bottom
-                bx = Math.random() * info.width;
-                by = info.height + info.actions[id].radius;
+                bx = Math.random() * bulletHellNeo.width;
+                by = bulletHellNeo.height + bulletHellNeo.actions["shootBee"].radius;
             } else { // left
-                bx = -info.actions[id].radius;
-                by = Math.random() * info.height;
+                bx = -bulletHellNeo.actions["shootBee"].radius;
+                by = Math.random() * bulletHellNeo.height;
             }
             // Angle toward player
-            let dx = info.px - bx;
-            let dy = info.py - by;
-            if (info.subArena && info.moveWithSub) {
-                dx += info.subx
-                dy += info.suby
+            let dx = bulletHellNeo.px - bx;
+            let dy = bulletHellNeo.py - by;
+            if (bulletHellNeo.subArena && options.bhKeyboard) {
+                dx += bulletHellNeo.subx
+                dy += bulletHellNeo.suby
             }
             angle = Math.atan2(dy, dx);
             // Store initial spawn for path line
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "Bee",
                 boxRender: true, // RENDER IN BOX
                 x: bx,
                 y: by,
                 angle: angle + Math.PI/2,
-                r: info.actions[id].radius,
-                vx: Math.cos(angle) * info.actions[id].enemySpeed,
-                vy: Math.sin(angle) * info.actions[id].enemySpeed,
+                r: bulletHellNeo.actions["shootBee"].radius,
+                vx: Math.cos(angle) * bulletHellNeo.actions["shootBee"].enemySpeed,
+                vy: Math.sin(angle) * bulletHellNeo.actions["shootBee"].enemySpeed,
                 draw(b, bossCtx) {
                     bossCtx.translate(b.x, b.y);
                     bossCtx.rotate(b.angle);
                     bossCtx.strokeStyle = "#000";
-                    bossCtx.lineWidth = info.actions[id].radius/10;
+                    bossCtx.lineWidth = b.r/10;
                     if (!options.performanceMode) bossCtx.shadowColor = "#fff";
                     if (!options.performanceMode) bossCtx.shadowBlur = 2;
                     // Wings
@@ -2312,33 +2262,32 @@ BHB.shootBee = {
                 }
             })
         }
-        if (beesToSpawn > 0) info.actions[id].lastTime = ticks;
-
-        return info
+        if (beesToSpawn > 0) bulletHellNeo.actions["shootBee"].lastTime = Date.now();
     },
 }
 
 BHB.bouncingBees = {
     //bulletHell({"bouncingBees": {beeAmount: 10, radius: 20, enemySpeed: 3, chargeMult: 1.5, lastTick: false}}, {duration: 10})
-    codeFunc(info, id) {
-        for (let i = 0; i < info.actions[id].beeAmount; i++) {
+    codeFunc() {
+        for (let i = 0; i < bulletHellNeo.actions["bouncingBees"].beeAmount; i++) {
             // Random position, not too close to player
             let angle = Math.random() * 2 * Math.PI;
-            let dist = Math.random() * (info.width / 2 - info.actions[id].radius - info.pr) + info.actions[id].radius + info.pr + 10;
-            let bx = info.width / 2 + Math.cos(angle) * dist + info.boxLeft;
-            let by = info.height / 2 + Math.sin(angle) * dist + info.boxTop;
+            let dist = Math.random() * (bulletHellNeo.width / 2 - bulletHellNeo.actions["bouncingBees"].radius - bulletHellNeo.pr) + bulletHellNeo.actions["bouncingBees"].radius + bulletHellNeo.pr + 10;
+            let bx = bulletHellNeo.width / 2 + Math.cos(angle) * dist + bulletHellNeo.boxLeft;
+            let by = bulletHellNeo.height / 2 + Math.sin(angle) * dist + bulletHellNeo.boxTop;
             // Random velocity
             let theta = Math.random() * 2 * Math.PI;
-            let vx = Math.cos(theta) * info.actions[id].enemySpeed;
-            let vy = Math.sin(theta) * info.actions[id].enemySpeed;
-            info.bullets.push({
+            let vx = Math.cos(theta) * bulletHellNeo.actions["bouncingBees"].enemySpeed;
+            let vy = Math.sin(theta) * bulletHellNeo.actions["bouncingBees"].enemySpeed;
+            bulletHellNeo.bullets.push({
                 name: "bounceBee",
                 x: bx,
                 y: by,
                 vx: vx,
                 vy: vy,
                 angle: theta,
-                r: info.actions[id].radius,
+                r: bulletHellNeo.actions["bouncingBees"].radius,
+                bouncy: true,
                 pulsingRed: false,
                 lungeTimer: 0,
                 lungeCooldown: 1000,
@@ -2346,7 +2295,7 @@ BHB.bouncingBees = {
                     bossCtx.translate(b.x, b.y);
                     bossCtx.rotate(b.angle + Math.PI/2);
                     bossCtx.strokeStyle = "#000";
-                    bossCtx.lineWidth = info.actions[id].radius/10;
+                    bossCtx.lineWidth = b.r/10;
                     if (!options.performanceMode) bossCtx.shadowColor = b.pulsingRed ? '#e22' : "#fff";
                     if (!options.performanceMode) bossCtx.shadowBlur = 2;
                     // Wings
@@ -2411,25 +2360,17 @@ BHB.bouncingBees = {
                 },
             });
         }
-
-        return info
     },
-    moveFunc(info, ticks, id) {
-        let dt = ticks - (info.actions[id].lastTick || ticks);
-        info.actions[id].lastTick = ticks;
-        for (let b of info.bullets) {
+    moveFunc() {
+        let dt = Date.now() - (bulletHellNeo.actions["bouncingBees"].lastTick || Date.now());
+        bulletHellNeo.actions["bouncingBees"].lastTick = Date.now();
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "bounceBee") {
-                // Bounce off walls
-                if (b.x < b.r + info.boxLeft) {b.x = b.r + info.boxLeft; b.vx *= -1; b.angle = Math.PI-b.angle}
-                if (b.x > info.width - b.r + info.boxLeft) {b.x = info.width - b.r + info.boxLeft; b.vx *= -1; b.angle = Math.PI-b.angle}
-                if (b.y < b.r + info.boxTop) {b.y = b.r + info.boxTop; b.vy *= -1; b.angle = -b.angle}
-                if (b.y > info.height - b.r + info.boxTop) {b.y = info.height - b.r + info.boxTop; b.vy *= -1; b.angle = -b.angle}
-
                 // Lunge logic
                 if (!b.pulsingRed && b.lungeCooldown <= 0) {
                     b.lungeTimer = 1000;
-                    b.vx = b.vx * info.actions[id].chargeMult;
-                    b.vy = b.vy * info.actions[id].chargeMult;
+                    b.vx = b.vx * bulletHellNeo.actions["bouncingBees"].chargeMult;
+                    b.vy = b.vy * bulletHellNeo.actions["bouncingBees"].chargeMult;
                     b.pulsingRed = true;
                 } else if (!b.pulsingRed) {
                     b.lungeCooldown -= dt;
@@ -2437,50 +2378,48 @@ BHB.bouncingBees = {
                 if (b.pulsingRed) {
                     b.lungeTimer -= dt;
                     if (b.lungeTimer <= 0) {
-                        b.vx = b.vx / info.actions[id].chargeMult;
-                        b.vy = b.vy / info.actions[id].chargeMult;
+                        b.vx = b.vx / bulletHellNeo.actions["bouncingBees"].chargeMult;
+                        b.vy = b.vy / bulletHellNeo.actions["bouncingBees"].chargeMult;
                         b.pulsingRed = false;
                         b.lungeCooldown = 1200 + (Math.random() * 800);
                     }
                 }
             }
         }
-
-        return info
     }
 }
 
 BHB.waveBees = {
     //bulletHell({"waveBees": {beeRate: 5, radius: 20, gapStart: 0, gap: 200, enemySpeed: 6, waveSpeed: 4}}, {duration: 10})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Spawn bees
-        let speedMod = 1.3 - (Math.abs(info.actions[id].gapStart - ((info.height-info.actions[id].gap)/2))/((info.height-info.actions[id].gap)/2))
-        info.actions[id].gapStart = info.actions[id].gapStart + (info.actions[id].waveSpeed*speedMod)
-        if (info.actions[id].gapStart > info.height-info.actions[id].gap) {
-            info.actions[id].gapStart = info.height-info.actions[id].gap
-            info.actions[id].waveSpeed = info.actions[id].waveSpeed * -1
+        let speedMod = 1.3 - (Math.abs(bulletHellNeo.actions["waveBees"].gapStart - ((bulletHellNeo.height-bulletHellNeo.actions["waveBees"].gap)/2))/((bulletHellNeo.height-bulletHellNeo.actions["waveBees"].gap)/2))
+        bulletHellNeo.actions["waveBees"].gapStart = bulletHellNeo.actions["waveBees"].gapStart + (bulletHellNeo.actions["waveBees"].waveSpeed*speedMod)
+        if (bulletHellNeo.actions["waveBees"].gapStart > bulletHellNeo.height-bulletHellNeo.actions["waveBees"].gap) {
+            bulletHellNeo.actions["waveBees"].gapStart = bulletHellNeo.height-bulletHellNeo.actions["waveBees"].gap
+            bulletHellNeo.actions["waveBees"].waveSpeed = bulletHellNeo.actions["waveBees"].waveSpeed * -1
         }
-        if (info.actions[id].gapStart < 0) {
-            info.actions[id].gapStart = 0
-            info.actions[id].waveSpeed = info.actions[id].waveSpeed * -1
+        if (bulletHellNeo.actions["waveBees"].gapStart < 0) {
+            bulletHellNeo.actions["waveBees"].gapStart = 0
+            bulletHellNeo.actions["waveBees"].waveSpeed = bulletHellNeo.actions["waveBees"].waveSpeed * -1
         }
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const beesToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].beeRate)*2;
+        if (!bulletHellNeo.actions["waveBees"].lastTime) bulletHellNeo.actions["waveBees"].lastTime = Date.now();
+        const beesToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions["waveBees"].lastTime) / 1000) * bulletHellNeo.actions["waveBees"].beeRate)*2;
         for (let i = 0; i < beesToSpawn; i++) {
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "Bee",
                 boxRender: true, // RENDER IN BOX
-                x: -info.actions[id].radius,
-                y: i%2 ? info.actions[id].gapStart+info.actions[id].gap : info.actions[id].gapStart,
+                x: -bulletHellNeo.actions["waveBees"].radius,
+                y: i%2 ? bulletHellNeo.actions["waveBees"].gapStart+bulletHellNeo.actions["waveBees"].gap : bulletHellNeo.actions["waveBees"].gapStart,
                 angle: Math.PI/2,
-                r: info.actions[id].radius,
-                vx: info.actions[id].enemySpeed,
+                r: bulletHellNeo.actions["waveBees"].radius,
+                vx: bulletHellNeo.actions["waveBees"].enemySpeed,
                 vy: 0,
                 draw(b, bossCtx) {
                     bossCtx.translate(b.x, b.y);
                     bossCtx.rotate(b.angle);
                     bossCtx.strokeStyle = "#000";
-                    bossCtx.lineWidth = info.actions[id].radius/10;
+                    bossCtx.lineWidth = b.r/10;
                     if (!options.performanceMode) bossCtx.shadowColor = "#fff";
                     if (!options.performanceMode) bossCtx.shadowBlur = 2;
                     // Wings
@@ -2545,33 +2484,264 @@ BHB.waveBees = {
                 }
             })
         }
-        if (beesToSpawn > 0) info.actions[id].lastTime = ticks;
-
-        return info
+        if (beesToSpawn > 0) bulletHellNeo.actions["waveBees"].lastTime = Date.now();
     }
 }
 
 // A wave of bees on the top and bottom of the screen, requiring you to move up and down
+
+BHB.firingBees = {
+    codeFunc() {
+        for (let i = 0; i < bulletHellNeo.actions["firingBees"].beeAmount; i++) {
+            let angleOffset = (2 * Math.PI * i) / bulletHellNeo.actions["firingBees"].beeAmount;
+            // Position
+            let bx = bulletHellNeo.boxLeft + bulletHellNeo.px + 200 * Math.cos(angleOffset)
+            let by = bulletHellNeo.boxTop + bulletHellNeo.py + 200 * Math.sin(angleOffset)
+
+            // Angle toward player
+            let dx = bulletHellNeo.boxLeft + bulletHellNeo.px - bx;
+            let dy = bulletHellNeo.boxTop + bulletHellNeo.py - by;
+            if (bulletHellNeo.subArena && options.bhKeyboard) {
+                dx += bulletHellNeo.subx
+                dy += bulletHellNeo.suby
+            }
+            bulletHellNeo.bullets.push({
+                name: "firingBee",
+                x: bx,
+                y: by,
+                vx: 0,
+                vy: 0,
+                angle: Math.atan2(dy, dx) + Math.PI/2,
+                r: bulletHellNeo.actions["firingBees"].radius,
+                orbitRadius: 200,
+                orbitAngle: angleOffset,
+                orbitSpeed: 0.015 + 0.003 * i, // slightly different speeds
+                shootInterval: (500 + Math.floor(Math.random() * 600) + i * 150) / (bulletHellNeo.actions["firingBees"].intervalDiv || 1), // each bee has a different interval
+                lastShotTime: 0,
+                draw(b, bossCtx) {
+                    bossCtx.translate(b.x, b.y);
+                    bossCtx.rotate(b.angle);
+                    bossCtx.strokeStyle = "#000";
+                    bossCtx.lineWidth = b.r/10;
+                    if (!options.performanceMode) bossCtx.shadowColor = "#fff";
+                    if (!options.performanceMode) bossCtx.shadowBlur = 2;
+                    // Wings
+                    bossCtx.beginPath()
+                    bossCtx.arcTo(0, 0, -b.r/2, b.r/2, b.r/4)
+                    bossCtx.arcTo(-b.r/2, b.r/2, -b.r, 0, b.r/4)
+                    bossCtx.arcTo(-b.r, 0, -b.r/2, -b.r/2, b.r/4)
+                    bossCtx.arcTo(-b.r/2, -b.r/2, 0, 0, b.r/4)
+                    bossCtx.arcTo(0, 0, b.r/2, b.r/2, b.r/4)
+                    bossCtx.arcTo(b.r/2, b.r/2, b.r, 0, b.r/4)
+                    bossCtx.arcTo(b.r, 0, b.r/2, -b.r/2, b.r/4)
+                    bossCtx.arcTo(b.r/2, -b.r/2, 0, 0, b.r/4)
+                    bossCtx.closePath()
+                    bossCtx.fillStyle = "#aaf";
+                    bossCtx.fill();
+                    bossCtx.stroke()
+                    // Butt
+                    bossCtx.beginPath()
+                    bossCtx.arcTo(0, 0, b.r/4, b.r/4, b.r/4)
+                    bossCtx.arcTo(b.r/4, b.r/4, b.r/2, (b.r*3)/4, b.r/4)
+                    bossCtx.arcTo(b.r/2, (b.r*3)/4, 0, b.r+(b.r/2), b.r/3)
+                    bossCtx.arcTo(0, b.r+(b.r/2), -b.r/2, (b.r*3)/4, b.r/3)
+                    bossCtx.arcTo(-b.r/2, (b.r*3)/4, -b.r/4, b.r/4, b.r/3)
+                    bossCtx.arcTo(-b.r/4, b.r/4, 0, 0, b.r/4)
+                    bossCtx.closePath()
+                    bossCtx.fillStyle = "#97804c";
+                    bossCtx.fill();
+                    bossCtx.stroke()
+                    // Stripes
+                    bossCtx.beginPath()
+                    bossCtx.moveTo(b.r/4, b.r/4)
+                    bossCtx.quadraticCurveTo(b.r/4, b.r/2, 0, b.r/2)
+                    bossCtx.moveTo(-b.r/4, b.r/4)
+                    bossCtx.quadraticCurveTo(-b.r/4, b.r/2, 0, b.r/2)
+                    bossCtx.moveTo(b.r/2-1, (b.r*3)/4)
+                    bossCtx.quadraticCurveTo(b.r/3-1, b.r, 0, b.r)
+                    bossCtx.moveTo(-b.r/2+1, (b.r*3)/4)
+                    bossCtx.quadraticCurveTo(-b.r/3+1, b.r, 0, b.r)
+                    bossCtx.stroke()
+
+                    // Head
+                    bossCtx.beginPath()
+                    bossCtx.arcTo(0, 0, b.r/2, -b.r/2, b.r/3)
+                    bossCtx.arcTo(b.r/2, -b.r/2, 0, -b.r, b.r/3)
+                    bossCtx.arcTo(0, -b.r, -b.r/2, -b.r/2, b.r/3)
+                    bossCtx.arcTo(-b.r/2, -b.r/2, 0, 0, b.r/3)
+                    bossCtx.closePath()
+                    bossCtx.fillStyle = "#97804c";
+                    bossCtx.fill();
+                    bossCtx.stroke()
+                    // Antenna
+                    bossCtx.beginPath()
+                    bossCtx.moveTo(-b.r/4, -(b.r*3)/4)
+                    bossCtx.quadraticCurveTo(-b.r/8, -(b.r+(b.r/4)), (-b.r*3)/8, -(b.r+(b.r/8)))
+                    bossCtx.stroke()
+                    bossCtx.beginPath()
+                    bossCtx.moveTo(b.r/4, -(b.r*3)/4)
+                    bossCtx.quadraticCurveTo(b.r/8, -(b.r+(b.r/4)), (b.r*3)/8, -(b.r+(b.r/8)))
+                    bossCtx.stroke()
+
+                    bossCtx.resetTransform()
+                },
+            });
+        }
+    },
+    moveFunc() {
+        // Update each bee's orbit and position, and handle shooting
+        for (let b of bulletHellNeo.bullets) {
+            if (b.name && b.name == "firingBee") {
+                b.orbitAngle += b.orbitSpeed;
+                const playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.px;
+                const playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.py;
+                const targetBx = playerGlobalX + b.orbitRadius * Math.cos(b.orbitAngle);
+                const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
+                // Smoothly move boss towards target position (lerp)
+                const lerpFactor = 0.05;
+                b.x += (targetBx - b.x) * lerpFactor * 60 * bulletHellNeo.delta;
+                b.y += (targetBy - b.y) * lerpFactor * 60 * bulletHellNeo.delta;
+
+                // Each bee shoots at its own interval
+                const speed = bulletHellNeo.actions["firingBees"].enemySpeed ?? 5
+                if (!b.lastShotTime) b.lastShotTime = Date.now();
+                if (Date.now() - b.lastShotTime > b.shootInterval) {
+                    bulletHellNeo.shootAtPlayer(b.x, b.y, "firingBees", speed, "spike");
+                    b.lastShotTime = Date.now();
+                }
+
+                // Angle toward player
+                let dx = bulletHellNeo.boxLeft + bulletHellNeo.px - b.x;
+                let dy = bulletHellNeo.boxTop + bulletHellNeo.py - b.y;
+                if (bulletHellNeo.subArena && options.bhKeyboard) {
+                    dx += bulletHellNeo.subx
+                    dy += bulletHellNeo.suby
+                }
+                b.angle = (Math.atan2(dy, dx) + Math.PI/2)
+            }
+        }
+    },
+}
+
+BHB.singularBee = {
+    codeFunc() {
+        bulletHellNeo.bullets.push({
+            name: "singularBee",
+            boxRender: true,
+            offScreen: true, // Bullets can be off screen
+            angle: Math.PI/2,
+            x: -bulletHellNeo.actions["singularBee"].radius,
+            y: bulletHellNeo.height / 2,
+            r: bulletHellNeo.actions["singularBee"].radius,
+            vx: bulletHellNeo.actions["singularBee"].enemySpeed,
+            vy: 0,
+            shooting: bulletHellNeo.actions["singularBee"].shooting || false,
+            lastShotTime: 0,
+            draw(b, bossCtx) {
+                bossCtx.translate(b.x, b.y);
+                bossCtx.rotate(b.angle);
+                bossCtx.strokeStyle = "#000";
+                bossCtx.lineWidth = b.r/10;
+                if (!options.performanceMode) bossCtx.shadowColor = "#fff";
+                if (!options.performanceMode) bossCtx.shadowBlur = 2;
+                // Wings
+                bossCtx.beginPath()
+                bossCtx.arcTo(0, 0, -b.r/2, b.r/2, b.r/4)
+                bossCtx.arcTo(-b.r/2, b.r/2, -b.r, 0, b.r/4)
+                bossCtx.arcTo(-b.r, 0, -b.r/2, -b.r/2, b.r/4)
+                bossCtx.arcTo(-b.r/2, -b.r/2, 0, 0, b.r/4)
+                bossCtx.arcTo(0, 0, b.r/2, b.r/2, b.r/4)
+                bossCtx.arcTo(b.r/2, b.r/2, b.r, 0, b.r/4)
+                bossCtx.arcTo(b.r, 0, b.r/2, -b.r/2, b.r/4)
+                bossCtx.arcTo(b.r/2, -b.r/2, 0, 0, b.r/4)
+                bossCtx.closePath()
+                bossCtx.fillStyle = "#aaf";
+                bossCtx.fill();
+                bossCtx.stroke()
+                // Butt
+                bossCtx.beginPath()
+                bossCtx.arcTo(0, 0, b.r/4, b.r/4, b.r/4)
+                bossCtx.arcTo(b.r/4, b.r/4, b.r/2, (b.r*3)/4, b.r/4)
+                bossCtx.arcTo(b.r/2, (b.r*3)/4, 0, b.r+(b.r/2), b.r/3)
+                bossCtx.arcTo(0, b.r+(b.r/2), -b.r/2, (b.r*3)/4, b.r/3)
+                bossCtx.arcTo(-b.r/2, (b.r*3)/4, -b.r/4, b.r/4, b.r/3)
+                bossCtx.arcTo(-b.r/4, b.r/4, 0, 0, b.r/4)
+                bossCtx.closePath()
+                bossCtx.fillStyle = "#E9AB17";
+                bossCtx.fill();
+                bossCtx.stroke()
+                // Stripes
+                bossCtx.beginPath()
+                bossCtx.moveTo(b.r/4, b.r/4)
+                bossCtx.quadraticCurveTo(b.r/4, b.r/2, 0, b.r/2)
+                bossCtx.moveTo(-b.r/4, b.r/4)
+                bossCtx.quadraticCurveTo(-b.r/4, b.r/2, 0, b.r/2)
+                bossCtx.moveTo(b.r/2-1, (b.r*3)/4)
+                bossCtx.quadraticCurveTo(b.r/3-1, b.r, 0, b.r)
+                bossCtx.moveTo(-b.r/2+1, (b.r*3)/4)
+                bossCtx.quadraticCurveTo(-b.r/3+1, b.r, 0, b.r)
+                bossCtx.stroke()
+
+                // Head
+                bossCtx.beginPath()
+                bossCtx.arcTo(0, 0, b.r/2, -b.r/2, b.r/3)
+                bossCtx.arcTo(b.r/2, -b.r/2, 0, -b.r, b.r/3)
+                bossCtx.arcTo(0, -b.r, -b.r/2, -b.r/2, b.r/3)
+                bossCtx.arcTo(-b.r/2, -b.r/2, 0, 0, b.r/3)
+                bossCtx.closePath()
+                bossCtx.fillStyle = "#E9AB17";
+                bossCtx.fill();
+                bossCtx.stroke()
+                // Antenna
+                bossCtx.beginPath()
+                bossCtx.moveTo(-b.r/4, -(b.r*3)/4)
+                bossCtx.quadraticCurveTo(-b.r/8, -(b.r+(b.r/4)), (-b.r*3)/8, -(b.r+(b.r/8)))
+                bossCtx.stroke()
+                bossCtx.beginPath()
+                bossCtx.moveTo(b.r/4, -(b.r*3)/4)
+                bossCtx.quadraticCurveTo(b.r/8, -(b.r+(b.r/4)), (b.r*3)/8, -(b.r+(b.r/8)))
+                bossCtx.stroke()
+
+                bossCtx.resetTransform()
+            },
+        })
+    },
+    moveFunc() {
+        // Update each bee's orbit and position, and handle shooting
+        for (let b of bulletHellNeo.bullets) {
+            if (b.name && b.name == "singularBee" && b.shooting) {
+                // Bee shoots on an interval
+                const speed = bulletHellNeo.actions["singularBee"].bulletSpeed ?? 5
+                const interval = bulletHellNeo.actions["singularBee"].interval ?? 1000
+                if (!b.lastShotTime) b.lastShotTime = Date.now();
+                if (Date.now() - b.lastShotTime > 1000) {
+                    bulletHellNeo.shootAtPlayer(b.x + bulletHellNeo.boxLeft + (b.r*0.9), b.y + bulletHellNeo.boxTop, "singularBee", speed, "spike");
+                    b.lastShotTime = Date.now();
+                }
+            }
+        }
+    },
+}
 
 
 //ZAR
 
 BHB.diceAttack = {
     //bulletHell({"diceAttack": {diceAmount: 2, intervalDiv: 1}}, {duration: 10})
-    codeFunc(info, id) {
-        for (let i = 0; i < info.actions[id].diceAmount; i++) {
-            let angleOffset = (2 * Math.PI * i) / info.actions[id].diceAmount;
-            info.bullets.push({
+    codeFunc() {
+        for (let i = 0; i < bulletHellNeo.actions["diceAttack"].diceAmount; i++) {
+            let angleOffset = (2 * Math.PI * i) / bulletHellNeo.actions["diceAttack"].diceAmount;
+            bulletHellNeo.bullets.push({
                 name: "dice",
-                x: info.boxLeft + info.px + 200 * Math.cos(angleOffset),
-                y: info.boxTop + info.py + 200 * Math.sin(angleOffset),
+                x: bulletHellNeo.boxLeft + bulletHellNeo.px + 200 * Math.cos(angleOffset),
+                y: bulletHellNeo.boxTop + bulletHellNeo.py + 200 * Math.sin(angleOffset),
                 vx: 0,
                 vy: 0,
                 r: 20,
                 orbitRadius: 200,
                 orbitAngle: angleOffset,
                 orbitSpeed: 0.005, // same speed
-                shootInterval: (500 + Math.floor(Math.random() * 600) + i * 150) / (info.actions[id].intervalDiv || 1), // each dice has a different interval
+                shootInterval: (500 + Math.floor(Math.random() * 600) + i * 150) / (bulletHellNeo.actions["diceAttack"].intervalDiv || 1), // each dice has a different interval
                 lastShotTime: 0,
                 draw(b, bossCtx) {
                     const size = b.r * 2;
@@ -2609,15 +2779,14 @@ BHB.diceAttack = {
                 }
             });
         }
-        return info
     },
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Update each dice's orbit and position, and handle shooting
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "dice") {
                 b.orbitAngle += b.orbitSpeed;
-                const playerGlobalX = info.boxLeft + info.px;
-                const playerGlobalY = info.boxTop + info.py;
+                const playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.px;
+                const playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.py;
                 const targetBx = playerGlobalX + b.orbitRadius * Math.cos(b.orbitAngle);
                 const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
                 // Smoothly move boss towards target position (lerp)
@@ -2626,38 +2795,38 @@ BHB.diceAttack = {
                 b.y += (targetBy - b.y) * lerpFactor;
 
                 // Each dice shoots at its own interval
-                if (!b.lastShotTime) b.lastShotTime = ticks;
-                if (ticks - b.lastShotTime > b.shootInterval) {
-                    info.shootAtPlayer(b.x, b.y, id, 2);
-                    b.lastShotTime = ticks;
+                if (!b.lastShotTime) b.lastShotTime = Date.now();
+                if (Date.now() - b.lastShotTime > b.shootInterval) {
+                    bulletHellNeo.shootAtPlayer(b.x, b.y, "diceAttack", 2);
+                    b.lastShotTime = Date.now();
                 }
             }
         }
-        return info
     },
 }
 BHB.bouncingDice = {
     //bulletHell({"bouncingDice": {diceCount: 6, enemySpeed: 2}}, {duration: 15})
-    codeFunc(info, id) {
+    codeFunc() {
         const br = 25;
-        for (let i = 0; i < info.actions[id].diceCount; i++) {
+        for (let i = 0; i < bulletHellNeo.actions["bouncingDice"].diceCount; i++) {
             // Random position, not too close to player
             let angle = Math.random() * 2 * Math.PI;
-            let dist = Math.random() * (info.width / 2 - br - info.pr) + br + info.pr + 10;
-            let bx = info.width / 2 + Math.cos(angle) * dist + info.boxLeft;
-            let by = info.height / 2 + Math.sin(angle) * dist + info.boxTop;
+            let dist = Math.random() * (bulletHellNeo.width / 2 - br - bulletHellNeo.pr) + br + bulletHellNeo.pr + 10;
+            let bx = bulletHellNeo.width / 2 + Math.cos(angle) * dist + bulletHellNeo.boxLeft;
+            let by = bulletHellNeo.height / 2 + Math.sin(angle) * dist + bulletHellNeo.boxTop;
             // Random velocity
             let theta = Math.random() * 2 * Math.PI;
-            let vx = Math.cos(theta) * info.actions[id].enemySpeed;
-            let vy = Math.sin(theta) * info.actions[id].enemySpeed;
-            info.bullets.push({
+            let vx = Math.cos(theta) * bulletHellNeo.actions["bouncingDice"].enemySpeed;
+            let vy = Math.sin(theta) * bulletHellNeo.actions["bouncingDice"].enemySpeed;
+            bulletHellNeo.bullets.push({
                 name: "dice",
                 x: bx,
                 y: by,
                 vx: vx,
                 vy: vy,
                 r: br,
-                shootInterval: (500 + Math.floor(Math.random() * 600) + i * 100) / (info.actions[id].intervalDiv || 1), // each dice has a different interval
+                bouncy: true,
+                shootInterval: (500 + Math.floor(Math.random() * 600) + i * 100) / (bulletHellNeo.actions["bouncingDice"].intervalDiv || 1), // each dice has a different interval
                 lastShotTime: 0,
                 draw(b, bossCtx) {
                     const size = b.r * 2;
@@ -2695,47 +2864,36 @@ BHB.bouncingDice = {
                 }
             });
         }
-
-        return info
     },
-    moveFunc(info, ticks, id) {
-        for (let b of info.bullets) {
-            if (b.name && b.name == "dice") {
-                // Bounce off walls
-                if (b.x < b.r + info.boxLeft) {b.x = b.r + info.boxLeft; b.vx *= -1}
-                if (b.x > info.width - b.r + info.boxLeft) {b.x = info.width - b.r + info.boxLeft; b.vx *= -1}
-                if (b.y < b.r + info.boxTop) {b.y = b.r + info.boxTop; b.vy *= -1}
-                if (b.y > info.height - b.r + info.boxTop) {b.y = info.height - b.r + info.boxTop; b.vy *= -1}
-            }
-                // Each dice shoots at its own interval
-            if (!b.lastShotTime) b.lastShotTime = ticks;
-            if (ticks - b.lastShotTime > b.shootInterval) {
-                info.shootAtPlayer(b.x, b.y, id, 3);
-                b.lastShotTime = ticks;
+    moveFunc() {
+        for (let b of bulletHellNeo.bullets) {
+            // Each dice shoots at its own interval
+            if (!b.lastShotTime) b.lastShotTime = Date.now();
+            if (Date.now() - b.lastShotTime > b.shootInterval) {
+                bulletHellNeo.shootAtPlayer(b.x, b.y, "bouncingDice", 3);
+                b.lastShotTime = Date.now();
             }
         }
-
-        return info
     }
 }
 
 
 BHB.diceAttackNoOrbit = {
     //bulletHell({"diceAttackNoOrbit": {diceAmount: 3, intervalDiv: 0.75}}, {duration: 10})
-    codeFunc(info, id) {
-        for (let i = 0; i < info.actions[id].diceAmount; i++) {
-            let angleOffset = (2 * Math.PI * i) / info.actions[id].diceAmount;
-            info.bullets.push({
+    codeFunc() {
+        for (let i = 0; i < bulletHellNeo.actions["diceAttackNoOrbit"].diceAmount; i++) {
+            let angleOffset = (2 * Math.PI * i) / bulletHellNeo.actions["diceAttackNoOrbit"].diceAmount;
+            bulletHellNeo.bullets.push({
                 name: "dice",
-                x: info.boxLeft + info.px + 200 * Math.cos(angleOffset),
-                y: info.boxTop + info.py + 200 * Math.sin(angleOffset),
+                x: bulletHellNeo.boxLeft + bulletHellNeo.px + 200 * Math.cos(angleOffset),
+                y: bulletHellNeo.boxTop + bulletHellNeo.py + 200 * Math.sin(angleOffset),
                 vx: 0,
                 vy: 0,
                 r: 20,
                 orbitRadius: 200,
                 orbitAngle: angleOffset,
                 orbitSpeed: 0, // same speed
-                shootInterval: (500 + Math.floor(Math.random() * 600) + i * 150) / (info.actions[id].intervalDiv || 1), // each dice has a different interval
+                shootInterval: (500 + Math.floor(Math.random() * 600) + i * 150) / (bulletHellNeo.actions["diceAttackNoOrbit"].intervalDiv || 1), // each dice has a different interval
                 lastShotTime: 0,
                 draw(b, bossCtx) {
                     const size = b.r * 2;
@@ -2773,15 +2931,14 @@ BHB.diceAttackNoOrbit = {
                 }
             });
         }
-        return info
     },
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Update each dice's orbit and position, and handle shooting
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "dice") {
                 b.orbitAngle += b.orbitSpeed;
-                const playerGlobalX = info.boxLeft + info.px;
-                const playerGlobalY = info.boxTop + info.py;
+                const playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.px;
+                const playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.py;
                 const targetBx = playerGlobalX + b.orbitRadius * Math.cos(b.orbitAngle);
                 const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
                 // Smoothly move boss towards target position (lerp)
@@ -2790,88 +2947,84 @@ BHB.diceAttackNoOrbit = {
                 b.y += (targetBy - b.y) * lerpFactor;
 
                 // Each dice shoots at its own interval
-                if (!b.lastShotTime) b.lastShotTime = ticks;
-                if (ticks - b.lastShotTime > b.shootInterval) {
-                    info.shootAtPlayer(b.x, b.y, id, 4);
-                    b.lastShotTime = ticks;
+                if (!b.lastShotTime) b.lastShotTime = Date.now();
+                if (Date.now() - b.lastShotTime > b.shootInterval) {
+                    bulletHellNeo.shootAtPlayer(b.x, b.y, "diceAttackNoOrbit", 4);
+                    b.lastShotTime = Date.now();
                 }
             }
         }
-        return info
     },
 }
 BHB.pipRain = {
     //bulletHell({"pipRain": {bulletPerSec: 7}}, {duration: 12})
-    moveFunc(info, ticks, id) {
+    moveFunc(id = "pipRain") {
         // Rain Bullets
-        const bulletRadius = info.actions[id].bulletRadius ?? 12;
-        const bulletSpeed = info.actions[id].bulletSpeed ?? 4;
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const bulletsToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
+        const bulletRadius = bulletHellNeo.actions[id].bulletRadius ?? 12;
+        const bulletSpeed = bulletHellNeo.actions[id].bulletSpeed ?? 4;
+        if (!bulletHellNeo.actions[id].lastTime) bulletHellNeo.actions[id].lastTime = Date.now();
+        const bulletsToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions[id].lastTime) / 1000) * bulletHellNeo.actions[id].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
         for (let i = 0; i < bulletsToSpawn; i++) {
-            let bx = Math.random() * info.width + info.boxLeft;
+            let bx = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by = -bulletRadius;
             let bul = {x: bx, y: by, vx: 0, vy: bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}}
-            info.bullets.push(bul);
-            let bx2 = Math.random() * info.width + info.boxLeft;
+            bulletHellNeo.bullets.push(bul);
+            let bx2 = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by2 = window.innerHeight + bulletRadius;
             let bul2 = {x: bx2, y: by2, vx: 0, vy: -bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#000000";bossCtx.fill()}}
-            info.bullets.push(bul2);
+            bulletHellNeo.bullets.push(bul2);
         }
-        if (bulletsToSpawn > 0) info.actions[id].lastTime = ticks;        // Rain Bullets
-        return info
+        if (bulletsToSpawn > 0) bulletHellNeo.actions[id].lastTime = Date.now(); // Rain Bullets
     },
 }
 BHB.pipRainHorizontal = {
     //bulletHell({"pipRainHorizontal": {bulletPerSec: 7}}, {duration: 12})
-    moveFunc(info, ticks, id) {
+    moveFunc(id = "pipRainHorizontal") {
         // Rain Bullets
-        const bulletRadius = info.actions[id].bulletRadius ?? 12;
-        const bulletSpeed = info.actions[id].bulletSpeed ?? 4;
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const bulletsToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
+        const bulletRadius = bulletHellNeo.actions[id].bulletRadius ?? 12;
+        const bulletSpeed = bulletHellNeo.actions[id].bulletSpeed ?? 4;
+        if (!bulletHellNeo.actions[id].lastTime) bulletHellNeo.actions[id].lastTime = Date.now();
+        const bulletsToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions[id].lastTime) / 1000) * bulletHellNeo.actions[id].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
         for (let i = 0; i < bulletsToSpawn; i++) {
             let bx = window.innerWidth + bulletRadius;
-            let by = Math.random() * info.height + info.boxTop
+            let by = Math.random() * bulletHellNeo.height + bulletHellNeo.boxTop
             let bul = {x: bx, y: by, vx: -bulletSpeed, vy: 0, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}}
-            info.bullets.push(bul);
+            bulletHellNeo.bullets.push(bul);
             let bx2 = 0;
-            let by2 = Math.random() * info.height + info.boxTop;
+            let by2 = Math.random() * bulletHellNeo.height + bulletHellNeo.boxTop;
             let bul2 = {x: bx2, y: by2, vx: bulletSpeed, vy: 0, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#000000";bossCtx.fill()}}
-            info.bullets.push(bul2);
+            bulletHellNeo.bullets.push(bul2);
         }
-        if (bulletsToSpawn > 0) info.actions[id].lastTime = ticks;        // Rain Bullets
-        return info
+        if (bulletsToSpawn > 0) bulletHellNeo.actions[id].lastTime = Date.now(); // Rain Bullets
     },
 }
 BHB.pipRainUltimate = {
     //bulletHell({"pipRainUltimate": {bulletPerSec: 3}}, {duration: 12})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Rain Bullets
-        const bulletRadius = info.actions[id].bulletRadius ?? 12;
-        const bulletSpeed = info.actions[id].bulletSpeed ?? 4;
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const bulletsToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
+        const bulletRadius = bulletHellNeo.actions["pipRainUltimate"].bulletRadius ?? 12;
+        const bulletSpeed = bulletHellNeo.actions["pipRainUltimate"].bulletSpeed ?? 4;
+        if (!bulletHellNeo.actions["pipRainUltimate"].lastTime) bulletHellNeo.actions["pipRainUltimate"].lastTime = Date.now();
+        const bulletsToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions["pipRainUltimate"].lastTime) / 1000) * bulletHellNeo.actions["pipRainUltimate"].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
         for (let i = 0; i < bulletsToSpawn; i++) {
-            let bx = Math.random() * info.width + info.boxLeft;
+            let bx = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by = -bulletRadius;
             let bul = {x: bx, y: by, vx: 0, vy: bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}}
-            info.bullets.push(bul);
-            let bx2 = Math.random() * info.width + info.boxLeft;
+            bulletHellNeo.bullets.push(bul);
+            let bx2 = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by2 = window.innerHeight + bulletRadius;
             let bul2 = {x: bx2, y: by2, vx: 0, vy: -bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#000000";bossCtx.fill()}}
-            info.bullets.push(bul2);
+            bulletHellNeo.bullets.push(bul2);
             let bx3 = window.innerWidth + bulletRadius;
-            let by3 = Math.random() * info.height + info.boxTop
+            let by3 = Math.random() * bulletHellNeo.height + bulletHellNeo.boxTop
             let bul3 = {x: bx3, y: by3, vx: -bulletSpeed, vy: 0, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#fff";bossCtx.fill()}}
-            info.bullets.push(bul3);
+            bulletHellNeo.bullets.push(bul3);
             let bx4 = 0;
-            let by4 = Math.random() * info.height + info.boxTop;
+            let by4 = Math.random() * bulletHellNeo.height + bulletHellNeo.boxTop;
             let bul4 = {x: bx4, y: by4, vx: bulletSpeed, vy: 0, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#000000";bossCtx.fill()}}
-            info.bullets.push(bul4);
+            bulletHellNeo.bullets.push(bul4);
         }
-        if (bulletsToSpawn > 0) info.actions[id].lastTime = ticks;        // Rain Bullets
-        return info
+        if (bulletsToSpawn > 0) bulletHellNeo.actions["pipRainUltimate"].lastTime = Date.now(); // Rain Bullets
     },
 }
 //bulletHellBlue({"bouncingDice": {diceCount: 4, enemySpeed: 2}}, {width:800, height:600, duration:15, jumpMin:6, jumpMax:150})
@@ -2879,36 +3032,36 @@ BHB.pipRainUltimate = {
 BHB.diceSpikes = {
     // bulletHell({"diceSpikes": {spawnPerSec: 6, bulletPerSec: 6, enemySpeed: 4, spikeSize: 28}}, {width: 1200, height: 600, duration: 12, transparent: false})
     // bulletHell({"diceSpikes": {spawnPerSec: 6, bulletPerSec: 6, enemySpeed: 4, bulletSpeed: 2, spikeSize: 28, rain: true}}, {width: 1200, height: 600, duration: 12, transparent: false})
-    moveFunc(info, ticks, id) {
-        const spikeSize = info.actions[id].spikeSize ?? 28;
-        const speed = info.actions[id].enemySpeed ?? 6;
-        const spawnPerSec = info.actions[id].spawnPerSec ?? 2.2;
-        const bulletPerSec = info.actions[id].bulletPerSec ?? 6;
+    moveFunc(id = "diceSpikes") {
+        const spikeSize = bulletHellNeo.actions[id].spikeSize ?? 28;
+        const speed = bulletHellNeo.actions[id].enemySpeed ?? 6;
+        const spawnPerSec = bulletHellNeo.actions[id].spawnPerSec ?? 2.2;
+        const bulletPerSec = bulletHellNeo.actions[id].bulletPerSec ?? 6;
 
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const bulletsToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * spawnPerSec);
+        if (!bulletHellNeo.actions[id].lastTime) bulletHellNeo.actions[id].lastTime = Date.now();
+        const bulletsToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions[id].lastTime) / 1000) * spawnPerSec);
 
-        // Allow `rain` to be specified on the action (info.actions[id].rain)
-        if ((info.actions && info.actions[id] && info.actions[id].rain) || info.rain) {
+        // Allow `rain` to be specified on the action (bulletHellNeo.actions[id].rain)
+        if ((bulletHellNeo.actions && bulletHellNeo.actions[id] && bulletHellNeo.actions[id].rain) || bulletHellNeo.rain) {
             // Reuse existing pipRain behavior so toggling `rain` matches pipRain effects.
             if (BHB && BHB.pipRain && typeof BHB.pipRain.moveFunc === 'function') {
-                info = BHB.pipRain.moveFunc(info, ticks, id) || info;
+                BHB.pipRain.moveFunc(id)
             }
             // Optionally spawn horizontal pip rain if configured
-            if (info.actions && info.actions[id] && info.actions[id].horizontalRain && BHB && BHB.pipRainHorizontal && typeof BHB.pipRainHorizontal.moveFunc === 'function') {
-                info = BHB.pipRainHorizontal.moveFunc(info, ticks, id) || info;
+            if (bulletHellNeo.actions && bulletHellNeo.actions[id] && bulletHellNeo.actions[id].horizontalRain && BHB && BHB.pipRainHorizontal && typeof BHB.pipRainHorizontal.moveFunc === 'function') {
+                BHB.pipRainHorizontal.moveFunc(id)
             }
         }
 
         for (let i = 0; i < bulletsToSpawn; i++) {
             // choose side: -1 = left, 1 = right
             const side = Math.random() < 0.5 ? -1 : 1;
-            const x = side === -1 ? (info.boxLeft - spikeSize) : (info.boxLeft + info.width + spikeSize);
-            const y = Math.random() * info.height + info.boxTop;
+            const x = side === -1 ? (bulletHellNeo.boxLeft - spikeSize) : (bulletHellNeo.boxLeft + bulletHellNeo.width + spikeSize);
+            const y = Math.random() * bulletHellNeo.height + bulletHellNeo.boxTop;
 
             // velocity aimed roughly towards player with a small random offset
-            const targetX = info.px ?? (info.boxLeft + info.width/2);
-            const targetY = info.py ?? (info.boxTop + info.height/2);
+            const targetX = bulletHellNeo.px + bulletHellNeo.boxLeft ?? (bulletHellNeo.boxLeft + bulletHellNeo.width/2);
+            const targetY = bulletHellNeo.py + bulletHellNeo.boxTop ?? (bulletHellNeo.boxTop + bulletHellNeo.height/2);
             const dx = (targetX + (Math.random() - 0.5) * 80) - x;
             const dy = (targetY + (Math.random() - 0.5) * 80) - y;
             const dist = Math.hypot(dx, dy) || 1;
@@ -2939,53 +3092,54 @@ BHB.diceSpikes = {
                 }
             };
 
-            info.bullets.push(bul);
+            bulletHellNeo.bullets.push(bul);
         }
 
-        if (bulletsToSpawn > 0) info.actions[id].lastTime = ticks;
+        if (bulletsToSpawn > 0) bulletHellNeo.actions[id].lastTime = Date.now();
 
         // update existing bullets' positions
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.vx !== undefined) {
-                b.x += b.vx;
-                b.y += b.vy;
+                b.x += b.vx * 60 * bulletHellNeo.delta;
+                b.y += b.vy * 60 * bulletHellNeo.delta;
             }
         }
 
-        return info;
+        return bulletHellNeo;
     },
 }
 BHB.diceSpikesPlatformer = {
     // bulletHellBlue({"diceSpikesPlatformer": {bulletPerSec: 1.2, enemySpeed: 3, spikeHeight: 80, spikeWidth: 60}}, {width:800, height:300, duration:15, jumpMin:6, jumpMax:150, gravity: 0.2})
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Based on pipRainHorizontal: spawn groups of spikes sliding along bottom
-        const spikeHeight = info.actions[id].spikeHeight ?? 64;
-        const spikeWidth = info.actions[id].spikeWidth ?? 40;
-        const bulletSpeed = info.actions[id].enemySpeed ?? 6;
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        let bulletsToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * (info.actions[id].bulletPerSec ?? 1.2));
-        if (!info.actions[id].__diceSpikesInit) { info.actions[id].__diceSpikesInit = true; bulletsToSpawn = Math.max(1, bulletsToSpawn); }
+        const spikeHeight = bulletHellNeo.actions["diceSpikesPlatformer"].spikeHeight ?? 64;
+        const spikeWidth = bulletHellNeo.actions["diceSpikesPlatformer"].spikeWidth ?? 40;
+        const bulletSpeed = bulletHellNeo.actions["diceSpikesPlatformer"].enemySpeed ?? 6;
+        if (!bulletHellNeo.actions["diceSpikesPlatformer"].lastTime) bulletHellNeo.actions["diceSpikesPlatformer"].lastTime = Date.now();
+        let bulletsToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions["diceSpikesPlatformer"].lastTime) / 1000) * (bulletHellNeo.actions["diceSpikesPlatformer"].bulletPerSec ?? 1.2));
+        if (!bulletHellNeo.actions["diceSpikesPlatformer"].__diceSpikesInit) { bulletHellNeo.actions["diceSpikesPlatformer"].__diceSpikesInit = true; bulletsToSpawn = Math.max(1, bulletsToSpawn); }
 
         for (let i = 0; i < bulletsToSpawn; i++) {
             const count = 1 + Math.floor(Math.random() * 4);
+            if (!bulletHellNeo.actions["diceSpikesPlatformer"].noSkips && count === 4) continue
             const fromLeft = Math.random() < 0.5;
             let curSpikeHeight = spikeHeight;
             let curSpikeWidth = spikeWidth;
-            if (count === 1) {
+            if (bulletHellNeo.actions["diceSpikesPlatformer"].bigSpikes && count === 1) {
                 curSpikeHeight = Math.round(spikeHeight * 1.6);
                 curSpikeWidth = Math.round(spikeWidth * 1.5);
             }
             const spacing = curSpikeWidth * 1.15;
 
             // always place at bottom of the arena (center of spike sits curSpikeHeight/2 above bottom)
-            const by = info.boxTop + info.height - curSpikeHeight / 2;
+            const by = bulletHellNeo.boxTop + bulletHellNeo.height - curSpikeHeight / 2;
 
             if (fromLeft) {
                 // shift group so the rightmost spike is just off-screen, preventing immediate culling
-                const bxBase = info.boxLeft - curSpikeWidth - 8 + (count - 1) * spacing;
+                const bxBase = bulletHellNeo.boxLeft - curSpikeWidth - 8 + (count - 1) * spacing;
                 for (let k = 0; k < count; k++) {
                     const bx = bxBase - k * spacing;
-                    info.bullets.push({
+                    bulletHellNeo.bullets.push({
                         name: "bigKnife",
                         x: bx,
                         y: by,
@@ -3019,10 +3173,10 @@ BHB.diceSpikesPlatformer = {
                 }
             } else {
                 // shift group so the leftmost spike is just off-screen on the right side
-                const bxBase = info.boxLeft + info.width + curSpikeWidth + 8 - (count - 1) * spacing;
+                const bxBase = bulletHellNeo.boxLeft + bulletHellNeo.width + curSpikeWidth + 8 - (count - 1) * spacing;
                 for (let k = 0; k < count; k++) {
                     const bx = bxBase + k * spacing;
-                    info.bullets.push({
+                    bulletHellNeo.bullets.push({
                         name: "bigKnife",
                         x: bx,
                         y: by,
@@ -3057,38 +3211,36 @@ BHB.diceSpikesPlatformer = {
             }
         }
 
-        if (bulletsToSpawn > 0) info.actions[id].lastTime = ticks;
-
-        return info;
+        if (bulletsToSpawn > 0) bulletHellNeo.actions["diceSpikesPlatformer"].lastTime = Date.now();
     },
 }
 
 BHB.spikePlatformAttack = {
     //bulletHellBlue({"spikePlatformAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 4, platformSpikeChance: 0.4, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203}}, {width:800, height:600, duration:15, jumpMin:6, jumpMax:250, gravity: 0.2})
     //bulletHellBlue({"spikePlatformAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 4, platformSpikeChance: 0.4, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203, rain: true, bulletPerSec: 10}}, {width:800, height:600, duration:15, jumpMin:6, jumpMax:250, gravity: 0.2})
-    codeFunc(info, id) {
+    codeFunc() {
         // Create spikes filling the entire ground
-        const spikeH = info.actions[id].spikeHeight || 36;
-        const spikeW = info.actions[id].spikeWidth || 28;
-        info.spikes = [];
-        for (let x = 0; x < info.width; x += spikeW) {
-            info.spikes.push({ x: x, y: info.height - spikeH, w: spikeW, h: spikeH });
+        const spikeH = bulletHellNeo.actions["spikePlatformAttack"].spikeHeight || 36;
+        const spikeW = bulletHellNeo.actions["spikePlatformAttack"].spikeWidth || 28;
+        bulletHellNeo.spikes = [];
+        for (let x = 0; x < bulletHellNeo.width; x += spikeW) {
+            bulletHellNeo.spikes.push({ x: x, y: bulletHellNeo.height - spikeH, w: spikeW, h: spikeH });
         }
 
         // Create sliding platforms slightly above the spikes
-        const pCount = info.actions[id].platformCount || 4;
-        info.platforms = [];
+        const pCount = bulletHellNeo.actions["spikePlatformAttack"].platformCount || 4;
+        bulletHellNeo.platforms = [];
         // determine vertical slots so only 1 platform can appear at each height
-        const minAbove = info.actions[id].platformMinAbove || 40;
-        const maxAbove = info.actions[id].platformMaxAbove || Math.max(120, Math.min(220, info.height - spikeH - 60));
+        const minAbove = bulletHellNeo.actions["spikePlatformAttack"].platformMinAbove || 40;
+        const maxAbove = bulletHellNeo.actions["spikePlatformAttack"].platformMaxAbove || Math.max(120, Math.min(220, bulletHellNeo.height - spikeH - 60));
         let heights = [];
         if (pCount <= 1) {
-            heights = [info.height - spikeH - Math.floor((minAbove + maxAbove) / 2)];
+            heights = [bulletHellNeo.height - spikeH - Math.floor((minAbove + maxAbove) / 2)];
         } else {
             for (let i = 0; i < pCount; i++) {
                 const t = i / (pCount - 1);
                 const above = Math.floor(minAbove + t * (maxAbove - minAbove));
-                heights.push(info.height - spikeH - above);
+                heights.push(bulletHellNeo.height - spikeH - above);
             }
         }
         // shuffle heights so order is not predictable
@@ -3097,82 +3249,81 @@ BHB.spikePlatformAttack = {
             [heights[i], heights[j]] = [heights[j], heights[i]];
         }
 
-        const spikeChance = typeof info.actions[id].platformSpikeChance !== 'undefined' ? info.actions[id].platformSpikeChance : (info.actions[id].spikeOnPlatformPercent || 0.25);
+        const spikeChance = typeof bulletHellNeo.actions["spikePlatformAttack"].platformSpikeChance !== 'undefined' ? bulletHellNeo.actions["spikePlatformAttack"].platformSpikeChance : (bulletHellNeo.actions["spikePlatformAttack"].spikeOnPlatformPercent || 0.25);
 
         for (let i = 0; i < pCount; i++) {
-            const w = Math.floor((info.actions[id].platformMinW || 80) + Math.random() * (((info.actions[id].platformMaxW || 160)) - (info.actions[id].platformMinW || 80)));
+            const w = Math.floor((bulletHellNeo.actions["spikePlatformAttack"].platformMinW || 80) + Math.random() * (((bulletHellNeo.actions["spikePlatformAttack"].platformMaxW || 160)) - (bulletHellNeo.actions["spikePlatformAttack"].platformMinW || 80)));
             const h = 14;
             const y = heights[i % heights.length];
             // place platform ensuring an extra horizontal gap between platforms
-            const extraGap = typeof info.actions[id].platformExtraGap !== 'undefined' ? info.actions[id].platformExtraGap : 50;
-            let x = Math.random() * (info.width - w);
+            const extraGap = typeof bulletHellNeo.actions["spikePlatformAttack"].platformExtraGap !== 'undefined' ? bulletHellNeo.actions["spikePlatformAttack"].platformExtraGap : 50;
+            let x = Math.random() * (bulletHellNeo.width - w);
             let placed = false;
             let attempts = 0;
             while (!placed && attempts < 60) {
                 let ok = true;
-                for (let q of info.platforms) {
+                for (let q of bulletHellNeo.platforms) {
                     if (!(x + w + extraGap <= q.x || x >= q.x + q.w + extraGap)) { ok = false; break; }
                 }
                 if (ok) { placed = true; break; }
-                x = Math.random() * (info.width - w);
+                x = Math.random() * (bulletHellNeo.width - w);
                 attempts++;
             }
             if (!placed) {
                 // fallback: scan for first fitting position
-                for (let cx = 0; cx <= info.width - w; cx += 4) {
+                for (let cx = 0; cx <= bulletHellNeo.width - w; cx += 4) {
                     let ok2 = true;
-                    for (let q of info.platforms) {
+                    for (let q of bulletHellNeo.platforms) {
                         if (!(cx + w + extraGap <= q.x || cx >= q.x + q.w + extraGap)) { ok2 = false; break; }
                     }
                     if (ok2) { x = cx; placed = true; break; }
                 }
             }
             // if still not placed, x remains random (may overlap)
-            const speed = ((Math.random() < 0.5) ? -1 : 1) * (info.actions[id].platformSpeed || 2.5) * (0.6 + Math.random() * 1.4);
+            const speed = ((Math.random() < 0.5) ? -1 : 1) * (bulletHellNeo.actions["spikePlatformAttack"].platformSpeed || 2.5) * (0.6 + Math.random() * 1.4);
             const hasSpikes = Math.random() < spikeChance;
-            const pSpikeW = Math.max(8, Math.min((info.actions[id].platformSpikeWidth || Math.floor(spikeW/1.6)), Math.floor(w/3)));
-            const pSpikeH = Math.max(6, Math.min((info.actions[id].platformSpikeHeight || Math.floor(spikeH*0.6)), 24));
-            info.platforms.push({ x: x, y: y, w: w, h: h, vx: speed, color: info.actions[id].platformColor || '#9aa', hasSpikes: hasSpikes, spikeW: pSpikeW, spikeH: pSpikeH });
+            const pSpikeW = Math.max(8, Math.min((bulletHellNeo.actions["spikePlatformAttack"].platformSpikeWidth || Math.floor(spikeW/1.6)), Math.floor(w/3)));
+            const pSpikeH = Math.max(6, Math.min((bulletHellNeo.actions["spikePlatformAttack"].platformSpikeHeight || Math.floor(spikeH*0.6)), 24));
+            bulletHellNeo.platforms.push({ x: x, y: y, w: w, h: h, vx: speed, color: bulletHellNeo.actions["spikePlatformAttack"].platformColor || '#9aa', hasSpikes: hasSpikes, spikeW: pSpikeW, spikeH: pSpikeH });
         }
 
         // timing for spike damage
-        info.actions[id].lastSpikeDamageTime = info.actions[id].lastSpikeDamageTime || 0;
-        return info;
+        bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime = bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime || 0;
     },
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Update platforms positions
-        if (info.platforms) {
-            for (let p of info.platforms) {
-                p.x += p.vx;
+        if (bulletHellNeo.platforms) {
+            for (let p of bulletHellNeo.platforms) {
+                p.x += (p.vx * 60 * bulletHellNeo.delta);
                 // wrap-around horizontally
-                if (p.vx > 0 && p.x > info.width) p.x = -p.w;
-                if (p.vx < 0 && p.x + p.w < 0) p.x = info.width;
+                if (p.vx > 0 && p.x > bulletHellNeo.width) p.x = -p.w;
+                if (p.vx < 0 && p.x + p.w < 0) p.x = bulletHellNeo.width;
             }
         }
 
         // Player support and spike damage checks (only relevant in blueMode/platformer)
-        if (info.blueMode) {
-            let playerX = info.px;
-            let playerY = info.py;
-            if (info.subArena && info.moveWithSub) { playerX += info.subx; playerY += info.suby }
+        if (bulletHellNeo.soul == "blue") {
+            let playerX = bulletHellNeo.px;
+            let playerY = bulletHellNeo.py;
+            if (bulletHellNeo.subArena && options.bhKeyboard) { playerX += bulletHellNeo.subx; playerY += bulletHellNeo.suby}
 
             // Platforms: allow standing on top
-            if (info.platforms) {
-                for (let p of info.platforms) {
+            if (bulletHellNeo.platforms) {
+                for (let p of bulletHellNeo.platforms) {
                     // check horizontal overlap with a small tolerance
-                    if (playerX + info.pr > p.x && playerX - info.pr < p.x + p.w) {
-                        const feetY = playerY + info.pr;
+                    if (playerX + bulletHellNeo.pr > p.x && playerX - bulletHellNeo.pr < p.x + p.w) {
+                        const feetY = playerY + bulletHellNeo.pr;
                         // If player's feet are touching or just below the platform top and falling, snap to platform
-                        if (feetY >= p.y - 6 && feetY <= p.y + 10 && (info.vy || 0) >= -2) {
-                            info.py = p.y - info.pr;
-                            info.vy = 0;
-                            info.onGround = true;
+                        if (feetY >= p.y - 6 && feetY <= p.y + 10 && (bulletHellNeo.pvy || 0) >= -2) {
+                            bulletHellNeo.py = p.y - bulletHellNeo.pr;
+                            bulletHellNeo.pvy = 0;
+                            bulletHellNeo.onGround = true;
                             if (p.hasSpikes) {
                                 const now = Date.now();
-                                if (!info.actions[id].lastSpikeDamageTime) info.actions[id].lastSpikeDamageTime = 0;
-                                if (now - info.actions[id].lastSpikeDamageTime > 0) {
-                                    info.platformHit = true;
-                                    info.actions[id].lastSpikeDamageTime = now;
+                                if (!bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime) bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime = 0;
+                                if (now - bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime > 0) {
+                                    bulletHellNeo.platformHit = true;
+                                    bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime = now;
                                 }
                             }
                         }
@@ -3181,18 +3332,18 @@ BHB.spikePlatformAttack = {
             }
 
             // Spikes: if player's feet intersect the spike band, deal damage periodically
-            if (info.spikes && info.spikes.length) {
-                const spikeTop = info.height - (info.actions[id].spikeHeight || 36);
-                const feetY = info.py + info.pr;
+            if (bulletHellNeo.spikes && bulletHellNeo.spikes.length) {
+                const spikeTop = bulletHellNeo.height - (bulletHellNeo.actions["spikePlatformAttack"].spikeHeight || 36);
+                const feetY = bulletHellNeo.py + bulletHellNeo.pr;
                 if (feetY >= spikeTop) {
                     // if player's x overlaps any spike
-                    for (let s of info.spikes) {
-                        if (info.px + info.pr > s.x && info.px - info.pr < s.x + s.w) {
+                    for (let s of bulletHellNeo.spikes) {
+                        if (bulletHellNeo.px + bulletHellNeo.pr > s.x && bulletHellNeo.px - bulletHellNeo.pr < s.x + s.w) {
                             const now = Date.now();
-                            if (!info.actions[id].lastSpikeDamageTime) info.actions[id].lastSpikeDamageTime = 0;
-                            if (now - info.actions[id].lastSpikeDamageTime > 0) {
-                                info.platformHit = true; // reuse central damage handling
-                                info.actions[id].lastSpikeDamageTime = now;
+                            if (!bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime) bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime = 0;
+                            if (now - bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime > 0) {
+                                bulletHellNeo.platformHit = true; // reuse central damage handling
+                                bulletHellNeo.actions["spikePlatformAttack"].lastSpikeDamageTime = now;
                             }
                             break;
                         }
@@ -3201,39 +3352,37 @@ BHB.spikePlatformAttack = {
             }
         }
 
-        // Allow `rain` to be specified on the action (info.actions[id].rain)
-        if ((info.actions && info.actions[id] && info.actions[id].rain) || info.rain) {
+        // Allow `rain` to be specified on the action (bulletHellNeo.actions["spikePlatformAttack"].rain)
+        if ((bulletHellNeo.actions && bulletHellNeo.actions["spikePlatformAttack"] && bulletHellNeo.actions["spikePlatformAttack"].rain) || bulletHellNeo.rain) {
             // Reuse existing pipRain behavior so toggling `rain` matches pipRain effects.
             if (BHB && BHB.pipRain && typeof BHB.pipRain.moveFunc === 'function') {
-                info = BHB.pipRain.moveFunc(info, ticks, id) || info;
+                BHB.pipRain.moveFunc("spikePlatformAttack")
             }
             // Optionally spawn horizontal pip rain if configured
-            if (info.actions && info.actions[id] && info.actions[id].horizontalRain && BHB && BHB.pipRainHorizontal && typeof BHB.pipRainHorizontal.moveFunc === 'function') {
-                info = BHB.pipRainHorizontal.moveFunc(info, ticks, id) || info;
+            if (bulletHellNeo.actions && bulletHellNeo.actions["spikePlatformAttack"] && bulletHellNeo.actions["spikePlatformAttack"].horizontalRain && BHB && BHB.pipRainHorizontal && typeof BHB.pipRainHorizontal.moveFunc === 'function') {
+                BHB.pipRainHorizontal.moveFunc("spikePlatformAttack")
             }
         }
-
-        return info;
     },
 }
 //    bulletHellBlue({"spikePlatformAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 4, platformSpikeChance: 0.3, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203, rain: true, bulletPerSec: 3}}, {width:800, height:600, duration:15, jumpMin:6, jumpMax:250, gravity: 0.2})
 
 BHB.dieBouncer = {
     //bulletHell({"dieBouncer": {dieAmount: 1, size: 50, enemySpeed: 3, chargeMult: 1.6, spikeSpeed:6, spikeRadius:36, lastTick:false}}, {width: 400, height: 400, duration: 10})
-    codeFunc(info, id) {
-        const amount = info.actions[id].dieAmount || 1;
+    codeFunc() {
+        const amount = bulletHellNeo.actions["dieBouncer"].dieAmount || 1;
         for (let i = 0; i < amount; i++) {
             const theta = Math.random() * Math.PI * 2;
-            const speed = info.actions[id].enemySpeed || 3;
-            const bx = info.width / 2 + Math.cos(theta) * (info.width / 4) + info.boxLeft;
-            const by = info.height / 2 + Math.sin(theta) * (info.height / 4) + info.boxTop;
-            info.bullets.push({
+            const speed = bulletHellNeo.actions["dieBouncer"].enemySpeed || 3;
+            const bx = bulletHellNeo.width / 2 + Math.cos(theta) * (bulletHellNeo.width / 4) + bulletHellNeo.boxLeft;
+            const by = bulletHellNeo.height / 2 + Math.sin(theta) * (bulletHellNeo.height / 4) + bulletHellNeo.boxTop;
+            bulletHellNeo.bullets.push({
                 name: "die",
                 x: bx,
                 y: by,
                 vx: Math.cos(theta) * speed,
                 vy: Math.sin(theta) * speed,
-                r: info.actions[id].size || 28,
+                r: bulletHellNeo.actions["dieBouncer"].size || 28,
                 angle: theta,
                 pulsingRed: false,
                 lungeTimer: 0,
@@ -3263,41 +3412,40 @@ BHB.dieBouncer = {
                 }
             })
         }
-        return info
     },
-    moveFunc(info, ticks, id) {
-        let dt = ticks - (info.actions[id].lastTick || ticks);
-        for (let b of info.bullets) {
+    moveFunc() {
+        let dt = Date.now() - (bulletHellNeo.actions["dieBouncer"].lastTick || Date.now());
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "die") {
                 let bounced = false;
-                if (b.x < b.r + info.boxLeft) { b.x = b.r + info.boxLeft; b.vx *= -1; bounced = true; }
-                if (b.x > info.width - b.r + info.boxLeft) { b.x = info.width - b.r + info.boxLeft; b.vx *= -1; bounced = true; }
-                if (b.y < b.r + info.boxTop) { b.y = b.r + info.boxTop; b.vy *= -1; bounced = true; }
-                if (b.y > info.height - b.r + info.boxTop) { b.y = info.height - b.r + info.boxTop; b.vy *= -1; bounced = true; }
+                if (b.x < b.r + bulletHellNeo.boxLeft) { b.x = b.r + bulletHellNeo.boxLeft; b.vx *= -1; bounced = true; }
+                if (b.x > bulletHellNeo.width - b.r + bulletHellNeo.boxLeft) { b.x = bulletHellNeo.width - b.r + bulletHellNeo.boxLeft; b.vx *= -1; bounced = true; }
+                if (b.y < b.r + bulletHellNeo.boxTop) { b.y = b.r + bulletHellNeo.boxTop; b.vy *= -1; bounced = true; }
+                if (b.y > bulletHellNeo.height - b.r + bulletHellNeo.boxTop) { b.y = bulletHellNeo.height - b.r + bulletHellNeo.boxTop; b.vy *= -1; bounced = true; }
 
-                if (bounced && (!b._lastBounce || ticks - b._lastBounce > 60)) {
-                    b._lastBounce = ticks;
+                if (bounced && (!b._lastBounce || Date.now() - b._lastBounce > 60)) {
+                    b._lastBounce = Date.now();
                     // Spawn 3 spikes aimed at player (centered + offsets)
-                    let px = info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-                    let py = info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+                    let px = bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+                    let py = bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
                     let base = Math.atan2(py - b.y, px - b.x);
                     for (let s = -1; s <= 1; s++) {
                         // Use exact diceSpikes aiming: spawn off-screen and aim roughly at player with random offset
-                        const spikeSize = (info.actions['diceSpikes'] && info.actions['diceSpikes'].spikeSize) || info.actions[id].spikeSize || info.actions[id].spikeRadius || 28;
-                        const speed = (info.actions['diceSpikes'] && info.actions['diceSpikes'].enemySpeed) || info.actions[id].spikeSpeed || 6;
+                        const spikeSize = (bulletHellNeo.actions['diceSpikes'] && bulletHellNeo.actions['diceSpikes'].spikeSize) || bulletHellNeo.actions["dieBouncer"].spikeSize || bulletHellNeo.actions["dieBouncer"].spikeRadius || 28;
+                        const speed = (bulletHellNeo.actions['diceSpikes'] && bulletHellNeo.actions['diceSpikes'].enemySpeed) || bulletHellNeo.actions["dieBouncer"].spikeSpeed || 6;
                         // spawn at screen edges (not arena) and aim directly at player
                         const side = Math.random() < 0.5 ? -1 : 1;
                         const sx = side === -1 ? -spikeSize : (window.innerWidth + spikeSize);
                         const sy = Math.random() * window.innerHeight;
-                        const playerGlobalX = info.boxLeft + (info.px || 0) + (info.subArena && info.moveWithSub ? info.subx : 0);
-                        const playerGlobalY = info.boxTop + (info.py || 0) + (info.subArena && info.moveWithSub ? info.suby : 0);
+                        const playerGlobalX = bulletHellNeo.boxLeft + (bulletHellNeo.px || 0) + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+                        const playerGlobalY = bulletHellNeo.boxTop + (bulletHellNeo.py || 0) + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
                         const dx = playerGlobalX - sx;
                         const dy = playerGlobalY - sy;
                         const dist = Math.hypot(dx, dy) || 1;
                         const vx = (dx / dist) * speed;
                         const vy = (dy / dist) * speed;
                         const color = Math.random() < 0.5 ? '#000' : '#fff';
-                        info.bullets.push({
+                        bulletHellNeo.bullets.push({
                             x: sx,
                             y: sy,
                             vx: vx,
@@ -3327,8 +3475,8 @@ BHB.dieBouncer = {
 
                     // Charge briefly (speed up like charged bees)
                     if (!b.pulsingRed) {
-                        b.vx *= (info.actions[id].chargeMult || 1.6);
-                        b.vy *= (info.actions[id].chargeMult || 1.6);
+                        b.vx *= (bulletHellNeo.actions["dieBouncer"].chargeMult || 1.6);
+                        b.vy *= (bulletHellNeo.actions["dieBouncer"].chargeMult || 1.6);
                         b.pulsingRed = true;
                         b.lungeTimer = 700;
                     }
@@ -3337,15 +3485,14 @@ BHB.dieBouncer = {
                 if (b.pulsingRed) {
                     b.lungeTimer -= dt;
                     if (b.lungeTimer <= 0) {
-                        b.vx = b.vx / (info.actions[id].chargeMult || 1.6);
-                        b.vy = b.vy / (info.actions[id].chargeMult || 1.6);
+                        b.vx = b.vx / (bulletHellNeo.actions["dieBouncer"].chargeMult || 1.6);
+                        b.vy = b.vy / (bulletHellNeo.actions["dieBouncer"].chargeMult || 1.6);
                         b.pulsingRed = false;
                     }
                 }
             }
         }
-        info.actions[id].lastTick = ticks;
-        return info
+        bulletHellNeo.actions["dieBouncer"].lastTick = Date.now();
     }
 }
 
@@ -3354,13 +3501,13 @@ BHB.dieBouncer = {
 
 BHB.movingDieRadialBurstAttack = {
     //bulletHell({"movingDieRadialBurstAttack": {circleAmount: 1, burstInterval: 1000, bulletsPerBurst: 7, enemySpeed: 1.5, bulletSpeed: 5}}, {duration: 12})
-    codeFunc(info, id) {
-        for (let i = 0; i < info.actions[id].circleAmount; i++) {
-            info.bullets.push({
+    codeFunc() {
+        for (let i = 0; i < bulletHellNeo.actions["movingDieRadialBurstAttack"].circleAmount; i++) {
+            bulletHellNeo.bullets.push({
                 name: "circle",
-                x: Math.random() * (info.width - 120) + 60 + info.boxLeft,
-                y: info.height + info.boxTop,
-                vx: info.actions[id].enemySpeed * 2,
+                x: Math.random() * (bulletHellNeo.width - 120) + 60 + bulletHellNeo.boxLeft,
+                y: bulletHellNeo.height + bulletHellNeo.boxTop,
+                vx: bulletHellNeo.actions["movingDieRadialBurstAttack"].enemySpeed * 2,
                 vy: 0,
                 r: 40,
                 lastBurstTime: 0,
@@ -3389,26 +3536,24 @@ BHB.movingDieRadialBurstAttack = {
                 }
             });
         }
-        return info
     },
-    moveFunc(info, ticks, id) {
-        for (let b of info.bullets) {
+    moveFunc() {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "circle") {
                 // Bounce off walls
-                if (b.x < b.r + info.boxLeft) {b.x = b.r + info.boxLeft; b.vx *= -1}
-                if (b.x > info.width - b.r + info.boxLeft) {b.x = info.width - b.r + info.boxLeft; b.vx *= -1}
-                if (b.y < b.r + info.boxTop) {b.y = b.r + info.boxTop; b.vy *= -1}
-                if (b.y > info.height - b.r + info.boxTop) {b.y = info.height - b.r + info.boxTop; b.vy *= -1}
+                if (b.x < b.r + bulletHellNeo.boxLeft) {b.x = b.r + bulletHellNeo.boxLeft; b.vx *= -1}
+                if (b.x > bulletHellNeo.width - b.r + bulletHellNeo.boxLeft) {b.x = bulletHellNeo.width - b.r + bulletHellNeo.boxLeft; b.vx *= -1}
+                if (b.y < b.r + bulletHellNeo.boxTop) {b.y = b.r + bulletHellNeo.boxTop; b.vy *= -1}
+                if (b.y > bulletHellNeo.height - b.r + bulletHellNeo.boxTop) {b.y = bulletHellNeo.height - b.r + bulletHellNeo.boxTop; b.vy *= -1}
 
                 // Burst
                 if (!b.lastBurstTime) b.lastBurstTime = Date.now()
-                if (Date.now() - b.lastBurstTime > info.actions[id].burstInterval) {
-                    info.fireDiceSpikeRadialBurst(b.x, b.y, id)
+                if (Date.now() - b.lastBurstTime > bulletHellNeo.actions["movingDieRadialBurstAttack"].burstInterval) {
+                    bulletHellNeo.fireDiceSpikeRadialBurst(b.x, b.y, "movingDieRadialBurstAttack")
                     b.lastBurstTime = Date.now()
                 }
             }
         }
-        return info
     },
     
 }
@@ -3419,29 +3564,29 @@ BHB.movingDieRadialBurstAttack = {
 
 BHB.zarUltimateAttack = {
 //bulletHellBlue({"zarUltimateAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 6, spawnPerSec: 4, bulletPerSec: 6, enemySpeed: 3, spikeSize: 28, platformSpikeChance: 0.1, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203, diceSpikes: true, bulletPerSec: 10}}, {width: window.innerWidth, height: window.innerHeight, duration: 19, transparent: true, saveContent: true, jumpMin:6, jumpMax:350, gravity: 0.2})
-    codeFunc(info, id) {
+    codeFunc() {
         // Create spikes filling the entire ground
-        const spikeH = info.actions[id].spikeHeight || 36;
-        const spikeW = info.actions[id].spikeWidth || 28;
-        info.spikes = [];
-        for (let x = 0; x < info.width; x += spikeW) {
-            info.spikes.push({ x: x, y: info.height - spikeH, w: spikeW, h: spikeH });
+        const spikeH = bulletHellNeo.actions["zarUltimateAttack"].spikeHeight || 36;
+        const spikeW = bulletHellNeo.actions["zarUltimateAttack"].spikeWidth || 28;
+        bulletHellNeo.spikes = [];
+        for (let x = 0; x < bulletHellNeo.width; x += spikeW) {
+            bulletHellNeo.spikes.push({ x: x, y: bulletHellNeo.height - spikeH, w: spikeW, h: spikeH });
         }
 
         // Create sliding platforms slightly above the spikes
-        const pCount = info.actions[id].platformCount || 6;
-        info.platforms = [];
+        const pCount = bulletHellNeo.actions["zarUltimateAttack"].platformCount || 6;
+        bulletHellNeo.platforms = [];
         // determine vertical slots so only 1 platform can appear at each height
-        const minAbove = info.actions[id].platformMinAbove || 80;
-        const maxAbove = info.actions[id].platformMaxAbove || Math.max(120, Math.min(220, info.height - spikeH - 60)) * 2;
+        const minAbove = bulletHellNeo.actions["zarUltimateAttack"].platformMinAbove || 80;
+        const maxAbove = bulletHellNeo.actions["zarUltimateAttack"].platformMaxAbove || Math.max(120, Math.min(220, bulletHellNeo.height - spikeH - 60)) * 2;
         let heights = [];
         if (pCount <= 1) {
-            heights = [info.height - spikeH - Math.floor((minAbove + maxAbove) / 2)];
+            heights = [bulletHellNeo.height - spikeH - Math.floor((minAbove + maxAbove) / 2)];
         } else {
             for (let i = 0; i < pCount; i++) {
                 const t = i / (pCount - 1);
                 const above = Math.floor(minAbove + t * (maxAbove - minAbove));
-                heights.push(info.height - spikeH - above);
+                heights.push(bulletHellNeo.height - spikeH - above);
             }
         }
         // shuffle heights so order is not predictable
@@ -3450,82 +3595,81 @@ BHB.zarUltimateAttack = {
             [heights[i], heights[j]] = [heights[j], heights[i]];
         }
 
-        const spikeChance = typeof info.actions[id].platformSpikeChance !== 'undefined' ? info.actions[id].platformSpikeChance : (info.actions[id].spikeOnPlatformPercent || 0.25);
+        const spikeChance = typeof bulletHellNeo.actions["zarUltimateAttack"].platformSpikeChance !== 'undefined' ? bulletHellNeo.actions["zarUltimateAttack"].platformSpikeChance : (bulletHellNeo.actions["zarUltimateAttack"].spikeOnPlatformPercent || 0.25);
 
         for (let i = 0; i < pCount; i++) {
-            const w = Math.floor((info.actions[id].platformMinW || 80) + Math.random() * (((info.actions[id].platformMaxW || 160)) - (info.actions[id].platformMinW || 80)));
+            const w = Math.floor((bulletHellNeo.actions["zarUltimateAttack"].platformMinW || 80) + Math.random() * (((bulletHellNeo.actions["zarUltimateAttack"].platformMaxW || 160)) - (bulletHellNeo.actions["zarUltimateAttack"].platformMinW || 80)));
             const h = 14;
             const y = heights[i % heights.length];
             // place platform ensuring an extra horizontal gap between platforms
-            const extraGap = typeof info.actions[id].platformExtraGap !== 'undefined' ? info.actions[id].platformExtraGap : 50;
-            let x = Math.random() * (info.width - w);
+            const extraGap = typeof bulletHellNeo.actions["zarUltimateAttack"].platformExtraGap !== 'undefined' ? bulletHellNeo.actions["zarUltimateAttack"].platformExtraGap : 50;
+            let x = Math.random() * (bulletHellNeo.width - w);
             let placed = false;
             let attempts = 0;
             while (!placed && attempts < 60) {
                 let ok = true;
-                for (let q of info.platforms) {
+                for (let q of bulletHellNeo.platforms) {
                     if (!(x + w + extraGap <= q.x || x >= q.x + q.w + extraGap)) { ok = false; break; }
                 }
                 if (ok) { placed = true; break; }
-                x = Math.random() * (info.width - w);
+                x = Math.random() * (bulletHellNeo.width - w);
                 attempts++;
             }
             if (!placed) {
                 // fallback: scan for first fitting position
-                for (let cx = 0; cx <= info.width - w; cx += 4) {
+                for (let cx = 0; cx <= bulletHellNeo.width - w; cx += 4) {
                     let ok2 = true;
-                    for (let q of info.platforms) {
+                    for (let q of bulletHellNeo.platforms) {
                         if (!(cx + w + extraGap <= q.x || cx >= q.x + q.w + extraGap)) { ok2 = false; break; }
                     }
                     if (ok2) { x = cx; placed = true; break; }
                 }
             }
             // if still not placed, x remains random (may overlap)
-            const speed = ((Math.random() < 0.5) ? -1 : 1) * (info.actions[id].platformSpeed || 2.5) * (0.6 + Math.random() * 1.4);
+            const speed = ((Math.random() < 0.5) ? -1 : 1) * (bulletHellNeo.actions["zarUltimateAttack"].platformSpeed || 2.5) * (0.6 + Math.random() * 1.4);
             const hasSpikes = Math.random() < spikeChance;
-            const pSpikeW = Math.max(8, Math.min((info.actions[id].platformSpikeWidth || Math.floor(spikeW/1.6)), Math.floor(w/3)));
-            const pSpikeH = Math.max(6, Math.min((info.actions[id].platformSpikeHeight || Math.floor(spikeH*0.6)), 24));
-            info.platforms.push({ x: x, y: y, w: w, h: h, vx: speed, color: info.actions[id].platformColor || '#9aa', hasSpikes: hasSpikes, spikeW: pSpikeW, spikeH: pSpikeH });
+            const pSpikeW = Math.max(8, Math.min((bulletHellNeo.actions["zarUltimateAttack"].platformSpikeWidth || Math.floor(spikeW/1.6)), Math.floor(w/3)));
+            const pSpikeH = Math.max(6, Math.min((bulletHellNeo.actions["zarUltimateAttack"].platformSpikeHeight || Math.floor(spikeH*0.6)), 24));
+            bulletHellNeo.platforms.push({ x: x, y: y, w: w, h: h, vx: speed, color: bulletHellNeo.actions["zarUltimateAttack"].platformColor || '#9aa', hasSpikes: hasSpikes, spikeW: pSpikeW, spikeH: pSpikeH });
         }
 
         // timing for spike damage
-        info.actions[id].lastSpikeDamageTime = info.actions[id].lastSpikeDamageTime || 0;
-        return info;
+        bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime = bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime || 0;
     },
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Update platforms positions
-        if (info.platforms) {
-            for (let p of info.platforms) {
-                p.x += p.vx;
+        if (bulletHellNeo.platforms) {
+            for (let p of bulletHellNeo.platforms) {
+                p.x += (p.vx * 60 * bulletHellNeo.delta);
                 // wrap-around horizontally
-                if (p.vx > 0 && p.x > info.width) p.x = -p.w;
-                if (p.vx < 0 && p.x + p.w < 0) p.x = info.width;
+                if (p.vx > 0 && p.x > bulletHellNeo.width) p.x = -p.w;
+                if (p.vx < 0 && p.x + p.w < 0) p.x = bulletHellNeo.width;
             }
         }
 
         // Player support and spike damage checks (only relevant in blueMode/platformer)
-        if (info.blueMode) {
-            let playerX = info.px;
-            let playerY = info.py;
-            if (info.subArena && info.moveWithSub) { playerX += info.subx; playerY += info.suby }
+        if (bulletHellNeo.soul == "blue") {
+            let playerX = bulletHellNeo.px;
+            let playerY = bulletHellNeo.py;
+            if (bulletHellNeo.subArena && options.bhKeyboard) { playerX += bulletHellNeo.subx; playerY += bulletHellNeo.suby }
 
             // Platforms: allow standing on top
-            if (info.platforms) {
-                for (let p of info.platforms) {
+            if (bulletHellNeo.platforms) {
+                for (let p of bulletHellNeo.platforms) {
                     // check horizontal overlap with a small tolerance
-                    if (playerX + info.pr > p.x && playerX - info.pr < p.x + p.w) {
-                        const feetY = playerY + info.pr;
+                    if (playerX + bulletHellNeo.pr > p.x && playerX - bulletHellNeo.pr < p.x + p.w) {
+                        const feetY = playerY + bulletHellNeo.pr;
                         // If player's feet are touching or just below the platform top and falling, snap to platform
-                        if (feetY >= p.y - 6 && feetY <= p.y + 10 && (info.vy || 0) >= -2) {
-                            info.py = p.y - info.pr;
-                            info.vy = 0;
-                            info.onGround = true;
+                        if (feetY >= p.y - 6 && feetY <= p.y + 10 && (bulletHellNeo.pvy || 0) >= -2) {
+                            bulletHellNeo.py = p.y - bulletHellNeo.pr;
+                            bulletHellNeo.pvy = 0;
+                            bulletHellNeo.onGround = true;
                             if (p.hasSpikes) {
                                 const now = Date.now();
-                                if (!info.actions[id].lastSpikeDamageTime) info.actions[id].lastSpikeDamageTime = 0;
-                                if (now - info.actions[id].lastSpikeDamageTime > 0) {
-                                    info.platformHit = true;
-                                    info.actions[id].lastSpikeDamageTime = now;
+                                if (!bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime) bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime = 0;
+                                if (now - bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime > 0) {
+                                    bulletHellNeo.platformHit = true;
+                                    bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime = now;
                                 }
                             }
                         }
@@ -3534,18 +3678,18 @@ BHB.zarUltimateAttack = {
             }
 
             // Spikes: if player's feet intersect the spike band, deal damage periodically
-            if (info.spikes && info.spikes.length) {
-                const spikeTop = info.height - (info.actions[id].spikeHeight || 36);
-                const feetY = info.py + info.pr;
+            if (bulletHellNeo.spikes && bulletHellNeo.spikes.length) {
+                const spikeTop = bulletHellNeo.height - (bulletHellNeo.actions["zarUltimateAttack"].spikeHeight || 36);
+                const feetY = bulletHellNeo.py + bulletHellNeo.pr;
                 if (feetY >= spikeTop) {
                     // if player's x overlaps any spike
-                    for (let s of info.spikes) {
-                        if (info.px + info.pr > s.x && info.px - info.pr < s.x + s.w) {
+                    for (let s of bulletHellNeo.spikes) {
+                        if (bulletHellNeo.px + bulletHellNeo.pr > s.x && bulletHellNeo.px - bulletHellNeo.pr < s.x + s.w) {
                             const now = Date.now();
-                            if (!info.actions[id].lastSpikeDamageTime) info.actions[id].lastSpikeDamageTime = 0;
-                            if (now - info.actions[id].lastSpikeDamageTime > 0) {
-                                info.platformHit = true; // reuse central damage handling
-                                info.actions[id].lastSpikeDamageTime = now;
+                            if (!bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime) bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime = 0;
+                            if (now - bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime > 0) {
+                                bulletHellNeo.platformHit = true; // reuse central damage handling
+                                bulletHellNeo.actions["zarUltimateAttack"].lastSpikeDamageTime = now;
                             }
                             break;
                         }
@@ -3554,14 +3698,12 @@ BHB.zarUltimateAttack = {
             }
         }
 
-        // Allow `rain` to be specified on the action (info.actions[id].rain)
-        if ((info.actions && info.actions[id] && info.actions[id].diceSpikes) || info.diceSpikes) {
+        // Allow `rain` to be specified on the action (bulletHellNeo.actions["zarUltimateAttack"].rain)
+        if ((bulletHellNeo.actions && bulletHellNeo.actions["zarUltimateAttack"] && bulletHellNeo.actions["zarUltimateAttack"].diceSpikes) || bulletHellNeo.diceSpikes) {
             // Reuse existing pipRain behavior so toggling `rain` matches pipRain effects.
             if (BHB && BHB.diceSpikes && typeof BHB.diceSpikes.moveFunc === 'function') {
-                info = BHB.diceSpikes.moveFunc(info, ticks, id) || info;
+                BHB.diceSpikes.moveFunc("zarUltimateAttack")
             }
         }
-
-        return info;
     },
 }

@@ -957,6 +957,8 @@ let changelog = `<h1>Changelog:</h1><br>
 		Content:<br>
 			- Added Tera, and its subsequent content.<br>
 			- Completely rebalanced uni-alpha.<br>
+			- Completely remade the backend of bullet hell, making it more stable.<br>
+			- Bullet hell now properly adjusts game speed based on fps.<br>
 			- Remade hex of sacrifice.<br>
 			- Added new Zar Dungeon upgrades.<br>
 			- Added new Laboratory upgrades.<br>
@@ -971,6 +973,11 @@ let changelog = `<h1>Changelog:</h1><br>
 			- Added purchase values to twig upgrades.<br>
 			- Improved buying reqs for the last row of stabilization buyables to prevent locking yourself out of purchases.<br>
 			- Improved Zar's Dungeon UI.<br>
+			- Improved Matos' final attack.<br>
+			- Removed Aleph's timer and replaced Aleph's second action with a growing drain attack.<br>
+			- Added 2 new Aleph attacks.<br>
+			- Remade Aleph's final attack.<br>
+			- Added the option to replace bullet hell attacks with a regular attack.<br>
 			- Added bulk cante/remembrance core gain.<br>
 			- Added -D1's song to the jukebox.<br>
 			- Added global black heart stats to character page.<br><br>

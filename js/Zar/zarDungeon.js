@@ -1538,6 +1538,7 @@ BHC.zd6 = {
                 if (random == 0) {
                     bhAttack(dmg, index, slot, "randomPlayer", "", "ranged")
                 } else {
+                    bhLog("<span style='color: #73741A'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " stunned itself for 3s.")
                     player.bh.celestialite.stun = ["soft", new Decimal(3)]
                 }
             },            
@@ -1577,6 +1578,7 @@ BHC.zd7 = {
                 if (random == 0) {
                     bhAttack(dmg, index, slot, "randomPlayer", "", "ranged")
                 } else {
+                    bhLog("<span style='color: #73741A'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " stunned itself for 0.2s.")
                     player.bh.celestialite.stun = ["soft", new Decimal(0.2)]
                 }
             },     
@@ -1624,13 +1626,13 @@ BHC.zd8 = {
 
                 let random = getRandomInt(4)
                 if (random == 0) {
-                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "", "magic")
+                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "<span style='color:#73741A'>[S-STUN] </span>", "magic")
                     player.bh.characters[1].stun = ["soft", new Decimal(5)]
                 } else if (random == 1) {
-                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "", "magic")
+                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "<span style='color:#73741A'>[S-STUN] </span>", "magic")
                     player.bh.characters[0].stun = ["soft", new Decimal(5)]
                 } else if (random == 2) {
-                    bhAttack(dmg, index, slot, "randomPlayer", "", "magic")
+                    bhAttack(dmg, index, slot, "randomPlayer", "<span style='color:#73741A'>[S-STUN] </span>", "magic")
                     player.bh.characters[0].stun = ["soft", new Decimal(2.5)]
                     player.bh.characters[1].stun = ["soft", new Decimal(2.5)]
                 } else {
@@ -1816,6 +1818,7 @@ BHC.dice3 = {
                 if (random == 0) {
                     bhAttack(dmg, index, slot, "randomPlayer", "", "ranged")
                 } else {
+                    bhLog("<span style='color: #73741A'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " stunned itself for 0.2s.")
                     player.bh.celestialite.stun = ["soft", new Decimal(0.2)]
                 }
             },     
@@ -1872,6 +1875,7 @@ BHC.dice4 = {
                 if (random == 0) {
                     bhAttack(dmg, index, slot, "randomPlayer", "", "ranged")
                 } else {
+                    bhLog("<span style='color: #73741A'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " stunned itself for 3s.")
                     player.bh.celestialite.stun = ["soft", new Decimal(3)]
                 }
             },            
@@ -1889,13 +1893,13 @@ BHC.dice4 = {
 
                 let random = getRandomInt(4)
                 if (random == 0) {
-                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "", "magic")
+                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "<span style='color:#73741A'>[S-STUN] </span>", "magic")
                     player.bh.characters[1].stun = ["soft", new Decimal(5)]
                 } else if (random == 1) {
-                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "", "magic")
+                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "<span style='color:#73741A'>[S-STUN] </span>", "magic")
                     player.bh.characters[0].stun = ["soft", new Decimal(5)]
                 } else if (random == 2) {
-                    bhAttack(dmg, index, slot, "randomPlayer", "", "magic")
+                    bhAttack(dmg, index, slot, "randomPlayer", "<span style='color:#73741A'>[S-STUN] </span>", "magic")
                     player.bh.characters[0].stun = ["soft", new Decimal(2.5)]
                     player.bh.characters[1].stun = ["soft", new Decimal(2.5)]
                 } else {
@@ -1988,13 +1992,13 @@ BHC.zar = {
 
                 let random = getRandomInt(4)
                 if (random == 0) {
-                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "", "magic")
+                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "<span style='color:#73741A'>[S-STUN] </span>", "magic")
                     player.bh.characters[1].stun = ["soft", new Decimal(5)]
                 } else if (random == 1) {
-                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "", "magic")
+                    bhAttack(dmg.mul(1.5), index, slot, "randomPlayer", "<span style='color:#73741A'>[S-STUN] </span>", "magic")
                     player.bh.characters[0].stun = ["soft", new Decimal(5)]
                 } else if (random == 2) {
-                    bhAttack(dmg, index, slot, "randomPlayer", "", "magic")
+                    bhAttack(dmg, index, slot, "randomPlayer", "<span style='color:#73741A'>[S-STUN] </span>", "magic")
                     player.bh.characters[0].stun = ["soft", new Decimal(2.5)]
                     player.bh.characters[1].stun = ["soft", new Decimal(2.5)]
                 } else {
@@ -2018,15 +2022,15 @@ BHC.zar = {
                     } else if (random == 1) {
                         bulletHell({"diceSpikes": {spawnPerSec: 10, enemySpeed: 3.5, spikeSize: 28,}}, {width: 1200, height: 600, duration: 12, transparent: false})
                     } else if (random == 2){
-                        bulletHellBlue({"diceSpikesPlatformer": {bulletPerSec: 1.2, enemySpeed: 3, spikeHeight: 80, spikeWidth: 60}}, {width:800, height:300, duration:15, jumpMin:6, jumpMax:150, gravity: 0.2})
+                        bulletHell({"diceSpikesPlatformer": {bulletPerSec: 1.2, enemySpeed: 3, spikeHeight: 80, spikeWidth: 60}}, {soul: "blue", width:800, height:300, duration:15, jumpMin:6, jumpMax:150, gravity: 0.2})
                     } else if (random == 3){
-                        bulletHellBlue({"spikePlatformAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 4, platformSpikeChance: 0.4, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203}}, {width:800, height:600, duration:15, jumpMin:6, jumpMax:250, gravity: 0.2})
+                        bulletHell({"spikePlatformAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 4, platformSpikeChance: 0.4, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203}}, {soul: "blue", width:800, height:600, duration:15, jumpMin:6, jumpMax:250, gravity: 0.2})
                     }  else if (random == 4){
-                        bulletHellBlue({"dieBouncer": {dieAmount: 1, size: 50, enemySpeed: 3, chargeMult: 1.6, spikeSpeed:5, spikeRadius:30, lastTick:false}}, {width: 800, height: 600, duration: 10, jumpMin:6, jumpMax:250, gravity: 0.2})
+                        bulletHell({"dieBouncer": {dieAmount: 1, size: 50, enemySpeed: 3, chargeMult: 1.6, spikeSpeed:5, spikeRadius:30, lastTick:false}}, {soul: "blue", width: 800, height: 600, duration: 10, jumpMin:6, jumpMax:250, gravity: 0.2})
                     } else if (random == 5){
                         bulletHell({"dieBouncer": {dieAmount: 2, size: 50, enemySpeed: 3, chargeMult: 1.6, spikeSpeed:6, spikeRadius:30, lastTick:false}}, {width: 1200, height: 600, duration: 10})
                     } else if (random == 6) {
-                        bulletHellBlue({"movingDieRadialBurstAttack": {circleAmount: 1, burstInterval: 800, bulletsPerBurst: 6, enemySpeed: 1.5, bulletSpeed: 5}}, {width:800, height:600, duration:15, jumpMin:6, jumpMax:250, gravity: 0.2})
+                        bulletHell({"movingDieRadialBurstAttack": {circleAmount: 1, burstInterval: 800, bulletsPerBurst: 6, enemySpeed: 1.5, bulletSpeed: 5}}, {soul: "blue", width:800, height:600, duration:15, jumpMin:6, jumpMax:250, gravity: 0.2})
                     }
                 } else
                 {
@@ -2038,15 +2042,24 @@ BHC.zar = {
                     } else if (random == 2){
                         bulletHell({"diceAttack": {diceAmount: 8, intervalDiv: 0.55}}, {duration: 10})
                     } else if (random == 3) {
-                        bulletHellBlue({"spikePlatformAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 4, platformSpikeChance: 0.1, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203, rain: true, bulletPerSec: 3}}, {width:800, height:600, duration:15, jumpMin:6, jumpMax:250, gravity: 0.2})
+                        bulletHell({"spikePlatformAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 4, platformSpikeChance: 0.1, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203, rain: true, bulletPerSec: 3}}, {soul: "blue", width:800, height:600, duration:15, jumpMin:6, jumpMax:250, gravity: 0.2})
                     } else if (random == 4) {
-                        bulletHellBlue({"zarUltimateAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 6, spawnPerSec: 2, bulletPerSec: 6, enemySpeed: 3, spikeSize: 28, platformSpikeChance: 0.1, platformSpeed: 1, platformMinW: 203, platformMaxW: 203, diceSpikes: true, bulletPerSec: 10}}, {width: 800, height: 600, duration: 12, transparent: false, saveContent: true, jumpMin:6, jumpMax:350, gravity: 0.2})
+                        bulletHell({"zarUltimateAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 6, spawnPerSec: 2, bulletPerSec: 6, enemySpeed: 3, spikeSize: 28, platformSpikeChance: 0.1, platformSpeed: 1, platformMinW: 203, platformMaxW: 203, diceSpikes: true, bulletPerSec: 10}}, {soul: "blue", width: 800, height: 600, duration: 12, transparent: false, saveContent: true, jumpMin:6, jumpMax:350, gravity: 0.2})
                     } else if (random == 5 || random == 6) {
-                        zarAttackBarrage(getRandomInt(4))
+                        if (player.tab == "bh" && !options.bulletHellOff) {
+                            zarAttackBarrage(getRandomInt(4))
+                        } else {
+                            if (player.bh.characters[0].id != "none") player.bh.characters[0].stun = ["hard", new Decimal(3)]
+                            if (player.bh.characters[1].id != "none") player.bh.characters[1].stun = ["hard", new Decimal(3)]
+                            if (player.bh.characters[2].id != "none") player.bh.characters[2].stun = ["hard", new Decimal(3)]
+                            for (let i = 0; i < 10; i++) {
+                                setTimeout(() => {
+                                    bhAttack(Decimal.mul(player.bh.celestialite.damage, 0.5), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                                }, i*300)
+                            }
+                        }
                     }
                 }
-                
-                
                 //bulletHell({"diceSpikes": {spawnPerSec: 6, bulletPerSec: 6, enemySpeed: 3.5, bulletSpeed: 2, spikeSize: 28, rain: true}}, {width: window.innerWidth, height: window.innerHeight, duration: 12, transparent: true})
                 //bulletHell({"pipRainUltimate": {bulletPerSec: 3}}, {width: window.innerWidth, height: window.innerHeight, duration: 12, transparent: true})
                 //bulletHell({"diceAttack": {diceAmount: 8, intervalDiv: 0.55}}, {duration: 10})
@@ -2056,25 +2069,34 @@ BHC.zar = {
 
             passive: true,
             onPassive(index, slot, target) {
-                if (!player.bh.celestialite.actions[3].variables.attacks) player.bh.celestialite.actions[3].variables.attacks = 0
-                if (player.bh.celestialite.health.lt(500) && player.bh.celestialite.attackID == 0 && player.bh.celestialite.actions[3].variables.attacks == 0) {
-                    screenFlash("", 200)
-                    setTimeout(() => {
-                    player.bh.celestialite.attackTimeout = [1, new Decimal(25)]
-                    bulletHellBlue({"zarUltimateAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 6, spawnPerSec: 4, bulletPerSec: 6, enemySpeed: 3, spikeSize: 28, platformSpikeChance: 0.1, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203, diceSpikes: true, bulletPerSec: 10}}, {width: window.innerWidth, height: window.innerHeight, duration: 25, transparent: true, saveContent: true, jumpMin:6, jumpMax:350, gravity: 0.2})
-                    }, 200)
-                    player.bh.celestialite.actions[3].variables.attacks = 1
+                if (player.bh.celestialite.health.lt(500) && player.bh.celestialite.attackID == 0) {
+                    if (player.tab == "bh" && !options.bulletHellOff) {
+                        screenFlash("", 200)
+                        setTimeout(() => {
+                            bulletHell({"zarUltimateAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 6, spawnPerSec: 4, bulletPerSec: 6, enemySpeed: 3, spikeSize: 28, platformSpikeChance: 0.1, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203, diceSpikes: true, bulletPerSec: 10}}, {soul: "blue", width: window.innerWidth, height: window.innerHeight, duration: 25, transparent: true, saveContent: true, jumpMin:6, jumpMax:350, gravity: 0.2})
+                        }, 200)
+                        setTimeout(() => {
+                            screenFlash("", 200)
+                            setTimeout(() => {
+                                bulletHell({"diceSpikes": {spawnPerSec: 6, bulletPerSec: 6, enemySpeed: 4, bulletSpeed: 2, spikeSize: 28, rain: true}}, {width: window.innerWidth, height: window.innerHeight, duration: 15, transparent: true}, () => {player.bh.celestialite.attackID = 2})
+                            }, 200)
+                        }, 27200)
+                        player.bh.celestialite.attackID += 1
+                    } else {
+                        player.bh.celestialite.health = new Decimal(500)
+                        if (player.bh.characters[0].id != "none") player.bh.characters[0].stun = ["hard", new Decimal(5)]
+                        if (player.bh.characters[1].id != "none") player.bh.characters[1].stun = ["hard", new Decimal(5)]
+                        if (player.bh.characters[2].id != "none") player.bh.characters[2].stun = ["hard", new Decimal(5)]
+                        for (let i = 0; i < 10; i++) {
+                            setTimeout(() => {
+                                bhAttack(Decimal.mul(player.bh.celestialite.damage, 1), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                                if (i == 9) player.bh.celestialite.attackID = 2
+                            }, i*300)
+                        }
+                        player.bh.celestialite.attackID += 1
+                    }
                 }
-                if (player.bh.celestialite.attackID == 1 && player.bh.celestialite.actions[3].variables.attacks == 1) {
-                    player.bh.celestialite.attackTimeout = [2, new Decimal(15)]
-                    screenFlash("", 200)
-                    setTimeout(() => {
-                    player.bh.celestialite.attackTimeout = [2, new Decimal(15)]
-                    bulletHell({"diceSpikes": {spawnPerSec: 6, bulletPerSec: 6, enemySpeed: 4, bulletSpeed: 2, spikeSize: 28, rain: true}}, {width: window.innerWidth, height: window.innerHeight, duration: 15, transparent: true})
-                    }, 200)
-                    player.bh.celestialite.actions[3].variables.attacks = 2
-                }
-                if (player.bh.celestialite.attackID == 2 && player.bh.celestialite.actions[3].variables.attacks == 2) {
+                if (player.bh.celestialite.attackID >= 2) {
                     celestialiteDeath()
                     player.zarDungeon.zarDefeated = true
                 }
@@ -2083,7 +2105,6 @@ BHC.zar = {
     },
     reward() {
         let gain = {}
-
         gain.pips = new Decimal(50)
         return gain
     },
@@ -2120,67 +2141,64 @@ BHC.zar = {
 */
 
 function zarAttackBarrage(attackVariable) {
-    if (attackVariable == 0)
-    {
-        player.zarDungeon.barrageActive = true
-        screenFlash("", 200)
-        setTimeout(() => {
-        bulletHellBlue({"diceSpikesPlatformer": {bulletPerSec: 1.2, enemySpeed: 3, spikeHeight: 80, spikeWidth: 60}}, {width:800, height:300, duration:3, jumpMin:6, jumpMax:150, gravity: 0.2})
-        }, 200)
-        setTimeout(() => {
-        zarAttackBarrage(getRandomInt(4))
-        }, 3200)
-    } 
-    else if (attackVariable == 1)
-    {
-        player.zarDungeon.barrageActive = true
-        screenFlash("", 200)
-        setTimeout(() => {
-        bulletHell({"pipRainUltimate": {bulletPerSec: 4}}, {width:800, height:600, duration:3,})
-        }, 200)
-        setTimeout(() => {
-        zarAttackBarrage(getRandomInt(4))
-        }, 3200)
-    }
-    else if (attackVariable == 2)
-    {
-        player.zarDungeon.barrageActive = true
-        screenFlash("", 200)
-        setTimeout(() => {
-        bulletHellBlue({"dieBouncer": {dieAmount: 1, size: 50, enemySpeed: 3, chargeMult: 1.6, spikeSpeed:5, spikeRadius:30, lastTick:false}}, {width: 800, height: 600, duration: 3, jumpMin:6, jumpMax:250, gravity: 0.2})
-        }, 200)
-        setTimeout(() => {
-        zarAttackBarrage(getRandomInt(5))
-        }, 3200)
-    } 
-    else if (attackVariable == 3)
-    {
-        player.zarDungeon.barrageActive = true
-        screenFlash("", 200)
-        setTimeout(() => {
-            bulletHellBlue({"spikePlatformAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 4, platformSpikeChance: 0, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203}}, {width:800, height:600, duration:3, jumpMin:6, jumpMax:250, gravity: 0.2})
-        }, 200)
-        setTimeout(() => {
-        zarAttackBarrage(getRandomInt(5))
-        }, 3200)
-    } else if (attackVariable == 4)
-    {
-        screenFlash("", 200)
-        setTimeout(() => {
-            bulletHell({"diceSpikes": {spawnPerSec: 10, enemySpeed: 3.5, spikeSize: 28,}}, {width: window.innerWidth, height: window.innerHeight, duration: 10, transparent: true})
-        }, 200)
-        setTimeout(() => {
-        player.zarDungeon.barrageActive = false
-        }, 3200)
+    switch (attackVariable) {
+        case 0:
+            player.zarDungeon.barrageActive = true
+            if (player.tab == "bh" || options.bulletHellOff) screenFlash("", 200)
+            setTimeout(() => {
+                bulletHell({"diceSpikesPlatformer": {bulletPerSec: 1.2, enemySpeed: 3, spikeHeight: 80, spikeWidth: 60}}, {soul: "blue", width:800, height:300, duration:3, jumpMin:6, jumpMax:150, gravity: 0.2})
+            }, 200)
+            setTimeout(() => {
+                zarAttackBarrage(getRandomInt(4))
+            }, 3200)
+            break;
+        case 1:
+            player.zarDungeon.barrageActive = true
+            if (player.tab == "bh" || options.bulletHellOff) screenFlash("", 200)
+            setTimeout(() => {
+                bulletHell({"pipRainUltimate": {bulletPerSec: 4}}, {width:800, height:600, duration:3,})
+            }, 200)
+            setTimeout(() => {
+                zarAttackBarrage(getRandomInt(4))
+            }, 3200)
+            break;
+        case 2:
+            player.zarDungeon.barrageActive = true
+            if (player.tab == "bh" || options.bulletHellOff) screenFlash("", 200)
+            setTimeout(() => {
+                bulletHell({"dieBouncer": {dieAmount: 1, size: 50, enemySpeed: 3, chargeMult: 1.6, spikeSpeed:5, spikeRadius:30, lastTick:false}}, {soul: "blue", width: 800, height: 600, duration: 3, jumpMin:6, jumpMax:250, gravity: 0.2})
+            }, 200)
+            setTimeout(() => {
+                zarAttackBarrage(getRandomInt(5))
+            }, 3200)
+            break;
+        case 3:
+            player.zarDungeon.barrageActive = true
+            if (player.tab == "bh" || options.bulletHellOff) screenFlash("", 200)
+            setTimeout(() => {
+                bulletHell({"spikePlatformAttack": {spikeHeight: 50, spikeWidth: 28, platformCount: 4, platformSpikeChance: 0, platformSpeed: 1.5, platformMinW: 203, platformMaxW: 203}}, {soul: "blue", width:800, height:600, duration:3, jumpMin:6, jumpMax:250, gravity: 0.2})
+            }, 200)
+            setTimeout(() => {
+                zarAttackBarrage(getRandomInt(5))
+            }, 3200)
+            break;
+        case 4:
+            if (player.tab == "bh" || options.bulletHellOff) screenFlash("", 200)
+            setTimeout(() => {
+                bulletHell({"diceSpikes": {spawnPerSec: 10, enemySpeed: 3.5, spikeSize: 28,}}, {width: window.innerWidth, height: window.innerHeight, duration: 10, transparent: true})
+            }, 200)
+            setTimeout(() => {
+                player.zarDungeon.barrageActive = false
+            }, 3200)
+            break;
     }
 }
 
 window.addEventListener('load', (event) => {
     setTimeout(() => {
-    if (player && player.zarDungeon && player.zarDungeon.barrageActive)
-    {
-        zarFinalAttack(0)
-    }
+        if (player && player.zarDungeon && player.zarDungeon.barrageActive) {
+            zarFinalAttack(0)
+        }
     }, 500)
 });
 

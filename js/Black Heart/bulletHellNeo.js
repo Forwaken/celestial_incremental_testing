@@ -1,10 +1,40 @@
 let bulletHellNeo = null;
 
+function bulletHell(actions, values = {}, exitAction = () => {}) {
+    if (Object.keys(actions).length === 0) actions = {"none": {}}
+    if ((options && options.bulletHellOff) || (player && player.tab && player.tab != "bh")) {
+        if (player.bh.celestialite.health.lte(0)) return
+        let amt = 0
+        for (let i = 0; i < 3; i++) {if (player.bh.characters[i].id != "none" && Decimal.gt(player.bh.characters[i].health, 0)) amt++}
+        let duration = values.duration ?? 10
+        bhAttack(Decimal.mul(player.bh.celestialite.damage, duration/3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+        exitAction()
+        return
+    }
+    if (values.goal) {values.goalStart = values.goal == "cell" ? "maze" : values.goal}
+    if (values.start) {values.pStart = values.start == "cell" ? "maze" : values.start}
+    if (values.timed) {values.timer = true;values.timerTime = values.duration}
+    if (values.transparent) {values.arenaTransparent = true}
+    if (values.duration) {for (let i in actions) {if (!actions[i].duration) actions[i].duration = values.duration}}
+    if (values.jumpMax) {values.pJumpMax = values.jumpMax}
+    if (values.jumpMin) {values.pJumpMin = values.jumpMin}
+    if (values.gravity) {values.pGravity = values.gravity}
+    if (!bulletHellNeo || !bulletHellNeo.overlay) {
+        bulletHellNeo = new BulletHell(values, actions, exitAction);
+        bulletHellNeo.spawnArena();
+    } else {
+        bulletHellNeo.newAction(values, actions, exitAction)
+    }
+}
+
 class BulletHell {
-    constructor(values = {}) {
+    constructor(values = {}, actions = {}, exitAction = () => {}) {
         this.running = false
-        this.actions = {}
-        this.exitActions = []
+        this.actions = actions
+        for (let i in this.actions) {
+            if (!this.actions[i].duration) this.actions[i].duration = -1000
+        }
+        this.exitActions = [exitAction]
         this.bullets = []
         this.prevScreenState = options.fullscreen
         this.time = Date.now()
@@ -15,14 +45,14 @@ class BulletHell {
         this.enemyCanvas = null
         this.arenaCanvas = null
         this.arenaType = values.arenaType || "normal" // used for clickthrough arena
-        this.arenaTransparent = false
+        this.arenaTransparent = values.arenaTransparent
         this.width = values.width || 700
         this.height = values.height || 500
         this.centerX = values.centerX || window.innerWidth / 2
         this.centerY = values.centerY || window.innerHeight / 2
         this.timer = values.timer || false
         this.timerTime = values.timerTime || 0
-        this.duration = values.duration || -1
+        this.duration = values.duration || -1000
 
         // Sub-arena Variables
         this.subArena = values.subArena || false
@@ -127,7 +157,7 @@ class BulletHell {
 
         // Player Variables
         this.soul = values.soul || "red"
-        this.invTime = 0.2
+        this.invTime = 0.5
         this.pStart = values.pStart || (this.cellSize ? "maze" : "center")
         let curWidth = this.subArena ? this.subWidth : this.width
         let curHeight = this.subArena ? this.subHeight : this.height
@@ -236,7 +266,7 @@ class BulletHell {
             if (BHB[i].moveFunc) this.actions[i].moveFunc = BHB[i].moveFunc
             this.actions[i].lastTime = false
 
-            if (this.actions[i].codeFunc) this.actions[i].codeFunc(this, i)
+            if (this.actions[i].codeFunc) this.actions[i].codeFunc()
         }
 
         // Event Listeners
@@ -251,8 +281,7 @@ class BulletHell {
         }
 
         // Pause Universes to prevent problems
-        if (this.running == false) {
-            if (player.bh.celestialite.health.lte(0)) return
+        if (this.running == false && (player.bh.celestialite.health.gt(0) || BHC[player.bh.celestialite.id].immortal)) {
             player.subtabs["bh"]["stuff"] = "bullet";
             if (!player.tempPaused) pauseUniverseAll(["BH"], "pause", true)
             options.fullscreen = true
@@ -266,6 +295,9 @@ class BulletHell {
     removeArena(damage = false, dead = false) {
         this.running = false;
         clearInterval(this.loop);
+        for (let i = 0; i < this.exitActions.length; i++) {
+            if (typeof this.exitActions[i] === "function") this.exitActions[i]()
+        }
         if (!options.bhKeyboard) {
             window.removeEventListener('mousemove', this.mouseHandler);
             window.removeEventListener('touchmove', this.touchHandler);
@@ -275,13 +307,220 @@ class BulletHell {
             window.removeEventListener('keyup', this.keyupHandler);
             window.removeEventListener('click', this.clickHandler);
         }
-        if (this.overlay) document.body.removeChild(this.overlay)
+        if (this.overlay) {
+            document.body.removeChild(this.overlay)
+            this.overlay = null
+        }
         if (!dead) player.subtabs["bh"]["stuff"] = "battle"
         else player.subtabs["bh"]["stuff"] = "dead"
         if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
         player.universe = "U3"
         options.fullscreen = this.prevScreenState
-        if (damage) bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer")
+        if (damage) bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+    }
+
+    newAction(values = {}, actions = {}, exitAction = () => {}) {
+        // Modify arena
+        if (values.arenaType) this.arenaType = values.arenaType
+        this.arenaCanvas.style.background = values.arenaTransparent ? "rgba(0,0,0,0)" : "#111"
+        if (!values.width) values.width = this.width
+        if (!values.height) values.height = this.height
+        this.width = values.width
+        this.height = values.height
+        this.arenaCanvas.width = values.width
+        this.arenaCanvas.height = values.height
+        this.arenaCanvas.style.left = `calc(50vw - ${values.width / 2}px)`
+        this.arenaCanvas.style.top = `calc(50vh - ${values.height / 2}px)`
+        if (this.arenaCanvas.width != window.innerWidth && this.arenaCanvas.height != window.innerHeight) {
+            this.arenaCanvas.style.border = "2px solid #fff"
+            this.arenaCanvas.style.borderRadius = "16px"
+        } else {this.arenaCanvas.style.border = "0"; this.arenaCanvas.style.borderRadius = "0"}
+        this.boxLeft = this.arenaCanvas.getBoundingClientRect().left
+        this.boxTop = this.arenaCanvas.getBoundingClientRect().top
+
+        // Misc Values
+        if (values.timer) this.timer = values.timer
+        if (values.timerTime) this.timerTime = values.timerTime
+
+        // Subarena stuff
+        this.subArena = values.subArena || false
+        if (this.subArena) {
+            this.subWidth = values.subWidth || 400
+            this.subHeight = values.subHeight || 300
+            this.subStart = values.subStart || "random"
+            switch (this.subStart) {
+                case "custom":
+                    this.subx = values.subx || 0
+                    this.suby = values.suby || 0
+                    break;
+                case "left":
+                    this.subx = 0
+                    this.suby = (this.height - this.subHeight) / 2
+                    break;
+                case "right":
+                    this.subx = this.width - this.subWidth
+                    this.suby = (this.height - this.subHeight) / 2
+                    break;
+                case "top":
+                    this.subx = (this.width - this.subWidth) / 2
+                    this.suby = 0
+                    break;
+                case "bottom":
+                    this.subx = (this.width - this.subWidth) / 2
+                    this.suby = 0
+                    break;
+                case "center":
+                    this.subx = (this.width - this.subWidth) / 2
+                    this.suby = (this.height - this.subHeight) / 2
+                    break;
+                default:
+                    this.subx = Math.random() * (this.width - this.subWidth)
+                    this.suby = Math.random() * (this.height - this.subHeight)
+                    break;
+            }
+            this.subSpeed = values.subSpeed || 2.5
+            this.subMove = values.subMove || "bounce"
+            let subAngle = 0
+            switch (this.subMove) {
+                case "bounce": case "random":
+                    subAngle = Math.random() * 2 * Math.PI
+                    break;
+                case "left":
+                    subAngle = Math.PI
+                    break;
+                case "down":
+                    subAngle = Math.PI / 2
+                    break;
+                case "up":
+                    subAngle = Math.PI * 1.5
+                    break;
+                case "custom":
+                    subAngle = values.subAngle
+                    break;
+            }
+            this.subvx = Math.cos(subAngle) * this.subSpeed
+            this.subvy = Math.sin(subAngle) * this.subSpeed
+        } else {
+            this.subWidth = null
+            this.subHeight = null
+            this.subStart = null
+            this.subSpeed = null
+            this.subMove = null
+            this.subvx = null
+            this.subvy = null
+        }
+
+
+        // Maze Moment
+        if (!values.cellSize && this.cellSize) {
+            this.cellSize = false
+            this.maze = null
+            this.mazeCols = null
+            this.mazeRows = null
+        } else if (values.cellSize && !this.cellSize || values.cellSize && values.cellSize != this.cellSize) {
+            this.cellSize = values.cellSize
+            this.mazeCols = Math.floor(this.width / this.cellSize)
+            this.mazeRows = Math.floor(this.height / this.cellSize)
+            this.maze = []
+            for (let y = 0; y < this.mazeRows; y++) {
+                this.maze[y] = [];
+                for (let x = 0; x < this.mazeCols; x++) {
+                    this.maze[y][x] = { x, y, visited: false, walls: [true, true, true, true] }; // top, right, bottom, left
+                }
+            }
+            this.shuffle = (arr) => {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+            this.carve = (x, y) => {
+                this.maze[y][x].visited = true;
+                const dirs = this.shuffle([[0, -1, 0], [1, 0, 1], [0, 1, 2], [-1, 0, 3]]); // [dx, dy, wall]
+                for (const [dx, dy, wall] of dirs) {
+                    const nx = x + dx, ny = y + dy;
+                    if (ny >= 0 && ny < this.mazeRows && nx >= 0 && nx < this.mazeCols && !this.maze[ny][nx].visited) {
+                        this.maze[y][x].walls[wall] = false;
+                        this.maze[ny][nx].walls[(wall + 2) % 4] = false;
+                        this.carve(nx, ny);
+                    }
+                }
+            }
+            this.carve(0, 0);
+        }
+
+        // Goalie
+        this.goalSize = values.goalSize || 50
+        this.goalAmt = values.goalAmt || 1
+        this.goalAmtShow = values.goalAmtShow || false
+        this.goalBehavior = values.goalBehavior || "normal"
+        this.goalEnd = values.goalEnd || "leave"
+        if (values.goalStart) {
+            this.goalStart = values.goalStart
+            this.positionGoal
+        }
+
+        // Modify Player
+        if (values.soul) this.soul = values.soul
+        if (values.pStart) {
+            this.pStart = values.pStart
+            let curWidth = this.subArena ? this.subWidth : this.width
+            let curHeight = this.subArena ? this.subHeight : this.height
+            switch (this.pStart) {
+                case "maze":
+                    this.px = this.cellSize / 2
+                    this.py = this.cellSize / 2
+                    break;
+                case "custom":
+                    this.px = values.px || 25
+                    this.py = values.py || 25
+                case "left":
+                    this.px = 25
+                    this.py = curHeight / 2
+                    break;
+                case "right":
+                    this.px = curWidth - 25
+                    this.py = curHeight / 2
+                    break;
+                case "top":
+                    this.px = curWidth / 2
+                    this.py = 25
+                    break;
+                case "bottom":
+                    this.px = curWidth / 2
+                    this.py = curHeight - 25
+                    break;
+                case "center":
+                    this.px = curWidth / 2
+                    this.py = curWidth / 2
+                    break;
+                default:
+                    this.px = (Math.random() * (curWidth - 25)) + 25
+                    this.py = (Math.random() * (curHeight - 25)) + 25
+                    break
+            }
+        }
+        if (values.pr) this.pr = values.pr
+        if (values.pSpeed) this.pSpeed = values.pSpeed
+        if (values.pGravity) this.pGravity = values.gravity
+        if (values.jumpStrength) this.pJumpStrength = values.jumpStrength
+        if (values.pJumpMin) this.pJumpMin = values.pJumpMin
+        if (values.pJumpMax) this.pJumpMax = values.pJumpMax
+
+        // Action setup and initial bullet spawn code
+        Object.assign(this.actions, actions);
+        for (let i in actions) {
+            if (BHB[i].codeFunc) this.actions[i].codeFunc = BHB[i].codeFunc
+            if (BHB[i].moveFunc) this.actions[i].moveFunc = BHB[i].moveFunc
+            this.actions[i].lastTime = false
+
+            if (this.actions[i].codeFunc) this.actions[i].codeFunc()
+        }
+        this.exitActions.push(exitAction)
+
+        // Extend global duration if duration value
+        if (values.duration) this.duration = this.duration + values.duration
     }
 
     updatePos(e, touch = false) {
@@ -371,8 +610,10 @@ class BulletHell {
         this.time = now
 
         // Check and end arena early if celestialite or all characters are dead
-        if (player.bh.celestialite.id == "none" || (player.bh.celestialite.health.lte(0) && !BHC[player.bh.celestialite.id].immortal)) this.removeArena()
-        if (this.allCharactersDead()) this.removeArena(false, true)
+        if (player.tab == "bh") {
+            if (player.bh.celestialite.id == "none" || (player.bh.celestialite.health.lte(0) && !BHC[player.bh.celestialite.id].immortal)) {this.removeArena()}
+            if (this.allCharactersDead()) this.removeArena(false, true)
+        }
 
         // Update arena position coordinates
         this.boxLeft = this.arenaCanvas.getBoundingClientRect().left
@@ -402,7 +643,7 @@ class BulletHell {
                 this.px += ((targetX - this.px) * 0.035 + (this.pvx || 0)) * 60 * this.delta;
 
                 // Apply gravity
-                this.pvy = (this.pvy || 0) + ((this.gravity || 0.6) * 0.65 * 60 * this.delta);
+                this.pvy = (this.pvy || 0) + ((this.pGravity || 0.6) * 0.65 * 60 * this.delta);
                 this.py += (this.pvy * 60 * this.delta);
 
                 // Floor collision (respect subArena if used)
@@ -435,17 +676,18 @@ class BulletHell {
                 break;
             default:
                 let dx = 0; let dy = 0;
+                let timeMult = 60 * this.delta
                 if (!options.bhKeyboard) {
                     dx = this.pos.x - this.px
                     dy = this.pos.y - this.py
                 } else {
-                    if (this.keys.up) dy -= 5
-                    if (this.keys.down) dy += 5
-                    if (this.keys.left) dx -= 5
-                    if (this.keys.right) dx += 5
+                    if (this.keys.up) dy -= (5 * timeMult)
+                    if (this.keys.down) dy += (5 * timeMult)
+                    if (this.keys.left) dx -= (5 * timeMult)
+                    if (this.keys.right) dx += (5 * timeMult)
                 }
                 let angle = Math.atan2(dy, dx)
-                if (dx < -3 || dx > 3 || dy < -3 || dy > 3) {
+                if (dx < -3 * timeMult || dx > 3 * timeMult || dy < -3 * timeMult || dy > 3 * timeMult) {
                     let speed = this.keys.shift ? this.pSpeed / 2 : this.pSpeed
                     if (this.cellSize) {
                         let npx = this.px + Math.cos(angle) * speed, npy = this.py + Math.sin(angle) * speed;
@@ -494,7 +736,7 @@ class BulletHell {
                         bhHeal(player.bh.celestialite.damage, 3, 0, "randomPlayer")
                         break;
                     case "damage":
-                        bhAttack(player.bh.celestialite.damage.mul(0.5), 3, 0, "randomPlayer")
+                        bhAttack(player.bh.celestialite.damage.mul(0.5), 3, 0, "randomPlayer", "<span style='color:#aa2798'>[BH] </span>")
                         break;
                 }
                 if (this.goalAmt <= 1) {
@@ -509,19 +751,35 @@ class BulletHell {
 
         // Action update functions
         for (let i in this.actions) {
-            if (this.actions[i].moveFunc) this.actions[i].moveFunc(this, this.delta, i)
+            if (this.actions[i].moveFunc) this.actions[i].moveFunc()
+            if (this.actions[i].duration && this.actions[i].duration >= -999) {
+                if (this.actions[i].duration <= 0) {
+                    if (this.actions[i].endAction) this.actions[i].endAction()
+                    delete this.actions[i]
+                } else if (this.actions[i].duration > 0) Math.max(this.actions[i].duration -= this.delta, 0)
+            }
         }
+        if (Object.keys(this.actions).length <= 0) this.removeArena()
 
-        // Move bullets
+        // Move bullets and do generic actions
         for (let b of this.bullets) {
             b.x += b.vx * 60 * this.delta;
             b.y += b.vy * 60 * this.delta;
+            let boxL = b.boxRender ? 0 : this.boxLeft, boxT = b.boxRender ? 0 : this.boxTop
+            if (b.bouncy) {
+                // Bounce off walls
+                if (b.x < b.r + boxL) {b.x = b.r + boxL; b.vx *= -1; if (b.angle) b.angle = Math.PI-b.angle}
+                if (b.x > bulletHellNeo.width - b.r + boxL) {b.x = bulletHellNeo.width - b.r + boxL; b.vx *= -1; if (b.angle) b.angle = Math.PI-b.angle}
+                if (b.y < b.r + boxT) {b.y = b.r + boxT; b.vy *= -1; if (b.angle) b.angle = -b.angle}
+                if (b.y > bulletHellNeo.height - b.r + boxT) {b.y = bulletHellNeo.height - b.r + boxT; b.vy *= -1; if (b.angle) b.angle = -b.angle}
+            }
         }
 
         // Remove bullets that go off screen
         this.bullets = this.bullets.filter(b => {
             if (b.offScreen) {
-                return b.x > this.boxLeft && b.x < this.boxLeft + this.width && b.y > this.boxTop && b.y < this.boxTop + this.height
+                let leeway = b.leeway ? b.leeway + b.r : b.r
+                return b.x > -this.boxLeft - leeway && b.x < this.boxLeft + this.width + leeway && b.y > -this.boxTop - leeway && b.y < this.boxTop + this.height + leeway
             }
             if (b.name && (b.name == "bomb" || b.name == "minibomb") && b.exploded) return false
             if (b.name && (b.name == "knife" || b.name == "bigKnife")) {
@@ -538,7 +796,7 @@ class BulletHell {
         for (let b of this.bullets) {
             let playerX = this.px
             let playerY = this.py
-            if (this.subArena) {playerX += this.subx; playerY += this.suby}
+            if (this.subArena && options.bhKeyboard) {playerX += this.subx; playerY += this.suby}
             if (b.name && b.name == "knife") {
                 // Knife is a rectangle, check if player is within knife's rectangle (approximate as line segment + width)
                 const cx = b.x + Math.cos(b.angle) * b.r / 2;
@@ -596,8 +854,8 @@ class BulletHell {
 
         // Take damage (only when in a BH stage)
         if (playerHit && player && player.bh && player.bh.currentStage && player.bh.currentStage != "none" && this.invTime <= 0) {
-            this.invTime = 0.2
-            bhAttack(player.bh.celestialite.damage.mul(0.25), 3, 0, "randomPlayer")
+            this.invTime = 0.3
+            bhAttack(player.bh.celestialite.damage.mul(0.25), 3, 0, "randomPlayer", "<span style='color:#aa2798'>[BH] </span>")
         }
         if (this.invTime > 0) Math.max(this.invTime -= this.delta, 0)
 
@@ -611,7 +869,7 @@ class BulletHell {
         }
 
         // Duration Stuff
-        if (this.duration >= 0) {
+        if (this.duration >= -999) {
             if (this.duration <= 0) this.removeArena()
             if (this.duration > 0) Math.max(this.duration -= this.delta, 0)
         }
@@ -716,7 +974,7 @@ class BulletHell {
                 this.arenaCtx.fillStyle = '#fff';
                 if (!options.performanceMode) this.arenaCtx.shadowColor = '#000';
                 if (!options.performanceMode) this.arenaCtx.shadowBlur = 6;
-                this.arenaCtx.fillText(`Goals: ${this.goalAmtShow - this.goalAmt}/${this.goalAmtShow}`, 10, 10);
+                this.arenaCtx.fillText(`Goals: ${formatWhole(this.goalAmtShow - this.goalAmt)}/${formatWhole(this.goalAmtShow)}`, 10, 10);
                 this.arenaCtx.restore();
                 this.arenaCtx.restore();
             }
@@ -731,7 +989,7 @@ class BulletHell {
             this.arenaCtx.fillStyle = this.timerTime <= 3 ? '#f44' : '#fff';
             if (!options.performanceMode) this.arenaCtx.shadowColor = '#000';
             if (!options.performanceMode) this.arenaCtx.shadowBlur = 6;
-            this.arenaCtx.fillText(`Time Left: ${this.timerTime}s`, this.width / 2, 10);
+            this.arenaCtx.fillText(`Time Left: ${format(this.timerTime)}s`, this.width / 2, 10);
             this.arenaCtx.restore();
             this.arenaCtx.restore();
         }
@@ -742,6 +1000,48 @@ class BulletHell {
             if (b.boxRender) {
                 b.draw(b, this.arenaCtx)
             }
+        }
+
+        // Draw sliding platforms and ground spikes if present
+        if (this.platforms && this.platforms.length) {
+            for (let p of this.platforms) {
+                this.arenaCtx.save();
+                this.arenaCtx.fillStyle = p.color || '#888';
+                if (!options.performanceMode) {
+                    this.arenaCtx.shadowColor = '#000';
+                    this.arenaCtx.shadowBlur = 8;
+                }
+                this.arenaCtx.fillRect(p.x, p.y, p.w, p.h);
+                // Draw spikes on top of platform if present
+                if (p.hasSpikes) {
+                    this.arenaCtx.fillStyle = p.spikeColor || '#ddd';
+                    const spW = p.spikeW || 12;
+                    const spH = p.spikeH || 12;
+                    for (let sx = p.x; sx < p.x + p.w; sx += spW) {
+                        this.arenaCtx.beginPath();
+                        this.arenaCtx.moveTo(sx, p.y);
+                        this.arenaCtx.lineTo(Math.min(sx + spW / 2, p.x + p.w), p.y - spH);
+                        this.arenaCtx.lineTo(Math.min(sx + spW, p.x + p.w), p.y);
+                        this.arenaCtx.closePath();
+                        this.arenaCtx.fill();
+                    }
+                }
+                this.arenaCtx.restore();
+            }
+        }
+        if (this.spikes && this.spikes.length) {
+            this.arenaCtx.save();
+            this.arenaCtx.fillStyle = '#ddd';
+            for (let s of this.spikes) {
+                const sx = s.x, sy = s.y, sw = s.w, sh = s.h;
+                this.arenaCtx.beginPath();
+                this.arenaCtx.moveTo(sx, sy + sh);
+                this.arenaCtx.lineTo(sx + sw / 2, sy);
+                this.arenaCtx.lineTo(sx + sw, sy + sh);
+                this.arenaCtx.closePath();
+                this.arenaCtx.fill();
+            }
+            this.arenaCtx.restore();
         }
 
         // Draw player in arena
@@ -893,7 +1193,7 @@ class BulletHell {
     }
 
     // Function to shoot a bullet that goes towards the player at coordinates
-    shootAtPlayer = (bx, by, id, speed = 5) => {
+    shootAtPlayer = (bx, by, id, speed = 5, bulletType = "ball") => {
         // Calculate direction from boss to player (relative to the box)
         let playerGlobalX = this.boxLeft + this.px;
         let playerGlobalY = this.boxTop + this.py;
@@ -906,19 +1206,49 @@ class BulletHell {
         const dist = Math.sqrt(dx * dx + dy * dy);
         const bulletRadius = this.actions[id].bulletRadius ?? 10
         if (dist === 0) return;
-        this.bullets.push({
-            x: bx,
-            y: by,
-            vx: (dx / dist) * speed,
-            vy: (dy / dist) * speed,
-            r: bulletRadius,
-            draw(b, bossCtx) {
-                bossCtx.beginPath();
-                bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
-                bossCtx.fillStyle = "#fff";
-                bossCtx.fill();
-            },
-        });
+        switch (bulletType) {
+            case "ball":
+                this.bullets.push({
+                    x: bx,
+                    y: by,
+                    vx: (dx / dist) * speed,
+                    vy: (dy / dist) * speed,
+                    r: bulletRadius,
+                    draw(b, bossCtx) {
+                        bossCtx.beginPath();
+                        bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
+                        bossCtx.fillStyle = "#fff";
+                        bossCtx.fill();
+                    },
+                });
+                break;
+            case "spike":
+                this.bullets.push({
+                    x: bx,
+                    y: by,
+                    vx: (dx / dist) * speed,
+                    vy: (dy / dist) * speed,
+                    r: bulletRadius,
+                    draw(b, bossCtx) {
+                        bossCtx.save();
+                        bossCtx.translate(b.x, b.y);
+                        bossCtx.rotate(Math.atan2(b.vy, b.vx));
+                        // triangle
+                        bossCtx.beginPath();
+                        bossCtx.moveTo(b.r, 0);
+                        bossCtx.lineTo(-b.r * 0.6, b.r * 0.7);
+                        bossCtx.lineTo(-b.r * 0.6, -b.r * 0.7);
+                        bossCtx.closePath();
+                        bossCtx.fillStyle = "#fff";
+                        bossCtx.fill();
+                        bossCtx.lineWidth = 2;
+                        bossCtx.strokeStyle = "#000";
+                        bossCtx.stroke();
+                        bossCtx.restore();
+                    }
+                });
+
+        }
     }
 
     // Function to fire a radial burst at coordinates
@@ -1168,6 +1498,7 @@ class BulletHell {
                 name: bname,
                 boxRender: true, // RENDER IN BOX
                 offScreen: true, // Bullets can be off screen
+                leeway: 200, // Offscreen lee-way for bullets
                 x: spawnX,
                 y: spawnY,
                 angle: knifeAngle,
