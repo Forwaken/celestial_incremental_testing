@@ -81,7 +81,7 @@ addLayer("h", {
         player.h.preNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.preNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())
         player.h.preNerf = player.h.preNerf.mul(player.hrm.challengeSoftcap)
-        if (player.sins.clickables["wrath"]) player.h.preNerf = player.h.preNerf.mul(Decimal.div(77, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1))
+        if (player.sins.clickables["wrath"]) player.h.preNerf = player.h.preNerf.mul(Decimal.div(7, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1))
 
         player.h.powNerf = new Decimal(1)
         if (player.h.stage.neq(6)) player.h.powNerf = Decimal.pow(1000, player.h.stage.sub(6).abs())

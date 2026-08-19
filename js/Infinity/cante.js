@@ -1250,6 +1250,7 @@
                         ["raw-html", "<u>Unlocks</u>", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
                         ["raw-html", "Universe 3: Domain of Singularity.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
                         ["raw-html", "Singularity, and the ability to reset for singularity points.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "Stabilization in Tav's Domain.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
                         ["raw-html", "<u>Buffs</u>", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
                         ["raw-html", "No longer require proto memory time to generate proto memories.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
                         ["raw-html", "x3 Pre-Power Resources.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],

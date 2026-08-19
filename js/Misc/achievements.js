@@ -514,7 +514,7 @@ addLayer("achievements", {
         215: {
             name: "Domain Expansion",
             image: "resources/achievements/3_15.png",
-            tooltip: "<h3>Domain Expansion</h3><hr style='margin-bottom:4px'>Buy the infinitum upgrade in<br>row 1, column 5.",
+            tooltip: "<h3>Domain Expansion</h3><hr style='margin-bottom:4px'>Buy the infinitum upgrade in<br>row 1, column 6.",
             color: "#b2d8d8",
             complete() {return hasUpgrade("tad", 115)},
             unlocked: true,
@@ -555,7 +555,7 @@ addLayer("achievements", {
         220: {
             name: "New Effects",
             image: "resources/achievements/3_20.png",
-            tooltip: "<h3>New Effects</h3><hr style='margin-bottom:4px'>Buy the infinitum upgrade in<br>row 3, column 3.<br><br>Reward: Increase matter<br>gain by 50%.",
+            tooltip: "<h3>New Effects</h3><hr style='margin-bottom:4px'>Buy the infinitum upgrade in<br>row 3, column 4.<br><br>Reward: Increase matter<br>gain by 50%.",
             color: "#b2d8d8",
             unlocked: true,
             marked: true,

@@ -300,7 +300,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(77, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1)) + " Pre-Power Resource"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(7, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1)) + " Pre-Power Resource"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#784848", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [

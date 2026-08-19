@@ -216,6 +216,7 @@ function startChallenge(layer, x) {
 
 function canCompleteChallenge(layer, x) {
 	if (x != player[layer].activeChallenge) return
+	if (!tmp[layer].challenges || !tmp[layer].challenges[x]) return
 	let challenge = tmp[layer].challenges[x]
 	if (challenge.canComplete !== undefined) return challenge.canComplete
 
