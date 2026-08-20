@@ -122,6 +122,7 @@ addLayer("tad", {
         matterGain: new Decimal(0),
         domainCap: new Decimal(1e5),
         highestCap: new Decimal(1e5),
+        sinceCollapse: new Decimal(0),
         matterSoftcap: new Decimal(1),
 
         // ACCUMULATION - ACCUMULATORS
@@ -268,6 +269,7 @@ addLayer("tad", {
     color: "#5b629a",
     branches: ["ta", "ip", "om"],
     update(delta) {
+        delta = Decimal.div(delta, player.uni["U2"].tickspeed)
         let onepersec = new Decimal(1)
 
         // DOMAIN CAP FIXER ON SINGULARITY
@@ -311,7 +313,7 @@ addLayer("tad", {
 
         // MATTER PER SECOND
         if (player.tad.matter.gte(player.tad.domainCap)) player.tad.matterGain = new Decimal(0)
-        if (player.tad.matter.lt(player.tad.domainCap)) player.tad.matter = player.tad.matter.add(player.tad.matterGain.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).min(player.tad.domainCap)
+        if (player.tad.matter.lt(player.tad.domainCap)) player.tad.matter = player.tad.matter.add(player.tad.matterGain.mul(delta)).min(player.tad.domainCap)
 
         // ACCUMULATION COST MODIFIERS
         player.tad.accumulationCost = new Decimal(1)
@@ -331,7 +333,6 @@ addLayer("tad", {
 
         // ACCUMULATION 2ND EFFECT MULT
         player.tad.accumulationMult = new Decimal(0.04)
-        if (player.tad.altInfinities.corrupted.milestone.gte(1)) player.tad.accumulationMult = player.tad.accumulationMult.mul(player.tad.altInfinities.corrupted.effect1)
         if (hasMilestone("tad", 3)) player.tad.accumulationMult = player.tad.accumulationMult.mul(player.tad.magnification.max(3).sub(3).div(10).add(1).pow(2))
 
         // AMPLIFICATION
@@ -341,6 +342,10 @@ addLayer("tad", {
         }
         player.tad.amplificationBase = new Decimal(0.1)
         if (hasUpgrade("tad", 116)) player.tad.amplificationBase = player.tad.amplificationBase.mul(1.5)
+        player.tad.amplificationBase = player.tad.amplificationBase.mul(buyableEffect("tad", 105))
+        if (hasUpgrade("tad", 136)) player.tad.amplificationBase = player.tad.amplificationBase.mul(upgradeEffect("tad", 136))
+        if (player.tad.altInfinities.corrupted.milestone.gte(1)) player.tad.amplificationBase = player.tad.amplificationBase.mul(player.tad.altInfinities.corrupted.effect1)
+        if (hasUpgrade("tad", 146)) player.tad.amplificationBase = player.tad.amplificationBase.mul(upgradeEffect("tad", 146))
 
         if (hasUpgrade("tad", 126)) player.tad.amplificationBase = player.tad.amplificationBase.add(upgradeEffect("tad", 126).sub(1))
         
@@ -365,6 +370,7 @@ addLayer("tad", {
         if (hasUpgrade("tad", 154)) player.tad.compressionKept = player.tad.compressionKept.add(1)
 
         player.tad.compressionMult = new Decimal(1)
+        player.tad.compressionMult = player.tad.compressionMult.mul(buyableEffect("tad", 106))
         if (player.tad.altInfinities.disfigured.milestone.gte(1)) player.tad.compressionMult = player.tad.compressionMult.mul(player.tad.altInfinities.disfigured.effect1)
         if (hasMilestone("tad", 5)) player.tad.compressionMult = player.tad.compressionMult.mul(player.tad.magnification.max(1).log(2).sub(3).max(0).div(5).add(1))
 
@@ -403,11 +409,13 @@ addLayer("tad", {
                 player.tad.matterGain = new Decimal(0)
                 player.tad.infinitum = player.tad.infinitum.add(player.tad.infinitumGain)
                 player.tad.infinitumResets = player.tad.infinitumResets.add(1)
+                player.tad.sinceCollapse = new Decimal(0)
                 if (player.tad.domainCap.gte(player.tad.highestCap)) player.tad.highestCap = player.tad.domainCap
 
                 layers.tad.domainReset(10)
             }
         }
+        player.tad.sinceCollapse = player.tad.sinceCollapse.add(delta)
 
         // INFINITUM MODIFIERS
         player.tad.infinitumGain = Decimal.pow(2, player.tad.domainCap.div(99999).log(10))
@@ -511,50 +519,50 @@ addLayer("tad", {
             case "none":
                 break;
             case "broken": case "shattered": case "fragmented":
-                if (player.in.infinities.gte(player.tad.altInfinities[player.tad.altSelection].cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))) && player.tad.infinitum.gte(player.tad.altInfinities[player.tad.altSelection].cost.div(10).mul(Decimal.div(delta, player.uni["U2"].tickspeed)))) {
-                    player.in.infinities = player.in.infinities.sub(player.tad.altInfinities[player.tad.altSelection].cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
-                    player.tad.infinitum = player.tad.infinitum.sub(player.tad.altInfinities[player.tad.altSelection].cost.div(10).mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
+                if (player.in.infinities.gte(player.tad.altInfinities[player.tad.altSelection].cost.mul(delta)) && player.tad.infinitum.gte(player.tad.altInfinities[player.tad.altSelection].cost.div(10).mul(delta))) {
+                    player.in.infinities = player.in.infinities.sub(player.tad.altInfinities[player.tad.altSelection].cost.mul(delta)).max(0)
+                    player.tad.infinitum = player.tad.infinitum.sub(player.tad.altInfinities[player.tad.altSelection].cost.div(10).mul(delta)).max(0)
                     if (player.in.infinities.lt(1)) player.in.infinities = new Decimal(0)
                     if (player.tad.infinitum.lt(0.1)) player.tad.infinitum = new Decimal(0)
-                    player.tad.altInfinities[player.tad.altSelection].amount = player.tad.altInfinities[player.tad.altSelection].amount.add(player.tad.altInfinities[player.tad.altSelection].gain.mul(Decimal.div(delta, player.uni["U2"].tickspeed)))
+                    player.tad.altInfinities[player.tad.altSelection].amount = player.tad.altInfinities[player.tad.altSelection].amount.add(player.tad.altInfinities[player.tad.altSelection].gain.mul(delta))
                 }
                 break;
             case "corrupted":
-                if (player.tad.altInfinities.shattered.amount.gte(player.tad.altInfinities.corrupted.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))) && player.tad.altInfinities.fragmented.amount.gte(player.tad.altInfinities.corrupted.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed)))) {
-                    player.tad.altInfinities.shattered.amount = player.tad.altInfinities.shattered.amount.sub(player.tad.altInfinities.corrupted.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
-                    player.tad.altInfinities.fragmented.amount = player.tad.altInfinities.fragmented.amount.sub(player.tad.altInfinities.corrupted.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
+                if (player.tad.altInfinities.shattered.amount.gte(player.tad.altInfinities.corrupted.cost.mul(delta)) && player.tad.altInfinities.fragmented.amount.gte(player.tad.altInfinities.corrupted.cost.mul(delta))) {
+                    player.tad.altInfinities.shattered.amount = player.tad.altInfinities.shattered.amount.sub(player.tad.altInfinities.corrupted.cost.mul(delta)).max(0)
+                    player.tad.altInfinities.fragmented.amount = player.tad.altInfinities.fragmented.amount.sub(player.tad.altInfinities.corrupted.cost.mul(delta)).max(0)
                     if (player.tad.altInfinities.shattered.amount.lt(0.5)) player.tad.altInfinities.shattered.amount = new Decimal(0)
                     if (player.tad.altInfinities.fragmented.amount.lt(0.5)) player.tad.altInfinities.fragmented.amount = new Decimal(0)
-                    player.tad.altInfinities.corrupted.amount = player.tad.altInfinities.corrupted.amount.add(player.tad.altInfinities.corrupted.gain.mul(Decimal.div(delta, player.uni["U2"].tickspeed)))
+                    player.tad.altInfinities.corrupted.amount = player.tad.altInfinities.corrupted.amount.add(player.tad.altInfinities.corrupted.gain.mul(delta))
                 }
                 break;
             case "disfigured":
-                if (player.tad.altInfinities.fragmented.amount.gte(player.tad.altInfinities.disfigured.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))) && player.tad.altInfinities.broken.amount.gte(player.tad.altInfinities.disfigured.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed)))) {
-                    player.tad.altInfinities.fragmented.amount = player.tad.altInfinities.fragmented.amount.sub(player.tad.altInfinities.disfigured.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
-                    player.tad.altInfinities.broken.amount = player.tad.altInfinities.broken.amount.sub(player.tad.altInfinities.disfigured.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
+                if (player.tad.altInfinities.fragmented.amount.gte(player.tad.altInfinities.disfigured.cost.mul(delta)) && player.tad.altInfinities.broken.amount.gte(player.tad.altInfinities.disfigured.cost.mul(delta))) {
+                    player.tad.altInfinities.fragmented.amount = player.tad.altInfinities.fragmented.amount.sub(player.tad.altInfinities.disfigured.cost.mul(delta)).max(0)
+                    player.tad.altInfinities.broken.amount = player.tad.altInfinities.broken.amount.sub(player.tad.altInfinities.disfigured.cost.mul(delta)).max(0)
                     if (player.tad.altInfinities.fragmented.amount.lt(0.5)) player.tad.altInfinities.fragmented.amount = new Decimal(0)
                     if (player.tad.altInfinities.broken.amount.lt(0.5)) player.tad.altInfinities.broken.amount = new Decimal(0)
-                    player.tad.altInfinities.disfigured.amount = player.tad.altInfinities.disfigured.amount.add(player.tad.altInfinities.disfigured.gain.mul(Decimal.div(delta, player.uni["U2"].tickspeed)))
+                    player.tad.altInfinities.disfigured.amount = player.tad.altInfinities.disfigured.amount.add(player.tad.altInfinities.disfigured.gain.mul(delta))
                 }
                 break;
             case "distorted":
-                if (player.tad.altInfinities.broken.amount.gte(player.tad.altInfinities.distorted.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))) && player.tad.altInfinities.shattered.amount.gte(player.tad.altInfinities.distorted.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed)))) {
-                    player.tad.altInfinities.broken.amount = player.tad.altInfinities.broken.amount.sub(player.tad.altInfinities.distorted.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
-                    player.tad.altInfinities.shattered.amount = player.tad.altInfinities.shattered.amount.sub(player.tad.altInfinities.distorted.cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
+                if (player.tad.altInfinities.broken.amount.gte(player.tad.altInfinities.distorted.cost.mul(delta)) && player.tad.altInfinities.shattered.amount.gte(player.tad.altInfinities.distorted.cost.mul(delta))) {
+                    player.tad.altInfinities.broken.amount = player.tad.altInfinities.broken.amount.sub(player.tad.altInfinities.distorted.cost.mul(delta)).max(0)
+                    player.tad.altInfinities.shattered.amount = player.tad.altInfinities.shattered.amount.sub(player.tad.altInfinities.distorted.cost.mul(delta)).max(0)
                     if (player.tad.altInfinities.broken.amount.lt(0.5)) player.tad.altInfinities.broken.amount = new Decimal(0)
                     if (player.tad.altInfinities.shattered.amount.lt(0.5)) player.tad.altInfinities.shattered.amount = new Decimal(0)
-                    player.tad.altInfinities.distorted.amount = player.tad.altInfinities.distorted.amount.add(player.tad.altInfinities.distorted.gain.mul(Decimal.div(delta, player.uni["U2"].tickspeed)))
+                    player.tad.altInfinities.distorted.amount = player.tad.altInfinities.distorted.amount.add(player.tad.altInfinities.distorted.gain.mul(delta))
                 }
                 break;
             case "infected": case "infested":
-                if (player.tad.altInfinities.corrupted.amount.gte(player.tad.altInfinities[player.tad.altSelection].cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))) && player.tad.altInfinities.disfigured.amount.gte(player.tad.altInfinities[player.tad.altSelection].cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))) && player.tad.altInfinities.distorted.amount.gte(player.tad.altInfinities[player.tad.altSelection].cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed)))) {
-                    player.tad.altInfinities.corrupted.amount = player.tad.altInfinities.corrupted.amount.sub(player.tad.altInfinities[player.tad.altSelection].cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
-                    player.tad.altInfinities.disfigured.amount = player.tad.altInfinities.disfigured.amount.sub(player.tad.altInfinities[player.tad.altSelection].cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
-                    player.tad.altInfinities.distorted.amount = player.tad.altInfinities.distorted.amount.sub(player.tad.altInfinities[player.tad.altSelection].cost.mul(Decimal.div(delta, player.uni["U2"].tickspeed))).max(0)
+                if (player.tad.altInfinities.corrupted.amount.gte(player.tad.altInfinities[player.tad.altSelection].cost.mul(delta)) && player.tad.altInfinities.disfigured.amount.gte(player.tad.altInfinities[player.tad.altSelection].cost.mul(delta)) && player.tad.altInfinities.distorted.amount.gte(player.tad.altInfinities[player.tad.altSelection].cost.mul(delta))) {
+                    player.tad.altInfinities.corrupted.amount = player.tad.altInfinities.corrupted.amount.sub(player.tad.altInfinities[player.tad.altSelection].cost.mul(delta)).max(0)
+                    player.tad.altInfinities.disfigured.amount = player.tad.altInfinities.disfigured.amount.sub(player.tad.altInfinities[player.tad.altSelection].cost.mul(delta)).max(0)
+                    player.tad.altInfinities.distorted.amount = player.tad.altInfinities.distorted.amount.sub(player.tad.altInfinities[player.tad.altSelection].cost.mul(delta)).max(0)
                     if (player.tad.altInfinities.corrupted.amount.lt(1e8)) player.tad.altInfinities.corrupted.amount = new Decimal(0)
                     if (player.tad.altInfinities.disfigured.amount.lt(1e8)) player.tad.altInfinities.disfigured.amount = new Decimal(0)
                     if (player.tad.altInfinities.distorted.amount.lt(1e8)) player.tad.altInfinities.distorted.amount = new Decimal(0)
-                    player.tad.altInfinities[player.tad.altSelection].amount = player.tad.altInfinities[player.tad.altSelection].amount.add(player.tad.altInfinities[player.tad.altSelection].gain.mul(Decimal.div(delta, player.uni["U2"].tickspeed)))
+                    player.tad.altInfinities[player.tad.altSelection].amount = player.tad.altInfinities[player.tad.altSelection].amount.add(player.tad.altInfinities[player.tad.altSelection].gain.mul(delta))
                     if (!hasAchievement("achievements", 915) && player.tad.altInfinities[player.tad.altSelection].amount.gte(1)) completeAchievement("achievements", 915)
                 }
                 break;
@@ -588,7 +596,7 @@ addLayer("tad", {
         player.tad.altInfinities.fragmented.effect1 = amt3.pow(0.3).add(1)
         player.tad.altInfinities.fragmented.effect2 = amt3.div(2).pow(0.2).max(1)
 
-        player.tad.altInfinities.corrupted.effect1 = amt4.max(0.1).mul(10).log(10).div(5).add(1)
+        player.tad.altInfinities.corrupted.effect1 = amt4.pow(0.2).div(2).add(1)
         player.tad.altInfinities.corrupted.effect2 = amt4.pow(0.5).add(1)
         if (player.tad.altInfinities.infected.milestone.gte(3)) player.tad.altInfinities.corrupted.effect2 = player.tad.altInfinities.corrupted.effect2.pow(5)
 
@@ -633,6 +641,7 @@ addLayer("tad", {
                 if (!hasAchievement("achievements", 214)) completeAchievement("achievements", 214)
                 player.tad.infinitum = player.tad.infinitum.add(player.tad.infinitumGain)
                 player.tad.infinitumResets = player.tad.infinitumResets.add(1)
+                player.tad.sinceCollapse = new Decimal(0)
                 if (player.tad.domainCap.gte(player.tad.highestCap)) player.tad.highestCap = player.tad.domainCap
                 player.subtabs["tad"]["Domain"] = "Accumulation"
                 player.subtabs["tad"]["Tabs"] = "Infinitum"
@@ -804,7 +813,7 @@ addLayer("tad", {
             unlocked: true,
             onClick() {
                 player.tad.compression = player.tad.compressionTotal
-                for (let i = 101; i < 105; i++) {
+                for (let i = 101; i < 107; i++) {
                     player.tad.buyables[i] = new Decimal(0)
                 }
 
@@ -1176,7 +1185,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1190,7 +1199,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1204,7 +1213,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1218,7 +1227,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1232,7 +1241,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1246,7 +1255,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1260,7 +1269,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1274,7 +1283,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1288,7 +1297,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1302,7 +1311,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1316,7 +1325,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1338,7 +1347,7 @@ addLayer("tad", {
             },
             effectDisplay() { return "+" + format(upgradeEffect(this.layer, this.id).sub(1)) }, // Add formatting to the effect
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", lineHeight: "1.1", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1356,7 +1365,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1379,28 +1388,27 @@ addLayer("tad", {
             },
             effectDisplay() { return "/" + format(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
         },
         133: {
-            title: "Infinitum (3:3)",
+            title: "Infinitum (3:4)",
             unlocked() {return hasUpgrade("tad", 125)},
             description() {return "Unlock 2nd effect for Accumulator (1:3)."},
-            tooltip: "Also gives +50% matter until I make the achievement.",
             cost: new Decimal(32),
             currencyLocation() { return player.tad },
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
         },
         134: {
-            title: "Infinitum (3:4)",
+            title: "Infinitum (3:5)",
             unlocked() {return hasUpgrade("tad", 125)},
             description() {return "Unlock another row of accumulators."},
             cost: new Decimal(32),
@@ -1408,13 +1416,13 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
         },
         135: {
-            title: "Infinitum (3:5)",
+            title: "Infinitum (3:6)",
             unlocked() {return hasUpgrade("tad", 125)},
             description() {return "Unlock alternative infinities."},
             cost: new Decimal(64),
@@ -1422,7 +1430,25 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
+                return look
+            },
+        },
+        136: {
+            title: "Infinitum (3:3)",
+            unlocked() {return hasUpgrade("tad", 125)},
+            description() {return "Total compressions increase amplifier base."},
+            cost: new Decimal(16),
+            currencyLocation() { return player.tad },
+            currencyDisplayName: "Infinitum",
+            currencyInternalName: "infinitum",
+            effect() {
+                return player.tad.compressionTotal.pow(0.7).div(10).add(1)
+            },
+            effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            style() {
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1436,7 +1462,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1450,49 +1476,67 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
         },
         143: {
-            title: "Infinitum (4:3)",
-            unlocked() {return hasUpgrade("bi", 16) && hasUpgrade("tad", 135)},
-            description() {return "Unlock 2nd effect for Accumulator (1:4)."},
-            cost: new Decimal(7500),
-            currencyLocation() { return player.tad },
-            currencyDisplayName: "Infinitum",
-            currencyInternalName: "infinitum",
-            style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
-                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
-                return look
-            },
-        },
-        144: {
             title: "Infinitum (4:4)",
             unlocked() {return hasUpgrade("bi", 16) && hasUpgrade("tad", 135)},
-            description() {return "Increase all alt-infinity gain by 20%."},
+            description() {return "Unlock 2nd effect for Accumulator (1:4)."},
             cost: new Decimal(20000),
             currencyLocation() { return player.tad },
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
         },
-        145: {
+        144: {
             title: "Infinitum (4:5)",
             unlocked() {return hasUpgrade("bi", 16) && hasUpgrade("tad", 135)},
-            description() {return "Unlock Magnification Layer."},
+            description() {return "Increase all alt-infinity gain by 20%."},
             cost: new Decimal(50000),
             currencyLocation() { return player.tad },
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
+                return look
+            },
+        },
+        145: {
+            title: "Infinitum (4:6)",
+            unlocked() {return hasUpgrade("bi", 16) && hasUpgrade("tad", 135)},
+            description() {return "Unlock Magnification Layer."},
+            cost: new Decimal(100000),
+            currencyLocation() { return player.tad },
+            currencyDisplayName: "Infinitum",
+            currencyInternalName: "infinitum",
+            style() {
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
+                return look
+            },
+        },
+        146: {
+            title: "Infinitum (4:3)",
+            unlocked() {return hasUpgrade("bi", 16) && hasUpgrade("tad", 135)},
+            description() {return "Time since domain collapse boosts amplifier base."},
+            cost: new Decimal(7500),
+            currencyLocation() { return player.tad },
+            currencyDisplayName: "Infinitum",
+            currencyInternalName: "infinitum",
+            effect() {
+                return player.tad.sinceCollapse.add(1).log(3).div(10).add(1)
+            },
+            effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            style() {
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1506,7 +1550,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1520,7 +1564,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1534,7 +1578,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", lineHeight: "0.9", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", lineHeight: "0.9", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1552,7 +1596,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -1566,7 +1610,7 @@ addLayer("tad", {
             currencyDisplayName: "Infinitum",
             currencyInternalName: "infinitum",
             style() {
-                let look = {width: "130px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
+                let look = {width: "130px", minHeight: "110px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background = "#bf8f8f" : look.background = "#9194FA"
                 return look
             },
@@ -2257,7 +2301,7 @@ addLayer("tad", {
                 }
             },
             style() {
-                let look = {width: "150px", height: "100px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
+                let look = {width: "200px", height: "80px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
                 if (getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit())) {look.color = "black";look.background = "#77bf5f"} else if (this.canAfford()) {look.color = "white";look.background = "#094242"} else {look.color = "black";look.background = "#bf8f8f"}
                 return look
             },
@@ -2294,7 +2338,7 @@ addLayer("tad", {
                 }
             },
             style() {
-                let look = {width: "150px", height: "100px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
+                let look = {width: "200px", height: "80px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
                 if (getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit())) {look.color = "black";look.background = "#77bf5f"} else if (this.canAfford()) {look.color = "white";look.background = "#094242"} else {look.color = "black";look.background = "#bf8f8f"}
                 return look
             },
@@ -2331,7 +2375,7 @@ addLayer("tad", {
                 }
             },
             style() {
-                let look = {width: "150px", height: "100px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
+                let look = {width: "200px", height: "80px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
                 if (getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit())) {look.color = "black";look.background = "#77bf5f"} else if (this.canAfford()) {look.color = "white";look.background = "#094242"} else {look.color = "black";look.background = "#bf8f8f"}
                 return look
             },
@@ -2368,7 +2412,80 @@ addLayer("tad", {
                 }
             },
             style() {
-                let look = {width: "150px", height: "100px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
+                let look = {width: "200px", height: "80px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
+                if (getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit())) {look.color = "black";look.background = "#77bf5f"} else if (this.canAfford()) {look.color = "white";look.background = "#094242"} else {look.color = "black";look.background = "#bf8f8f"}
+                return look
+            },
+        },
+        105: {
+            purchaseLimit() { return hasMilestone("tad", 102) ? new Decimal(25) : new Decimal(10) },
+            currency() { return player.tad.compression},
+            pay(amt) { player.tad.compression = this.currency().sub(amt) },
+            effect(x) {
+                let base = new Decimal(0.5).mul(player.tad.compressionMult).add(1)
+                return Decimal.pow(base, getBuyableAmount(this.layer, this.id))
+            },
+            unlocked: true,
+            cost(x) { return (x || getBuyableAmount(this.layer, this.id)).add(1) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            display() {
+                return "<h3>Ampli-Base Compressor</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")\n\
+                    x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " Amplifier Base<br>\n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Compression"
+            },
+            buy() {
+                if (!player.tad.compressionMax) {
+                    let buyonecost = getBuyableAmount(this.layer, this.id).add(1)
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordArithmeticSeries(this.currency(), new Decimal(1), new Decimal(1), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumArithmeticSeries(max, new Decimal(1), new Decimal(1), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style() {
+                let look = {width: "200px", height: "80px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
+                if (getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit())) {look.color = "black";look.background = "#77bf5f"} else if (this.canAfford()) {look.color = "white";look.background = "#094242"} else {look.color = "black";look.background = "#bf8f8f"}
+                return look
+            },
+        },
+        106: {
+            purchaseLimit() { return hasMilestone("tad", 102) ? new Decimal(25) : new Decimal(10) },
+            currency() { return player.tad.compression},
+            pay(amt) { player.tad.compression = this.currency().sub(amt) },
+            effect(x) {
+                return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id))
+            },
+            unlocked: true,
+            cost(x) { return (x || getBuyableAmount(this.layer, this.id)).add(1) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            display() {
+                return "<h3>Compressor Compressor</h3><br><small>[UNEFFECTED BY COMPRESSOR BUFFS]</small><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")\n\
+                    x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " Compressor Effectiveness<br>\n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Compression"
+            },
+            buy() {
+                if (!player.tad.compressionMax) {
+                    let buyonecost = getBuyableAmount(this.layer, this.id).add(1)
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordArithmeticSeries(this.currency(), new Decimal(1), new Decimal(1), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumArithmeticSeries(max, new Decimal(1), new Decimal(1), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style() {
+                let look = {width: "200px", height: "80px", border: "3px solid rgba(0,0,0,0.3)", borderRadius: "15px", margin: "3px"}
                 if (getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit())) {look.color = "black";look.background = "#77bf5f"} else if (this.canAfford()) {look.color = "white";look.background = "#094242"} else {look.color = "black";look.background = "#bf8f8f"}
                 return look
             },
@@ -3005,7 +3122,7 @@ addLayer("tad", {
             player.tad.compressionTotal = player.tad.compressionKept
             player.tad.compressionGain = new Decimal(0)
 
-            for (let i = 101; i < 105; i++) {
+            for (let i = 101; i < 107; i++) {
                 player.tad.buyables[i] = new Decimal(0)
             }
         }
@@ -3050,9 +3167,9 @@ addLayer("tad", {
                     ["blank", "10px"],
                     ["row", [["upgrade", 111], ["upgrade", 112], ["upgrade", 116], ["upgrade", 113], ["upgrade", 114], ["upgrade", 115]]],
                     ["row", [["upgrade", 121], ["upgrade", 122], ["upgrade", 126], ["upgrade", 123], ["upgrade", 124], ["upgrade", 125]]],
-                    ["row", [["upgrade", 131], ["upgrade", 132], ["upgrade", 133], ["upgrade", 134], ["upgrade", 135]]],
-                    ["row", [["upgrade", 141], ["upgrade", 142], ["upgrade", 143], ["upgrade", 144], ["upgrade", 145]]],
-                    ["row", [["upgrade", 151], ["upgrade", 152], ["upgrade", 153], ["upgrade", 154], ["upgrade", 155]]],
+                    ["row", [["upgrade", 131], ["upgrade", 132], ["upgrade", 136], ["upgrade", 133], ["upgrade", 134], ["upgrade", 135]]],
+                    ["row", [["upgrade", 141], ["upgrade", 142], ["upgrade", 146], ["upgrade", 143], ["upgrade", 144], ["upgrade", 145]]],
+                    ["row", [["upgrade", 151], ["upgrade", 152], ["upgrade", 156], ["upgrade", 153], ["upgrade", 154], ["upgrade", 155]]],
                     ["blank", "25px"],
                     ["style-column", [
                         ["style-column", [
@@ -3210,7 +3327,7 @@ addLayer("tad", {
                                         ["color-text", [() => {return "1"}, true, "black", () => {return player.tad.altInfinities.corrupted.milestone.gte(1)}, "rgba(0,0,0,0.5)"]],
                                     ], {width: "40px", height: "40px", borderRight: "3px solid #570951"}],
                                     ["style-row", [
-                                        ["color-text", [() => {return "x" + formatSimple(player.tad.altInfinities.corrupted.effect1, 2) + " Accumulator 2nd-Effect Base."}, true, "black", () => {return player.tad.altInfinities.corrupted.milestone.gte(1)}, "rgba(0,0,0,0.5)"]],
+                                        ["color-text", [() => {return "x" + formatSimple(player.tad.altInfinities.corrupted.effect1, 2) + " Amplifier Base."}, true, "black", () => {return player.tad.altInfinities.corrupted.milestone.gte(1)}, "rgba(0,0,0,0.5)"]],
                                     ], {width: "207px", height: "40px"}],
                                 ], {width: "250px", height: "40px", borderBottom: "3px solid #570951"}],
                                 ["style-row", [
@@ -3384,6 +3501,30 @@ addLayer("tad", {
                     ["style-row", [["clickable", 203]], () => {return player.al.cocoonLevel >= 5 ? {width: "310px", height: "60px", background: "#094242", border: "5px solid rgba(0,0,0,0.4)", borderRadius: "20px"} : {display: "none !important"}}],
                 ]
             },
+            "Perks": {
+                buttonStyle() { return { color: "black", borderColor: "#008080", borderRadius: "5px" } },
+                unlocked() { return player.in.unlockedBreak },
+                content: [
+                    ["blank", "25px"],
+                    ["style-column", [
+                        ["raw-html", "Perks for defeating Tav", {color: "rgba(0,0,0,0.7)", fontSize: "24px", fontFamily: "monospace"}],
+                    ], {width: "800px", border: "3px solid #008080", backgroundImage: "linear-gradient(45deg, #31aeb0 0%, #b2d8d8 100%)", borderBottom: "5px", paddingTop: "5px", paddingBottom: "5px", borderRadius: "15px 15px 0px 0px"}],
+                    ["style-column", [
+                        ["raw-html", "<u>Unlocks</u>", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", "Break Infinity OTF.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "Break Infinity layer.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "New checkback evolutions.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "New infinity milestones.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "A new origin upgrade.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "<u>Buffs</u>", {color: "rgba(0,0,0,0.7)", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x1.5 Dice Points, Rocket Fuel, and " + player.h.stageName[0] + " Points."}, {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "x1.25 Infinities, IP, and NIP.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "+0.1 Evolution Shard Chance.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "/1.1 Crate Button Cooldowns.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", "x1.2 Checkback XP.", {color: "rgba(0,0,0,0.7)", fontSize: "18px", fontFamily: "monospace"}],
+                    ], {width: "800px", border: "3px solid #008080", backgroundImage: "linear-gradient(45deg, #31aeb0 0%, #b2d8d8 100%)", paddingTop: "5px", paddingBottom: "5px", borderRadius: "0px 0px 15px 15px"}]
+                ]
+            },
         },
         Domain: {
             "Accumulation": {
@@ -3429,7 +3570,8 @@ addLayer("tad", {
                     ["blank", "10px"],
                     ["row", [["clickable", 23], ["clickable", 24]]],
                     ["blank", "10px"],
-                    ["row", [["buyable", 101], ["buyable", 102], ["buyable", 103], ["buyable", 104]]],
+                    ["row", [["buyable", 101], ["buyable", 102], ["buyable", 103]]],
+                    ["row", [["buyable", 105], ["buyable", 106], ["buyable", 104]]],
                     ["blank", "10px"],
                     ["clickable", 12],
                 ]

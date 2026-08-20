@@ -117,7 +117,7 @@
         if (hasAchievement("achievements", 301)) player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(2)
         player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(player.hbl.boosters[2].effect)
         player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(buyableEffect("ip", 11))
-        player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(player.d.boosterEffects[11])
+        player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(player.d.boosterEffects[10])
         player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(player.rf.abilityEffects[5])
         player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(buyableEffect("cb", 12))
         player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(buyableEffect("ta", 33))
@@ -125,6 +125,7 @@
         if (hasUpgrade("bi", 101)) player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(upgradeEffect("bi", 101))
         player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(player.om.diceMasteryPointsEffect)
         if (player.tad.altInfinities.disfigured.milestone.gte(2)) player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(player.tad.altInfinities.disfigured.effect2)
+        if (player.in.unlockedBreak) player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(1.25)
         player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(buyableEffect("gh", 38))
         if (hasUpgrade("bi", 23)) player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(upgradeEffect("bi", 23))
         player.in.infinityPointsToGet = player.in.infinityPointsToGet.mul(player.ca.replicantiEffect)
@@ -176,6 +177,8 @@
         if (hasAchievement("achievements", 124)) player.in.infinitiesToGet = player.in.infinitiesToGet.mul(1.1)
 
         if (player.tad.altInfinities.shattered.milestone.gte(2)) player.in.infinitiesToGet = player.in.infinitiesToGet.mul(player.tad.altInfinities.shattered.effect2)
+        player.in.infinitiesToGet = player.in.infinitiesToGet.mul(player.d.boosterEffects[11])
+        if (player.in.unlockedBreak) player.in.infinitiesToGet = player.in.infinitiesToGet.mul(1.25)
         player.in.infinitiesToGet = player.in.infinitiesToGet.mul(buyableEffect("om", 11))
         player.in.infinitiesToGet = player.in.infinitiesToGet.mul(buyableEffect("p", 15))
         player.in.infinitiesToGet = player.in.infinitiesToGet.mul(levelableEffect("pet", 1101)[0])
@@ -373,7 +376,7 @@
         player.d.diceRolls = [new Decimal(1)]
         player.d.dice = new Decimal(1)
 
-        for (let i = 0; i < 11; i++) {
+        for (let i = 0; i < 10; i++) {
             player.d.boosterEffects[i] = new Decimal(1)
         }
 

@@ -676,7 +676,7 @@ addLayer("co", {
 
         player.d.upgrades.splice(0, player.d.upgrades.length)
 
-        for (let i = 0; !hasUpgrade("s", 13) ? i < 15 : i < 11; i++) {
+        for (let i = 0; !hasUpgrade("s", 13) ? i < 15 : i < 10; i++) {
             player.d.boosterEffects[i] = new Decimal(1)
         }
 

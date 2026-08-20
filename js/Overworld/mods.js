@@ -56,7 +56,7 @@
         player.m.codeExperienceToGet = player.t.trees.div(1e7).pow(0.3)
         player.m.codeExperienceToGet = player.m.codeExperienceToGet.mul(buyableEffect("m", 11))
         player.m.codeExperienceToGet = player.m.codeExperienceToGet.mul(levelableEffect("pet", 201)[0])
-        player.m.codeExperienceToGet = player.m.codeExperienceToGet.mul(player.d.boosterEffects[10])
+        player.m.codeExperienceToGet = player.m.codeExperienceToGet.mul(player.d.boosterEffects[9])
         if (hasUpgrade("ad", 21) && !inChallenge("ip", 14)) player.m.codeExperienceToGet = player.m.codeExperienceToGet.mul(upgradeEffect("ad", 21))
 
         // CHALLENGE MODIFIERS
@@ -116,7 +116,6 @@
         player.m.linesOfCodePerSecond = player.m.codeExperience.pow(1.5)
         player.m.linesOfCodePerSecond = player.m.linesOfCodePerSecond.mul(buyableEffect("m", 12))
         player.m.linesOfCodePerSecond = player.m.linesOfCodePerSecond.mul(levelableEffect("pet", 202)[0])
-        player.m.linesOfCodePerSecond = player.m.linesOfCodePerSecond.mul(player.d.boosterEffects[9])
         if (hasUpgrade("ip", 23) && !inChallenge("ip", 14)) player.m.linesOfCodePerSecond = player.m.linesOfCodePerSecond.mul(upgradeEffect("ip", 23))
 
         // CHALLENGE MODIFIERS

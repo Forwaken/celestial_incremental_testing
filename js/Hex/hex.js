@@ -124,6 +124,7 @@ addLayer("h", {
         player.h.hexPointGain = player.h.hexPointGain.mul(player.hbl.boosters[0].effect)
         player.h.hexPointGain = player.h.hexPointGain.mul(buyableEffect("hcu", 107))
         if (hasUpgrade("hbl", 2)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hbl", 2))
+        if (player.in.unlockedBreak) player.h.hexPointGain = player.h.hexPointGain.mul(1.5)
         if (hasUpgrade("hbl", 5)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hbl", 5))
         if (hasUpgrade("hpw", 2)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hpw", 2))
         if (hasUpgrade("hve", 11)) player.h.hexPointGain = player.h.hexPointGain.mul(upgradeEffect("hve", 11))

@@ -253,6 +253,7 @@ addLayer("cb", {
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(player.cb.XPBoostEffect)
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(player.d.boosterEffects[12])
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(buyableEffect("g", 25))
+            if (player.in.unlockedBreak) player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(1.2)
             if (hasUpgrade("hpw", 1013) || player.tera.realmMastery[0]) player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(upgradeEffect("hpw", 1013))
             if (player.ca.defeatedCante) player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(2)
             player.cb.xpTimers[i].base = player.cb.xpTimers[i].base.mul(player.cs.scraps.checkback.effect)
@@ -320,6 +321,7 @@ addLayer("cb", {
         player.cb.xpTimers[8].esc = new Decimal(500).mul(buyableEffect("ev1", 184))
 
         let mult = new Decimal(1)
+        if (player.in.unlockedBreak) mult = mult.add(0.1)
         mult = mult.add(levelableEffect("pet", 1107)[1].sub(1))
         mult = mult.add(buyableEffect("ev2", 31).sub(1))
         mult = mult.add(buyableEffect("depth1", 4).sub(1))
@@ -364,6 +366,7 @@ addLayer("cb", {
             player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(levelableEffect("pet", 105)[0])
             player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(levelableEffect("pet", 202)[2])
             player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(buyableEffect("ev0", 13))
+            if (player.in.unlockedBreak) player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(1.1)
             if (hasUpgrade("ev8", 12)) player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(1.1)
             player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(levelableEffect("pet", 1104)[2])
 

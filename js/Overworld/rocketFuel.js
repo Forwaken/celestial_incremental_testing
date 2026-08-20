@@ -78,6 +78,7 @@
         player.rf.rocketFuelToGet = player.rf.rocketFuelToGet.mul(buyableEffect("ta", 44))
         player.rf.rocketFuelToGet = player.rf.rocketFuelToGet.mul(buyableEffect("ta", 45))
         player.rf.rocketFuelToGet = player.rf.rocketFuelToGet.mul(buyableEffect("ta", 46))
+        if (player.in.unlockedBreak) player.rf.rocketFuelToGet = player.rf.rocketFuelToGet.mul(1.5)
         if (player.pol.pollinatorEffects.ant.enabled) player.rf.rocketFuelToGet = player.rf.rocketFuelToGet.mul(player.pol.pollinatorEffects.ant.effects[1])
         player.rf.rocketFuelToGet = player.rf.rocketFuelToGet.mul(levelableEffect("pet", 1202)[1])
         player.rf.rocketFuelToGet = player.rf.rocketFuelToGet.mul(levelableEffect("pet", 306)[1])

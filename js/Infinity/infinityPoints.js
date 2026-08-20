@@ -576,9 +576,9 @@
             style: {width: "600px", height: "55px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         27: {
-            requirementDescription: "<h3>20,000 Infinities",
+            requirementDescription: "<h3>35,000 Infinities",
             effectDescription() { return "Unlock autocrunchers for inf and negative inf resets.<br>(IN BREAK INFINITY)" },
-            done() { return player.in.infinities.gte(20000) && player.in.unlockedBreak },
+            done() { return player.in.infinities.gte(35000) && player.in.unlockedBreak },
             unlocked() { return player.in.unlockedBreak},
             style: {width: "600px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },

@@ -215,6 +215,7 @@ function updateStyles() {
 			if (player.subtabs["tad"]["Tabs"] == "Domain") layerBG = "#b2d8d8"
 			if (player.subtabs["tad"]["Tabs"] == "Infinitum") layerBG = "#c8c9fc"
 			if (player.subtabs["tad"]["Tabs"] == "Alternative Infinities") layerBG = "#9dc7fe"
+			if (player.subtabs["tad"]["Tabs"] == "Perks") layerBG = "#98d6d7"
 			break;
 		case "ca":
 			layerBG = "#2a3e66"
@@ -2426,12 +2427,18 @@ function fixOldSave(oldVersion){
 		if (player.sme.buyables[136]) player.darkTemple.buyables[1007] = new Decimal(player.sme.buyables[136])
 	}
 	if (oldVersion < 190.27 && player.stagnantSynestia) {
-		if (player.stagnantSynestia.milestone[25] > 0) player.stagnantSynestia.milestone[10] = player.stagnantSynestia.milestone[25]
-		if (player.stagnantSynestia.milestone[50] > 0) player.stagnantSynestia.milestone[20] = player.stagnantSynestia.milestone[50]
-		if (player.stagnantSynestia.milestone[75] > 0) player.stagnantSynestia.milestone[30] = player.stagnantSynestia.milestone[75]
-		if (player.stagnantSynestia.milestone[100] > 0) {
-			player.stagnantSynestia.milestone[40] = player.stagnantSynestia.milestone[100]
-			player.stagnantSynestia.milestone[50] = player.stagnantSynestia.milestone[100]
+		if (player.d && player.d.boosterEffects) {
+			player.d.boosterEffects[10] = new Decimal(player.d.boosterEffects[11])
+			player.d.boosterEffects[11] = Decimal.pow(player.d.boosterEffects[11], 0.5)
+		}
+		if (player.stagnantSynestia) {
+			if (player.stagnantSynestia.milestone[25] > 0) player.stagnantSynestia.milestone[10] = player.stagnantSynestia.milestone[25]
+			if (player.stagnantSynestia.milestone[50] > 0) player.stagnantSynestia.milestone[20] = player.stagnantSynestia.milestone[50]
+			if (player.stagnantSynestia.milestone[75] > 0) player.stagnantSynestia.milestone[30] = player.stagnantSynestia.milestone[75]
+			if (player.stagnantSynestia.milestone[100] > 0) {
+				player.stagnantSynestia.milestone[40] = player.stagnantSynestia.milestone[100]
+				player.stagnantSynestia.milestone[50] = player.stagnantSynestia.milestone[100]
+			}
 		}
 	}
 }

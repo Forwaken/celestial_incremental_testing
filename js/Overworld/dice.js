@@ -33,40 +33,27 @@
         previousBoosterRoll: -1,
         currentBoosterText: "",
         currentBoosterRoll: -1,
-        /*
-        0 - Points
-        1 - Factor Power
-        2 - Prestige Points
-        3 - Trees
-        4 - Leaves
-        5 - Grass Value
-        6 - Grasshoppers
-        7 - Fertilizer
-        8 - Mods
-        9 - Lines of Code
-        10 - Code Experience
-        */
         boosterSpeedToggle: false,
         boosterDiceCooldown: new Decimal(0),
         diceScore: new Decimal(0),
         rigIndex: 0,
 
         boosterEffects: {
-            0: new Decimal(1),
-            1: new Decimal(1),
-            2: new Decimal(1),
-            3: new Decimal(1),
-            4: new Decimal(1),
-            5: new Decimal(1),
-            6: new Decimal(1),
-            7: new Decimal(1),
-            8: new Decimal(1),
-            9: new Decimal(1),
-            10: new Decimal(1),
-            11: new Decimal(1),
-            12: new Decimal(1),
-            13: new Decimal(1),
-            14: new Decimal(1),
+            0: new Decimal(1), // Points
+            1: new Decimal(1), // Factor Power
+            2: new Decimal(1), // Prestige Points
+            3: new Decimal(1), // Trees
+            4: new Decimal(1), // Leaves
+            5: new Decimal(1), // Grass Value
+            6: new Decimal(1), // Grasshoppers
+            7: new Decimal(1), // Fertilizer
+            8: new Decimal(1), // Mods
+            9: new Decimal(1), // Code Experience
+            10: new Decimal(1), // Infinity Points
+            11: new Decimal(1), // Infinities
+            12: new Decimal(1), // Check Back XP
+            13: new Decimal(1), // Rocket Fuel
+            14: new Decimal(1), // Hex Points
             15: new Decimal(1),
             16: new Decimal(1),
             17: new Decimal(1),
@@ -145,6 +132,7 @@
         player.d.dicePointsMult = player.d.dicePointsMult.mul(buyableEffect("ta", 41))
         player.d.dicePointsMult = player.d.dicePointsMult.mul(buyableEffect("ta", 42))
         player.d.dicePointsMult = player.d.dicePointsMult.mul(buyableEffect("ta", 43))
+        if (player.in.unlockedBreak) player.d.dicePointsMult = player.d.dicePointsMult.mul(1.5)
         if (player.pol.pollinatorEffects.ant.enabled) player.d.dicePointsMult = player.d.dicePointsMult.mul(player.pol.pollinatorEffects.ant.effects[0])
         player.d.dicePointsMult = player.d.dicePointsMult.mul(levelableEffect("pet", 306)[0])
         player.d.dicePointsMult = player.d.dicePointsMult.mul(player.co.cores.dice.effect[0])
@@ -210,9 +198,9 @@
             "Currently boosting grasshoppers.",
             "Currently boosting fertilizer.",
             "Currently boosting mods.",
-            "Currently boosting lines of code.",
             "Currently boosting code experience.",
             "Currently boosting infinity points.",
+            "Currently boosting infinities.",
             "Currently boosting check back xp.",
             "Currently boosting rocket fuel.",
             "Currently boosting " + player.h.stageName[1] + " points.",
@@ -243,7 +231,7 @@
                 do {
                     player.d.previousBoosterRoll = player.d.currentBoosterRoll
                     if (!hasChallenge("ip", 15)) {
-                        player.d.currentBoosterRoll = getRandomInt(11)
+                        player.d.currentBoosterRoll = getRandomInt(10)
                     } else if (!hasMilestone("r", 22)) {
                         player.d.currentBoosterRoll = getRandomInt(15)
                     } else if (!hasMilestone("r", 24)) {
@@ -262,7 +250,7 @@
 
         // BOOSTER DICE EFFECT PER SECOND
         player.d.boosterDiceStatsPerSecond = buyableEffect("d", 21)
-        for (let i = 0; i < 11; i++) {
+        for (let i = 0; i < 10; i++) {
             if (i == 8 && player.d.boosterDiceStatsPerSecond.gte(1000)) {
                 player.d.boosterEffects[i] = player.d.boosterEffects[i].add(player.d.boosterDiceStatsPerSecond.div(1000).pow(0.1).mul(1000).mul(delta))
             } else {
@@ -412,7 +400,7 @@
                     do {
                         player.d.previousBoosterRoll = player.d.currentBoosterRoll
                         if (!hasChallenge("ip", 15)) {
-                            player.d.currentBoosterRoll = getRandomInt(11)
+                            player.d.currentBoosterRoll = getRandomInt(10)
                         } else if (!hasMilestone("r", 22)) {
                             player.d.currentBoosterRoll = getRandomInt(15)
                         } else if (!hasMilestone("r", 24)) {
@@ -425,7 +413,7 @@
                 }
                 if (!hasAchievement("achievements", 22)) {
                     let unlock = true
-                    for (let i = 0; i < 11; i++) {
+                    for (let i = 0; i < 10; i++) {
                         if (player.d.boosterEffects[i].eq(1) && player.d.currentBoosterRoll != i) unlock = false
                     }
                     if (unlock) completeAchievement("achievements", 22)
@@ -584,7 +572,7 @@
             },
         },
         110: {
-            title() { return "Lines of Code<br>x" + format(player.d.boosterEffects[9]) },
+            title() { return "Code Experience<br>x" + format(player.d.boosterEffects[9]) },
             canClick() { return true },
             unlocked() { return true },
             onClick() {
@@ -598,7 +586,7 @@
             },
         },
         111: {
-            title() { return "Code Experience<br>x" + format(player.d.boosterEffects[10]) },
+            title() { return "Infinity Points<br>x" + format(player.d.boosterEffects[10]) },
             canClick() { return true },
             unlocked() { return true },
             onClick() {
@@ -612,7 +600,7 @@
             },
         },
         112: {
-            title() { return "Infinity Points<br>x" + format(player.d.boosterEffects[11]) },
+            title() { return "Infinities<br>x" + format(player.d.boosterEffects[11]) },
             canClick() { return true },
             unlocked() { return true },
             onClick() {
@@ -786,17 +774,16 @@
                 if (player.d.addDiceEffect.gte(1e6)) player.d.addDiceEffect = player.d.addDiceEffect.div(1e6).pow(0.1).mul(1e6)
                 player.d.boosterEffects[8] = player.d.boosterEffects[8].add(player.d.addDiceEffect)
         } else if (player.d.currentBoosterRoll == 9) {
-                player.d.addDiceEffect = player.d.diceScore.mul(0.0007).pow(0.7)
-                if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
-                player.d.boosterEffects[9] = player.d.boosterEffects[9].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 10) {
             player.d.addDiceEffect = player.d.diceScore.mul(0.0006).pow(0.7)
             if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
-            player.d.boosterEffects[10] = player.d.boosterEffects[10].add(player.d.addDiceEffect)
+            player.d.boosterEffects[9] = player.d.boosterEffects[9].add(player.d.addDiceEffect)
         // TIER 2 EFFECTS
-        } else if (player.d.currentBoosterRoll == 11) {
+        } else if (player.d.currentBoosterRoll == 10) {
             player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00002)
             if (hasUpgrade("d", 18)) player.d.addDiceEffect = player.d.addDiceEffect.mul(100)
+            player.d.boosterEffects[10] = player.d.boosterEffects[10].add(player.d.addDiceEffect)
+        } else if (player.d.currentBoosterRoll == 11) {
+            player.d.addDiceEffect = player.d.diceScore.add(1).log(100).div(1000)
             player.d.boosterEffects[11] = player.d.boosterEffects[11].add(player.d.addDiceEffect)
         } else if (player.d.currentBoosterRoll == 12) {
             player.d.addDiceEffect = player.d.diceScore.pow(0.1).mul(0.0001).div(player.d.boosterEffects[12].pow(5))
@@ -1290,32 +1277,33 @@
                                     return player.d.currentBoosterText[player.d.currentBoosterRoll] + "<br>(Currently x" + format(player.d.boosterEffects[player.d.currentBoosterRoll]) + ")"
                                 }, { color: "white", fontSize: "24px", fontFamily: "monospace" }],
                                 ["raw-html", () => { return player.d.currentBoosterRoll == 18 ? "(MAX IS x100)" : player.d.currentBoosterRoll == 12 ? "(MAX IS x10)" : "" }, { color: "white", fontSize: "20px", fontFamily: "monospace" }],
-                            ], {width: "490px"}]
+                            ], {width: "540px"}]
                         ]],
                         ["blank", "10px"],
-                        ["h-line", "650px"],
+                        ["h-line", "700px"],
                         ["blank", "10px"],
                         ["raw-html", "Click a side to rig that side of the die in your favor.", { color: "white", fontSize: "16px", fontFamily: "monospace" }],
                         ["raw-html", "Current rigged side is shown by a red border.", { color: "white", fontSize: "16px", fontFamily: "monospace" }],
                         ["blank", "10px"],
-                        ["h-line", "650px"],
+                        ["h-line", "700px"],
                         ["blank", "10px"],
-                        ["row", [["clickable", 101], ["clickable", 102], ["clickable", 103], ["clickable", 104]]],
-                        ["row", [["clickable", 105], ["clickable", 106], ["clickable", 107], ["clickable", 108]]],
-                        ["row", [["clickable", 109], ["clickable", 110], ["clickable", 111]]],
+                        ["row", [
+                            ["clickable", 101], ["clickable", 102], ["clickable", 103], ["clickable", 104], ["clickable", 105],
+                            ["clickable", 106], ["clickable", 107], ["clickable", 108], ["clickable", 109], ["clickable", 110],
+                        ]],
                         ["blank", "10px"],
                         ["style-column", [
-                            ["h-line", "650px"],
+                            ["h-line", "700px"],
                             ["blank", "10px"],
                             ["raw-html", () => { return hasUpgrade('s', 13) ? "Kept on singularity" : "Kept on infinity" }, { color: "white", fontSize: "24px", fontFamily: "monospace" }],
                             ["blank", "10px"],
-                            ["h-line", "650px"],
+                            ["h-line", "700px"],
                             ["blank", "10px"],
-                            ["row", [["clickable", 112], ["clickable", 113], ["clickable", 114], ["clickable", 115]]],
+                            ["row", [["clickable", 111], ["clickable", 112], ["clickable", 113], ["clickable", 114], ["clickable", 115]]],
                             ["row", [["clickable", 116], ["clickable", 117], ["clickable", 118], ["clickable", 119]]],
                             ["blank", "10px"],
                         ], () => { return hasChallenge("ip", 15) ? {} : {display: "none !important"}}],
-                    ], {backgroundColor: "#35654d", border: "3px solid white", borderRadius: "15px", width: "650px"}],
+                    ], {backgroundColor: "#35654d", border: "3px solid white", borderRadius: "15px", width: "700px"}],
                     ["blank", "25px"],
                     ["row", [["clickable", 1], ["clickable", 2], ["clickable", 3]]],
                 ]
