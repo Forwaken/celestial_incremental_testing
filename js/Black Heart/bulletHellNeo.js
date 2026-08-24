@@ -223,6 +223,7 @@ class BulletHell {
         this.overlay.style.display = "flex"
         this.overlay.style.alignItems = "center"
         this.overlay.style.justifyContent = "center"
+        this.overlay.style.touchAction = "none"
 
         // Create canvas for the enemies (Always full screen)
         this.enemyCanvas = document.createElement("canvas")
@@ -544,7 +545,7 @@ class BulletHell {
     }
 
     touchHandler(e) {
-        if (bulletHellNeo) bulletHellNeo.updatePos(e)
+        if (bulletHellNeo) bulletHellNeo.updatePos(e, true)
         e.preventDefault()
     }
 
