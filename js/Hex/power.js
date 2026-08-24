@@ -2154,7 +2154,7 @@ addLayer("hpw", {
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
                     Boost blessing gain.\n\
                     Currently: x" + formatWhole(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
-                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
             },
             buy() {
                 this.pay(this.cost())
@@ -2178,7 +2178,7 @@ addLayer("hpw", {
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
                     Reduce purity requirement.\n\
                     Currently: -" + formatWhole(tmp[this.layer].buyables[this.id].effect.sub(1)) + "\n\ \n\
-                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
             },
             buy() {
                 this.pay(this.cost())
@@ -2202,7 +2202,7 @@ addLayer("hpw", {
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
                     Boost curse gain.\n\
                     Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 3) + "\n\ \n\
-                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
             },
             buy() {
                 this.pay(this.cost())
@@ -2226,7 +2226,7 @@ addLayer("hpw", {
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
                     Boost " + player.h.stageName[1] + " point gain.\n\
                     Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 3) + "\n\ \n\
-                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
             },
             buy() {
                 this.pay(this.cost())
@@ -2250,7 +2250,7 @@ addLayer("hpw", {
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
                     Boost pre power resource gain.\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
-                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
             },
             buy() {
                 this.pay(this.cost())
@@ -2274,7 +2274,7 @@ addLayer("hpw", {
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
                     Boost uni-alpha tickspeed.\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
-                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Power"
             },
             buy() {
                 this.pay(this.cost())
