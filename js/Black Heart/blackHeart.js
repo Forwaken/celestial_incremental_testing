@@ -757,8 +757,7 @@ addLayer("bh", {
             unpaused = !player.bh.bhPause
         }
 
-        if (cutsceneActive)
-        {
+        if (cutsceneActive) {
             player.bh.bhPause = true
         }
 
@@ -814,13 +813,16 @@ addLayer("bh", {
 
         if (player.subtabs["bh"]["stuff"] == "bullet") {
             player.bh.bulletHell = true
+            if (!bulletHellNeo) {
+                player.subtabs["bh"]["stuff"] = "stages"
+                player.bh.bulletHell = false
+            }
         } else {
             player.bh.bulletHell = false
         }
 
         if (player.bh.currentStage == "none" && (player.subtabs["bh"]["stuff"] == "battle" || player.subtabs["bh"]["stuff"] == "bullet")) {
-            if (player.bh.currentStage == "zarDungeon")
-            {
+            if (player.bh.currentStage == "zarDungeon") {
                 if (player.zd.buyables[14].gte(1)) player.tab = "zard"
                 options.fullscreen = false
 
