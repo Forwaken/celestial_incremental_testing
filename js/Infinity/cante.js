@@ -106,7 +106,7 @@
         player.ca.replicantiTimerReq = player.ca.replicantiTimerReq.div(buyableEffect("ca", 16))
         player.ca.replicantiTimerReq = player.ca.replicantiTimerReq.div(buyableEffect("ca", 19))
 
-        player.ca.replicateChance = new Decimal(0.02)
+        player.ca.replicateChance = new Decimal(0.05)
         player.ca.replicateChance = player.ca.replicateChance.add(buyableEffect("ca", 11))
         player.ca.replicateChance = player.ca.replicateChance.add(buyableEffect("ca", 14))
         player.ca.replicateChance = player.ca.replicateChance.add(buyableEffect("ca", 17))
@@ -432,10 +432,10 @@
         11: {
             costBase() { return new Decimal(1e18) },
             costGrowth() { return new Decimal(10) },
-            purchaseLimit() { return new Decimal(78) },
+            purchaseLimit() { return new Decimal(75) },
             currency() { return player.in.infinityPoints},
             pay(amt) { player.in.infinityPoints = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).mul(0.005) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).max(75).mul(0.005) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -534,10 +534,10 @@
         14: {
             costBase() { return new Decimal(1e13) },
             costGrowth() { return new Decimal(10) },
-            purchaseLimit() { return new Decimal(78) },
+            purchaseLimit() { return new Decimal(75) },
             currency() { return player.ta.negativeInfinityPoints},
             pay(amt) { player.ta.negativeInfinityPoints = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).mul(0.005) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).max(75).mul(0.005) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },

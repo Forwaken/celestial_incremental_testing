@@ -827,6 +827,14 @@ addLayer("co", {
 
         if (!hasMilestone("s", 15)) {
             player.tad.upgrades.splice(0, player.tad.upgrades.length)
+
+            player.tad.optimization = new Decimal(0)
+            player.tad.optimizationReq = new Decimal(1)
+            player.tad.autoAccumulator = new Decimal(0)
+            player.tad.autoAmplifier = new Decimal(0)
+            for (let i = 1001; i < 1005; i++) {
+                player.tad.buyables[i] = new Decimal(0)
+            }
         }
 
         if (!hasMilestone("s", 18)) {

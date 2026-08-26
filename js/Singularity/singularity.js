@@ -589,7 +589,7 @@
     milestones: {
         11: {
             requirementDescription: "<h3>1 Singularity",
-            effectDescription: "Start every singularity reset with 8 infinities. Keep alt-infinity limit breaks. Unlock realm essence and the factory.",
+            effectDescription: "Start every singularity reset with 8 infinities. Keep alt-infinity limit breaks. Unlock realm essence and the factory. Remove the unlock requirement for optimization layer.",
             done() { return player.s.singularities.gte(1) },
             style: {width: "800px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
@@ -613,7 +613,7 @@
         },
         15: {
             requirementDescription: "<h3>5 Singularities",
-            effectDescription: "Keep check back buyables, infinitum upgrades, and infinity challenges on singularity resets, and unlock singularity point buyables.",
+            effectDescription: "Keep check back buyables, infinitum upgrades, optimization layer content, and infinity challenges on singularity resets, and unlock singularity point buyables.",
             done() { return player.s.singularities.gte(5) },
             style: {width: "800px", height: "70px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },

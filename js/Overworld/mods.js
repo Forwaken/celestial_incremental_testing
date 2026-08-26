@@ -476,7 +476,7 @@
         },
         15: {
             costBase() { return new Decimal(1e60) },
-            costGrowth() { return new Decimal(1e8) },
+            costGrowth() { return new Decimal(1e2) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.m.mods},
             pay(amt) { player.m.mods = this.currency().sub(amt) },
@@ -511,8 +511,8 @@
             style: {width: '275px', height: '150px'},
         },
         16: {
-            costBase() { return new Decimal(1e65) },
-            costGrowth() { return new Decimal(1e5) },
+            costBase() { return new Decimal(1e64) },
+            costGrowth() { return new Decimal(1e4) },
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.m.mods},
             pay(amt) { player.m.mods = this.currency().sub(amt) },
@@ -546,7 +546,7 @@
         },
         17: {
             costBase() { return new Decimal(1e80) },
-            costGrowth() { return new Decimal(1e10) },
+            costGrowth() { return new Decimal(1e8) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.m.mods},
             pay(amt) { player.m.mods = this.currency().sub(amt) },
