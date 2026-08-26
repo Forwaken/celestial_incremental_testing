@@ -3864,7 +3864,7 @@ addLayer("tad", {
                                         ["color-text", [() => {return "100"}, true, "black", () => {return player.tad.altInfinities.fragmented.milestone.gte(3)}, "rgba(0,0,0,0.5)"]],
                                     ], {width: "40px", height: "40px", borderRight: "3px solid #265314"}],
                                     ["style-row", [
-                                        ["color-text", [() => {return "<small>Produce +25% infinities per second.</small>"}, true, "black", () => {return player.tad.altInfinities.fragmented.milestone.gte(3)}, "rgba(0,0,0,0.5)"]],
+                                        ["color-text", [() => {return "<small>Produce +100% infinities<br>per second.</small>"}, true, "black", () => {return player.tad.altInfinities.fragmented.milestone.gte(3)}, "rgba(0,0,0,0.5)"]],
                                     ], {width: "207px", height: "40px"}],
                                 ], {width: "250px", height: "40px"}],
                             ], {width: "250px", height: "126px", background: "#336f1b", borderTop: "3px solid #265314", borderBottom: "3px solid #265314"}],

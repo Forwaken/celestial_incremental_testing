@@ -202,7 +202,7 @@
         if (player.po.halter.infinities.enabled == 2 && player.in.infinitiesToGet.gt(player.po.halter.infinities.halt)) player.in.infinitiesToGet = player.po.halter.infinities.halt
 
         // PASSIVE GAIN
-        if (player.tad.altInfinities.fragmented.milestone.gte(3)) player.in.infinities = player.in.infinities.add(player.in.infinitiesToGet.div(4).mul(delta))
+        if (player.tad.altInfinities.fragmented.milestone.gte(3)) player.in.infinities = player.in.infinities.add(player.in.infinitiesToGet.mul(delta))
 
 
         player.in.pylonEnergyMax = Decimal.pow(1e15, player.in.pylonTier)

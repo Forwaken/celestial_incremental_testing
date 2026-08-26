@@ -300,6 +300,7 @@ addLayer("darkTemple", {
         },
         byproductCap: new Decimal(1),
         byproductMult: new Decimal(1),
+        byproductTimer: new Decimal(0),
 
         spAdd: new Decimal(0),
         skillCost: new Decimal(1),
@@ -388,40 +389,44 @@ addLayer("darkTemple", {
         player.darkTemple.byproductMult = new Decimal(1)
         if (hasUpgrade("darkTemple", 8)) player.darkTemple.byproductMult = player.darkTemple.byproductMult.mul(upgradeEffect("darkTemple", 8))
 
-        if (player.darkTemple.byproduct[1]) {
-            let eff1 = getBuyableAmount("darkTemple", 1).mul(getBuyableAmount("darkTemple", 101).div(2).add(1))
-            player.depth1.gloomingUmbrite = player.depth1.gloomingUmbrite.add(new Decimal(3).mul(eff1).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.depth1.dimUmbrite = player.depth1.dimUmbrite.add(new Decimal(1).mul(eff1).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.bh.darkEssence = player.bh.darkEssence.add(new Decimal(0.3).mul(eff1).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-        }
-        if (player.darkTemple.byproduct[2]) {
-            let eff2 = getBuyableAmount("darkTemple", 2).mul(getBuyableAmount("darkTemple", 102).div(2).add(1))
-            player.depth2.faintUmbrite = player.depth2.faintUmbrite.add(new Decimal(4).mul(eff2).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.depth2.clearUmbrite = player.depth2.clearUmbrite.add(new Decimal(1.5).mul(eff2).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.bh.darkEssence = player.bh.darkEssence.add(new Decimal(0.6).mul(eff2).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-        }
-        if (player.darkTemple.byproduct[3]) {
-            let eff3 = getBuyableAmount("darkTemple", 3)
-            player.depth3.vividUmbrite = player.depth3.vividUmbrite.add(new Decimal(5).mul(eff3).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.depth3.lustrousUmbrite = player.depth3.lustrousUmbrite.add(new Decimal(2).mul(eff3).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.bh.darkEssence = player.bh.darkEssence.add(new Decimal(0.9).mul(eff3).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-        }
-        if (player.darkTemple.byproduct[4]) {
-            let eff4 = getBuyableAmount("darkTemple", 4)
-            player.stagnantSynestia.temporalDust = player.stagnantSynestia.temporalDust.add(new Decimal(8).mul(eff4).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.stagnantSynestia.temporalShard = player.stagnantSynestia.temporalShard.add(new Decimal(1).mul(eff4).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-        }
-        if (player.darkTemple.byproduct[5]) {
-            let eff5 = getBuyableAmount("darkTemple", 5)
-            player.depth4.gloomingNocturnium = player.depth4.gloomingNocturnium.add(new Decimal(10).mul(eff5).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.depth4.dimNocturnium = player.depth4.dimNocturnium.add(new Decimal(3).mul(eff5).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.bh.darkEssence = player.bh.darkEssence.add(new Decimal(1.5).mul(eff5).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-        }
-        if (player.darkTemple.byproduct[6]) {
-            let eff6 = getBuyableAmount("darkTemple", 6)
-            player.laboratory.matosDust = player.laboratory.matosDust.add(new Decimal(32).mul(eff6.neq(0) ? Decimal.pow(1.5, eff6) : new Decimal(0)).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.laboratory.matosShard = player.laboratory.matosShard.add(new Decimal(1).mul(eff6.neq(0) ? Decimal.pow(1.5, eff6) : new Decimal(0)).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
-            player.zd.pips = player.zd.pips.add(new Decimal(3).mul(eff6).mul(player.darkTemple.byproductMult).div(3600).mul(delta))
+        player.darkTemple.byproductTimer = player.darkTemple.byproductTimer.add(delta)
+        if (player.darkTemple.byproductTimer.gte(3600)) {
+            if (player.darkTemple.byproduct[1]) {
+                let eff1 = getBuyableAmount("darkTemple", 1).mul(getBuyableAmount("darkTemple", 101).div(2).add(1))
+                player.depth1.gloomingUmbrite = player.depth1.gloomingUmbrite.add(new Decimal(3).mul(eff1).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.depth1.dimUmbrite = player.depth1.dimUmbrite.add(new Decimal(1).mul(eff1).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.bh.darkEssence = player.bh.darkEssence.add(new Decimal(0.3).mul(eff1).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+            }
+            if (player.darkTemple.byproduct[2]) {
+                let eff2 = getBuyableAmount("darkTemple", 2).mul(getBuyableAmount("darkTemple", 102).div(2).add(1))
+                player.depth2.faintUmbrite = player.depth2.faintUmbrite.add(new Decimal(4).mul(eff2).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.depth2.clearUmbrite = player.depth2.clearUmbrite.add(new Decimal(1.5).mul(eff2).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.bh.darkEssence = player.bh.darkEssence.add(new Decimal(0.6).mul(eff2).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+            }
+            if (player.darkTemple.byproduct[3]) {
+                let eff3 = getBuyableAmount("darkTemple", 3)
+                player.depth3.vividUmbrite = player.depth3.vividUmbrite.add(new Decimal(5).mul(eff3).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.depth3.lustrousUmbrite = player.depth3.lustrousUmbrite.add(new Decimal(2).mul(eff3).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.bh.darkEssence = player.bh.darkEssence.add(new Decimal(0.9).mul(eff3).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+            }
+            if (player.darkTemple.byproduct[4]) {
+                let eff4 = getBuyableAmount("darkTemple", 4)
+                player.stagnantSynestia.temporalDust = player.stagnantSynestia.temporalDust.add(new Decimal(8).mul(eff4).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.stagnantSynestia.temporalShard = player.stagnantSynestia.temporalShard.add(new Decimal(1).mul(eff4).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+            }
+            if (player.darkTemple.byproduct[5]) {
+                let eff5 = getBuyableAmount("darkTemple", 5)
+                player.depth4.gloomingNocturnium = player.depth4.gloomingNocturnium.add(new Decimal(10).mul(eff5).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.depth4.dimNocturnium = player.depth4.dimNocturnium.add(new Decimal(3).mul(eff5).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.bh.darkEssence = player.bh.darkEssence.add(new Decimal(1.5).mul(eff5).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+            }
+            if (player.darkTemple.byproduct[6]) {
+                let eff6 = getBuyableAmount("darkTemple", 6)
+                player.laboratory.matosDust = player.laboratory.matosDust.add(new Decimal(32).mul(eff6.neq(0) ? Decimal.pow(1.5, eff6) : new Decimal(0)).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.laboratory.matosShard = player.laboratory.matosShard.add(new Decimal(1).mul(eff6.neq(0) ? Decimal.pow(1.5, eff6) : new Decimal(0)).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+                player.zd.pips = player.zd.pips.add(new Decimal(3).mul(eff6).mul(player.darkTemple.byproductMult).div(3600).mul(player.darkTemple.byproductTimer))
+            }
+            player.darkTemple.byproductTimer = new Decimal(0)
         }
     },
     clickables: {
