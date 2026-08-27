@@ -75,7 +75,7 @@ addLayer("pu", {
         player.pu.legendaryRaise = player.pu.legendaryRaise.mul(buyableEffect("rp", 16))
         player.pu.legendaryRaise = player.pu.legendaryRaise.mul(player.bl.bloodEffect)
     },
-    generateSelection() {
+    generateSelection(keepLeg = false) {
         player.pu.selectedPunchcards = [0, 0, 0, 0]
         let raritySelect = [[], [], [], []]
         for (let prop in player.pu.levelables) {
@@ -109,13 +109,13 @@ addLayer("pu", {
         }
 
         //legendary
-        let random = Math.random()
-        if (random < player.pu.legendaryPunchcardChance)
-        {
-            if (hasUpgrade("le", 201)) player.pu.legendarySelectionActive = true
-        } else
-        {
-            player.pu.legendarySelectionActive = false
+        if (!keepLeg) {
+            let random = Math.random()
+            if (random < player.pu.legendaryPunchcardChance) {
+                if (hasUpgrade("le", 201)) player.pu.legendarySelectionActive = true
+            } else {
+                player.pu.legendarySelectionActive = false
+            }
         }
         if (player.pu.legendarySelectionActive) {
             let choice = Math.floor(Math.random() * raritySelect[3].length)

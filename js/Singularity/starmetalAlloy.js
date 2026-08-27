@@ -117,8 +117,6 @@
 
             pauseUniverseAll(["D1", "DA", "U3", "A2"], "pause", true)
         }
-
-        player.sma.starmetalAlloy = player.sma.starmetalAlloy.floor()
     },
     clickables: {
         11: {
@@ -803,25 +801,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).mul(0.05).add(1) },
             unlocked() { return hasUpgrade("sma", 105) },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Starmetal Booster I"
             },
             display() {
                 return "which are boosting starmetal alloy gain by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " SMA"
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " SMA"
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -837,25 +835,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).mul(0.075).add(1) },
             unlocked() { return hasUpgrade("sma", 105) },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Starmetal Booster II"
             },
             display() {
                 return "which are boosting starmetal alloy growth rate by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " SMA"
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " SMA"
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -871,25 +869,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).mul(2).add(1).pow(1.5) },
             unlocked() { return hasUpgrade("sma", 105) },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Radiation Softcap Extender"
             },
             display() {
                 return "which are extending the radiation softcap by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " SMA"
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " SMA"
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -905,25 +903,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).mul(2).add(1).pow(2) },
             unlocked() { return hasUpgrade("sma", 105) },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Singularity Dimension Booster"
             },
             display() {
                 return "which are boosting all singularity dimensions by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " SMA"
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " SMA"
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -1010,7 +1008,7 @@
                                 ], {width: "400px", height: "30px", backgroundColor: "#3f1c46", borderRadius: "12px 12px 0 0"}],
                                 ["style-column", [
                                     ["raw-html", () => {return "Autoleave amount"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                                    ["raw-html", () => {return formatWhole(player.sme.leaveAmount) + " SMA."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                    ["raw-html", () => {return formatSimple(player.sme.leaveAmount) + " SMA."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                                 ], {width: "400px", height: "70px"}],
                                 ["text-input", "leaveInput", {width: "350px", height: "50px", backgroundColor: "#150917", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
                                 ["style-row", [
@@ -1026,7 +1024,7 @@
                 unlocked() { return player.pet.levelables[501][0].gte(1) },
                 content: [
                     ["blank", "25px"],
-                    ["raw-html", () => {return "You have <h3>" + formatWhole(player.sma.eclipseShards) + "</h3> eclipse shards"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "You have <h3>" + formatSimple(player.sma.eclipseShards) + "</h3> eclipse shards"}, {color: "white", fontSize: "30px", fontFamily: "monospace"}],
                     ["blank", "25px"],
                     ["style-column", [
                         ["blank", "5px"],
@@ -1044,7 +1042,7 @@
         },
     }, 
     tabFormat: [
-        ["raw-html", () => {return "You have <h3>" + formatWhole(player.sma.starmetalAlloy) + "</h3> starmetal alloy." }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+        ["raw-html", () => {return "You have <h3>" + formatSimple(player.sma.starmetalAlloy) + "</h3> starmetal alloy." }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],

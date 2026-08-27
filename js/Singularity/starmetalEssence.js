@@ -249,25 +249,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.75)},
             unlocked() { return true },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Essence Generator I"
             },
             display() {
                 return 'which are boosting starmetal essence generator I production by x' + format(tmp[this.layer].buyables[this.id].effect) + '.\n\
-                    Cost: ' + formatWhole(tmp[this.layer].buyables[this.id].cost) + ' SMA'
+                    Cost: ' + formatSimple(tmp[this.layer].buyables[this.id].cost) + ' SMA'
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -283,25 +283,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.8)},
             unlocked() { return true },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Essence Generator II"
             },
             display() {
                 return 'which are boosting starmetal essence generator II production by x' + format(tmp[this.layer].buyables[this.id].effect) + '.\n\
-                    Cost: ' + formatWhole(tmp[this.layer].buyables[this.id].cost) + ' SMA'
+                    Cost: ' + formatSimple(tmp[this.layer].buyables[this.id].cost) + ' SMA'
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -317,25 +317,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.85)},
             unlocked() { return true },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Essence Generator III"
             },
             display() {
                 return 'which are boosting starmetal essence generator III production by x' + format(tmp[this.layer].buyables[this.id].effect) + '.\n\
-                    Cost: ' + formatWhole(tmp[this.layer].buyables[this.id].cost) + ' SMA'
+                    Cost: ' + formatSimple(tmp[this.layer].buyables[this.id].cost) + ' SMA'
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -351,25 +351,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.9)},
             unlocked() { return true },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Essence Generator IV"
             },
             display() {
                 return 'which are boosting starmetal essence generator IV production by x' + format(tmp[this.layer].buyables[this.id].effect) + '.\n\
-                    Cost: ' + formatWhole(tmp[this.layer].buyables[this.id].cost) + ' SMA'
+                    Cost: ' + formatSimple(tmp[this.layer].buyables[this.id].cost) + ' SMA'
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -385,25 +385,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.95)},
             unlocked() { return true },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Essence Generator V"
             },
             display() {
                 return 'which are boosting starmetal essence generator V production by x' + format(tmp[this.layer].buyables[this.id].effect) + '.\n\
-                    Cost: ' + formatWhole(tmp[this.layer].buyables[this.id].cost) + ' SMA'
+                    Cost: ' + formatSimple(tmp[this.layer].buyables[this.id].cost) + ' SMA'
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -419,25 +419,25 @@
             pay(amt) { player.sma.starmetalAlloy = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id)},
             unlocked() { return hasUpgrade("laboratory", 16) },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Essence Generator VI"
             },
             display() {
                 return 'which are boosting starmetal essence generator VI production by x' + format(tmp[this.layer].buyables[this.id].effect) + '.\n\
-                    Cost: ' + formatWhole(tmp[this.layer].buyables[this.id].cost) + ' SMA'
+                    Cost: ' + formatSimple(tmp[this.layer].buyables[this.id].cost) + ' SMA'
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -2187,7 +2187,7 @@
                 unlocked: true,
                 content: [
                     ["blank", "25px"],
-                    ["raw-html", function () { return "You have <h3>" + formatWhole(player.sma.starmetalAlloy) + "</h3> starmetal alloy." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
+                    ["raw-html", () => { return "You have <h3>" + formatSimple(player.sma.starmetalAlloy) + "</h3> starmetal alloy." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
                     ["raw-html", function () { return "You have <h3>" + formatWhole(player.ra.radiation) + "</h3> radiation." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
                     ["blank", "25px"],
                     ["style-row", [["ex-buyable", 0], ["bar", 0], ["ex-buyable", 10]], {border: "3px solid white"}],
@@ -2227,8 +2227,8 @@
         },
     }, 
     tabFormat: [
-        ["raw-html", function () { return "You have <h3>" + format(player.sme.starmetalEssence) + "</h3> starmetal essence." }, { "color": "white", "font-size": "30px", "font-family": "monospace" }],
-        ["raw-html", function () { return "Your starmetal essence extends generator time requirements by x<h3>" + format(player.sme.starmetalEssenceSoftcap) + "</h3>." }, { "color": "white", "font-size": "16px", "font-family": "monospace" }],
+        ["raw-html", function () { return "You have <h3>" + formatSimple(player.sme.starmetalEssence) + "</h3> starmetal essence." }, { "color": "white", "font-size": "30px", "font-family": "monospace" }],
+        ["raw-html", function () { return "Your starmetal essence extends generator time requirements by x<h3>" + formatSimple(player.sme.starmetalEssenceSoftcap) + "</h3>." }, { "color": "white", "font-size": "16px", "font-family": "monospace" }],
         ["row", [["clickable", 1]]],
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],

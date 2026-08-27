@@ -147,7 +147,7 @@
             if (player.tempPaused) pauseUniverseAll(["D1", "DA", "U3", "A2"], "unpause", true)
             player.sb.storedSpaceEnergy = player.sb.storedSpaceEnergy.add(player.ds.storedSpaceEnergyToGet)
 
-            player.sma.starmetalAlloy = player.sma.starmetalAlloy.add(player.le.starmetalAlloyToGetTrue.floor())
+            player.sma.starmetalAlloy = player.sma.starmetalAlloy.add(player.le.starmetalAlloyToGetTrue.mul(10).floor().div(10))
             player.le.starmetalAlloyPauseAgain = new Decimal(10)
             for (let prop in player.pu.levelables) {
                 if (getLevelableTier("pu", prop, true)) {
@@ -180,7 +180,7 @@
                 player.le.resetAmount = player.le.resetAmount.add(1)
                 if (player.le.highestReset.lt(player.le.resetAmount)) player.le.highestReset = player.le.resetAmount
 
-                if (player.pu.storedSelections.lte(0)) layers.pu.generateSelection()
+                if (player.pu.storedSelections.lte(0)) layers.pu.generateSelection(true)
                 player.pu.storedSelections = player.pu.storedSelections.add(1)
 
                 player.le.starmetalAlloyPause = new Decimal(10)
@@ -201,7 +201,7 @@
                 if (player.tempPaused) pauseUniverseAll(["D1", "DA", "U3", "A2"], "unpause", true)
                 player.sb.storedSpaceEnergy = player.sb.storedSpaceEnergy.add(player.ds.storedSpaceEnergyToGet)
 
-                player.sma.starmetalAlloy = player.sma.starmetalAlloy.add(player.le.starmetalAlloyToGetTrue.floor())
+                player.sma.starmetalAlloy = player.sma.starmetalAlloy.add(player.le.starmetalAlloyToGetTrue.mul(10).floor().div(10))
                 player.le.starmetalAlloyPauseAgain = new Decimal(10)
                 for (let prop in player.pu.levelables) {
                     if (getLevelableTier("pu", prop, true)) {
@@ -236,7 +236,7 @@
                 player.le.resetAmount = player.le.resetAmount.add(1)
                 if (player.le.highestReset.lt(player.le.resetAmount)) player.le.highestReset = player.le.resetAmount
 
-                if (player.pu.storedSelections.lte(0)) layers.pu.generateSelection()
+                if (player.pu.storedSelections.lte(0)) layers.pu.generateSelection(true)
                 player.pu.storedSelections = player.pu.storedSelections.add(1)
 
                 player.le.starmetalAlloyPause = new Decimal(10)
@@ -256,7 +256,7 @@
             unlocked() { return true },
             onClick() {
                 if (player.tempPaused) pauseUniverseAll(["D1", "DA", "U3", "A2"], "unpause", true)
-                player.sma.eclipseShards = player.sma.eclipseShards.add(player.le.eclipseShardsToGetTrue.floor())
+                player.sma.eclipseShards = player.sma.eclipseShards.add(player.le.eclipseShardsToGetTrue.mul(10).floor().div(10))
                 player.le.starmetalAlloyPauseAgain = new Decimal(10)
                 for (let prop in player.pu.levelables) {
                     if (getLevelableTier("pu", prop, true)) {
@@ -976,25 +976,25 @@
             pay(amt) { player.sma.eclipseShards = this.currency().sub(amt) },
             effect(x) { return getBuyableAmount(this.layer, this.id).mul(0.25).add(1) },
             unlocked() { return true },
-            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
                 return "Eclipse Shard Value Increaser"
             },
             display() {
                 return "which are multiplying eclipse shard xp value multiplier by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
-                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Eclipse Shards"
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + " Eclipse Shards"
             },
             buy(mult) {
                 if (mult != true) {
-                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor()
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase()).mul(10).floor().div(10)
                     this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
-                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).floor()
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id)).mul(10).floor().div(10)
                     this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
@@ -1120,22 +1120,22 @@
                 glowColor: "#bbf",
                 content: [
                     ["blank", "25px"],
-                    ["raw-html", () => { return "You will store +" + formatWhole(player.le.starmetalAlloyToGetToGet) + " starmetal alloy on universe reset." }, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return "You will store +" + formatSimple(player.le.starmetalAlloyToGetToGet) + " starmetal alloy on universe reset." }, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "Reset Count: " + formatWhole(player.le.resetAmount)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                     ["blank", "10px"],
                     ["row", [["clickable", 11]]],
                     ["blank", "10px"],
-                    ["raw-html", () => { return "Empty your stored starmetal alloy,<br>gaining +" + formatWhole(player.le.starmetalAlloyToGetTrue) + " starmetal alloy when you leave." }, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return "Empty your stored starmetal alloy,<br>gaining +" + formatSimple(player.le.starmetalAlloyToGetTrue) + " starmetal alloy when you leave." }, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
                     ["blank", "10px"],
                     ["row", [["clickable", 12]]],
                     ["layer-proxy", ["sme", [
                         ["style-column", [
                             ["style-row", [
-                                ["raw-html", () => {return format(player.sma.starmetalAlloy) + " SMA"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return formatSimple(player.sma.starmetalAlloy) + " SMA"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
                             ], {width: "400px", height: "30px", backgroundColor: "#21273d", borderRadius: "12px 12px 0 0"}],
                             ["style-column", [
                                 ["raw-html", () => {return "Autoleave amount"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                                ["raw-html", () => {return formatWhole(player.sme.leaveAmount) + " SMA."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return formatSimple(player.sme.leaveAmount) + " SMA."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "400px", height: "70px"}],
                             ["text-input", "leaveInput", {width: "350px", height: "50px", backgroundColor: "black", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
                             ["style-row", [
@@ -1152,18 +1152,18 @@
                 glowColor: "#00f",
                 content: [
                     ["blank", "25px"],
-                    ["raw-html", () => { return "You will store +" + formatWhole(player.le.eclipseShardsToGetToGet) + " eclipse shards on universe reset."}, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return "You will store +" + formatSimple(player.le.eclipseShardsToGetToGet) + " eclipse shards on universe reset."}, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "Reset Count: " + formatWhole(player.le.resetAmount)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                     ["blank", "10px"],
                     ["row", [["clickable", 13]]],
                     ["blank", "10px"],
-                    ["raw-html", () => { return "Empty your stored eclipse shards,<br>gaining +" + formatWhole(player.le.eclipseShardsToGetTrue) + " eclipse shards when you leave."}, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return "Empty your stored eclipse shards,<br>gaining +" + formatSimple(player.le.eclipseShardsToGetTrue) + " eclipse shards when you leave."}, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
                     ["blank", "10px"],
                     ["row", [["clickable", 14]]],
                     ["blank", "25px"],
-                    ["raw-html", () => { return "(Eclipse shards are worth " + formatWhole(player.le.eclipseShardsValue) + " XP each for leveling punchcards.)" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return "(Eclipse shards are worth " + formatSimple(player.le.eclipseShardsValue) + " XP each for leveling punchcards.)" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                     ["blank", "10px"],
-                    ["raw-html", () => {return "You have <h3>" + formatWhole(player.sma.eclipseShards) + "</h3> eclipse shards"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => {return "You have <h3>" + formatSimple(player.sma.eclipseShards) + "</h3> eclipse shards"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                     ["blank", "10px"],
                     ["row", [["dark-buyable", 11]]],
                 ]
@@ -1195,7 +1195,7 @@
                     ["layer-proxy", ["sma", [
                         ["style-column", [
                             ["blank", "5px"],
-                            ["raw-html", () => { return "You have <h3>" + formatWhole(player.sma.starmetalAlloy) + "</h3> starmetal alloy." }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                            ["raw-html", () => { return "You have <h3>" + formatSimple(player.sma.starmetalAlloy) + "</h3> starmetal alloy." }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                             ["blank", "5px"],
                             ["style-row", [["upgrade", 10], ["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15], ["upgrade", 16],
                                 ["upgrade", 17], ["upgrade", 18], ["upgrade", 19], ["upgrade", 20], ["upgrade", 21]], {maxWidth: "800px"}],

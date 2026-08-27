@@ -334,19 +334,32 @@
                 unlocked() { return true },
                 content: [
                     ["blank", "25px"],
-            ["raw-html", function () { return "Softcap starts at <h3>" + format(player.cp.replicantiSoftcapStart) + "</h3>." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
-            ["raw-html", function () { return "Softcap divides replicanti mult by <h3>/" + format(player.cp.replicantiSoftcapEffect) + "</h3>." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
+            ["raw-html", () => {return "Softcap starts at <h3>" + format(player.cp.replicantiSoftcapStart) + "</h3>." }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+            ["raw-html", () => {
+                if (player.cp.replicantiSoftcapEffect.gte(1)) return "Softcap divides replicanti mult by <h3>/" + format(player.cp.replicantiSoftcapEffect) + "</h3>."
+                else return "Softcap multiplies replicanti mult by <h3>x" + format(player.cp.replicantiSoftcapEffect.recip()) + "</h3>."
+            }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
             ["blank", "25px"],
-            ["raw-html", function () { return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap2Start) ? "Second softcap starts at <h3>" + format(player.cp.replicantiSoftcap2Start) + "</h3>." : ""}, { "color": "#ff4545", "font-size": "20px", "font-family": "monospace" }],
-            ["raw-html", function () { return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap2Start) ? "Second softcap divides replicanti mult by <h3>/" + format(player.cp.replicantiSoftcap2Effect) + "</h3>." : ""}, { "color": "#ff4545", "font-size": "20px", "font-family": "monospace" }],
+            ["raw-html", () => {return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap2Start) ? "Second softcap starts at <h3>" + format(player.cp.replicantiSoftcap2Start) + "</h3>." : ""}, {color: "#ff4545", fontSize: "20px", fontFamily: "monospace"}],
+            ["raw-html", () => {
+                if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap2Start)) {
+                    if (player.cp.replicantiSoftcap2Effect.gte(1)) return "Second softcap divides replicanti mult by <h3>/" + format(player.cp.replicantiSoftcap2Effect) + "</h3>."
+                    else return "Second softcap multiplies replicanti mult by <h3>x" + format(player.cp.replicantiSoftcap2Effect.recip()) + "</h3>."
+                } else return ""
+            }, {color: "#ff4545", fontSize: "20px", fontFamily: "monospace"}],
             ["blank", "25px"],
-            ["raw-html", function () { return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap3Start) ? "Third softcap starts at <h3>" + format(player.cp.replicantiSoftcap3Start) + "</h3>." : ""}, { "color": "#cc2121", "font-size": "20px", "font-family": "monospace" }],
-            ["raw-html", function () { return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap3Start) ? "Third softcap multiplies replicanti time requirement by <h3>x" + format(player.cp.replicantiSoftcap3Effect) + "</h3>." : ""}, { "color": "#cc2121", "font-size": "20px", "font-family": "monospace" }],
+            ["raw-html", () => {return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap3Start) ? "Third softcap starts at <h3>" + format(player.cp.replicantiSoftcap3Start) + "</h3>." : ""}, {color: "#cc2121", fontSize: "20px", fontFamily: "monospace"}],
+            ["raw-html", () => {
+                if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap3Start)) {
+                    if (player.cp.replicantiSoftcap3Start.gte(1)) return "Third softcap multiplies replicanti time requirement by <h3>x" + format(player.cp.replicantiSoftcap3Effect) + "</h3>."
+                    else return "Third softcap divides replicanti time requirement by <h3>/" + format(player.cp.replicantiSoftcap3Effect.recip()) + "</h3>."
+                } else return ""
+            }, {color: "#cc2121", fontSize: "20px", fontFamily: "monospace"}],
             ["blank", "25px"],
-            ["raw-html", function () { return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap4Start) ? "Fourth softcap starts at <h3>" + format(player.cp.replicantiSoftcap4Start) + "</h3>." : ""}, { "color": "#9c1c1c", "font-size": "20px", "font-family": "monospace" }],
-            ["raw-html", function () { return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap4Start) ? "Fourth softcap raises replicanti mult by <h3>^" + format(player.cp.replicantiSoftcap4Effect) + "</h3>." : ""}, { "color": "#9c1c1c", "font-size": "20px", "font-family": "monospace" }],
+            ["raw-html", () => {return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap4Start) ? "Fourth softcap starts at <h3>" + format(player.cp.replicantiSoftcap4Start) + "</h3>." : ""}, {color: "#9c1c1c", fontSize: "20px", fontFamily: "monospace"}],
+            ["raw-html", () => {return player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap4Start) ? "Fourth softcap raises replicanti mult by <h3>^" + format(player.cp.replicantiSoftcap4Effect) + "</h3>." : ""}, {color: "#9c1c1c", fontSize: "20px", fontFamily: "monospace"}],
             ["blank", "25px"],
-            ["raw-html", function () { return player.cp.replicantiPoints.gte(1e308) ? "Hardcap: <h3>" + format(player.cp.replicantiPointCap) + "</h3>." : ""}, { "color": "black", "font-size": "20px", "font-family": "monospace" }],
+            ["raw-html", () => {return player.cp.replicantiPoints.gte(1e308) ? "Hardcap: <h3>" + format(player.cp.replicantiPointCap) + "</h3>." : ""}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                 ]
             },
         },

@@ -456,8 +456,8 @@
                 content: [
                     ["blank", "25px"],
                     ["row", [
-                        ["raw-html", () => {return "You have " + formatWhole(player.rt.repliTrees) + " repli-trees"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "(+" + format(player.rt.repliTreesToGet, 1) + ")"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
+                        ["raw-html", () => {return "You have " + formatSimple(player.rt.repliTrees) + " repli-trees"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "(+" + formatSimple(player.rt.repliTreesToGet) + ")"}, {color: "white", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}],
                     ]],
                     ["raw-html", () => {return "Boosts anonymity gain by x" + format(player.rt.repliTreesEffect)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                     ["raw-html", () => {return "Repli-Leaves mult: x" + format(player.rt.repliLeavesMult, 4)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
