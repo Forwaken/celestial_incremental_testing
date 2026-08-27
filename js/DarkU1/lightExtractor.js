@@ -1149,7 +1149,7 @@
                 buttonStyle() { return { border: "2px solid rgb(245, 255, 104)", borderRadius: "10px" } },
                 unlocked() { return player.pet.legPetTimers[0].active },
                 shouldNotify() {return tmp.le.clickables[13].canClick},
-                glowColor: "#00f",
+                glowColor: "#ffb",
                 content: [
                     ["blank", "25px"],
                     ["raw-html", () => { return "You will store +" + formatSimple(player.le.eclipseShardsToGetToGet) + " eclipse shards on universe reset."}, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
