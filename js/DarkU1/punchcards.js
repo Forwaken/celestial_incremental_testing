@@ -9,9 +9,9 @@ addLayer("pu", {
         paused: false,
 
         selectedPunchcards: [0, 0, 0, 0],
-        storedSelections: new Decimal(0),
+        storedSelections: new Decimal(1),
         selectionIndex: 0,
-        commonRaise: new Decimal(1),
+        commonRaise: new Decimal(0.7),
         rareRaise: new Decimal(1),
         epicRaise: new Decimal(1),
         legendaryRaise: new Decimal(1),
@@ -58,7 +58,8 @@ addLayer("pu", {
 
         //reroll
         player.pu.rerollCost = player.pu.rerolls.pow(1.2).add(1).mul(5)
-        player.pu.commonRaise = new Decimal(1)
+        player.pu.commonRaise = new Decimal(0.5)
+        if (hasUpgrade("sma", 14)) player.pu.commonRaise = player.pu.commonRaise.add(0.5)
         player.pu.commonRaise = player.pu.commonRaise.mul(buyableEffect("funify", 14))
         player.pu.commonRaise = player.pu.commonRaise.mul(player.bl.bloodEffect)
 
@@ -309,6 +310,19 @@ addLayer("pu", {
                 return look
             },
         },
+        101: {
+            title() {return !player.pu.clickables[101] ? "Highlight tab button when you can select<br>[ENABLED]" : "Highlight tab button when you can select<br>[DISABLED]"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.pu.clickables[101]) {
+                    player.pu.clickables[101] = false
+                } else {
+                    player.pu.clickables[101] = true
+                }
+            },
+            style: {width: "400px", minHeight: "50px", color: "white", border: "2px solid #384166", borderRadius: "10px"},
+        },
     },
     levelables: {
         0: {
@@ -418,8 +432,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.5).mul(10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id).sub(9)).mul(364.83).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(4)) return getLevelableAmount(this.layer, this.id).add(1).mul(2).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(4)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id)).div(1.4).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -466,14 +480,14 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked: true,
-            canSelect: true,
+            unlocked() {return player.le.highestReset.gte(2) || this.canClick()},
+            canSelect() {return player.le.resetAmount.gte(2) && !player.pet.legPetTimers[0].active},
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.5).mul(10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id).sub(9)).mul(364.83).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(4)) return getLevelableAmount(this.layer, this.id).add(1).mul(2).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(4)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id)).div(1.4).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -527,8 +541,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.5).mul(10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id).sub(9)).mul(364.83).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(4)) return getLevelableAmount(this.layer, this.id).add(1).mul(2).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(4)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id)).div(1.4).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -582,8 +596,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.5).mul(10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id).sub(9)).mul(364.83).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(4)) return getLevelableAmount(this.layer, this.id).add(1).mul(2).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(4)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id)).div(1.4).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -637,8 +651,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.5).mul(10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id).sub(9)).mul(364.83).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(4)) return getLevelableAmount(this.layer, this.id).add(1).mul(2).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(4)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id)).div(1.4).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -693,8 +707,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.5).mul(10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id).sub(9)).mul(364.83).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(4)) return getLevelableAmount(this.layer, this.id).add(1).mul(2).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(4)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id)).div(1.4).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -749,8 +763,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.5).mul(10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id).sub(9)).mul(364.83).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(4)) return getLevelableAmount(this.layer, this.id).add(1).mul(2).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(4)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id)).div(1.4).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -1122,8 +1136,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return hasUpgrade("depth1", 6)},
-            canSelect() {return hasUpgrade("depth1", 6) && player.pet.legPetTimers[0].active},
+            unlocked() {return hasUpgrade("sma", 15) && hasUpgrade("depth1", 6)},
+            canSelect() {return hasUpgrade("sma", 15) && hasUpgrade("depth1", 6) && player.pet.legPetTimers[0].active},
             challengeType: 'Ec',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1178,8 +1192,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked: true,
-            canSelect: true,
+            unlocked() {return hasUpgrade("sma", 15)},
+            canSelect() {return hasUpgrade("sma", 15)},
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
@@ -1233,8 +1247,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked: true,
-            canSelect: true,
+            unlocked() {return hasUpgrade("sma", 15)},
+            canSelect() {return hasUpgrade("sma", 15)},
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
@@ -1288,8 +1302,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return player.le.highestReset.gte(3) || this.canClick()},
-            canSelect() {return player.le.resetAmount.gte(3) && !player.pet.legPetTimers[0].active},
+            unlocked() {return hasUpgrade("sma", 15) && player.le.highestReset.gte(3) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.le.resetAmount.gte(3) && !player.pet.legPetTimers[0].active},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1344,8 +1358,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return player.le.highestReset.gte(3) || this.canClick()},
-            canSelect() {return player.le.resetAmount.gte(3) && !player.pet.legPetTimers[0].active},
+            unlocked() {return hasUpgrade("sma", 15) && player.le.highestReset.gte(3) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.le.resetAmount.gte(3) && !player.pet.legPetTimers[0].active},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1399,8 +1413,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return player.le.highestReset.gte(4) || this.canClick()},
-            canSelect() {return player.le.resetAmount.gte(4) && !player.pet.legPetTimers[0].active},
+            unlocked() {return hasUpgrade("sma", 15) && player.le.highestReset.gte(4) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.le.resetAmount.gte(4) && !player.pet.legPetTimers[0].active},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1454,8 +1468,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return player.le.highestReset.gte(4) || this.canClick()},
-            canSelect() {return player.le.resetAmount.gte(4)},
+            unlocked() {return hasUpgrade("sma", 15) && player.le.highestReset.gte(4) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.le.resetAmount.gte(4)},
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
@@ -1508,8 +1522,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return player.le.highestReset.gte(5) || this.canClick()},
-            canSelect() {return player.le.resetAmount.gte(5)},
+            unlocked() {return hasUpgrade("sma", 15) && player.le.highestReset.gte(5) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.le.resetAmount.gte(5)},
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
@@ -1562,8 +1576,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return ((player.pet.legPetTimers[0].active || player.dotf.penumbral) && player.le.highestReset.gte(3)) || this.canClick()},
-            canSelect() {return (player.pet.legPetTimers[0].active || player.dotf.penumbral) && player.le.resetAmount.gte(3)},
+            unlocked() {return (hasUpgrade("sma", 15) && (player.pet.legPetTimers[0].active || player.dotf.penumbral) && player.le.highestReset.gte(3)) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && (player.pet.legPetTimers[0].active || player.dotf.penumbral) && player.le.resetAmount.gte(3)},
             challengeType: 'Ec',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1617,8 +1631,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return (player.ir.iriditeDefeated && player.le.highestReset.gte(7) && !player.pet.legPetTimers[0].active) || this.canClick()},
-            canSelect() {return player.ir.iriditeDefeated && player.le.resetAmount.gte(7) && !player.pet.legPetTimers[0].active},
+            unlocked() {return (hasUpgrade("sma", 15) && player.ir.iriditeDefeated && player.le.highestReset.gte(7) && !player.pet.legPetTimers[0].active) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.ir.iriditeDefeated && player.le.resetAmount.gte(7) && !player.pet.legPetTimers[0].active},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1672,8 +1686,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return (player.ir.iriditeDefeated && player.le.highestReset.gte(5) && !player.pet.legPetTimers[0].active) || this.canClick()},
-            canSelect() {return player.ir.iriditeDefeated && player.le.resetAmount.gte(5) && !player.pet.legPetTimers[0].active},
+            unlocked() {return (hasUpgrade("sma", 15) && player.ir.iriditeDefeated && player.le.highestReset.gte(5) && !player.pet.legPetTimers[0].active) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.ir.iriditeDefeated && player.le.resetAmount.gte(5) && !player.pet.legPetTimers[0].active},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1726,8 +1740,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return (player.pet.legPetTimers[0].active && player.ir.iriditeDefeated && player.le.highestReset.gte(4)) || this.canClick()},
-            canSelect() {return player.pet.legPetTimers[0].active && player.ir.iriditeDefeated && player.le.resetAmount.gte(4)},
+            unlocked() {return hasUpgrade("sma", 15) && (player.pet.legPetTimers[0].active && player.ir.iriditeDefeated && player.le.highestReset.gte(4)) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.pet.legPetTimers[0].active && player.ir.iriditeDefeated && player.le.resetAmount.gte(4)},
             challengeType: 'Ec',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1780,8 +1794,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return (player.ir.iriditeDefeated && player.le.highestReset.gte(7)) || this.canClick()},
-            canSelect() {return player.ir.iriditeDefeated && player.le.resetAmount.gte(7) && !player.pet.legPetTimers[0].active},
+            unlocked() {return (hasUpgrade("sma", 15) && player.ir.iriditeDefeated && player.le.highestReset.gte(7)) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.ir.iriditeDefeated && player.le.resetAmount.gte(7) && !player.pet.legPetTimers[0].active},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1833,8 +1847,8 @@ addLayer("pu", {
                 return eff
             },
             // CLICK CODE
-            unlocked() {return (player.alephsChamber.milestone[25] > 0 && player.le.highestReset.gte(4) && hasUpgrade("le", 202) && player.pet.legPetTimers[0].active) || this.canClick()},
-            canSelect() {return player.alephsChamber.milestone[25] > 0 && player.le.resetAmount.gte(4) && hasUpgrade("le", 202) && player.pet.legPetTimers[0].active},
+            unlocked() {return (hasUpgrade("sma", 15) && player.alephsChamber.milestone[25] > 0 && player.le.highestReset.gte(4) && hasUpgrade("le", 202) && player.pet.legPetTimers[0].active) || this.canClick()},
+            canSelect() {return hasUpgrade("sma", 15) && player.alephsChamber.milestone[25] > 0 && player.le.resetAmount.gte(4) && hasUpgrade("le", 202) && player.pet.legPetTimers[0].active},
             challengeType: 'Ec',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -2487,10 +2501,12 @@ addLayer("pu", {
                         ["style-column", [
                             ["raw-html", () => {return "Punchcard Selections: " + formatWhole(player.pu.storedSelections)}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
                             ["raw-html", () => { return "Gain punchcard selections on universe resets."}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                        ], {width: "550px", height: "70px"}],
-                    ], () => {return {returnwidth: "550px", height: "390px", border: "3px solid white", backgroundColor: "#1c2033"}}],
-                                        ["style-column", [
+                            ["blank", "10px"],
+                            ["clickable", 101],
+                        ], {width: "550px", height: "130px"}],
+                    ], () => {return {returnwidth: "550px", height: "450px", border: "3px solid white", backgroundColor: "#1c2033"}}],
                     ["style-column", [
+                        ["style-column", [
                             ["raw-html", () => {
                                 return "Legendary Punchcards<br><small>(Costs " + formatWhole(player.pu.selectionCost) + " Punchcard Selections)"
                             }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
@@ -2514,24 +2530,24 @@ addLayer("pu", {
                         ], {width: "550px", height: "175px", borderBottom: "3px solid white"}],
                         ["always-scroll-column", [
                             ["style-column", [
-                                ["raw-html", () => {return hasUpgrade("sma", 17) ? "Common (65%)" : "Common (75%)"}, {color: "#7f7f7f", fontSize: "20px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return hasUpgrade("sma", 17) ? "Common (65%)" : hasUpgrade("sma", 15) ? "Common (75%)" : "Common"}, {color: "#7f7f7f", fontSize: "20px", fontFamily: "monospace"}],
                             ], {width: "535px", height: "40px", backgroundColor: "#323232", borderBottom: "3px solid #7f7f7f", userSelect: "none"}],
                             ["style-row", [
-                                ["levelable", 101], ["levelable", 102], ["levelable", 103], ["levelable", 104],
-                                ["levelable", 105], ["levelable", 106], ["levelable", 107], ["levelable", 108],
+                                ["levelable", 101], ["levelable", 103], ["levelable", 104], ["levelable", 105],
+                                ["levelable", 102], ["levelable", 106], ["levelable", 107], ["levelable", 108],
                                 ["levelable", 109], ["levelable", 100], ["levelable", 110], ["levelable", 111],
                                 ["levelable", 112], ["levelable", 113],
-                            ], {width: "525px", backgroundColor: "#191919", padding: "5px"}],
+                            ], () => {return hasUpgrade("sma", 15) ? {width: "525px", backgroundColor: "#191919", padding: "5px"} : {width: "525px", backgroundColor: "#191919", padding: "5px", borderBottom: "3px solid #7f7f7f"}}],
 
                             ["style-column", [
                                 ["raw-html", "Rare (25%)", {color: "#7f5f00", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "535px", height: "40px", backgroundColor: "#322600", borderTop: "3px solid #7f5f00", borderBottom: "3px solid #7f5f00", userSelect: "none"}],
+                            ], () => {return hasUpgrade("sma", 15) ? {width: "535px", height: "40px", backgroundColor: "#322600", borderTop: "3px solid #7f5f00", borderBottom: "3px solid #7f5f00", userSelect: "none"} : {display: "none !important"}}],
                             ["style-row", [
                                 ["levelable", 201], ["levelable", 202], ["levelable", 203], ["levelable", 204],
                                 ["levelable", 205], ["levelable", 206], ["levelable", 207], ["levelable", 208],
                                 ["levelable", 200], ["levelable", 209], ["levelable", 210], ["levelable", 211],
                                 ["levelable", 212], ["levelable", 213],
-                            ], () => {return hasUpgrade("sma", 17) ? {width: "525px", backgroundColor: "#191300", padding: "5px"} : {width: "525px", backgroundColor: "#191300", padding: "5px", borderBottom: "3px solid #7f5f00"}}],
+                            ], () => {return hasUpgrade("sma", 17) ? {width: "525px", backgroundColor: "#191300", padding: "5px"} : hasUpgrade("sma", 15) ? {width: "525px", backgroundColor: "#191300", padding: "5px", borderBottom: "3px solid #7f5f00"} : {display: "none !important"}}],
 
                             ["style-column", [
                                 ["raw-html", "Epic (10%)", {color: "#003f7f", fontSize: "20px", fontFamily: "monospace"}],

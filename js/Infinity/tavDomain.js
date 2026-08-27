@@ -665,6 +665,14 @@ addLayer("tad", {
                 break;
         }
 
+        // ALTERNATE INFINITIES AUTOMATION
+        let t1Auto = buyableEffect("tad", 1003).add(buyableEffect("tad", 1004)).sub(2)
+        if (t1Auto.gt(0)) {
+            player.tad.altInfinities["broken"].amount = player.tad.altInfinities["broken"].amount.add(player.tad.altInfinities["broken"].gain.mul(t1Auto).mul(delta))
+            player.tad.altInfinities["shattered"].amount = player.tad.altInfinities["shattered"].amount.add(player.tad.altInfinities["shattered"].gain.mul(t1Auto).mul(delta))
+            player.tad.altInfinities["fragmented"].amount = player.tad.altInfinities["fragmented"].amount.add(player.tad.altInfinities["fragmented"].gain.mul(t1Auto).mul(delta))
+        }
+
         // ALTERNATE INFINITIES EFFECTS
         let amt1 = player.tad.altInfinities.broken.amount
         let amt2 = player.tad.altInfinities.shattered.amount
@@ -3370,7 +3378,7 @@ addLayer("tad", {
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             display() {
-                return "Increase T1-I gain by +" + format(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100)) + "/s.\n\
+                return "Increase T1-I gain by +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100)) + "%/s.\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Infinitum"
             },
             buy(mult) {
@@ -3388,7 +3396,7 @@ addLayer("tad", {
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
             },
-            style: { width: '250px', height: '100px', color: "rgba(0,0,0,0.8)", backgroundColor: "#a75553", fontSize: "12px", boxSizing: "border-box"},
+            style: { width: '250px', height: '105px', color: "rgba(0,0,0,0.8)", backgroundColor: "#a75553", fontSize: "12px", boxSizing: "border-box"},
         },
         1004: {
             costBase() { return new Decimal(1e10) },
@@ -3401,7 +3409,7 @@ addLayer("tad", {
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             display() {
-                return "Increase T1-I gain by +" + format(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100)) + "/s.\n\
+                return "Increase T1-I gain by +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(1).mul(100)) + "%/s.\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Infinities"
             },
             buy(mult) {
@@ -3419,7 +3427,7 @@ addLayer("tad", {
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
             },
-            style: { width: '250px', height: '100px', color: "rgba(0,0,0,0.8)", backgroundColor: "#a75553", fontSize: "12px", boxSizing: "border-box"},
+            style: { width: '250px', height: '105px', color: "rgba(0,0,0,0.8)", backgroundColor: "#a75553", fontSize: "12px", boxSizing: "border-box"},
         },
     },
     bars: {
@@ -4313,7 +4321,6 @@ addLayer("tad", {
                                 ["style-row", [], {width: "250px", height: "3px", background: "#532a29"}],
                                 ["ex-buyable", 1002],
                             ], () => {return player.tad.optimization.gte(5) ? {width: "250px", height: "250px", background: "#a75553", border: "4px solid #532a29", marginLeft: "10px"} : {display: "none !important"}}],
-                            // Constant T1 infinity gain
                             // Amplifiers no longer cost matter
                             // Compression automation (can toggle which compressors are autobought)
                             // Automatically magnify
@@ -4328,7 +4335,7 @@ addLayer("tad", {
                             ["style-column", [
                                 ["style-column", [
                                     ["raw-html", "T1 Infinity Automation", {color: "rgba(0,0,0,0.8)", fontSize: "18px", fontFamily: "monospace"}],
-                                ], {width: "250px", height: "43px", borderBottom: "4px solid #532a29"}],
+                                ], {width: "250px", height: "33px", borderBottom: "4px solid #532a29"}],
                                 ["ex-buyable", 1003],
                                 ["style-row", [], {width: "250px", height: "3px", background: "#532a29"}],
                                 ["ex-buyable", 1004],

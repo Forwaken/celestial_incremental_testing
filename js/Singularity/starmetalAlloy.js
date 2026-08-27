@@ -292,7 +292,7 @@
         14: {
             title: "Dark Starmetal Upgrade V",
             unlocked() { return hasUpgrade("sma", 13)},
-            description: "Unlock starmetal punchcards.",
+            description: "Greatly improve common punchcard's active effects.",
             cost: new Decimal("15"),
             currencyLocation() { return player.sma },
             currencyDisplayName: "Starmetal Alloy",
@@ -307,8 +307,7 @@
         15: {
             title: "Dark Starmetal Upgrade VI",
             unlocked() { return hasUpgrade("sma", 14)},
-            description: "Gain an extra card selection at the start of a run.",
-            onPurchase() {player.pu.storedSelections = player.pu.storedSelections.add(1)},
+            description: "Unlock rare punchcards.",
             cost: new Decimal("22"),
             currencyLocation() { return player.sma },
             currencyDisplayName: "Starmetal Alloy",
@@ -973,7 +972,7 @@
             },
             "Punchcards": {
                 buttonStyle() {return {color: "white", borderRadius: "10px"}},
-                unlocked() { return hasUpgrade("sma", 14) },
+                unlocked() { return true },
                 embedLayer: 'pu',
             },
             "Auto Singularity": {

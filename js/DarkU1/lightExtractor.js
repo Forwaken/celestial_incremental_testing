@@ -158,8 +158,7 @@
             player.le.eclipseShardsToGet = new Decimal(0)
             player.le.resetAmount = new Decimal(0)
 
-            if (!hasUpgrade("sma", 15)) player.pu.storedSelections = new Decimal(0)
-            if (hasUpgrade("sma", 15)) player.pu.storedSelections = new Decimal(1)
+            player.pu.storedSelections = new Decimal(1)
 
             player.sma.inStarmetalChallenge = false
             player.universe = "U3"
@@ -174,14 +173,16 @@
     clickables: {
         11: {
             title() { return "<h2>Reset everything in this universe for stored starmetal alloy.<br>Req: " + format(player.le.starmetalAlloyReq) + " Points" },
-            canClick() { return player.du.points.gte(player.le.starmetalAlloyReq) },
+            canClick() { return !player.pet.legPetTimers[0].active && player.du.points.gte(player.le.starmetalAlloyReq) },
             unlocked() { return true },
             onClick() {
                 player.le.resetAmount = player.le.resetAmount.add(1)
                 if (player.le.highestReset.lt(player.le.resetAmount)) player.le.highestReset = player.le.resetAmount
-                player.le.starmetalAlloyPause = new Decimal(10)
 
+                if (player.pu.storedSelections.lte(0)) layers.pu.generateSelection()
                 player.pu.storedSelections = player.pu.storedSelections.add(1)
+
+                player.le.starmetalAlloyPause = new Decimal(10)
 
                 player.le.starmetalAlloyToGet = player.le.starmetalAlloyToGet.add(player.le.starmetalAlloyToGetToGet)
             },
@@ -210,8 +211,7 @@
                 player.le.starmetalAlloyToGet = new Decimal(0)
                 player.le.resetAmount = new Decimal(0)
 
-                if (!hasUpgrade("sma", 15)) player.pu.storedSelections = new Decimal(0)
-                if (hasUpgrade("sma", 15)) player.pu.storedSelections = new Decimal(1)
+                player.pu.storedSelections = new Decimal(1)
 
                 player.sma.inStarmetalChallenge = false
                 player.universe = "U3"
@@ -229,14 +229,16 @@
         },
         13: {
             title() { return "<h2>Reset everything in this universe for stored eclipse shards.<br>Req: " + format(player.le.eclipseShardsReq) + " Points" },
-            canClick() { return player.du.points.gte(player.le.eclipseShardsReq) },
+            canClick() { return player.pet.legPetTimers[0].active && player.du.points.gte(player.le.eclipseShardsReq) },
             unlocked() { return true },
             onClick() {
                 player.le.resetAmount = player.le.resetAmount.add(1)
                 if (player.le.highestReset.lt(player.le.resetAmount)) player.le.highestReset = player.le.resetAmount
-                player.le.starmetalAlloyPause = new Decimal(10)
 
+                if (player.pu.storedSelections.lte(0)) layers.pu.generateSelection()
                 player.pu.storedSelections = player.pu.storedSelections.add(1)
+
+                player.le.starmetalAlloyPause = new Decimal(10)
 
                 player.le.eclipseShardsToGet = player.le.eclipseShardsToGet.add(player.le.eclipseShardsToGetToGet)
             },
@@ -265,8 +267,7 @@
                 player.le.eclipseShardsToGet = new Decimal(0)
                 player.le.resetAmount = new Decimal(0)
 
-                if (!hasUpgrade("sma", 15)) player.pu.storedSelections = new Decimal(0)
-                if (hasUpgrade("sma", 15)) player.pu.storedSelections = new Decimal(1)
+                player.pu.storedSelections = new Decimal(1)
 
                 player.sma.inStarmetalChallenge = false
                 player.universe = "U3"
@@ -722,7 +723,7 @@
         12: {
             title: "Darked Rankness",
             unlocked() { return true },
-            description: "Divides rank requirements by /20.",
+            description: "Divides rank requirement by /10.",
             cost: new Decimal(1000),
             currencyLocation() { return player.du },
             currencyDisplayName: "Dark Celestial Points",
@@ -1114,6 +1115,8 @@
             "Main": {
                 buttonStyle() { return { border: "2px solid #384166", borderRadius: "10px" } },
                 unlocked() { return !player.pet.legPetTimers[0].active },
+                shouldNotify() {return tmp.le.clickables[11].canClick},
+                glowColor: "#bbf",
                 content: [
                     ["blank", "25px"],
                     ["raw-html", () => { return "You will store +" + formatWhole(player.le.starmetalAlloyToGetToGet) + " starmetal alloy on universe reset." }, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
@@ -1144,6 +1147,8 @@
             "Shards": {
                 buttonStyle() { return { border: "2px solid rgb(245, 255, 104)", borderRadius: "10px" } },
                 unlocked() { return player.pet.legPetTimers[0].active },
+                shouldNotify() {return tmp.le.clickables[13].canClick},
+                glowColor: "#00f",
                 content: [
                     ["blank", "25px"],
                     ["raw-html", () => { return "You will store +" + formatWhole(player.le.eclipseShardsToGetToGet) + " eclipse shards on universe reset."}, {color: "white", fontSize: "22px", fontFamily: "monospace"}],
@@ -1200,7 +1205,9 @@
             },
             "Punchcards": {
                 buttonStyle() { return { border: "2px solid #384166", borderRadius: "10px" } },
-                unlocked() { return hasUpgrade("sma", 14) },
+                unlocked() { return true },
+                shouldNotify() {return !player.pu.clickables[101] && player.pu.storedSelections.gt(0)},
+                glowColor: "#bbf",
                 embedLayer: 'pu',
             },
         },
