@@ -241,7 +241,7 @@
         },
         11: {
             title: "Dark Starmetal Upgrade II",
-            unlocked() { return hasUpgrade("sma", 10)},
+            unlocked: true,
             description: "Improve dark ranks and tiers effects.",
             cost: new Decimal("3"),
             currencyLocation() { return player.sma },
@@ -256,7 +256,7 @@
         },
         12: {
             title: "Dark Starmetal Upgrade III",
-            unlocked() { return hasUpgrade("sma", 11)},
+            unlocked: true,
             description: "Unlock dark generators.",
             cost: new Decimal("5"),
             currencyLocation() { return player.sma },
@@ -271,7 +271,7 @@
         },
         13: {
             title: "Dark Starmetal Upgrade IV",
-            unlocked() { return hasUpgrade("sma", 12)},
+            unlocked: true,
             description: "Dark prestige points boost dark celestial point gain.",
             cost: new Decimal("8"),
             currencyLocation() { return player.sma },
@@ -291,7 +291,7 @@
         },
         14: {
             title: "Dark Starmetal Upgrade V",
-            unlocked() { return hasUpgrade("sma", 13)},
+            unlocked: true,
             description: "Greatly improve common punchcard's active effects.",
             cost: new Decimal("15"),
             currencyLocation() { return player.sma },
@@ -306,7 +306,7 @@
         },
         15: {
             title: "Dark Starmetal Upgrade VI",
-            unlocked() { return hasUpgrade("sma", 14)},
+            unlocked: true,
             description: "Unlock rare punchcards.",
             cost: new Decimal("22"),
             currencyLocation() { return player.sma },
@@ -321,7 +321,7 @@
         },
         16: {
             title: "Dark Starmetal Upgrade VII",
-            unlocked() { return hasUpgrade("sma", 15)},
+            unlocked: true,
             description: "Unlock dark grass.",
             cost: new Decimal("30"),
             currencyLocation() { return player.sma },
@@ -336,7 +336,7 @@
         },
         17: {
             title: "Dark Starmetal Upgrade VIII",
-            unlocked() { return hasUpgrade("sma", 16)},
+            unlocked: true,
             description: "Unlock epic punchcards.",
             cost: new Decimal("45"),
             currencyLocation() { return player.sma },
@@ -351,7 +351,7 @@
         },
         18: {
             title: "Dark Starmetal Upgrade IX",
-            unlocked() { return hasUpgrade("sma", 17)},
+            unlocked: true,
             description: "Unlock normality upgrades.",
             cost: new Decimal("5000"),
             currencyLocation() { return player.sma },
@@ -366,7 +366,7 @@
         },
         19: {
             title: "Dark Starmetal Upgrade X",
-            unlocked() { return hasUpgrade("sma", 18) && player.ir.iriditeDefeated},
+            unlocked() { return player.ir.iriditeDefeated},
             description: "Automate pent resets.",
             cost: new Decimal(1e7),
             currencyLocation() { return player.sma },
@@ -381,7 +381,7 @@
         },
         20: {
             title: "Dark Starmetal Upgrade XI",
-            unlocked() { return hasUpgrade("sma", 19)},
+            unlocked() { return player.ir.iriditeDefeated},
             description: "Space energy resets no longer reset space.",
             cost: new Decimal(1e8),
             currencyLocation() { return player.sma },
@@ -396,7 +396,7 @@
         },
         21: {
             title: "Dark Starmetal Upgrade XII",
-            unlocked() { return hasUpgrade("sma", 20)},
+            unlocked() { return player.ir.iriditeDefeated},
             description: "Autobuy normality upgrades.",
             cost: new Decimal(1e9),
             currencyLocation() { return player.sma },
@@ -413,7 +413,7 @@
         //other
         101: {
             title: "Light Starmetal Upgrade I",
-            unlocked() { return true},
+            unlocked: true,
             description: "Unspent starmetal alloy boosts singularity point gain.",
             cost: new Decimal("3"),
             currencyLocation() { return player.sma },
@@ -431,7 +431,7 @@
         },
         102: {
             title: "Light Starmetal Upgrade II",
-            unlocked() { return hasUpgrade("sma", 101)},
+            unlocked: true,
             description: "Unspent starmetal alloy boosts core scrap gain.",
             cost: new Decimal("6"),
             currencyLocation() { return player.sma },
@@ -449,7 +449,7 @@
         },
         103: {
             title: "Light Starmetal Upgrade III",
-            unlocked() { return hasUpgrade("sma", 102)},
+            unlocked: true,
             description: "Gain 10% of steel per second.",
             cost: new Decimal("12"),
             currencyLocation() { return player.sma },
@@ -463,7 +463,7 @@
         },
         104: {
             title: "Light Starmetal Upgrade IV",
-            unlocked() { return hasUpgrade("sma", 103)},
+            unlocked: true,
             description: "Unlock auto singularity.",
             cost: new Decimal("25"),
             currencyLocation() { return player.sma },
@@ -477,7 +477,7 @@
         },
         105: {
             title: "Light Starmetal Upgrade V",
-            unlocked() { return hasUpgrade("sma", 104)},
+            unlocked: true,
             description: "Unlock starmetal buyables.",
             cost: new Decimal("50"),
             currencyLocation() { return player.sma },
@@ -491,7 +491,7 @@
         },
         106: {
             title: "Light Starmetal Upgrade VI",
-            unlocked() { return hasUpgrade("sma", 105)},
+            unlocked: true,
             description: "Unlock radioactive core.",
             cost: new Decimal("150"),
             currencyLocation() { return player.sma },
@@ -505,7 +505,7 @@
         },
         107: {
             title: "Light Starmetal Upgrade VII",
-            unlocked() { return hasUpgrade("sma", 106)},
+            unlocked: true,
             description: "Produce 1% core scrap per second",
             cost: new Decimal("500"),
             currencyLocation() { return player.sma },
@@ -519,7 +519,7 @@
         },
         108: {
             title: "Light Starmetal Upgrade VIII",
-            unlocked() { return hasUpgrade("sma", 107) && player.depth2.unlocked},
+            unlocked() { return player.depth2.unlocked},
             description: "Number of dice sides is multiplied based on best depth 1 combo, and unlock new singularity milestones.",
             cost: new Decimal("1111"),
             currencyLocation() { return player.sma },
@@ -538,7 +538,7 @@
         //eclipse shards
         201: {
             title: "Eclipse Shard Upgrade I",
-            unlocked() { return true},
+            unlocked: true,
             description: "Autobuy all light extractor upgrades.",
             cost: new Decimal("6"),
             currencyLocation() { return player.sma },
@@ -552,7 +552,7 @@
         },
         202: {
             title: "Eclipse Shard Upgrade II",
-            unlocked() { return true},
+            unlocked: true,
             description: "Always generate 1% of dark prestige points per second.",
             cost: new Decimal("10"),
             currencyLocation() { return player.sma },
@@ -566,7 +566,7 @@
         },
         203: {
             title: "Eclipse Shard Upgrade III",
-            unlocked() { return true},
+            unlocked: true,
             description: "Boost space pet XP gain by x1.2.",
             cost: new Decimal("14"),
             currencyLocation() { return player.sma },
@@ -580,7 +580,7 @@
         },
         204: {
             title: "Eclipse Shard Upgrade IV",
-            unlocked() { return true},
+            unlocked: true,
             description: "Boost starmetal alloy gain based on eclipse shards.",
             cost: new Decimal("18"),
             currencyLocation() { return player.sma },
@@ -598,7 +598,7 @@
         },
         205: {
             title: "Eclipse Shard Upgrade V",
-            unlocked() { return true},
+            unlocked: true,
             description: "Always generate 1% of dark generators per second.",
             cost: new Decimal("24"),
             currencyLocation() { return player.sma },
@@ -612,7 +612,7 @@
         },
         206: {
             title: "Eclipse Shard Upgrade VI",
-            unlocked() { return true},
+            unlocked: true,
             description: "Reduce eclipse tickspeed by /1.2.",
             cost: new Decimal(75),
             currencyLocation() { return player.sma },
@@ -626,7 +626,7 @@
         },
         207: {
             title: "Eclipse Shard Upgrade VII",
-            unlocked() { return true},
+            unlocked: true,
             description: "Dark prestige points reduce booster requirement.",
             cost: new Decimal(250),
             currencyLocation() { return player.sma },
@@ -644,7 +644,7 @@
         },
         208: {
             title: "Eclipse Shard Upgrade VIII",
-            unlocked() { return true},
+            unlocked: true,
             description: "Always generate 1% of normality per second.",
             cost: new Decimal(750),
             currencyLocation() { return player.sma },
@@ -658,7 +658,7 @@
         },
         209: {
             title: "Eclipse Shard Upgrade IX",
-            unlocked() { return true},
+            unlocked: true,
             description: "Slightly improve cloud's tickspeed nerf formula.",
             cost: new Decimal(2500),
             currencyLocation() { return player.sma },
@@ -672,7 +672,7 @@
         },
         210: {
             title: "Eclipse Shard Upgrade X",
-            unlocked() { return true},
+            unlocked: true,
             description: "Starmetal requirement dividers slightly apply to eclipse requirement.",
             tooltip: "Only applies at ^0.1 the power",
             cost: new Decimal(7500),
