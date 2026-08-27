@@ -818,8 +818,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.5).mul(10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id).sub(9)).mul(364.83).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(6)) return getLevelableAmount(this.layer, this.id).add(1).mul(5).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(6)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id)).div(1.4).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -874,8 +874,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.5).mul(10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id).sub(9)).mul(364.83).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(6)) return getLevelableAmount(this.layer, this.id).add(1).mul(5).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(6)) return Decimal.pow(2, getLevelableAmount(this.layer, this.id)).div(1.4).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -1420,8 +1420,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.6).mul(25).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2.25, getLevelableAmount(this.layer, this.id).sub(9)).mul(1159.23).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(6)) return getLevelableAmount(this.layer, this.id).add(1).mul(10).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(6)) return Decimal.pow(2.25, getLevelableAmount(this.layer, this.id)).div(1.275).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -1474,8 +1474,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.6).mul(25).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2.25, getLevelableAmount(this.layer, this.id).sub(9)).mul(1159.23).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(6)) return getLevelableAmount(this.layer, this.id).add(1).mul(10).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(6)) return Decimal.pow(2.25, getLevelableAmount(this.layer, this.id)).div(1.275).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -1528,8 +1528,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.6).mul(25).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2.25, getLevelableAmount(this.layer, this.id).sub(9)).mul(1159.23).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(7)) return getLevelableAmount(this.layer, this.id).add(1).mul(20).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(7)) return Decimal.pow(2.25, getLevelableAmount(this.layer, this.id)).div(1.275).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -1583,8 +1583,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.6).mul(25).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2.25, getLevelableAmount(this.layer, this.id).sub(9)).mul(1159.23).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(6)) return getLevelableAmount(this.layer, this.id).add(1).mul(10).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(6)) return Decimal.pow(2.25, getLevelableAmount(this.layer, this.id)).div(1.275).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -1966,8 +1966,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.7).mul(75).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2.5, getLevelableAmount(this.layer, this.id).sub(9)).mul(4420.07).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(6)) return getLevelableAmount(this.layer, this.id).add(1).mul(25).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(6)) return Decimal.pow(2.5, getLevelableAmount(this.layer, this.id)).div(1.16).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -2020,8 +2020,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.7).mul(75).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2.5, getLevelableAmount(this.layer, this.id).sub(9)).mul(4420.07).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(6)) return getLevelableAmount(this.layer, this.id).add(1).mul(25).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(6)) return Decimal.pow(2.5, getLevelableAmount(this.layer, this.id)).div(1.16).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -2074,8 +2074,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.7).mul(75).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2.5, getLevelableAmount(this.layer, this.id).sub(9)).mul(4420.07).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(6)) return getLevelableAmount(this.layer, this.id).add(1).mul(25).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(6)) return Decimal.pow(2.5, getLevelableAmount(this.layer, this.id)).div(1.16).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -2128,8 +2128,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(1.7).mul(75).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(2.5, getLevelableAmount(this.layer, this.id).sub(9)).mul(4420.07).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(6)) return getLevelableAmount(this.layer, this.id).add(1).mul(25).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(6)) return Decimal.pow(2.5, getLevelableAmount(this.layer, this.id)).div(1.16).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
