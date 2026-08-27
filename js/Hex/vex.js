@@ -26,7 +26,7 @@ addLayer("hve", {
         if (hasUpgrade("hpw", 44)) player.hve.vexDiv = player.hve.vexDiv.mul(upgradeEffect("hpw", 44))
         if (hasUpgrade("hbl", 102)) player.hve.vexDiv = player.hve.vexDiv.mul(upgradeEffect("hbl", 102))
 
-        let connect = Decimal.pow10(player.h.stage.mul(4))
+        let connect = Decimal.pow10(player.h.stage.mul(player.h.stage.sub(5).mul(2)))
 
         if (player.hve.vexTotal.lt(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage), player.hve.vexTotal).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv)
         if (player.hve.vexTotal.gte(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage.mul(2)), player.hve.vexTotal).div(connect).div(player.hve.vexDiv)

@@ -835,6 +835,9 @@ addLayer("co", {
             for (let i = 1001; i < 1005; i++) {
                 player.tad.buyables[i] = new Decimal(0)
             }
+            for (let i = 1001; i < 1005; i++) {
+                player.tad.clickables[i] = false
+            }
         }
 
         if (!hasMilestone("s", 18)) {

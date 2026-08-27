@@ -4303,7 +4303,7 @@ addLayer("tad", {
                                     ], {width: "250px", height: "46px", borderBottom: "4px solid #532a29"}],
                                     ["clickable", 1003],
                                 ], () => {return player.tad.optimization.gte(4) ? {width: "250px", height: "87px", background: "#a75553", border: "4px solid #532a29", borderRadius: "20px", marginLeft: "10px"} : {display: "none !important"}}],
-                            ], {height: "258px"}],
+                            ], () => {return player.tad.optimization.gte(2) ? {height: "258px"} : {}}],
                             ["style-column", [
                                 ["style-column", [
                                     ["raw-html", "Amplifier Autobuyer", {color: "rgba(0,0,0,0.8)", fontSize: "18px", fontFamily: "monospace"}],
@@ -4324,7 +4324,7 @@ addLayer("tad", {
                             // Simplifiers no longer cost matter
                             // Constant T3 infinity gain
                         ]],
-                        ["row", [
+                        ["style-row", [
                             ["style-column", [
                                 ["style-column", [
                                     ["raw-html", "T1 Infinity Automation", {color: "rgba(0,0,0,0.8)", fontSize: "18px", fontFamily: "monospace"}],
@@ -4333,7 +4333,7 @@ addLayer("tad", {
                                 ["style-row", [], {width: "250px", height: "3px", background: "#532a29"}],
                                 ["ex-buyable", 1004],
                             ], () => {return player.tad.optimization.gte(6) ? {width: "250px", height: "250px", background: "#a75553", border: "4px solid #532a29"} : {display: "none !important"}}],
-                        ]],
+                        ], () => {return player.tad.optimization.gte(6) ? {marginTop: "10px"} : {}}],
                     ], {background: "#c18886", border: "3px solid #532a29", borderRadius: "20px", padding: "10px"}],
                 ]
             },
