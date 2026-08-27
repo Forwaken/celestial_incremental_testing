@@ -11,7 +11,7 @@ addLayer("pu", {
         selectedPunchcards: [0, 0, 0, 0],
         storedSelections: new Decimal(1),
         selectionIndex: 0,
-        commonRaise: new Decimal(0.7),
+        commonRaise: new Decimal(0.5),
         rareRaise: new Decimal(1),
         epicRaise: new Decimal(1),
         legendaryRaise: new Decimal(1),
