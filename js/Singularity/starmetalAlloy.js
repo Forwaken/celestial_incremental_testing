@@ -338,7 +338,7 @@
             title: "Dark Starmetal Upgrade VIII",
             unlocked: true,
             description: "Unlock epic punchcards.",
-            cost: new Decimal("60"),
+            cost: new Decimal("50"),
             currencyLocation() { return player.sma },
             currencyDisplayName: "Starmetal Alloy",
             currencyInternalName: "starmetalAlloy",
