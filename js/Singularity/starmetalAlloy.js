@@ -292,7 +292,7 @@
         14: {
             title: "Dark Starmetal Upgrade V",
             unlocked: true,
-            description: "Greatly improve common punchcard's active effects.",
+            description: "Unlock rare punchcards.",
             cost: new Decimal("15"),
             currencyLocation() { return player.sma },
             currencyDisplayName: "Starmetal Alloy",
@@ -307,7 +307,7 @@
         15: {
             title: "Dark Starmetal Upgrade VI",
             unlocked: true,
-            description: "Unlock rare punchcards.",
+            description: "Greatly improve common punchcard's active effects.",
             cost: new Decimal("22"),
             currencyLocation() { return player.sma },
             currencyDisplayName: "Starmetal Alloy",

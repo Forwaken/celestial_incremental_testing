@@ -70,6 +70,7 @@
         // Universe Dividers
         let uniDiv = new Decimal(1)
         uniDiv = uniDiv.mul(player.db.milestone1Effect)
+        if (getLevelableTier("pu", 201, true)) uniDiv = uniDiv.mul(levelableEffect("pu", 201)[1])
 
         // Starmetal Alloy
         player.le.starmetalAlloyReq = Decimal.pow(1e1, player.le.resetAmount.add(1).pow(1.5).floor()).mul(1e2)
