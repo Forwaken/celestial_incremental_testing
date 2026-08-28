@@ -168,6 +168,7 @@ addLayer("tad", {
         compressionGain: new Decimal(0),
         compressionKept: new Decimal(0),
         compressionMult: new Decimal(1),
+        compressorCapAdd: new Decimal(0),
         compressionMax: false,
 
         // SIMPLIFICATION - SIMPLIFIERS
@@ -414,7 +415,7 @@ addLayer("tad", {
         if (hasUpgrade("tad", 126)) player.tad.amplificationBase = player.tad.amplificationBase.add(upgradeEffect("tad", 126).sub(1))
         
         player.tad.amplificationRaise = new Decimal(1)
-        if (hasMilestone("tad", 5)) player.tad.amplificationRaise = player.tad.amplificationRaise.mul(player.tad.magnification.max(15).sub(15).pow(0.5).div(50).add(1))
+        if (hasMilestone("tad", 7)) player.tad.amplificationRaise = player.tad.amplificationRaise.mul(player.tad.magnification.max(63).sub(63).pow(0.5).div(50).add(1))
 
         // COMPRESSION MODIFIERS
         let compressionDiv = new Decimal(1)
@@ -439,7 +440,11 @@ addLayer("tad", {
         player.tad.compressionMult = new Decimal(1)
         player.tad.compressionMult = player.tad.compressionMult.mul(buyableEffect("tad", 106))
         if (player.tad.altInfinities.disfigured.milestone.gte(1)) player.tad.compressionMult = player.tad.compressionMult.mul(player.tad.altInfinities.disfigured.effect1)
-        if (hasMilestone("tad", 6)) player.tad.compressionMult = player.tad.compressionMult.mul(player.tad.magnification.max(32).sub(31).log(2).div(5).add(1))
+        if (hasMilestone("tad", 5)) player.tad.compressionMult = player.tad.compressionMult.mul(player.tad.magnification.max(16).sub(15).log(2).div(5).add(1))
+
+        player.tad.compressorCapAdd = new Decimal(0)
+        if (hasMilestone("tad", 6)) player.tad.compressorCapAdd = player.tad.compressorCapAdd.add(player.tad.magnification.max(32).sub(31).pow(0.5).floor())
+        if (hasMilestone("tad", 102)) player.tad.compressorCapAdd = player.tad.compressorCapAdd.add(10)
 
         // SIMPLIFICATION MODIFIERS
         for (let i = 0; i < 4; i++) {
@@ -450,6 +455,7 @@ addLayer("tad", {
             let currReq = Decimal.pow(1.05, player.tad.simplifiers[i].level).mul(base).mul(player.tad.simplifiers[i].level.add(1))
 
             let divisor = buyableEffect("tad", 401+i)
+            if (i == 0 && player.tad.altInfinities.infested.milestone.gte(1)) divisor = divisor.mul(player.tad.altInfinities.infested.effect1)
             if (i < 3) divisor = divisor.mul(player.tad.simplifiers[i+1].effect)
             player.tad.simplifiers[i].current = player.tad.simplifiers[i].amount.sub(pastReq).div(divisor)
             player.tad.simplifiers[i].next = currReq.sub(pastReq).div(divisor)
@@ -465,7 +471,6 @@ addLayer("tad", {
         if (player.tad.altInfinities.infected.milestone.gte(1)) magnificationDiv = magnificationDiv.mul(player.tad.altInfinities.infected.effect1)
 
         let magnificationScale = new Decimal(1e4)
-        if (player.tad.altInfinities.infested.milestone.gte(1)) magnificationScale = magnificationScale.div(player.tad.altInfinities.infested.effect1)
 
         player.tad.magnificationReq = Decimal.pow(magnificationScale, player.tad.magnification).mul(1e16).div(magnificationDiv)
         player.tad.magnificationGain = player.tad.matter.add(1).div(1e16).mul(magnificationDiv).ln().div(new Decimal(magnificationScale).ln()).add(1).sub(player.tad.magnification).floor()
@@ -705,7 +710,7 @@ addLayer("tad", {
         player.tad.altInfinities.corrupted.effect2 = amt4.pow(0.3).add(1)
         if (player.tad.altInfinities.infected.milestone.gte(3)) player.tad.altInfinities.corrupted.effect2 = player.tad.altInfinities.corrupted.effect2.pow(5)
 
-        player.tad.altInfinities.disfigured.effect1 = amt5.max(0.1).mul(10).log(10).div(10).add(1)
+        player.tad.altInfinities.disfigured.effect1 = amt5.max(0.1).mul(10).log(10).pow(0.5).div(10).add(1)
         player.tad.altInfinities.disfigured.effect2 = amt5.add(1).log(10).div(2).add(1)
         if (player.tad.altInfinities.infected.milestone.gte(3)) player.tad.altInfinities.disfigured.effect2 = new Decimal(1e20).pow(player.tad.altInfinities.disfigured.effect2)
 
@@ -716,7 +721,7 @@ addLayer("tad", {
         player.tad.altInfinities.infected.effect1 = amt7.pow(0.7).add(1)
         player.tad.altInfinities.infected.effect2 = amt7.add(1).log(10).div(20).add(1)
 
-        player.tad.altInfinities.infested.effect1 = amt8.add(1).log(10).div(2).add(1).pow(2)
+        player.tad.altInfinities.infested.effect1 = amt8.pow(0.5).add(1)
         if (player.tad.altInfinities.infested.effect1.gt(100)) player.tad.altInfinities.infested.effect1 = player.tad.altInfinities.infested.effect1.div(100).pow(0.2).mul(100)
         player.tad.altInfinities.infested.effect2 = amt8.add(1).log(10).div(10).add(1)
 
@@ -2459,7 +2464,7 @@ addLayer("tad", {
             },
         },
         101: {
-            purchaseLimit() { return hasMilestone("tad", 102) ? new Decimal(25) : new Decimal(10) },
+            purchaseLimit() { return new Decimal(10).add(player.tad.compressorCapAdd) },
             currency() { return player.tad.compression},
             pay(amt) { player.tad.compression = this.currency().sub(amt) },
             effect(x) {
@@ -2496,7 +2501,7 @@ addLayer("tad", {
             },
         },
         102: {
-            purchaseLimit() { return hasMilestone("tad", 102) ? new Decimal(25) : new Decimal(10) },
+            purchaseLimit() { return new Decimal(10).add(player.tad.compressorCapAdd) },
             currency() { return player.tad.compression},
             pay(amt) { player.tad.compression = this.currency().sub(amt) },
             effect(x) {
@@ -2533,7 +2538,7 @@ addLayer("tad", {
             },
         },
         103: {
-            purchaseLimit() { return hasMilestone("tad", 102) ? new Decimal(25) : new Decimal(10) },
+            purchaseLimit() { return new Decimal(10).add(player.tad.compressorCapAdd) },
             currency() { return player.tad.compression},
             pay(amt) { player.tad.compression = this.currency().sub(amt) },
             effect(x) {
@@ -2570,7 +2575,7 @@ addLayer("tad", {
             },
         },
         104: {
-            purchaseLimit() { return hasMilestone("tad", 102) ? new Decimal(25) : new Decimal(10) },
+            purchaseLimit() { return new Decimal(10).add(player.tad.compressorCapAdd) },
             currency() { return player.tad.compression},
             pay(amt) { player.tad.compression = this.currency().sub(amt) },
             effect(x) {
@@ -2607,7 +2612,7 @@ addLayer("tad", {
             },
         },
         105: {
-            purchaseLimit() { return hasMilestone("tad", 102) ? new Decimal(25) : new Decimal(10) },
+            purchaseLimit() { return new Decimal(10).add(player.tad.compressorCapAdd) },
             currency() { return player.tad.compression},
             pay(amt) { player.tad.compression = this.currency().sub(amt) },
             effect(x) {
@@ -2644,7 +2649,7 @@ addLayer("tad", {
             },
         },
         106: {
-            purchaseLimit() { return hasMilestone("tad", 102) ? new Decimal(25) : new Decimal(10) },
+            purchaseLimit() { return new Decimal(10).add(player.tad.compressorCapAdd) },
             currency() { return player.tad.compression},
             pay(amt) { player.tad.compression = this.currency().sub(amt) },
             effect(x) {
@@ -3563,7 +3568,7 @@ addLayer("tad", {
         },
         5: {
             requirementDescription: "<h3>16 Magnification",
-            effectDescription() { return "Raise amplifier effects.<br>Currently: ^" + formatSimple(player.tad.magnification.max(15).sub(15).pow(0.5).div(50).add(1)) },
+            effectDescription() { return "Multiply compressor effect base.<br>Currently: x" + formatSimple(player.tad.magnification.max(16).sub(15).log(2).div(5).add(1)) },
             done() { return player.tad.magnification.gte(16) },
             unlocked: true,
             color: "#6d228b",
@@ -3571,7 +3576,7 @@ addLayer("tad", {
         },
         6: {
             requirementDescription: "<h3>32 Magnification",
-            effectDescription() { return "Multiply compressor effect base.<br>Currently: x" + formatSimple(player.tad.magnification.max(32).sub(31).log(2).div(5).add(1)) },
+            effectDescription() { return "Increase compressor cap.<br>Currently: +" + formatSimple(player.tad.magnification.max(32).sub(31).pow(0.5).floor()) },
             done() { return player.tad.magnification.gte(32) },
             unlocked: true,
             color: "#6d228b",
@@ -3579,7 +3584,7 @@ addLayer("tad", {
         },
         7: {
             requirementDescription: "<h3>64 Magnification",
-            effectDescription() { return "Keep magnification layer content on all resets."},
+            effectDescription() { return "Raise amplifier effects.<br>Currently: ^" + formatSimple(player.tad.magnification.max(63).sub(63).pow(0.5).div(50).add(1)) },
             done() { return player.tad.magnification.gte(64) },
             unlocked: true,
             color: "#6d228b",
@@ -3599,7 +3604,7 @@ addLayer("tad", {
         },
         102: {
             requirementDescription: "2 Exponentiations",
-            effectDescription() { return "Increase compressor cap to 25" },
+            effectDescription() { return "Increase compressor cap by +10" },
             done() { return player.tad.exponentiate.gte(2) },
             color: "#ffd5b3",
             style() {
@@ -4041,7 +4046,7 @@ addLayer("tad", {
                                         ["color-text", [() => {return "1"}, true, "black", () => {return player.tad.altInfinities.infested.milestone.gte(1)}, "rgba(0,0,0,0.5)"]],
                                     ], {width: "40px", height: "40px", borderRight: "3px solid #21315a"}],
                                     ["style-row", [
-                                        ["color-text", [() => {return "/" + formatSimple(player.tad.altInfinities.infested.effect1, 2) + " Magnification Cost-Scaling."}, true, "black", () => {return player.tad.altInfinities.infested.milestone.gte(1)}, "rgba(0,0,0,0.5)"]],
+                                        ["color-text", [() => {return "/" + formatSimple(player.tad.altInfinities.infested.effect1, 2) + " 1st Simplifier Cooldown."}, true, "black", () => {return player.tad.altInfinities.infested.milestone.gte(1)}, "rgba(0,0,0,0.5)"]],
                                     ], {width: "207px", height: "40px"}],
                                 ], {width: "250px", height: "40px", borderBottom: "3px solid #21315a"}],
                                 ["style-row", [
@@ -4321,15 +4326,6 @@ addLayer("tad", {
                                 ["style-row", [], {width: "250px", height: "3px", background: "#532a29"}],
                                 ["ex-buyable", 1002],
                             ], () => {return player.tad.optimization.gte(5) ? {width: "250px", height: "250px", background: "#a75553", border: "4px solid #532a29", marginLeft: "10px"} : {display: "none !important"}}],
-                            // Amplifiers no longer cost matter
-                            // Compression automation (can toggle which compressors are autobought)
-                            // Automatically magnify
-                            // Keep some simplifier time on resets
-                            // Constant T2 infinity gain
-                            // Automatically upgrade simplifiers
-                            // Keep magnification milestones on resets
-                            // Simplifiers no longer cost matter
-                            // Constant T3 infinity gain
                         ]],
                         ["style-row", [
                             ["style-column", [
@@ -4342,6 +4338,15 @@ addLayer("tad", {
                             ], () => {return player.tad.optimization.gte(6) ? {width: "250px", height: "250px", background: "#a75553", border: "4px solid #532a29"} : {display: "none !important"}}],
                         ], () => {return player.tad.optimization.gte(6) ? {marginTop: "10px"} : {}}],
                     ], {background: "#c18886", border: "3px solid #532a29", borderRadius: "20px", padding: "10px"}],
+                    // Amplifiers no longer cost matter
+                    // Compression automation (can toggle which compressors are autobought)
+                    // Automatically magnify
+                    // Keep some simplifier time on resets
+                    // Constant T2 infinity gain
+                    // Automatically upgrade simplifiers
+                    // Keep magnification milestones on resets
+                    // Simplifiers no longer cost matter
+                    // Constant T3 infinity gain
                 ]
             },
         },

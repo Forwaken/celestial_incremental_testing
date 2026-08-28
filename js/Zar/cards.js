@@ -62,10 +62,11 @@
         player.car.cardsToGet = player.car.cardsToGet.add(buyableEffect("car", 24))
         player.car.cardsToGet = player.car.cardsToGet.add(buyableEffect("car", 34))
         player.car.cardsToGet = player.car.cardsToGet.add(buyableEffect("car", 44))
-        player.car.cardsToGet = player.car.cardsToGet.add(levelableEffect("car", 114)[1].sub(1))
-        player.car.cardsToGet = player.car.cardsToGet.add(levelableEffect("car", 214)[1].sub(1))
-        player.car.cardsToGet = player.car.cardsToGet.add(levelableEffect("car", 314)[1].sub(1))
-        player.car.cardsToGet = player.car.cardsToGet.add(levelableEffect("car", 414)[1].sub(1))
+        player.car.cardsToGet = player.car.cardsToGet.mul(levelableEffect("car", 114)[1])
+        player.car.cardsToGet = player.car.cardsToGet.mul(levelableEffect("car", 214)[1])
+        player.car.cardsToGet = player.car.cardsToGet.mul(levelableEffect("car", 314)[1])
+        player.car.cardsToGet = player.car.cardsToGet.mul(levelableEffect("car", 414)[1])
+        player.car.cardsToGet = player.car.cardsToGet.floor()
 
         if (player.car.cardGenerators.gte(1)) {
             player.car.cardPointsPerSecond = [new Decimal(1), new Decimal(1), new Decimal(1), new Decimal(1)] 
@@ -222,7 +223,7 @@
             title() {return "Level All"},
             canClick() {
                 for (let suit = 1; suit <= 4; suit++) {
-	                for(let rank = 1; rank <= 13; rank++){
+	                for(let rank = 1; rank <= 14; rank++){
                         let index = 100*suit+rank
                         if(Decimal.lt(getLevelableAmount("car", index), layers.car.levelables[index].levelLimit()) && getLevelableXP("car", index).gte(tmp.car.levelables[index].xpReq))
                         {
@@ -235,7 +236,7 @@
             unlocked() {return true},
             onClick() {
                 for (let suit = 1; suit <= 4; suit++) {
-	                for(let rank = 1; rank <= 13; rank++){
+	                for(let rank = 1; rank <= 14; rank++){
                         let index = 100*suit+rank
                         while(Decimal.lt(getLevelableAmount("car", index), layers.car.levelables[index].levelLimit()) && getLevelableXP("car", index).gte(tmp.car.levelables[index].xpReq))
                         {
@@ -837,14 +838,14 @@
             description() {
                 let str = [
                     "+" + format(this.effect()[0].sub(1)) + " to spade card level caps. (Ignoring this card)<br>",
-                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount. [Next at Lv" + formatWhole(Decimal.sumArithmeticSeries(this.effect()[1], new Decimal(1), new Decimal(1), new Decimal(0))) + "]",
+                    "x" + format(this.effect()[1].sub(1)) + " to card draw amount.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
                 eff[0] = getLevelableAmount(this.layer, this.id).add(1)
-                eff[1] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
+                eff[1] = getLevelableAmount(this.layer, this.id).div(100).add(1)
                 return eff
             },
             // CLICK CODE
@@ -1370,14 +1371,14 @@
             description() {
                 let str = [
                     "+" + format(this.effect()[0].sub(1)) + " to club card level caps. (Ignoring this card)<br>",
-                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount. [Next at Lv" + formatWhole(Decimal.sumArithmeticSeries(this.effect()[1], new Decimal(1), new Decimal(1), new Decimal(0))) + "]",
+                    "x" + format(this.effect()[1].sub(1)) + " to card draw amount.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
                 eff[0] = getLevelableAmount(this.layer, this.id).add(1)
-                eff[1] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
+                eff[1] = getLevelableAmount(this.layer, this.id).div(100).add(1)
                 return eff
             },
             // CLICK CODE
@@ -1903,14 +1904,14 @@
             description() {
                 let str = [
                     "+" + format(this.effect()[0].sub(1)) + " to diamond card level caps. (Ignoring this card)<br>",
-                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount. [Next at Lv" + formatWhole(Decimal.sumArithmeticSeries(this.effect()[1], new Decimal(1), new Decimal(1), new Decimal(0))) + "]",
+                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
                 eff[0] = getLevelableAmount(this.layer, this.id).add(1)
-                eff[1] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
+                eff[1] = getLevelableAmount(this.layer, this.id).div(100).add(1)
                 return eff
             },
             // CLICK CODE
@@ -2437,14 +2438,14 @@
             description() {
                 let str = [
                     "+" + format(this.effect()[0].sub(1)) + " to heart card level caps. (Ignoring this card)<br>",
-                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount. [Next at Lv" + formatWhole(Decimal.sumArithmeticSeries(this.effect()[1], new Decimal(1), new Decimal(1), new Decimal(0))) + "]",
+                    "x" + format(this.effect()[1].sub(1)) + " to card draw amount.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
                 eff[0] = getLevelableAmount(this.layer, this.id).add(1)
-                eff[1] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
+                eff[1] = getLevelableAmount(this.layer, this.id).div(100).add(1)
                 return eff
             },
             // CLICK CODE
