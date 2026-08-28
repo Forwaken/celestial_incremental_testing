@@ -532,7 +532,7 @@ addLayer("darkTemple", {
             title: "ᚱ",
             canClick() {
                 if (player.darkTemple.tab == "tier") return player.stagnantSynestia.lowestCombo.lt(0)
-                return player.stagnantSynestia.unlocked
+                return hasUpgrade("ev8", 24)
             },
             unlocked: true,
             branches: [[6, "#88f", 5]],
