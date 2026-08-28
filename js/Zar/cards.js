@@ -838,14 +838,14 @@
             description() {
                 let str = [
                     "+" + format(this.effect()[0].sub(1)) + " to spade card level caps. (Ignoring this card)<br>",
-                    "x" + format(this.effect()[1].sub(1)) + " to card draw amount.",
+                    "x" + format(this.effect()[1]) + " to card draw amount.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
                 eff[0] = getLevelableAmount(this.layer, this.id).add(1)
-                eff[1] = getLevelableAmount(this.layer, this.id).div(100).add(1)
+                eff[1] = getLevelableAmount(this.layer, this.id).div(50).add(1)
                 return eff
             },
             // CLICK CODE
@@ -1371,14 +1371,14 @@
             description() {
                 let str = [
                     "+" + format(this.effect()[0].sub(1)) + " to club card level caps. (Ignoring this card)<br>",
-                    "x" + format(this.effect()[1].sub(1)) + " to card draw amount.",
+                    "x" + format(this.effect()[1]) + " to card draw amount.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
                 eff[0] = getLevelableAmount(this.layer, this.id).add(1)
-                eff[1] = getLevelableAmount(this.layer, this.id).div(100).add(1)
+                eff[1] = getLevelableAmount(this.layer, this.id).div(50).add(1)
                 return eff
             },
             // CLICK CODE
@@ -1904,14 +1904,14 @@
             description() {
                 let str = [
                     "+" + format(this.effect()[0].sub(1)) + " to diamond card level caps. (Ignoring this card)<br>",
-                    "+" + format(this.effect()[1].sub(1)) + " to card draw amount.",
+                    "+" + format(this.effect()[1]) + " to card draw amount.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
                 eff[0] = getLevelableAmount(this.layer, this.id).add(1)
-                eff[1] = getLevelableAmount(this.layer, this.id).div(100).add(1)
+                eff[1] = getLevelableAmount(this.layer, this.id).div(50).add(1)
                 return eff
             },
             // CLICK CODE
@@ -2438,14 +2438,14 @@
             description() {
                 let str = [
                     "+" + format(this.effect()[0].sub(1)) + " to heart card level caps. (Ignoring this card)<br>",
-                    "x" + format(this.effect()[1].sub(1)) + " to card draw amount.",
+                    "x" + format(this.effect()[1]) + " to card draw amount.",
                 ]
                 return str.join("")
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
                 eff[0] = getLevelableAmount(this.layer, this.id).add(1)
-                eff[1] = getLevelableAmount(this.layer, this.id).div(100).add(1)
+                eff[1] = getLevelableAmount(this.layer, this.id).div(50).add(1)
                 return eff
             },
             // CLICK CODE
