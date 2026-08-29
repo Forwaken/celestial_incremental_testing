@@ -1226,7 +1226,7 @@
                 { text: "Tav enters your vision.",  },
                 { text: "Who are you... What do you want from me???", portrait: "resources/cante.png"  },
                 { text: "I am Tav. It is my sole responsibility to keep you locked here.", portrait: "resources/tav.png"  },
-                { text: "I am currently taking away your power away from you.", portrait: "resources/tav.png"  },
+                { text: "I am currently taking your power away from you.", portrait: "resources/tav.png"  },
                 { text: "You don't deserve your power. What you did is unforgivable.", portrait: "resources/tav.png"  },
                 { text: "I will make sure that no more lives are in danger because of your existence.", portrait: "resources/tav.png"  },
                 { text: "Whatever you say... Tav.", portrait: "resources/cante.png"  },

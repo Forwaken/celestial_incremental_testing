@@ -3953,7 +3953,8 @@ addLayer("tad", {
         // ACCUMULATORS
         if (tier > 1) {
             for (let i = 11; i < 45; ) {
-                player.tad.buyables[i] = new Decimal(0)
+                if (i == 11 && hasMilestone("tad", 101)) player.tad.buyables[i] = new Decimal(1)
+                else player.tad.buyables[i] = new Decimal(0)
                 if (i % 10 == 4) {i = i+7} else {i++}
             }
         }
@@ -3995,7 +3996,7 @@ addLayer("tad", {
         }
 
         // MAGNIFICATIONS
-        if (tier > 3 && !hasMilestone("tad", 7)) {
+        if (tier > 3) {
             player.tad.magnification = new Decimal(0)
             player.tad.magnificationGain = new Decimal(0)
             for (let i = 0; i < player.tad.milestones.length; i++) {
