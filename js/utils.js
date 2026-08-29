@@ -281,7 +281,7 @@ function updateMilestones(layer) {
 		if (!(hasMilestone(layer, id)) && layers[layer].milestones[id].done()) {
 			player[layer].milestones.push(id)
 			if (layers[layer].milestones[id].onComplete) layers[layer].milestones[id].onComplete()
-			if (tmp[layer].milestonePopups || tmp[layer].milestonePopups === undefined) doPopup("milestone", run(layers[layer].milestones[id].requirementDescription, layers[layer].milestones[id]), "Milestone Gotten!", 3, layers[layer].milestones[id].color ?? tmp[layer].color);
+			if ((tmp[layer].milestonePopups || tmp[layer].milestonePopups === undefined) && !run(layers[layer].milestones[id].disablePopup, layers[layer].milestones[id])) doPopup("milestone", run(layers[layer].milestones[id].requirementDescription, layers[layer].milestones[id]), "Milestone Gotten!", 3, layers[layer].milestones[id].color ?? tmp[layer].color);
 			player[layer].lastMilestone = id
 		}
 	}
