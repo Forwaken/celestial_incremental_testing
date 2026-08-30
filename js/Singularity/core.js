@@ -832,10 +832,10 @@ addLayer("co", {
             player.tad.optimizationReq = new Decimal(1)
             player.tad.autoAccumulator = new Decimal(0)
             player.tad.autoAmplifier = new Decimal(0)
-            for (let i = 1001; i < 1005; i++) {
+            for (let i = 1001; i < 1007; i++) {
                 player.tad.buyables[i] = new Decimal(0)
             }
-            for (let i = 1001; i < 1005; i++) {
+            for (let i = 1001; i < 1030; i++) {
                 player.tad.clickables[i] = false
             }
         }

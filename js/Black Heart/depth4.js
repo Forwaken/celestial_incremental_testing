@@ -416,8 +416,8 @@ addLayer("depth4", {
                         ["style-column", [
                             ["style-column", [
                                 ["style-column", [
-                                    ["raw-html", "Depth 4", {color: "var(--textColor)", fontSize: "24px", fontFamily: "monospace"}],
-                                ], {width: "200px", height: "35px", borderBottom: "2px solid var(--regBorder)", marginBottom: "5px"}],
+                                    ["raw-html", "Negative<br>Depth 4", {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
+                                ], {width: "200px", height: "35px", lineHeight: "1", borderBottom: "2px solid var(--regBorder)", marginBottom: "5px"}],
                                 ["clickable", "enter"],
                             ], {width: "250px", height: "127px", background: "var(--miscButton)", borderBottom: "3px solid var(--regBorder)"}],
                             ["top-column", [

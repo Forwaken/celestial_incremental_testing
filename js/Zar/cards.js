@@ -2580,7 +2580,17 @@
             currencyDisplayName: "Card Generators",
             currencyInternalName: "cardGenerators",
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0, 0, 0, 0.5)", borderRadius: "15px", margin: "2px", width: '150px', "min-height": '125px', },
-        },   
+        },
+        20: {
+            title: "How is this even slightly relevant?",
+            unlocked() { return player.zarDungeon.zarDefeated },
+            description: "Raise the incrementing of Tav's Domain Expander cap by ^5.",
+            cost: new Decimal(1e30),
+            currencyLocation() { return player.car },
+            currencyDisplayName: "Card Generators",
+            currencyInternalName: "cardGenerators",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0, 0, 0, 0.5)", borderRadius: "15px", margin: "2px", width: '150px', "min-height": '125px', },
+        },
     },
     buyables: {
         11: {
@@ -3150,7 +3160,7 @@
                             ["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15],
                     ],],
                     ["style-row", [
-                            ["upgrade", 16], ["upgrade", 17], ["upgrade", 18], ["upgrade", 19],
+                            ["upgrade", 16], ["upgrade", 17], ["upgrade", 18], ["upgrade", 19], ["upgrade", 20],
                     ],],
                 ],         
                             
