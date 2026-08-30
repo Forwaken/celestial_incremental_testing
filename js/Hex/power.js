@@ -41,6 +41,7 @@ addLayer("hpw", {
         external = external.mul(buyableEffect("sme", 144))
         external = external.mul(buyableEffect("al", 206))
         if (player.alephsChamber.milestone[25] > 0) external = external.mul(36)
+        if (player.ep1.dragonEvolutionIndex >= 7) external = external.mul(7);
         if (hasUpgrade("tera", "hept7")) external = external.mul(upgradeEffect("tera", "hept7"))
 
         external = external.pow(player.h.externalRaise)

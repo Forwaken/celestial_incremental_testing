@@ -388,6 +388,7 @@ addLayer("darkTemple", {
 
         player.darkTemple.byproductMult = new Decimal(1)
         if (hasUpgrade("darkTemple", 8)) player.darkTemple.byproductMult = player.darkTemple.byproductMult.mul(upgradeEffect("darkTemple", 8))
+        if (hasUpgrade("ir", 302)) player.darkTemple.byproductMult = player.darkTemple.byproductMult.mul(1.5)
 
         player.darkTemple.byproductTimer = player.darkTemple.byproductTimer.add(delta)
         if (player.darkTemple.byproductTimer.gte(3600)) {

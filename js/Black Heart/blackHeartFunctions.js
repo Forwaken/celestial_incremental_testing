@@ -717,6 +717,8 @@ function celestialiteReward(gain) {
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.lustrousUmbrite) + " lustrous umbrite! (You have " + formatWhole(player.depth3.lustrousUmbrite) + ")")
     }
     if (gain.darkEssence) {
+        let darkEssExtra = buyableEffect("darkTemple", 1005)
+        if (hasMilestone("spaceZone2", 12)) darkEssExtra = darkEssExtra.mul(1.2)
         gain.darkEssence = chanceRemainder(gain.darkEssence.mul(buyableEffect("darkTemple", 1005)).mul(generalMult))
         player.bh.darkEssence = player.bh.darkEssence.add(gain.darkEssence)
         bhLog("<span style='color: #eed200'>" + str + "You gained " + formatWhole(gain.darkEssence) + " dark essence! (You have " + formatWhole(player.bh.darkEssence) + ")")
@@ -768,7 +770,7 @@ function celestialiteReward(gain) {
     }
     if (gain.pips) {
         let pipMult = hasUpgrade("zd", 24) ? upgradeEffect("zd", 24) : new Decimal(1)
-        gain.pips = chanceRemainder(gain.pips.mul(player.darkTemple.celStageCurMult).mul(generalMult))
+        gain.pips = chanceRemainder(gain.pips.mul(player.darkTemple.celStageCurMult).mul(pipMult).mul(generalMult))
         player.zd.pips = player.zd.pips.add(gain.pips)
         bhLog("<span style='color: #a3a3a3'>" + str + "You gained " + formatWhole(gain.pips) + " dice pips! (You have " + formatWhole(player.zd.pips) + ")")
     }
@@ -1476,4 +1478,9 @@ function chanceRemainder(val) {
     
     if (Decimal.gte(chance, Math.random())) remain = remain.add(1)
     return remain
+}
+function bumpyUltimateEffect(x, y) {
+    if (typeof options !== 'undefined' && options.toggleParticle === false) return;
+
+    player.bh.fadeBackground = 0
 }
