@@ -1244,6 +1244,7 @@ let changelog = `<h1>Changelog:</h1><br>
 			- Fixed a bug with IP (4:2)'s softcap. [It accidentally gave you x1e5,000 extra IP for free]<br><br>
 
 	<h3>v1.14 - The Interspace Update Part I: A Change of Space</h3><br>
+	
 		Content:<br>
 			- Added universe δ.<br>
 			- Added the multiverse map.<br>
