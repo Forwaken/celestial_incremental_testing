@@ -965,13 +965,13 @@
                         ], () => {return layers.po.clickables[12].unlocked() ? {backgroundColor: "#119B35", border: "3px solid #119B35", borderRadius: "13px", width: "300px", height: "300px", margin: "4px"} : {display: "none !important"}}],
                         ["style-column", [
                             ["style-column", [
-                                ["raw-html", "Hex", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return player.h.stageName[0]}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
                             ], {backgroundColor: "black", borderRadius: "10px 10px 0px 0px", width: "300px", height: "50px"}],
                             ["style-column", [
                                 ["blank", "16px"],
                                 ["raw-html", "目", {color: "white", fontSize: "96px", fontWeight: "400", lineHeight: "1", fontFamily: "monospace"}],
                                 ["blank", "16px"],
-                                ["raw-html", "The number 6.", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return "The number " + formatWhole(player.h.stage) + "."}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                             ], {background: "linear-gradient(0deg, #0061ff -100%, black 100%)", borderBottom: "3px solid #0061ff", borderTop: "3px solid #0061ff", width: "300px", height: "169px"}],
                             ["clickable", 13],
                         ], () => {return layers.po.clickables[13].unlocked() ? {backgroundColor: "#0061ff", border: "3px solid #0061ff", borderRadius: "13px", width: "300px", height: "300px", margin: "4px"} : {display: "none !important"}}],

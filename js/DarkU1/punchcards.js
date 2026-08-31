@@ -317,7 +317,7 @@ addLayer("pu", {
                 return look
             },
         },
-        101: {
+        50: {
             title() {
                 let val = player.pu.selectedPunchcards[4]
                 if (player.pu.storedSelections.lt(1)) val = 0
@@ -2766,6 +2766,7 @@ addLayer("pu", {
                             ["raw-html", () => { return "Gain punchcard selections on universe resets."}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                             ["blank", "10px"],
                             ["clickable", 101],
+                            ["blank", "10px"],
                         ], {width: "620px"}],
                     ], () => {return {width: "620px", border: "3px solid #8ca3ff", backgroundColor: "#232940"}}],
                     ["style-column", [
@@ -2778,7 +2779,7 @@ addLayer("pu", {
                             ["blank", "15px"],
                         ], {width: "616px", background: "#AB2042", border: "2px solid #0000007f"}],
                         ["style-column", [
-                            ["row", [["clickable", 101],]],
+                            ["row", [["clickable", 50],]],
                         ], {width: "620px", height: "150px", background: "repeating-linear-gradient(-45deg, #541021 0 15px, #661328 0 30px)"}],
                     ], () => {return player.pu.legendarySelectionActive ? {width: "620px", border: "3px solid #8ca3ff", borderTop: "0", backgroundColor: "#330d22ff"} : {display: "none !important"}}],
                 ]

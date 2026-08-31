@@ -1902,7 +1902,7 @@
             description() {
                 let str = [
                     "+" + format(this.effect()[0].sub(1)) + " to diamond card level caps. (Ignoring this card)<br>",
-                    "+" + format(this.effect()[1]) + " to card draw amount.",
+                    "x" + format(this.effect()[1]) + " to card draw amount.",
                 ]
                 return str.join("")
             },
@@ -2697,6 +2697,15 @@
             },
         },   
         20: {
+            fullDisplay() {
+                return "<div style='height:40px;display:flex;align-items:center'><div>" +
+                "<h3>" + this.title + "</h3>" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:75px;display:flex;align-items:center'><div>" + 
+                this.description + // MIDDLE
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='height:25px;display:flex;align-items:center'><div>" + 
+                "<span style='color:rgb(91, 0, 0)'>" + formatWhole(this.cost) + " " + this.currencyDisplayName + "</span>" // BOTTOM
+                "</div></div>"
+            },
             title: "How is this even slightly relevant?",
             unlocked() { return player.zarDungeon.zarDefeated },
             description: "Raise the incrementing of Tav's Domain Expander cap by ^5.",
