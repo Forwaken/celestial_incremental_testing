@@ -458,8 +458,8 @@ addLayer("tera", {
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
         "seal3": {
-            title() {return player.tera.clickables["seal3"] ? "" : formatSimple(player.tad.infinitum) + "/<br>1e180<br>Infinitum"},
-            canClick() {return player.tad.infinitum.gte(1e180)},
+            title() {return player.tera.clickables["seal3"] ? "" : formatSimple(player.tad.altInfinities["infested"].amount.add(player.tad.altInfinities["infected"].amount)) + "/<br>1e18<br>T3 Infinities"},
+            canClick() {return player.tad.altInfinities["infested"].amount.add(player.tad.altInfinities["infected"].amount).gte(1e18)},
             unlocked() {return !player.tera.clickables["seal3"]},
             branches: [["sealCenter", "gray", 25]],
             onClick() {
@@ -468,8 +468,8 @@ addLayer("tera", {
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
         "seal4": {
-            title() {return player.tera.clickables["seal4"] ? "" : formatSimple(player.ca.replicanti) + "/<br>1e2,400<br>Replicanti"},
-            canClick() {return player.ca.replicanti.gte("1e2400")},
+            title() {return player.tera.clickables["seal4"] ? "" : formatSimple(player.wel.bestLight) + "/<br>1e24<br>Best Light"},
+            canClick() {return player.wel.bestLight.gte("1e24")},
             unlocked() {return !player.tera.clickables["seal4"]},
             branches: [["sealCenter", "gray", 25]],
             onClick() {
