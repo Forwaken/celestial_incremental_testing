@@ -56,7 +56,7 @@
 
         // stored
 
-        player.dt.storedToGet = player.dt.timeCapsules.div(100).log(10).add(1).pow(0.2).sub(1).pow_base(10).sub(1).mul(5).add(1)
+        player.dt.storedToGet = player.dt.timeCapsules.div(100).max(1).log(10).add(1).pow(0.2).sub(1).pow_base(10).sub(1).mul(5).add(1)
         player.dt.storedToGet = player.dt.storedToGet.mul(buyableEffect("dt", 16))
         player.dt.storedToGet = player.dt.storedToGet.mul(player.pri.fountains[6].completionEffect)
         player.dt.storedToGet = player.dt.storedToGet.mul(buyableEffect("st", 207))

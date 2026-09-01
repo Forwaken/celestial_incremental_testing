@@ -66,8 +66,8 @@
         let onepersec = new Decimal(1)
         
         if (player.sma.inStarmetalChallenge) {
-            player.le.timeSinceEnter = player.le.timeSinceEnter.add(Decimal.div(delta, player.uni["D1"].tickspeed))
-            player.le.timeSinceReset = player.le.timeSinceReset.add(Decimal.div(delta, player.uni["D1"].tickspeed))
+            player.le.timeSinceEnter = player.le.timeSinceEnter.add(delta)
+            player.le.timeSinceReset = player.le.timeSinceReset.add(delta)
         }
 
         // Universe Dividers
@@ -148,8 +148,6 @@
         player.le.eclipseShardsValue = player.le.eclipseShardsValue.mul(levelableEffect("st", 310)[0])
         player.le.eclipseShardsValue = player.le.eclipseShardsValue.mul(player.dt.timeEnergyEffect)
         player.le.eclipseShardsValue = player.le.eclipseShardsValue.mul(buyableEffect("ep1", 15))
-
-        player.le.eclipseShardsValue = player.le.eclipseShardsValue.floor()
 
         if (player.sme.starmetalResetToggle && player.du.points.gte(player.le.starmetalAlloyReq) && !player.pet.legPetTimers[0].active) {
             player.le.resetAmount = player.le.resetAmount.add(1)

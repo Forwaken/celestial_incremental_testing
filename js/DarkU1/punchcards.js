@@ -525,7 +525,7 @@ addLayer("pu", {
             },
             // CLICK CODE
             unlocked() {return player.le.highestReset.gte(2) || this.canClick()},
-            canSelect() {return player.le.resetAmount.gte(2) && !player.pet.legPetTimers[0].active},
+            canSelect() {return player.le.resetAmount.gte(2)},
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
@@ -744,7 +744,7 @@ addLayer("pu", {
             },
             // CLICK CODE
             unlocked() {return (hasUpgrade("sma", 12) && player.le.highestReset.gte(3)) || this.canClick()},
-            canSelect() {return hasUpgrade("sma", 12) && player.le.resetAmount.gte(3) && !player.pet.legPetTimers[0].active},
+            canSelect() {return hasUpgrade("sma", 12) && player.le.resetAmount.gte(3) && (!player.pet.legPetTimers[0].active || player.dotf.penumbral)},
             challengeType: 'SM',
 
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
@@ -801,7 +801,7 @@ addLayer("pu", {
             },
             // CLICK CODE
             unlocked() {return (hasUpgrade("sma", 12) && player.le.highestReset.gte(3)) || this.canClick()},
-            canSelect() {return hasUpgrade("sma", 12) && player.le.resetAmount.gte(3) && !player.pet.legPetTimers[0].active},
+            canSelect() {return hasUpgrade("sma", 12) && player.le.resetAmount.gte(3) && (!player.pet.legPetTimers[0].active || player.dotf.penumbral)},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1224,9 +1224,9 @@ addLayer("pu", {
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1), new Decimal(1)]
-                let time1 = player.le.timeSinceReset.gt(300) ? player.le.timeSinceReset.div(300).pow(0.5).mul(300) : player.le.timeSinceReset
+                let time1 = player.le.timeSinceReset.gt(300) ? player.le.timeSinceReset.log(300).pow(0.5).mul(300) : player.le.timeSinceReset
                 eff[0] = Decimal.pow(1.15, time1).pow(this.effectScale()).pow(player.pu.rareRaise)
-                let time2 = player.le.timeSinceEnter.gt(1800) ? player.le.timeSinceEnter.div(1800).pow(0.5).mul(1800) : player.le.timeSinceEnter
+                let time2 = player.le.timeSinceEnter.gt(1800) ? player.le.timeSinceEnter.log(1800).pow(0.5).mul(1800) : player.le.timeSinceEnter
                 eff[1] = Decimal.pow(1.05, time2).pow(this.effectScale()).pow(player.pu.rareRaise)
                 eff[2] = Decimal.affordArithmeticSeries(getLevelableAmount(this.layer, this.id), new Decimal(1), new Decimal(1), new Decimal(0)).add(1)
                 return eff
@@ -1399,7 +1399,7 @@ addLayer("pu", {
             },
             // CLICK CODE
             unlocked() {return hasUpgrade("sma", 14) && player.le.highestReset.gte(3) || this.canClick()},
-            canSelect() {return hasUpgrade("sma", 14) && player.le.resetAmount.gte(3) && !player.pet.legPetTimers[0].active},
+            canSelect() {return hasUpgrade("sma", 14) && player.le.resetAmount.gte(3) && (!player.pet.legPetTimers[0].active || player.dotf.penumbral)},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1455,7 +1455,7 @@ addLayer("pu", {
             },
             // CLICK CODE
             unlocked() {return hasUpgrade("sma", 14) && player.le.highestReset.gte(3) || this.canClick()},
-            canSelect() {return hasUpgrade("sma", 14) && player.le.resetAmount.gte(3) && !player.pet.legPetTimers[0].active},
+            canSelect() {return hasUpgrade("sma", 14) && player.le.resetAmount.gte(3) && (!player.pet.legPetTimers[0].active || player.dotf.penumbral)},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
@@ -1510,7 +1510,7 @@ addLayer("pu", {
             },
             // CLICK CODE
             unlocked() {return hasUpgrade("sma", 16) && player.le.highestReset.gte(4) || this.canClick()},
-            canSelect() {return hasUpgrade("sma", 16) && player.le.resetAmount.gte(4) && !player.pet.legPetTimers[0].active},
+            canSelect() {return hasUpgrade("sma", 16) && player.le.resetAmount.gte(4) && (!player.pet.legPetTimers[0].active || player.dotf.penumbral)},
             challengeType: 'SM',
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},

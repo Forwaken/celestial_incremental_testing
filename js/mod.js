@@ -308,8 +308,10 @@ function updateStyles() {
 			}
 			break;
 		case "du": case "le": case "dr": case "dp": case "dg":
-		case "dgr": case "dn": case "db": case "dv": case "ds": case "pu": case "rp":
-			layerBG = "linear-gradient(0deg, #000)"
+		case "dgr": case "dn": case "db": case "dv": case "ds":
+		case "pu": case "rp": case "dgj": case "dt":
+			if (options.performanceMode && player.pet.legPetTimers[0].active) layerBG = "radial-gradient(circle at 125% 125%, #222 10%, #111 25%, #000 30%, #1E1807 30.5%, #3C2F0E 30.9%, #ffb700 31%, #FFD64D 31.2%, #ffe066 31.45%, #5E5635 31.5%, #474128 33%, #2F2B1B 36%, #18160D 40%, #000 45%)"
+			else layerBG = "linear-gradient(0deg, #000)"
 			break;
 		case "dotf":
 			layerBG = "linear-gradient(45deg, #140019, #000e26)"

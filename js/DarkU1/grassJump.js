@@ -442,6 +442,9 @@ addLayer("dgj", {
                         ["raw-html", "Grass Jumps are not reset when leaving the dark universe.", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ], {backgroundColor: "#002e5c", border: "3px solid #00488F", borderTop: "0px", borderRadius: "0px 0px 13px 13px", width: "588px", height: "40px"}],
                 ]
+                // GRASS JUMP MILESTONE IDEAS
+                // Grass jumper upgrades (holds stuff like automation, some are kept on reset)
+                // Dark Charger OTF?
             },
             "Grassjumpers": {
                 buttonStyle() { return { border: "2px solid #00488F", borderRadius: "10px" } },
