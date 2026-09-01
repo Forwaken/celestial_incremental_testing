@@ -726,14 +726,14 @@ addLayer("settings", {
                             "Art: Jtoh_Sc Lemonsja Akash Vel Bumpy<br>" +
                             "Testing: Nova Piterpicher Vel Bumpy<br>" +
                             "Bug Fixing: Tsanth Forwaken", {color: "var(--textColor)", fontSize: "12px", fontFamily: "monospace"}],
-                    ], {width: "409px", height: "206px"}],
+                    ], {width: "409px", height: "255px"}],
                     ["style-row", [
                         ["raw-html", () => "<a href=https://discord.gg/icecreamdude-s-incremental-games-850817562040467556><button class=can style='display:flex;align-items:center;justify-content:center;width:409px;height:40px;font-size:20px;color:#dde0fc;background:#5865f2;border:3px solid #2c3279'>Join the Discord!</button></a>", {fontFamily: "monospace",}],
                     ], {width: "409px", height: "40px", borderTop: "3px solid var(--regBorder)"}],
                     ["style-row", [
                         ["raw-html", () => {return "Playtime: " + formatTime(player.timePlayed)}, {color: "var(--textColor)", fontSize: "16px", fontFamily: "monospace"}],
                     ], {width: "409px", height: "30px", borderTop: "3px solid var(--regBorder)"}],
-                ], {width: "409px", height: "315px", background: "var(--layerBackground)", border: "3px solid var(--regBorder)"}],
+                ], {width: "409px", height: "364px", background: "var(--layerBackground)", border: "3px solid var(--regBorder)"}],
             ]],
         ], {width: "737px", background: "var(--miscButtonHover)", border: "3px solid var(--regBorder)", padding: "8px"}],
         ["blank", "25px"],
