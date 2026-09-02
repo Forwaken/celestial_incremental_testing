@@ -198,7 +198,29 @@ addUniverse("A1", {
 addUniverse("A2", {
     name: "Alt-Universe 2<br>Cosmic Cosmos",
     symbol: "A2",
-    tree: [["st"], ["pl", "sh", "se"], ["ir"], ["sb"]],
+    tree: [["spet", "st", "sdim"], ["pl", "sh", "se"], ["ir"], ["sb"]],
+    nodeStyle() {
+        let style = {
+            background: "linear-gradient(315deg, #5A4FCF 0%, #242124 74%)",
+            backgroundOrigin: "border-box",
+			color: "#ffffff",
+        	borderColor: "#270052",
+        }
+        if (player.universe=="A2") {
+            style.outline = "2px solid white"
+            style.outlineOffset = "-2px"
+            style.borderWidth = "5px"
+        }
+        return style
+    },
+    uniShown() { return player.startedGame && player.au2.au2Unlocked && !player.sma.inStarmetalChallenge},
+    disabled() {return !player.startedGame || !player.au2.au2Unlocked},
+})
+
+addUniverse("SB", {
+    name: "Ship Battle",
+    symbol: "✦",
+    tree: [],
     nodeStyle() {
         let style = {
             background: "linear-gradient(315deg, #5A4FCF 0%, #242124 74%)",
