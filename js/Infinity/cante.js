@@ -1047,7 +1047,7 @@
             purchaseLimit() { return new Decimal(30) },
             currency() { return player.ca.replicanticanti},
             pay(amt) { player.ca.replicanticanti = this.currency().sub(amt.sub(1)) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(1000).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
             canAfford() { return this.currency().gte(this.cost()) },

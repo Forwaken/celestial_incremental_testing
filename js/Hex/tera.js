@@ -468,7 +468,7 @@ addLayer("tera", {
             style: {width: "150px", height: "150px", fontSize: "12px", color: "rgba(0,0,0,0.7)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"},
         },
         "seal4": {
-            title() {return player.tera.clickables["seal4"] ? "" : formatSimple(player.wel.bestLight) + "/<br>1e24<br>Best Light"},
+            title() {return player.tera.clickables["seal4"] ? "" : formatSimple(player.wel.bestLight) + "/<br>1e24<br>Light"},
             canClick() {return player.wel.bestLight.gte("1e24")},
             unlocked() {return !player.tera.clickables["seal4"]},
             branches: [["sealCenter", "gray", 25]],

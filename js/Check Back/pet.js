@@ -1,58 +1,412 @@
-const petShopShardName = ["Evolution Shard", "Paragon Shard", "Ascension Shard"]
-const petShopCrateName = ["Common Crate", "Common/Uncommon Crate", "Uncommon Crate", "Antimatter Crate", "Replicanti Crate", "Rare Crate"]
-const petShopBase = {
-    common: {
-        0: new Decimal(10),
-        1: new Decimal(10),
-        2: new Decimal(10),
-        3: new Decimal(10),
-        4: new Decimal(10),
-        5: new Decimal(20),
-        6: new Decimal(20),
-        7: new Decimal(30),
-        8: new Decimal(30),
-    },
-    uncommon: {
-        0: new Decimal(25),
-        1: new Decimal(25),
-        2: new Decimal(25),
-        3: new Decimal(25),
-        4: new Decimal(25),
-        5: new Decimal(50),
-        6: new Decimal(50),
-        7: new Decimal(75),
-        8: new Decimal(75),
-    },
-    rare: {
-        0: new Decimal(200),
-        1: new Decimal(200),
-        2: new Decimal(200),
-        3: new Decimal(200),
-        4: new Decimal(200),
-        5: new Decimal(400),
-        6: new Decimal(400),
-        7: new Decimal(600),
-        8: new Decimal(600),
-    },
-    epic: {
-        0: new Decimal(500),
-        1: new Decimal(500),
-        2: new Decimal(500),
-        3: new Decimal(1000),
-    },
+const petShop = {
     shard: {
-        0: new Decimal(500),
-        1: new Decimal(20000),
-        2: new Decimal(50000),
+        0: {
+            name: "Evolution Shard",
+            amt() {return player.cb.evolutionShards},
+            base: new Decimal(500),
+            scale: 0.1,
+            style: {background: "url('resources/evoShard.png')", backgroundSize: "contain"},
+            color: "#d487fd",
+            unlocked() {return player.cb.highestLevel.gte(35)},
+        },
+        1: {
+            name: "Paragon Shard",
+            amt() {return player.cb.paragonShards},
+            base: new Decimal(20000),
+            scale: 0.25,
+            style: {background: "url('resources/paragonShard.png')", backgroundSize: "contain"},
+            color: "#4c64ff",
+            unlocked() {return player.cb.highestLevel.gte(250)},
+        },
+        2: {
+            name: "Choco Shard",
+            amt() {return player.ep2.chocoShards},
+            base: new Decimal(1e6),
+            scale: 1,
+            style: {background: "url('resources/checkback/choco_shard.png')", backgroundSize: "contain"},
+            color: "#86562E",
+            unlocked() {return player.ep2.obtainedShards},
+        },
+        3: {
+            name: "Ascension Shard",
+            amt() {return player.cbs.ascensionShards},
+            base: new Decimal(1e15),
+            scale: 2,
+            style: {background: "url('resources/ascensionShard.png')", backgroundSize: "contain"},
+            color: "#4d767f",
+            unlocked() {return player.cbs.shrineReactivated},
+        },
     },
     crate: {
-        0: new Decimal(10),
-        1: new Decimal(20),
-        2: new Decimal(40),
-        3: new Decimal(150),
-        4: new Decimal(75),
-        5: new Decimal(300),
-        6: new Decimal(500),
+        0: {
+            name: "Common Crate",
+            tooltip() { return "18% - Gwa<br>18% - Egg Guy<br>18% - Unsmith<br>18% - Gd Checkpoint<br>18% - Slax<br>10% - Teste"},
+            base: new Decimal(10),
+            scale: 0.05,
+            style: {border: "10px solid #7cbdcc", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#9bedff"},
+            color: "#4d767f",
+            unlocked() { return player.cb.highestLevel.gte(10) },
+        },
+        1: {
+            name: "Common / Uncommon Crate",
+            tooltip() { return "6% - Gwa<br>6% - Egg Guy<br>6% - Unsmith<br>6% - Gd Checkpoint<br>6% - Slax<br>12% - Teste<br>12% - Star<br>12% - Normal Face<br>12% - Shark<br>12% - THE WATCHING EYE<br>10% - Nova"},
+            base: new Decimal(20),
+            scale: 0.06,
+            style: {border: "10px solid #74bb9c", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#92EAC4"},
+            color: "#497562",
+            unlocked() { return player.cb.highestLevel.gte(25) },
+        },
+        2: {
+            name: "Uncommon Crate",
+            tooltip() { return "16% - Teste<br>16% - Star<br>16% - Normal Face<br>16% - Shark<br>16% - THE WATCHING EYE<br>12% - Goofy Ahh Thing<br>8% - Evo Shard"},
+            base: new Decimal(40),
+            scale: 0.07,
+            style: {border: "10px solid #6cb86c", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#88e688"},
+            color: "#447344",
+            unlocked() { return player.cb.highestLevel.gte(75) },
+        },
+        3: {
+            name: "Antimatter Crate",
+            tooltip() { return "25% - Spider<br>25% - Blob<br>15% - Clock<br>15% - Trollface<br>15% - Antimatter<br>5% - Evo Shards"},
+            base: new Decimal(150),
+            scale: 0.09,
+            style: {border: "10px solid #189011", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#1eb516"},
+            color: "#0f5a0b",
+            unlocked() { return player.cb.highestLevel.gte(125) },
+        },
+        4: {
+            name: "Replicanti Crate",
+            tooltip() { return "25% - Replicator<br>25% - Smoke<br>15% - Infinity Breaker<br>15% - John<br>10% - Hex Shadow<br>10% - Grass Square"},
+            base: new Decimal(75),
+            scale: 0.08,
+            style: {border: "10px solid #086894", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#0a82b9"},
+            color: "#05415c",
+            unlocked() { return player.cb.highestLevel.gte(1500) && player.ca.unlockedCante },
+        },
+        5: {
+            name: "Rare Crate",
+            tooltip() { return "10% - Nova<br>10% - Dice<br>10% - Drippy Ufo<br>10% - Goofy Ahh Thing<br>10% - Antimatter<br>10% - Hex Shadow<br>10% - Grass Square<br>30% - Epic Pet Fragment"},
+            base: new Decimal(300),
+            scale: 0.1,
+            style: {border: "10px solid #3e63cc", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#4e7cff"},
+            color: "#273e7f",
+            unlocked() { return player.cb.highestLevel.gte(1500) && player.ca.unlockedCante },
+        },
+        6: {
+            name: "Singularity Crate",
+            tooltip() { return "30% - Impossible Triangle<br>30% - Forbidden Core<br>10% - Paragon Shard<br>25% - Singularity Fragment<br>5% - Legendary Gems"},
+            base: new Decimal(2500),
+            scale: 0.15,
+            style: {border: "10px solid #a33636", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#cc4444"},
+            color: "#662222",
+            unlocked() { return player.cb.highestLevel.gte(25000) && hasUpgrade("s", 23) },
+        },
+    },
+    common: {
+        0: {
+            name: "Gwa",
+            amt() {return getLevelableXP("pet", 101)},
+            next() {return layers.pet.levelables[101].xpReq()},
+            base: new Decimal(10),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/gwaCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked: true,
+        },
+        1: {
+            name: "Egg Guy",
+            amt() {return getLevelableXP("pet", 102)},
+            next() {return layers.pet.levelables[102].xpReq()},
+            base: new Decimal(10),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/eggCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked: true,
+        },
+        2: {
+            name: "Unsmith",
+            amt() {return getLevelableXP("pet", 103)},
+            next() {return layers.pet.levelables[103].xpReq()},
+            base: new Decimal(10),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/unsmithCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked: true,
+        },
+        3: {
+            name: "Gd Checkpoint",
+            amt() {return getLevelableXP("pet", 104)},
+            next() {return layers.pet.levelables[104].xpReq()},
+            base: new Decimal(10),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/checkpointCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked: true,
+        },
+        4: {
+            name: "Slax",
+            amt() {return getLevelableXP("pet", 105)},
+            next() {return layers.pet.levelables[105].xpReq()},
+            base: new Decimal(10),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/slaxCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked: true,
+        },
+        5: {
+            name: "Spider",
+            amt() {return getLevelableXP("pet", 106)},
+            next() {return layers.pet.levelables[106].xpReq()},
+            base: new Decimal(20),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/spiderCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked() { return player.cb.highestLevel.gte(125) },
+        },
+        6: {
+            name: "Blob",
+            amt() {return getLevelableXP("pet", 107)},
+            next() {return layers.pet.levelables[107].xpReq()},
+            base: new Decimal(20),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/blobCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked() { return player.cb.highestLevel.gte(125) },
+        },
+        7: {
+            name: "Replicator",
+            amt() {return getLevelableXP("pet", 108)},
+            next() {return layers.pet.levelables[108].xpReq()},
+            base: new Decimal(30),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/replicatorCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked() { return player.cb.highestLevel.gte(1500) && player.ca.unlockedCante },
+        },
+        8: {
+            name: "Smoke",
+            amt() {return getLevelableXP("pet", 109)},
+            next() {return layers.pet.levelables[109].xpReq()},
+            base: new Decimal(30),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/smokeCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked() { return player.cb.highestLevel.gte(1500) && player.ca.unlockedCante },
+        },
+        9: {
+            name: "Coin Fragment",
+            amt() {return getLevelableXP("pet", 110)},
+            next() {return layers.pet.levelables[110].xpReq()},
+            base: new Decimal(1000),
+            scale: 0.4,
+            style: {background: "url('resources/Pets/coinFragmentCommonPet.png')", backgroundSize: "contain"},
+            color: "#45BDD7",
+            unlocked() { return player.cb.highestLevel.gte(7500) && player.ca.unlockedCante },
+        },
+    },
+    uncommon: {
+        0: {
+            name: "Teste",
+            amt() {return getLevelableXP("pet", 201)},
+            next() {return layers.pet.levelables[201].xpReq()},
+            base: new Decimal(25),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/testeUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked: true,
+        },
+        1: {
+            name: "Star",
+            amt() {return getLevelableXP("pet", 202)},
+            next() {return layers.pet.levelables[202].xpReq()},
+            base: new Decimal(25),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/starUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked: true,
+        },
+        2: {
+            name: "Normal Face",
+            amt() {return getLevelableXP("pet", 203)},
+            next() {return layers.pet.levelables[203].xpReq()},
+            base: new Decimal(25),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/normalFaceUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked: true,
+        },
+        3: {
+            name: "Shark",
+            amt() {return getLevelableXP("pet", 204)},
+            next() {return layers.pet.levelables[204].xpReq()},
+            base: new Decimal(25),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/sharkUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked: true,
+        },
+        4: {
+            name: "THE WATCHING EYE",
+            amt() {return getLevelableXP("pet", 205)},
+            next() {return layers.pet.levelables[205].xpReq()},
+            base: new Decimal(25),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/eyeUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked: true,
+        },
+        5: {
+            name: "Clock",
+            amt() {return getLevelableXP("pet", 206)},
+            next() {return layers.pet.levelables[206].xpReq()},
+            base: new Decimal(50),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/clockUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked() { return player.cb.highestLevel.gte(125) },
+        },
+        6: {
+            name: "Trollface",
+            amt() {return getLevelableXP("pet", 207)},
+            next() {return layers.pet.levelables[207].xpReq()},
+            base: new Decimal(50),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/trollUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked() { return player.cb.highestLevel.gte(125) },
+        },
+        7: {
+            name: "Infinity Breaker",
+            amt() {return getLevelableXP("pet", 208)},
+            next() {return layers.pet.levelables[208].xpReq()},
+            base: new Decimal(75),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/infinityBreakerUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked() { return player.cb.highestLevel.gte(1500) && player.ca.unlockedCante },
+        },
+        8: {
+            name: "John",
+            amt() {return getLevelableXP("pet", 209)},
+            next() {return layers.pet.levelables[209].xpReq()},
+            base: new Decimal(75),
+            scale: 0.05,
+            style: {background: "url('resources/Pets/johnUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked() { return player.cb.highestLevel.gte(1500) && player.ca.unlockedCante },
+        },
+        9: {
+            name: "Refined Fragment",
+            amt() {return getLevelableXP("pet", 210)},
+            next() {return layers.pet.levelables[210].xpReq()},
+            base: new Decimal(2000),
+            scale: 0.45,
+            style: {background: "url('resources/Pets/refinedFragmentUncommonPet.png')", backgroundSize: "contain"},
+            color: "#008300",
+            unlocked() { return player.cb.highestLevel.gte(15000) && player.ca.unlockedCante },
+        },
+    },
+    rare: {
+        0: {
+            name: "Nova",
+            amt() {return getLevelableXP("pet", 301)},
+            next() {return layers.pet.levelables[301].xpReq()},
+            base: new Decimal(25),
+            scale: 0.08,
+            style: {background: "url('resources/Pets/novaRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(25) },
+        },
+        1: {
+            name: "Dice",
+            amt() {return getLevelableXP("pet", 302)},
+            next() {return layers.pet.levelables[302].xpReq()},
+            base: new Decimal(25),
+            scale: 0.08,
+            style: {background: "url('resources/Pets/diceRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(25) },
+        },
+        2: {
+            name: "Normal Face",
+            amt() {return getLevelableXP("pet", 303)},
+            next() {return layers.pet.levelables[303].xpReq()},
+            base: new Decimal(25),
+            scale: 0.08,
+            style: {background: "url('resources/Pets/ufoRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(25) },
+        },
+        3: {
+            name: "Goofy Ahh Thing",
+            amt() {return getLevelableXP("pet", 304)},
+            next() {return layers.pet.levelables[304].xpReq()},
+            base: new Decimal(25),
+            scale: 0.08,
+            style: {background: "url('resources/Pets/goofyAhhThingRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(75) },
+        },
+        4: {
+            name: "Antimatter",
+            amt() {return getLevelableXP("pet", 305)},
+            next() {return layers.pet.levelables[305].xpReq()},
+            base: new Decimal(25),
+            scale: 0.08,
+            style: {background: "url('resources/Pets/antimatterRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(125) },
+        },
+        5: {
+            name: "Hex Shadow",
+            amt() {return getLevelableXP("pet", 306)},
+            next() {return layers.pet.levelables[306].xpReq()},
+            base: new Decimal(50),
+            scale: 0.08,
+            style: {background: "url('resources/Pets/hexShadowRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(1500) && player.ca.unlockedCante },
+        },
+        6: {
+            name: "Grass Square",
+            amt() {return getLevelableXP("pet", 307)},
+            next() {return layers.pet.levelables[307].xpReq()},
+            base: new Decimal(50),
+            scale: 0.08,
+            style: {background: "url('resources/Pets/grassSquareRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(1500) && player.ca.unlockedCante },
+        },
+        7: {
+            name: "Impossible Triangle",
+            amt() {return getLevelableXP("pet", 308)},
+            next() {return layers.pet.levelables[308].xpReq()},
+            base: new Decimal(75),
+            scale: 0.08,
+            style: {background: "url('resources/Pets/impossibleTriangleRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(25000) && hasUpgrade("s", 23) },
+        },
+        8: {
+            name: "Forbidden Core",
+            amt() {return getLevelableXP("pet", 309)},
+            next() {return layers.pet.levelables[309].xpReq()},
+            base: new Decimal(75),
+            scale: 0.08,
+            style: {background: "url('resources/Pets/forbiddenCoreRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(25000) && hasUpgrade("s", 23) },
+        },
+        9: {
+            name: "Evolution Fragment",
+            amt() {return getLevelableXP("pet", 310)},
+            next() {return layers.pet.levelables[310].xpReq()},
+            base: new Decimal(4000),
+            scale: 0.5,
+            style: {background: "url('resources/Pets/evolutionFragmentRarePet.png')", backgroundSize: "contain"},
+            color: "#0031BF",
+            unlocked() { return player.cb.highestLevel.gte(250000) && player.bh.unlockConditions.done },
+        },
     },
 }
 const fragShopBase = {
@@ -297,7 +651,7 @@ addLayer("pet", {
         summonIndex: new Decimal(0),
 
         // PET SHOP
-        shopIndex: 101,
+        shopIndex: ["common", 1],
         shopBulk: new Decimal(1),
         shopInput: new Decimal(1),
 
@@ -348,6 +702,11 @@ addLayer("pet", {
                     current: new Decimal(0),
                     max: new Decimal(1800),
                 },
+                9: {
+                    cost: new Decimal(1000),
+                    current: new Decimal(0),
+                    max: new Decimal(21600),
+                },
             },
             uncommon: {
                 0: {
@@ -394,6 +753,11 @@ addLayer("pet", {
                     cost: new Decimal(75),
                     current: new Decimal(0),
                     max: new Decimal(5400),
+                },
+                9: {
+                    cost: new Decimal(2000),
+                    current: new Decimal(0),
+                    max: new Decimal(43200),
                 },
             },
             rare: {
@@ -442,27 +806,10 @@ addLayer("pet", {
                     current: new Decimal(0),
                     max: new Decimal(32400),
                 },
-            },
-            epic: {
-                0: {
-                    cost: new Decimal(500),
+                9: {
+                    cost: new Decimal(4000),
                     current: new Decimal(0),
-                    max: new Decimal(43200),
-                },
-                1: {
-                    cost: new Decimal(500),
-                    current: new Decimal(0),
-                    max: new Decimal(43200),
-                },
-                2: {
-                    cost: new Decimal(500),
-                    current: new Decimal(0),
-                    max: new Decimal(43200),
-                },
-                3: {
-                    cost: new Decimal(1000),
-                    current: new Decimal(0),
-                    max: new Decimal(86400),
+                    max: new Decimal(64800),
                 },
             },
             shard: {
@@ -477,9 +824,14 @@ addLayer("pet", {
                     max: new Decimal(86400),
                 },
                 2: {
-                    cost: new Decimal(50000),
+                    cost: new Decimal(1e6),
                     current: new Decimal(0),
                     max: new Decimal(64800),
+                },
+                3: {
+                    cost: new Decimal(1e15),
+                    current: new Decimal(0),
+                    max: new Decimal(604800),
                 },
             },
             crate: {
@@ -722,14 +1074,10 @@ addLayer("pet", {
         }
 
         // =- PET SHOP START -=
-        for (let i in player.pet.shop) {
-            for (let j in player.pet.shop[i]) {
-                player.pet.shop[i][j].cost = petShopBase[i][j]
-                if (i != "shard") {
-                    player.pet.shop[i][j].cost = player.pet.shop[i][j].cost.mul(player.pet.shopBulk.mul(0.05).add(0.95)).mul(player.pet.shopBulk)
-                } else {
-                    player.pet.shop[i][j].cost = player.pet.shop[i][j].cost.mul(player.pet.shopBulk.mul(0.1).add(0.9)).mul(player.pet.shopBulk)
-                }
+        if (typeof player.pet.shopIndex != "object") player.pet.shopIndex = ["common", 0]
+        for (let i in petShop) {
+            for (let j in petShop[i]) {
+                player.pet.shop[i][j].cost = petShop[i][j].base.mul(player.pet.shopBulk.pow(player.pet.shopBulk.log(10).mul(petShop[i][j].scale).add(1)))
 
                 player.pet.shop[i][j].current = player.pet.shop[i][j].current.sub(onepersec.mul(delta))
             }
@@ -1602,484 +1950,66 @@ addLayer("pet", {
         },
 
         // PET SHOP
-        1002: {
+        1001: {
             title() {
-                if (player.pet.shopIndex >= 100 && player.pet.shopIndex < 200) {
-                    if (player.pet.shop.common[player.pet.shopIndex-101].current.gte(0)) {
-                        return "<h3>Check back in <br>" + formatTime(player.pet.shop.common[player.pet.shopIndex-101].current) + "."
-                    } else {return "<h3>Buy"}
-                } else if (player.pet.shopIndex >= 200 && player.pet.shopIndex < 300) {
-                    if (player.pet.shop.uncommon[player.pet.shopIndex-201].current.gte(0)) {
-                        return "<h3>Check back in <br>" + formatTime(player.pet.shop.uncommon[player.pet.shopIndex-201].current) + "."
-                    } else {return "<h3>Buy"}
-                } else if (player.pet.shopIndex >= 300 && player.pet.shopIndex < 400) {
-                    if (player.pet.shop.rare[player.pet.shopIndex-301].current.gte(0)) {
-                        return "<h3>Check back in <br>" + formatTime(player.pet.shop.rare[player.pet.shopIndex-301].current) + "."
-                    } else {return "<h3>Buy"}
-                } else if (player.pet.shopIndex >= 400 && player.pet.shopIndex < 500) {
-                    if (player.pet.shop.epic[player.pet.shopIndex-401].current.gte(0)) {
-                        return "<h3>Check back in <br>" + formatTime(player.pet.shop.epic[player.pet.shopIndex-401].current) + "."
-                    } else {return "<h3>Buy"}
-                } else { return "<h3>Buy" }
+                if (player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].current.gte(0)) {
+                    return "Check back in<br>" + formatTime(player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].current) + "."
+                } else {return "<h3>Buy"}
             },
-            canClick() {
-                if (player.pet.shopIndex >= 100 && player.pet.shopIndex < 200) {
-                    return player.cb.petPoints.gte(player.pet.shop.common[player.pet.shopIndex-101].cost) && player.pet.shop.common[player.pet.shopIndex-101].current.lt(0)
-                } else if (player.pet.shopIndex >= 200 && player.pet.shopIndex < 300) {
-                    return player.cb.petPoints.gte(player.pet.shop.uncommon[player.pet.shopIndex-201].cost) && player.pet.shop.uncommon[player.pet.shopIndex-201].current.lt(0)
-                } else if (player.pet.shopIndex >= 300 && player.pet.shopIndex < 400) {
-                    return player.cb.petPoints.gte(player.pet.shop.rare[player.pet.shopIndex-301].cost) && player.pet.shop.rare[player.pet.shopIndex-301].current.lt(0)
-                } else if (player.pet.shopIndex >= 400 && player.pet.shopIndex < 500) {
-                    return player.cb.petPoints.gte(player.pet.shop.epic[player.pet.shopIndex-401].cost) && player.pet.shop.epic[player.pet.shopIndex-401].current.lt(0)
-                } else { return false }
-            },
-            unlocked() { return player.pet.shopIndex > 100},
+            canClick() {return player.cb.petPoints.gte(player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].cost) && player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].current.lt(0)},
+            unlocked() {return true},
             onClick() {
                 if (!hasAchievement("achievements", 104)) completeAchievement("achievements", 104)
-                if (player.pet.shopIndex >= 100 && player.pet.shopIndex < 200) {
-                    player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop.common[player.pet.shopIndex-101].cost)
-                    player.pet.shop.common[player.pet.shopIndex-101].current = player.pet.shop.common[player.pet.shopIndex-101].max
-                    doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[player.pet.shopIndex].title, layers.pet.levelables[player.pet.shopIndex]), "Pet Obtained!", 5, "#9bedff", run(layers.pet.levelables[player.pet.shopIndex].image, layers.pet.levelables[player.pet.shopIndex]))
-                } else if (player.pet.shopIndex >= 200 && player.pet.shopIndex < 300) {
-                    player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop.uncommon[player.pet.shopIndex-201].cost)
-                    player.pet.shop.uncommon[player.pet.shopIndex-201].current = player.pet.shop.uncommon[player.pet.shopIndex-201].max
-                    doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[player.pet.shopIndex].title, layers.pet.levelables[player.pet.shopIndex]), "Pet Obtained!", 5, "#88e688", run(layers.pet.levelables[player.pet.shopIndex].image, layers.pet.levelables[player.pet.shopIndex]))
-                } else if (player.pet.shopIndex >= 300 && player.pet.shopIndex < 400) {
-                    player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop.rare[player.pet.shopIndex-301].cost)
-                    player.pet.shop.rare[player.pet.shopIndex-301].current = player.pet.shop.rare[player.pet.shopIndex-301].max
-                    doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[player.pet.shopIndex].title, layers.pet.levelables[player.pet.shopIndex]), "Pet Obtained!", 5, "#4e7cff", run(layers.pet.levelables[player.pet.shopIndex].image, layers.pet.levelables[player.pet.shopIndex]))
-                } else if (player.pet.shopIndex >= 400 && player.pet.shopIndex < 500) {
-                    player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop.epic[player.pet.shopIndex-401].cost)
-                    player.pet.shop.epic[player.pet.shopIndex-401].current = player.pet.shop.epic[player.pet.shopIndex-401].max
-                    if (player.pet.shopIndex == 401) doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Dotknight Fragment", "Fragment Obtained!", 5, "#cb79ed", "resources/dotknightEpicPetFragment1.png")
-                    if (player.pet.shopIndex == 402) doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Dragon Fragment", "Fragment Obtained!", 5, "#cb79ed", "resources/dragonEpicPetFragment1.png")
-                    if (player.pet.shopIndex == 403) doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Cookie Fragment", "Fragment Obtained!", 5, "#cb79ed", "resources/cookieEpicPetFragment1.png")
-                    if (player.pet.shopIndex == 404) doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Singularity Fragment", "Fragment Obtained!", 5, "#cb79ed", "resources/singularityEpicPetFragment.png")
-                }
-                if (player.pet.shopIndex != 404) {
-                    addLevelableXP("pet", player.pet.shopIndex, player.pet.shopBulk)
-                } else {
-                    player.pet.singularityFragments = player.pet.singularityFragments.add(player.pet.shopBulk)
+                let petId = 101
+                player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].cost)
+                player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].current = player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].max
+
+                if (player.pet.shopIndex[0] == "shard") {
+                    switch (player.pet.shopIndex[1]) {
+                        case 0:
+                            player.cb.evolutionShards = player.cb.evolutionShards.add(player.pet.shopBulk);
+                            doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Evolution Shard!", "Shard Obtained!", 5, "#d487fd", "resources/evoShard.png")
+                            break;
+                        case 1:
+                            player.cb.paragonShards = player.cb.paragonShards.add(player.pet.shopBulk);
+                            doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Paragon Shard!", "Shard Obtained!", 5, "#4c64ff", "resources/paragonShard.png")
+                            break;
+                        case 2:
+                            player.ep2.chocoShards = player.ep2.chocoShards.add(player.pet.shopBulk);
+                            doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Chocolate Shard!", "Shard Obtained!", 5, "#2D6C95", "resources/checkback/choco_shard.png")
+                            break;
+                        case 3:
+                            player.cbs.ascensionshards = player.cbs.ascensionshards.add(player.pet.shopBulk);
+                            doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Ascension Shard!", "Shard Obtained!", 5, "#5cafbf", "resources/ascensionShard.png")
+                            break;
+                    }
+                } else if (player.pet.shopIndex[0] == "crate") {
+                    switch (player.pet.shopIndex[1]) {
+                        case 0: layers.cb.petButton1(player.pet.shopBulk); break;
+                        case 1: layers.cb.petButton2(player.pet.shopBulk); break;
+                        case 2: layers.cb.petButton3(player.pet.shopBulk); break;
+                        case 3: layers.cb.petButton4(player.pet.shopBulk); break;
+                        case 4: layers.cb.petButton5(player.pet.shopBulk); break;
+                        case 5: layers.cb.petButton6(player.pet.shopBulk); break;
+                        case 6: layers.cb.petButton7(player.pet.shopBulk); break;
+                    }
+                } else if (player.pet.shopIndex[0] == "common") {
+                    petId = 101 + player.pet.shopIndex[1]
+                    doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#9bedff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
+                } else if (player.pet.shopIndex[0] == "uncommon") {
+                    petId = 201 + player.pet.shopIndex[1]
+                    doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#88e688", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
+                } else if (player.pet.shopIndex[0] == "rare") {
+                    petId = 301 + player.pet.shopIndex[1]
+                    doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#4e7cff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
                 }
             },
             onHold() { clickClickable(this.layer, this.id) },
-            style: {width: "197px", minHeight: "72px", borderRadius: "0px", border: "3px solid rgba(0,0,0,0.3)"},
-        },
-        1003: {
-            title() {
-                if (player.pet.shopIndex > 0 && player.pet.shopIndex < 11) {
-                    if (player.pet.shop.shard[player.pet.shopIndex-1].current.gte(0)) {
-                        return "<h3>Check back in <br>" + formatTime(player.pet.shop.shard[player.pet.shopIndex-1].current) + "."
-                    } else {return "<h3>Buy"}
-                } else if (player.pet.shopIndex > 10 && player.pet.shopIndex < 100) {
-                    if (player.pet.shop.crate[player.pet.shopIndex-11].current.gte(0)) {
-                        return "<h3>Check back in <br>" + formatTime(player.pet.shop.crate[player.pet.shopIndex-11].current) + "."
-                    } else {return "<h3>Buy"}
-                } else { return "<h3>Buy" }
+            style() {
+                let look = {width: "200px", minHeight: "37px", height: "37px", lineHeight: "1", borderRadius: "0px", border: "3px solid rgba(0,0,0,0.3)"}
+                this.canClick() ? look.backgroundColor = "#727fd5" : look.backgroundColor = "#bf8f8f"
+                return look
             },
-            canClick() {
-                if (player.pet.shopIndex > 0 && player.pet.shopIndex < 11) {
-                    return player.cb.petPoints.gte(player.pet.shop.shard[player.pet.shopIndex-1].cost) && player.pet.shop.shard[player.pet.shopIndex-1].current.lt(0)
-                } else if (player.pet.shopIndex > 10 && player.pet.shopIndex < 100) {
-                    return player.cb.petPoints.gte(player.pet.shop.crate[player.pet.shopIndex-11].cost) && player.pet.shop.crate[player.pet.shopIndex-11].current.lt(0)
-                } else {
-                    return false
-                }
-            },
-            unlocked() { return player.pet.shopIndex < 100},
-            onClick() {
-                if (player.pet.shopIndex > 0 && player.pet.shopIndex < 11) {
-                    player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop.shard[player.pet.shopIndex-1].cost)
-                    player.pet.shop.shard[player.pet.shopIndex-1].current = player.pet.shop.shard[player.pet.shopIndex-1].max
-                    if (player.pet.shopIndex == 1) {
-                        player.cb.evolutionShards = player.cb.evolutionShards.add(player.pet.shopBulk);
-                        doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Evolution Shard!", "Shard Obtained!", 5, "#d487fd", "resources/evoShard.png")
-                    }
-                    if (player.pet.shopIndex == 2) {
-                        player.cb.paragonShards = player.cb.paragonShards.add(player.pet.shopBulk);
-                        doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Paragon Shard!", "Shard Obtained!", 5, "#4c64ff", "resources/paragonShard.png")
-                    }
-                    if (player.pet.shopIndex == 3) {
-                        player.ep2.chocoShards = player.ep2.chocoShards.add(player.pet.shopBulk);
-                        doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Chocolate Shard!", "Shard Obtained!", 5, "#2D6C95", "resources/checkback/choco_shard.png")
-                    }
-                } else if (player.pet.shopIndex > 10 && player.pet.shopIndex < 100) {
-                    player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop.crate[player.pet.shopIndex-11].cost)
-                    player.pet.shop.crate[player.pet.shopIndex-11].current = player.pet.shop.crate[player.pet.shopIndex-11].max
-                    // ADD BULK
-                    if (player.pet.shopIndex == 11) layers.cb.petButton1(player.pet.shopBulk);
-                    if (player.pet.shopIndex == 12) layers.cb.petButton2(player.pet.shopBulk);
-                    if (player.pet.shopIndex == 13) layers.cb.petButton3(player.pet.shopBulk);
-                    if (player.pet.shopIndex == 14) layers.cb.petButton4(player.pet.shopBulk);
-                    if (player.pet.shopIndex == 15) layers.cb.petButton5(player.pet.shopBulk);
-                    if (player.pet.shopIndex == 16) layers.cb.petButton6(player.pet.shopBulk);
-                    if (player.pet.shopIndex == 17) layers.cb.petButton7(player.pet.shopBulk);
-                }
-            },
-            onHold() { clickClickable(this.layer, this.id) },
-            style: {width: "197px", minHeight: "72px", borderRadius: "0px", border: "3px solid rgba(0,0,0,0.3)"},
-        },
-        1004: {
-            title() {return "Misc."},
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(65) },
-            onClick() {
-                player.subtabs["pet"]["shopTabs"] = "Misc."
-            },
-            style: {width: "162.5px", minHeight: "47px", backgroundColor: "grey", color: "black", borderRadius: "0px", border: "0px", borderRight: "2px solid #2e3c99"},
-        },
-        1005: {
-            title() { return "Common"},
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.subtabs["pet"]["shopTabs"] = "Common"
-            },
-            style: {width: "162.5px", minHeight: "47px", backgroundColor: "#9bedff", color: "black", borderRadius: "0px", border: "0px", borderRight: "2px solid #2e3c99"},
-        },
-        1006: {
-            title() { return "Uncommon"},
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.subtabs["pet"]["shopTabs"] = "Uncommon"
-            },
-            style: {width: "162.5px", minHeight: "47px", backgroundColor: "#88e688", color: "black", borderRadius: "0px", border: "0px", borderRight: "2px solid #2e3c99"},
-        },
-        1007: {
-            title() { return "Rare"},
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.subtabs["pet"]["shopTabs"] = "Rare"
-            },
-            style: {width: "162.5px", minHeight: "47px", backgroundColor: "#4e7cff", color: "black", borderRadius: "0px", border: "0px"},
-        },
-        // MISC SELECTION
-        1011: {
-            title() { return "<img src='resources/evoShard.png'style='width:100px;height:100px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 1
-            },
-            style: {width: "100px", minHeight: "100px", border: "0px", borderRadius: "0px", padding: "0px"},
-        },
-        1012: {
-            title() { return "<img src='resources/paragonShard.png'style='width:100px;height:100px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 2
-            },
-            style: {width: "100px", minHeight: "100px", border: "0px", borderRadius: "0px", padding: "0px"},
-        },
-        1021: {
-            title() { return "Common Crate" },
-            tooltip() { return "18% - Gwa<br>18% - Egg Guy<br>18% - Unsmith<br>18% - Gd Checkpoint<br>18% - Slax<br>10% - Teste"},
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 11
-            },
-            style: {zIndex: "10", width: "100px", minHeight: "100px", borderRadius: "0px", border: "10px solid #7cbdcc", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#9bedff"},
-        },
-        1022: {
-            title() { return "Common/<br>Uncommon Crate" },
-            tooltip() { return "6% - Gwa<br>6% - Egg Guy<br>6% - Unsmith<br>6% - Gd Checkpoint<br>6% - Slax<br>12% - Teste<br>12% - Star<br>12% - Normal Face<br>12% - Shark<br>12% - THE WATCHING EYE<br>10% - Nova"},
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 12
-            },
-            style: {zIndex: "10", width: "100px", minHeight: "100px", borderRadius: "0px", border: "10px solid #74bb9c", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#92EAC4"},
-        },
-        1023: {
-            title() { return "Uncommon Crate" },
-            tooltip() { return "16% - Teste<br>16% - Star<br>16% - Normal Face<br>16% - Shark<br>16% - THE WATCHING EYE<br>12% - Goofy Ahh Thing<br>8% - Evo Shard"},
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 13
-            },
-            style: {zIndex: "10", width: "100px", minHeight: "100px", borderRadius: "0px", border: "10px solid #6cb86c", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#88e688"},
-        },
-        1024: {
-            title() { return "<small>Antimatter</small> Crate" },
-            tooltip() { return "25% - Spider<br>25% - Blob<br>15% - Clock<br>15% - Trollface<br>15% - Antimatter<br>5% - Evo Shards"},
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 14
-            },
-            style: {zIndex: "10", width: "100px", minHeight: "100px", borderRadius: "0px", border: "10px solid #189011", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#1eb516"},
-        },
-        1025: {
-            title() { return "<small>Replicanti</small> Crate" },
-            tooltip() { return "25% - Replicator<br>25% - Smoke<br>15% - Infinity Breaker<br>15% - John<br>10% - Hex Shadow<br>10% - Grass Square"},
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 15
-            },
-            style: {zIndex: "10", width: "100px", minHeight: "100px", borderRadius: "0px", border: "10px solid #086894", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#0a82b9"},
-        },
-        1026: {
-            title() { return "Rare Crate" },
-            tooltip() { return "10% - Nova<br>10% - Dice<br>10% - Drippy Ufo<br>10% - Goofy Ahh Thing<br>10% - Antimatter<br>10% - Hex Shadow<br>10% - Grass Square<br>30% - Epic Pet Fragment"},
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 16
-            },
-            style: {zIndex: "9", width: "100px", minHeight: "100px", borderRadius: "0px", border: "10px solid #3e63cc", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#4e7cff"},
-        },
-        1027: {
-            title() { return "Singularity Crate" },
-            tooltip() { return "30% - Impossible Triangle<br>30% - Forbidden Core<br>10% - Paragon Shard<br>25% - Singularity Fragment<br>5% - Legendary Gems"},
-            canClick() { return true },
-            unlocked() { return false },
-            onClick() {
-                player.pet.shopIndex = 17
-            },
-            style: {zIndex: "9", width: "100px", minHeight: "100px", borderRadius: "0px", border: "10px solid #a33636", background: "linear-gradient(135deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 55%", backgroundColor: "#cc4444"},
-        },
-        // COMMON SELECTION
-        1101: {
-            title() { return "<img src='resources/Pets/gwaCommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 101
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #45BDD7", borderRadius: "0px", padding: "0px"},
-        },
-        1102: {
-            title() { return "<img src='resources/Pets/eggCommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 102
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #45BDD7", borderRadius: "0px", padding: "0px"},
-        },
-        1103: {
-            title() { return "<img src='resources/Pets/unsmithCommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 103
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #45BDD7", borderRadius: "0px", padding: "0px"},
-        },
-        1104: {
-            title() { return "<img src='resources/Pets/checkpointCommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 104
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #45BDD7", borderRadius: "0px", padding: "0px"},
-        },
-        1105: {
-            title() { return "<img src='resources/Pets/slaxCommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 105
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #45BDD7", borderRadius: "0px", padding: "0px"},
-        },
-        1106: {
-            title() { return "<img src='resources/Pets/spiderCommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 106
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #45BDD7", borderRadius: "0px", padding: "0px"},
-        },
-        1107: {
-            title() { return "<img src='resources/Pets/blobCommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 107
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #45BDD7", borderRadius: "0px", padding: "0px"},
-        },
-        1108: {
-            title() { return "<img src='resources/Pets/replicatorCommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 108
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #45BDD7", borderRadius: "0px", padding: "0px"},
-        },
-        1109: {
-            title() { return "<img src='resources/Pets/smokeCommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 109
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #45BDD7", borderRadius: "0px", padding: "0px"},
-        },
-        // UNCOMMON SELECTION
-        1201: {
-            title() { return "<img src='resources/Pets/testeUncommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 201
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #008300", borderRadius: "0px", padding: "0px"},
-        },
-        1202: {
-            title() { return "<img src='resources/Pets/starUncommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 202
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #008300", borderRadius: "0px", padding: "0px"},
-        },
-        1203: {
-            title() { return "<img src='resources/Pets/normalFaceUncommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 203
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #008300", borderRadius: "0px", padding: "0px"},
-        },
-        1204: {
-            title() { return "<img src='resources/Pets/sharkUncommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 204
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #008300", borderRadius: "0px", padding: "0px"},
-        },
-        1205: {
-            title() { return "<img src='resources/Pets/eyeUncommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 205
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #008300", borderRadius: "0px", padding: "0px"},
-        },
-        1206: {
-            title() { return "<img src='resources/Pets/clockUncommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 206
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #008300", borderRadius: "0px", padding: "0px"},
-        },
-        1207: {
-            title() { return "<img src='resources/Pets/trollUncommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 207
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #008300", borderRadius: "0px", padding: "0px"},
-        },
-        1208: {
-            title() { return "<img src='resources/Pets/infinityBreakerUncommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 208
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #008300", borderRadius: "0px", padding: "0px"},
-        },
-        1209: {
-            title() { return "<img src='resources/Pets/johnUncommonPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return player.cb.highestLevel.gte(3000) },
-            onClick() {
-                player.pet.shopIndex = 209
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #008300", borderRadius: "0px", padding: "0px"},
-        },
-        // RARE SELECTION
-        1301: {
-            title() { return "<img src='resources/Pets/novaRarePet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 301
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #0031BF", borderRadius: "0px", padding: "0px"},
-        },
-        1302: {
-            title() { return "<img src='resources/Pets/diceRarePet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 302
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #0031BF", borderRadius: "0px", padding: "0px"},
-        },
-        1303: {
-            title() { return "<img src='resources/Pets/ufoRarePet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 303
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #0031BF", borderRadius: "0px", padding: "0px"},
-        },
-        1304: {
-            title() { return "<img src='resources/Pets/goofyAhhThingRarePet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 304
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #0031BF", borderRadius: "0px", padding: "0px"},
-        },
-        1305: {
-            title() { return "<img src='resources/Pets/antimatterRarePet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 305
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #0031BF", borderRadius: "0px", padding: "0px"},
-        },
-        1306: {
-            title() { return "<img src='resources/Pets/hexShadowRarePet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 306
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #0031BF", borderRadius: "0px", padding: "0px"},
-        },
-        1308: {
-            title() { return "<img src='resources/Pets/impossibleTriangleRarePet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 308
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #0031BF", borderRadius: "0px", padding: "0px"},
-        },
-        1309: {
-            title() { return "<img src='resources/Pets/forbiddenCoreRarePet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>" },
-            canClick() { return true },
-            unlocked() { return true },
-            onClick() {
-                player.pet.shopIndex = 309
-            },
-            style: {width: "100px", minHeight: "100px", border: "5px solid #0031BF", borderRadius: "0px", padding: "0px"},
         },
     },
     levelables: {
@@ -5463,32 +5393,88 @@ addLayer("pet", {
                 content: [
                     ["style-row", [
                         ["style-column", [
-                            ["clickable", 1002],
-                            ["clickable", 1003],
-                            ["tooltip-row", [
-                                ["text-input", "shopInput", {width: "177px", height: "48px", backgroundColor: "#131e4d", color: "white", fontSize: "24px", border: "0px", padding: "0px 10px"}],
-                                ["raw-html", "<div class='bottomTooltip'>Bulk Buy Amount<hr><small>Bulk buying increases costs by:<br>base*(amt*0.05+0.95)*amt</small></div>"],
-                            ], {width: "197px", height: "48px", borderTop: "2px solid #2e3c99"}],
-                        ], {width: "197px"}],
+                            ["style-row", [
+                                ["style-row", [], {width: "3px", height: "100px", background: "#2e3c99"}],
+                                ["style-row", [], () => {
+                                    let look = {width: "100px", height: "100px", boxSizing: "border-box"}
+                                    if (petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].style) return { ...look, ...run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].style, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]])}
+                                    return look
+                                }],
+                                ["style-row", [], {width: "3px", height: "100px", background: "#2e3c99"}],
+                            ], {width: "150px", height: "100px", background: "#171e4c"}],
+                            ["style-column", [
+                                ["raw-html", () => {
+                                    if (petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].next) return formatWhole(run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].amt, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]])) + "<hr>" + formatWhole(run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].next, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]]))
+                                    else if (petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].amt) return formatWhole(run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].amt, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]]))
+                                    else return ""
+                                }, () => {
+                                    let look = {color: "white", fontSize: "12px", fontFamily: "monospace"}
+                                    if (!petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].next) look.fontSize = "14px"
+                                    return look
+                                }],
+                            ], {width: "150px", height: "37px", lineHeight: "1", borderTop: "3px solid #2e3c99"}],
+                        ], {width: "150px", height: "140px", borderRight: "3px solid #2e3c99"}],
                         ["style-column", [
                             ["style-column", [
-                                ["raw-html", () => { return player.pet.shopIndex > 0 && player.pet.shopIndex < 11 ? petShopShardName[player.pet.shopIndex - 1] : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                                ["raw-html", () => { return player.pet.shopIndex > 10 && player.pet.shopIndex < 101 ? petShopCrateName[player.pet.shopIndex - 11] : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],        
-                                ["raw-html", () => { return player.pet.shopIndex > 100 ? run(layers.pet.levelables[player.pet.shopIndex].title, layers.pet.levelables[player.pet.shopIndex]) + "<br>(" + player.pet.levelables[player.pet.shopIndex][1] + "/" + tmp.pet.levelables[player.pet.shopIndex].xpReq + ")" : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "450px", height: "72px", borderBottom: "2px solid #2e3c99"}],
+                                ["style-column", [
+                                    ["raw-html", () => {return petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].name}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ], {width: "450px", height: "43px", borderBottom: "2px solid #2e3c99"}],
+                                ["style-row", [
+                                    ["raw-html", () => { return "Costs: " + formatWhole(player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].cost) + " Pet Points"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                ], {width: "450px", height: "55px"}],
+                            ], {width: "497px", height: "100px"}],
                             ["style-row", [
-                                ["raw-html", () => { return player.pet.shopIndex > 0 && player.pet.shopIndex < 11 ? "Costs " + formatWhole(player.pet.shop.shard[player.pet.shopIndex-1].cost) + " Pet Points" : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                                ["raw-html", () => { return player.pet.shopIndex > 10 && player.pet.shopIndex < 101 ? "Costs " + formatWhole(player.pet.shop.crate[player.pet.shopIndex-11].cost) + " Pet Points" : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                                ["raw-html", () => { return player.pet.shopIndex > 100 && player.pet.shopIndex < 201 ? "Costs " + formatWhole(player.pet.shop.common[player.pet.shopIndex-101].cost) + " Pet Points" : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                                ["raw-html", () => { return player.pet.shopIndex > 200 && player.pet.shopIndex < 301 ? "Costs " + formatWhole(player.pet.shop.uncommon[player.pet.shopIndex-201].cost) + " Pet Points" : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                                ["raw-html", () => { return player.pet.shopIndex > 300 && player.pet.shopIndex < 401 ? "Costs " + formatWhole(player.pet.shop.rare[player.pet.shopIndex-301].cost) + " Pet Points" : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "450px", height: "48px"}],
-                        ], {width: "450px", height: "122px", borderLeft: "3px solid #2e3c99"}],
-                    ], {width: "650px", height: "122px", borderBottom: "3px solid #2e3c99", backgroundColor: "#060917"}],
-                    ["left-row", [
-                        ["hoverless-clickable", 1004], ["hoverless-clickable", 1005], ["hoverless-clickable", 1006], ["hoverless-clickable", 1007], ["hoverless-clickable", 1008]
-                    ], {width: "650px", height: "47px", background: "repeating-linear-gradient(-45deg, #060917 0 15px, #04060f 0 30px)", borderBottom: "3px solid #2e3c99"}],
-                    ["buttonless-microtabs", "shopTabs", { 'border-width': '0px' }],
+                                ["clickable", 1001],
+                                ["tooltip-row", [
+                                    ["text-input", "shopInput", {width: "254px", height: "37px", backgroundColor: "#131e4d", color: "white", fontSize: "24px", border: "0px", borderLeft: "3px solid #2e3c99", padding: "0px 20px", textAlign: "left"}],
+                                    ["raw-html", () => {return "<div class='bottomTooltip'>Bulk Buy Amount<hr><small>Bulk buying increases costs by:<br>base*amt<sup>(scale*log10(amt))+1</sup></small><hr><small>Scale on this item: " + formatSimple(run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].scale, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]]), 2) + "</small></div>"}],
+                                ], {width: "297px", height: "37px"}],
+                            ], {width: "497px", height: "37px", borderTop: "3px solid #2e3c99"}],
+                        ], {width: "497px", height: "140px"}],
+                    ], {width: "650px", height: "140px", borderBottom: "3px solid #2e3c99", backgroundColor: "#060917"}],
+                    ["always-scroll-column", [
+                        ["style-column", [
+                            ["raw-html", "Common Pets", {color: "black", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "646px", height: "40px", backgroundColor: "#45BDD7", border: "2px solid #0000007f", userSelect: "none"}],
+                        ["style-row", [
+                            ["pet-shop", ["common", 0]], ["pet-shop", ["common", 1]], ["pet-shop", ["common", 2]], ["pet-shop", ["common", 3]],
+                            ["pet-shop", ["common", 4]], ["pet-shop", ["common", 5]], ["pet-shop", ["common", 6]], ["pet-shop", ["common", 7]],
+                            ["pet-shop", ["common", 8]], ["pet-shop", ["common", 9]],
+                        ], {width: "630px", padding: "5px 0", background: "repeating-linear-gradient(-45deg, #235F6C 0 15px, #2B7686 0 30px)"}],
+                        
+                        ["style-column", [
+                            ["raw-html", "Uncommon Pets", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "646px", height: "40px", backgroundColor: "#008300", border: "2px solid #0000007f", userSelect: "none"}],
+                        ["style-row", [
+                            ["pet-shop", ["uncommon", 0]], ["pet-shop", ["uncommon", 1]], ["pet-shop", ["uncommon", 2]], ["pet-shop", ["uncommon", 3]],
+                            ["pet-shop", ["uncommon", 4]], ["pet-shop", ["uncommon", 5]], ["pet-shop", ["uncommon", 6]], ["pet-shop", ["uncommon", 7]],
+                            ["pet-shop", ["uncommon", 8]], ["pet-shop", ["uncommon", 9]],
+                        ], {width: "630px", padding: "5px 0", background: "repeating-linear-gradient(-45deg, #004100 0 15px, #004f00 0 30px)"}],
+
+                        ["style-column", [
+                            ["raw-html", "Rare Pets", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "646px", height: "40px", backgroundColor: "#0031BF", border: "2px solid #0000007f", userSelect: "none"}],
+                        ["style-row", [
+                            ["pet-shop", ["rare", 0]], ["pet-shop", ["rare", 1]], ["pet-shop", ["rare", 2]], ["pet-shop", ["rare", 3]],
+                            ["pet-shop", ["rare", 4]], ["pet-shop", ["rare", 5]], ["pet-shop", ["rare", 6]], ["pet-shop", ["rare", 7]],
+                            ["pet-shop", ["rare", 8]], ["pet-shop", ["rare", 9]],
+                        ], {width: "630px", padding: "5px 0", background: "repeating-linear-gradient(-45deg, #001960 0 15px, #001F77 0 30px)"}],
+
+                        ["style-column", [
+                            ["raw-html", "Shards", {color: "#1500bf", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "646px", height: "40px", background: "linear-gradient(90deg, #d487fd, #4b79ff)", border: "2px solid #1500bf", userSelect: "none"}],
+                        ["style-row", [
+                            ["pet-shop", ["shard", 0]], ["pet-shop", ["shard", 1]], ["pet-shop", ["shard", 2]], ["pet-shop", ["shard", 3]],
+                        ], {width: "630px", background: "repeating-linear-gradient(-45deg, #6A447F 0 15px, #85549E 0 30px)", padding: "5px 0"}],
+
+                        ["style-column", [
+                            ["raw-html", "Crates<small> (ignores CRC)</small>", {color: "black", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "646px", height: "40px", backgroundColor: "#4b79ff", border: "2px solid #0000007f", userSelect: "none"}],
+                        ["style-row", [
+                            ["pet-shop", ["crate", 0]], ["pet-shop", ["crate", 1]], ["pet-shop", ["crate", 2]], ["pet-shop", ["crate", 3]],
+                            ["pet-shop", ["crate", 4]], ["pet-shop", ["crate", 5]], ["pet-shop", ["crate", 6]],
+                        ], {width: "430px", background: "repeating-linear-gradient(-45deg, #263D80 0 15px, #2F4C9F 0 30px)", padding: "5px 100px"}],
+                    ], {width: "650px", height: "557px", background: "repeating-linear-gradient(-45deg, #060917 0 15px, #04060f 0 30px)"}],
                 ],
             },
             "Fragmentation": {
@@ -5683,81 +5669,6 @@ addLayer("pet", {
             },
         },
         shopTabs: {
-            "Common": {
-                buttonStyle() { return { color: "grey" } },
-                unlocked() { return true },
-                content: [
-                    ["scroll-column", [
-                            ["style-column", [
-                                ["raw-html", "Common Pets", {color: "black", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "646px", height: "40px", backgroundColor: "#45BDD7", border: "2px solid #0000007f", userSelect: "none"}],
-                        ["blank", "5px"],
-                        ["row", [["clickable", 1101], ["clickable", 1102], ["clickable", 1103], ["clickable", 1104], ["clickable", 1105]]],
-                        ["row", [["clickable", 1106], ["clickable", 1107], ["clickable", 1108], ["clickable", 1109]]],
-                    ], {width: "650px", height: "525px", background: "repeating-linear-gradient(-45deg, #235F6C 0 15px, #2B7686 0 30px)"}],
-                ],
-            },
-            "Uncommon": {
-                buttonStyle() { return { color: "grey" } },
-                unlocked() { return true },
-                content: [
-                    ["scroll-column", [
-                            ["style-column", [
-                                ["raw-html", "Uncommon Pets", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "646px", height: "40px", backgroundColor: "#008300", border: "2px solid #0000007f", userSelect: "none"}],
-                        ["blank", "5px"],
-                        ["row", [["clickable", 1201], ["clickable", 1202], ["clickable", 1203], ["clickable", 1204], ["clickable", 1205]]],
-                        ["row", [["clickable", 1206], ["clickable", 1207], ["clickable", 1208], ["clickable", 1209]]],
-                    ], {width: "650px", height: "525px", background: "repeating-linear-gradient(-45deg, #004100 0 15px, #004f00 0 30px)"}],
-                ],
-            },
-            "Rare": {
-                buttonStyle() { return { color: "grey" } },
-                unlocked() { return player.cb.highestLevel.gte(3000) },
-                content: [
-                    ["scroll-column", [
-                            ["style-column", [
-                                ["raw-html", "Rare Pets", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], {width: "646px", height: "40px", backgroundColor: "#0031BF", border: "2px solid #0000007f", userSelect: "none"}],
-                        ["blank", "5px"],
-                        ["row", [["clickable", 1301], ["clickable", 1302], ["clickable", 1303], ["clickable", 1304], ["clickable", 1305]]],
-                        ["row", [["clickable", 1306], ["clickable", 1307]]],
-                    ], {width: "650px", height: "525px", background: "repeating-linear-gradient(-45deg, #001960 0 15px, #001F77 0 30px)"}],
-                ],
-            },
-            "Epic": {
-                buttonStyle() { return { color: "grey" } },
-                unlocked() { return false },
-                content: [
-                    ["scroll-column", [
-                        ["style-column", [
-                            ["raw-html", "Epic Pets", {color: "#cb79ed", fontSize: "20px", fontFamily: "monospace"}],
-                        ], {width: "650px", height: "40px", backgroundColor: "#28182f", borderBottom: "3px solid #cb79ed", userSelect: "none"}],
-                        ["blank", "5px"],
-                        ["row", [["clickable", 1401], ["clickable", 1402], ["clickable", 1403], ["clickable", 1404]]],
-                    ], {width: "650px", height: "525px", backgroundColor: "#161616"}],
-                ],
-            },
-            "Misc.": {
-                buttonStyle() { return { color: "grey" } },
-                unlocked() { return player.cb.highestLevel.gte(65) },
-                content: [
-                    ["top-column", [
-                        ["style-column", [
-                            ["raw-html", "Shards", {color: "#1500bf", fontSize: "20px", fontFamily: "monospace"}],
-                        ], {width: "646px", height: "40px", background: "linear-gradient(90deg, #d487fd, #4b79ff)", border: "2px solid #1500bf", userSelect: "none"}],
-                        ["blank", "5px"],
-                        ["row", [["clickable", 1011], ["clickable", 1012]]],
-                        ["blank", "5px"],
-                        ["style-column", [
-                            ["raw-html", "Crates<small> (ignores CRC)</small>", {color: "black", fontSize: "20px", fontFamily: "monospace"}],
-                        ], {width: "646px", height: "40px", backgroundColor: "#4b79ff", border: "2px solid #0000007f", userSelect: "none"}],
-                        ["blank", "5px"],
-                        ["row", [["bt-clickable", 1021], ["bt-clickable", 1022], ["bt-clickable", 1023], ["bt-clickable", 1024], ["bt-clickable", 1025]]],
-                        ["row", [["bt-clickable", 1026]]],
-                    ], {width: "650px", height: "525px", background: "repeating-linear-gradient(-45deg, #263D80 0 15px, #2F4C9F 0 30px)"}],
-                ],
-            },
             "Buyables": {
                 buttonStyle() { return { color: "black" } },
                 unlocked() { return true },
