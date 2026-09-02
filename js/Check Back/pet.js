@@ -651,9 +651,10 @@ addLayer("pet", {
         summonIndex: new Decimal(0),
 
         // PET SHOP
-        shopIndex: ["common", 1],
+        shopId: ["common", 1],
         shopBulk: new Decimal(1),
         shopInput: new Decimal(1),
+        shopScaleDiv: new Decimal(1),
 
         shop: {
             common: {
@@ -906,6 +907,7 @@ addLayer("pet", {
         // PET COOLDOWN DIVIDER
         player.pet.petCooldownDiv = new Decimal(1)
         player.pet.petCooldownDiv = player.pet.petCooldownDiv.mul(buyableEffect("ev0", 14))
+        player.pet.petCooldownDiv = player.pet.petCooldownDiv.div(buyableEffect("cb", 17))
         player.pet.petCooldownDiv = player.pet.petCooldownDiv.mul(levelableEffect("pet", 1203)[0])
         player.pet.petCooldownDiv = player.pet.petCooldownDiv.mul(levelableEffect("pet", 401)[1])
         player.pet.petCooldownDiv = player.pet.petCooldownDiv.mul(buyableEffect("ev2", 22))
@@ -971,6 +973,7 @@ addLayer("pet", {
 
         player.pet.fragmentMult = new Decimal(1)
         player.pet.fragmentMult = player.pet.fragmentMult.mul(buyableEffect("pet", 1))
+        player.pet.fragmentMult = player.pet.fragmentMult.mul(buyableEffect("cb", 18))
         player.pet.fragmentMult = player.pet.fragmentMult.mul(buyableEffect("sp", 25))
         player.pet.fragmentMult = player.pet.fragmentMult.mul(levelableEffect("pet", 110)[0])
         if (hasUpgrade("ev8", 23)) player.pet.fragmentMult = player.pet.fragmentMult.mul(1.2)
@@ -1074,10 +1077,11 @@ addLayer("pet", {
         }
 
         // =- PET SHOP START -=
-        if (typeof player.pet.shopIndex != "object") player.pet.shopIndex = ["common", 0]
+        player.pet.shopScaleDiv = new Decimal(1)
+        player.pet.shopScaleDiv = player.pet.shopScaleDiv.mul(buyableEffect("cb", 19))
         for (let i in petShop) {
             for (let j in petShop[i]) {
-                player.pet.shop[i][j].cost = petShop[i][j].base.mul(player.pet.shopBulk.pow(player.pet.shopBulk.log(10).mul(petShop[i][j].scale).add(1)))
+                player.pet.shop[i][j].cost = petShop[i][j].base.mul(player.pet.shopBulk.pow(player.pet.shopBulk.log(10).mul(Decimal.div(petShop[i][j].scale, player.pet.shopScaleDiv)).add(1)))
 
                 player.pet.shop[i][j].current = player.pet.shop[i][j].current.sub(onepersec.mul(delta))
             }
@@ -1952,20 +1956,20 @@ addLayer("pet", {
         // PET SHOP
         1001: {
             title() {
-                if (player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].current.gte(0)) {
-                    return "Check back in<br>" + formatTime(player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].current) + "."
+                if (player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].current.gte(0)) {
+                    return "Check back in<br>" + formatTime(player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].current) + "."
                 } else {return "<h3>Buy"}
             },
-            canClick() {return player.cb.petPoints.gte(player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].cost) && player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].current.lt(0)},
+            canClick() {return player.cb.petPoints.gte(player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].cost) && player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].current.lt(0)},
             unlocked() {return true},
             onClick() {
                 if (!hasAchievement("achievements", 104)) completeAchievement("achievements", 104)
                 let petId = 101
-                player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].cost)
-                player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].current = player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].max
+                player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].cost)
+                player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].current = player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].max
 
-                if (player.pet.shopIndex[0] == "shard") {
-                    switch (player.pet.shopIndex[1]) {
+                if (player.pet.shopId[0] == "shard") {
+                    switch (player.pet.shopId[1]) {
                         case 0:
                             player.cb.evolutionShards = player.cb.evolutionShards.add(player.pet.shopBulk);
                             doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Evolution Shard!", "Shard Obtained!", 5, "#d487fd", "resources/evoShard.png")
@@ -1983,8 +1987,8 @@ addLayer("pet", {
                             doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Ascension Shard!", "Shard Obtained!", 5, "#5cafbf", "resources/ascensionShard.png")
                             break;
                     }
-                } else if (player.pet.shopIndex[0] == "crate") {
-                    switch (player.pet.shopIndex[1]) {
+                } else if (player.pet.shopId[0] == "crate") {
+                    switch (player.pet.shopId[1]) {
                         case 0: layers.cb.petButton1(player.pet.shopBulk); break;
                         case 1: layers.cb.petButton2(player.pet.shopBulk); break;
                         case 2: layers.cb.petButton3(player.pet.shopBulk); break;
@@ -1993,14 +1997,14 @@ addLayer("pet", {
                         case 5: layers.cb.petButton6(player.pet.shopBulk); break;
                         case 6: layers.cb.petButton7(player.pet.shopBulk); break;
                     }
-                } else if (player.pet.shopIndex[0] == "common") {
-                    petId = 101 + player.pet.shopIndex[1]
+                } else if (player.pet.shopId[0] == "common") {
+                    petId = 101 + player.pet.shopId[1]
                     doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#9bedff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
-                } else if (player.pet.shopIndex[0] == "uncommon") {
-                    petId = 201 + player.pet.shopIndex[1]
+                } else if (player.pet.shopId[0] == "uncommon") {
+                    petId = 201 + player.pet.shopId[1]
                     doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#88e688", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
-                } else if (player.pet.shopIndex[0] == "rare") {
-                    petId = 301 + player.pet.shopIndex[1]
+                } else if (player.pet.shopId[0] == "rare") {
+                    petId = 301 + player.pet.shopId[1]
                     doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#4e7cff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
                 }
             },
@@ -5397,19 +5401,19 @@ addLayer("pet", {
                                 ["style-row", [], {width: "3px", height: "100px", background: "#2e3c99"}],
                                 ["style-row", [], () => {
                                     let look = {width: "100px", height: "100px", boxSizing: "border-box"}
-                                    if (petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].style) return { ...look, ...run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].style, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]])}
+                                    if (petShop[player.pet.shopId[0]][player.pet.shopId[1]].style) return { ...look, ...run(petShop[player.pet.shopId[0]][player.pet.shopId[1]].style, petShop[player.pet.shopId[0]][player.pet.shopId[1]])}
                                     return look
                                 }],
                                 ["style-row", [], {width: "3px", height: "100px", background: "#2e3c99"}],
                             ], {width: "150px", height: "100px", background: "#171e4c"}],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    if (petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].next) return formatWhole(run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].amt, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]])) + "<hr>" + formatWhole(run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].next, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]]))
-                                    else if (petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].amt) return formatWhole(run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].amt, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]]))
+                                    if (petShop[player.pet.shopId[0]][player.pet.shopId[1]].next) return formatWhole(run(petShop[player.pet.shopId[0]][player.pet.shopId[1]].amt, petShop[player.pet.shopId[0]][player.pet.shopId[1]])) + "<hr>" + formatWhole(run(petShop[player.pet.shopId[0]][player.pet.shopId[1]].next, petShop[player.pet.shopId[0]][player.pet.shopId[1]]))
+                                    else if (petShop[player.pet.shopId[0]][player.pet.shopId[1]].amt) return formatWhole(run(petShop[player.pet.shopId[0]][player.pet.shopId[1]].amt, petShop[player.pet.shopId[0]][player.pet.shopId[1]]))
                                     else return ""
                                 }, () => {
                                     let look = {color: "white", fontSize: "12px", fontFamily: "monospace"}
-                                    if (!petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].next) look.fontSize = "14px"
+                                    if (!petShop[player.pet.shopId[0]][player.pet.shopId[1]].next) look.fontSize = "14px"
                                     return look
                                 }],
                             ], {width: "150px", height: "37px", lineHeight: "1", borderTop: "3px solid #2e3c99"}],
@@ -5417,17 +5421,17 @@ addLayer("pet", {
                         ["style-column", [
                             ["style-column", [
                                 ["style-column", [
-                                    ["raw-html", () => {return petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].name}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                    ["raw-html", () => {return petShop[player.pet.shopId[0]][player.pet.shopId[1]].name}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                                 ], {width: "450px", height: "43px", borderBottom: "2px solid #2e3c99"}],
                                 ["style-row", [
-                                    ["raw-html", () => { return "Costs: " + formatWhole(player.pet.shop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].cost) + " Pet Points"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                                    ["raw-html", () => { return "Costs: " + formatWhole(player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].cost) + " Pet Points"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                                 ], {width: "450px", height: "55px"}],
                             ], {width: "497px", height: "100px"}],
                             ["style-row", [
                                 ["clickable", 1001],
                                 ["tooltip-row", [
                                     ["text-input", "shopInput", {width: "254px", height: "37px", backgroundColor: "#131e4d", color: "white", fontSize: "24px", border: "0px", borderLeft: "3px solid #2e3c99", padding: "0px 20px", textAlign: "left"}],
-                                    ["raw-html", () => {return "<div class='bottomTooltip'>Bulk Buy Amount<hr><small>Bulk buying increases costs by:<br>base*amt<sup>(scale*log10(amt))+1</sup></small><hr><small>Scale on this item: " + formatSimple(run(petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]].scale, petShop[player.pet.shopIndex[0]][player.pet.shopIndex[1]]), 2) + "</small></div>"}],
+                                    ["raw-html", () => {return "<div class='bottomTooltip'>Bulk Buy Amount<hr><small>Bulk buying increases costs by:<br>base*amt<sup>(scale*log10(amt))+1</sup></small><hr><small>Scale on this item: " + formatSimple(Decimal.div(run(petShop[player.pet.shopId[0]][player.pet.shopId[1]].scale, petShop[player.pet.shopId[0]][player.pet.shopId[1]]), player.pet.shopScaleDiv), 2) + "</small></div>"}],
                                 ], {width: "297px", height: "37px"}],
                             ], {width: "497px", height: "37px", borderTop: "3px solid #2e3c99"}],
                         ], {width: "497px", height: "140px"}],

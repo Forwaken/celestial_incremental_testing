@@ -305,6 +305,7 @@ addLayer("cb", {
             player.cb.xpTimers[i].max = player.cb.xpTimers[i].max.div(levelableEffect("pet", 105)[1])
             player.cb.xpTimers[i].max = player.cb.xpTimers[i].max.div(levelableEffect("pet", 202)[2])
             player.cb.xpTimers[i].max = player.cb.xpTimers[i].max.div(buyableEffect("ev0", 12))
+            player.cb.xpTimers[i].max = player.cb.xpTimers[i].max.div(buyableEffect("cb", 17))
             player.cb.xpTimers[i].max = player.cb.xpTimers[i].max.div(player.co.cores.checkback.effect[2])
             player.cb.xpTimers[i].max = player.cb.xpTimers[i].max.div(levelableEffect("pu", 201)[2])
             if (player.rf.abilityTimers[6].gt(0)) player.cb.xpTimers[i].max = player.cb.xpTimers[i].max.div(1.2)
@@ -375,6 +376,7 @@ addLayer("cb", {
             player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(levelableEffect("pet", 105)[0])
             player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(levelableEffect("pet", 202)[2])
             player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(buyableEffect("ev0", 13))
+            player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(buyableEffect("cb", 17))
             if (player.in.unlockedBreak) player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(1.1)
             if (hasUpgrade("ev8", 12)) player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(1.1)
             player.cb.crateTimers[i].max = player.cb.crateTimers[i].max.div(levelableEffect("pet", 1104)[2])
@@ -429,6 +431,7 @@ addLayer("cb", {
         player.cb.boostTimers[2].max = new Decimal(129600)
         for (let i in player.cb.boostTimers) {
             player.cb.boostTimers[i].max = player.cb.boostTimers[i].max.div(levelableEffect("pet", 401)[2])
+            player.cb.boostTimers[i].max = player.cb.boostTimers[i].max.div(buyableEffect("cb", 17))
             player.cb.boostTimers[i].max = player.cb.boostTimers[i].max.div(buyableEffect("sp", 35))
             player.cb.boostTimers[i].max = player.cb.boostTimers[i].max.div(buyableEffect("ev2", 12))
             player.cb.boostTimers[i].max = player.cb.boostTimers[i].max.div(buyableEffect("stagnantSynestia", 4))
@@ -2048,7 +2051,7 @@ addLayer("cb", {
     upgrades: {},
     buyables: {
         11: {
-            costBase() { return new Decimal(420).div(levelableEffect("pet", 203)[2]).div(levelableEffect("pet", 304)[1]) },
+            costBase() { return new Decimal(420).div(player.cb.reqDiv) },
             costGrowth() { return new Decimal(2.05) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.cb.totalxp},
@@ -2090,7 +2093,7 @@ addLayer("cb", {
             style: { width: '275px', height: '150px', backgroundColor: '#006699', color: "#cceaf9"}
         },
         12: {
-            costBase() { return new Decimal(950).div(levelableEffect("pet", 203)[2]).div(levelableEffect("pet", 304)[1]) },
+            costBase() { return new Decimal(950).div(player.cb.reqDiv) },
             costGrowth() { return new Decimal(2.22) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.cb.totalxp},
@@ -2132,7 +2135,7 @@ addLayer("cb", {
             style: { width: '275px', height: '150px', backgroundColor: '#006699', color: "#cceaf9"}
         },
         13: {
-            costBase() { return new Decimal(2750).div(levelableEffect("pet", 203)[2]).div(levelableEffect("pet", 304)[1]) },
+            costBase() { return new Decimal(2750).div(player.cb.reqDiv) },
             costGrowth() { return new Decimal(2.4) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.cb.totalxp},
@@ -2174,7 +2177,7 @@ addLayer("cb", {
             style: { width: '275px', height: '150px', backgroundColor: '#006699', color: "#cceaf9"}
         },
         14: {
-            costBase() { return new Decimal(7500).div(levelableEffect("pet", 203)[2]).div(levelableEffect("pet", 304)[1]) },
+            costBase() { return new Decimal(7500).div(player.cb.reqDiv) },
             costGrowth() { return new Decimal(2.75) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.cb.totalxp},
@@ -2216,7 +2219,7 @@ addLayer("cb", {
             style: { width: '275px', height: '150px', backgroundColor: '#006699', color: "#cceaf9"}
         },
         15: {
-            costBase() { return new Decimal(1850).div(levelableEffect("pet", 203)[2]).div(levelableEffect("pet", 304)[1]) },
+            costBase() { return new Decimal(1850).div(player.cb.reqDiv) },
             costGrowth() { return new Decimal(2.3) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.cb.totalxp},
@@ -2258,7 +2261,7 @@ addLayer("cb", {
             style: { width: '275px', height: '150px', backgroundColor: '#006699', color: "#cceaf9"}
         },
         16: {
-            costBase() { return new Decimal(10000).div(levelableEffect("pet", 203)[2]).div(levelableEffect("pet", 304)[1]) },
+            costBase() { return new Decimal(10000).div(player.cb.reqDiv) },
             costGrowth() { return new Decimal(3) },
             purchaseLimit() { return new Decimal(20) },
             currency() { return player.cb.totalxp},
@@ -2277,6 +2280,132 @@ addLayer("cb", {
                 } else {
                     let postCost = player.cb.totalxp.sub(tmp[this.layer].buyables[this.id].cost)
                     return "which are reducing the pity requirement by -" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                        Cost: " + formatWhole(player.cb.level.sub(layers.cb.xpToLevel(postCost))) + " Check Back Levels."
+                }
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                    layers.cb.levelup()
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                    layers.cb.levelup()
+                }
+            },
+            style: { width: '275px', height: '150px', backgroundColor: '#006699', color: "#cceaf9"}
+        },
+        17: {
+            costBase() { return new Decimal(500000).div(player.cb.reqDiv) },
+            costGrowth() { return new Decimal(10) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.cb.totalxp},
+            pay(amt) { player.cb.totalxp = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked() { return player.cb.highestLevel.gte(3000) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Check Back Cooldown Boost."
+            },
+            display() {
+                if (tmp[this.layer].buyables[this.id].cost.gte(player.cb.totalxp)) {
+                    return "which are reducing main tab button cooldowns by /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + ".\n\
+                        Cost: " + formatWhole(layers.cb.xpToLevel(tmp[this.layer].buyables[this.id].cost)) + " Check Back Levels."
+                } else {
+                    let postCost = player.cb.totalxp.sub(tmp[this.layer].buyables[this.id].cost)
+                    return "which are reducing main tab button cooldowns by /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + ".\n\
+                        Cost: " + formatWhole(player.cb.level.sub(layers.cb.xpToLevel(postCost))) + " Check Back Levels."
+                }
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                    layers.cb.levelup()
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                    layers.cb.levelup()
+                }
+            },
+            style: { width: '275px', height: '150px', backgroundColor: '#006699', color: "#cceaf9"}
+        },
+        18: {
+            costBase() { return new Decimal(2e7).div(player.cb.reqDiv) },
+            costGrowth() { return new Decimal(100) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.cb.totalxp},
+            pay(amt) { player.cb.totalxp = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked() { return player.cb.highestLevel.gte(3000) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Check Back Fragmentation Boost."
+            },
+            display() {
+                if (tmp[this.layer].buyables[this.id].cost.gte(player.cb.totalxp)) {
+                    return "which are multiplying fragmentation multiplier by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                        Cost: " + formatWhole(layers.cb.xpToLevel(tmp[this.layer].buyables[this.id].cost)) + " Check Back Levels."
+                } else {
+                    let postCost = player.cb.totalxp.sub(tmp[this.layer].buyables[this.id].cost)
+                    return "which are multiplying fragmentation multiplier by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                        Cost: " + formatWhole(player.cb.level.sub(layers.cb.xpToLevel(postCost))) + " Check Back Levels."
+                }
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                    layers.cb.levelup()
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                    layers.cb.levelup()
+                }
+            },
+            style: { width: '275px', height: '150px', backgroundColor: '#006699', color: "#cceaf9"}
+        },
+        19: {
+            costBase() { return new Decimal(1e10).div(player.cb.reqDiv) },
+            costGrowth() { return new Decimal(1e10) },
+            purchaseLimit() { return new Decimal(20) },
+            currency() { return player.cb.totalxp},
+            pay(amt) { player.cb.totalxp = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked() { return player.cb.highestLevel.gte(3000) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Check Back Shop Boost."
+            },
+            display() {
+                if (tmp[this.layer].buyables[this.id].cost.gte(player.cb.totalxp)) {
+                    return "which are dividing pet shop scaling by /" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                        Cost: " + formatWhole(layers.cb.xpToLevel(tmp[this.layer].buyables[this.id].cost)) + " Check Back Levels."
+                } else {
+                    let postCost = player.cb.totalxp.sub(tmp[this.layer].buyables[this.id].cost)
+                    return "which are dividing pet shop scaling by /" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
                         Cost: " + formatWhole(player.cb.level.sub(layers.cb.xpToLevel(postCost))) + " Check Back Levels."
                 }
             },
@@ -2342,8 +2471,11 @@ addLayer("cb", {
                 unlocked() { return (hasChallenge("ip", 17) || hasMilestone("s", 14)) },
                 content: [
                     ["blank", "25px"],
-                    ["style-row", [["ex-buyable", 11], ["ex-buyable", 12], ["ex-buyable", 15],
-                        ["ex-buyable", 13], ["ex-buyable", 14], ["ex-buyable", 16]], {maxWidth: "900px"}],
+                    ["style-row", [
+                        ["ex-buyable", 11], ["ex-buyable", 12], ["ex-buyable", 15],
+                        ["ex-buyable", 13], ["ex-buyable", 14], ["ex-buyable", 16],
+                        ["ex-buyable", 17], ["ex-buyable", 18], ["ex-buyable", 19],
+                    ], {maxWidth: "900px"}],
                     ["blank", "20px"],
                     ["style-column", [
                         ["raw-html", "Buyable costs are based on total xp", {color: "#cceaf9", fontSize: "16px", fontFamily: "monospace"}],
@@ -2553,7 +2685,7 @@ addLayer("cb", {
         ["raw-html", () => { return player.cb.highestLevel.lt(250) && player.cb.highestLevel.gte(200) ?  "You will unlock something at level 250! <small>[EVOLUTION TAB]</small>" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
         ["raw-html", () => { return player.cb.highestLevel.lt(666) && player.cb.highestLevel.gte(250) ?  "You will unlock something at level 666! <small>[XPBOOST TAB]</small>" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
         ["raw-html", () => { return player.cb.highestLevel.lt(1500) && player.cb.highestLevel.gte(666) ?  "You will unlock something at level 1,500! <small>[CRATE TAB]</small>" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-        ["raw-html", () => { return player.cb.highestLevel.lt(3000) && player.cb.highestLevel.gte(1500) ?  "You will unlock something at level 3,000! <small>[nothing rn, we will get to it]</small>" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}], // REPLACE WITH SOMETHING ... ANYTHING
+        ["raw-html", () => { return player.cb.highestLevel.lt(3000) && player.cb.highestLevel.gte(1500) ?  "You will unlock something at level 3,000! <small>[BUYABLES TAB]</small>" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}], // REPLACE WITH SOMETHING ... ANYTHING
         ["raw-html", () => { return player.cb.highestLevel.lt(7500) && player.cb.highestLevel.gte(3000) ?  "You will unlock something at level 7,500! <small>[FRAGMENTATION]</small>" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
         ["raw-html", () => { return player.cb.highestLevel.lt(15000) && player.cb.highestLevel.gte(7500) ?  "You will unlock something at level 15,000! <small>[FRAGMENTATION]</small>" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
         ["raw-html", () => { return player.cb.highestLevel.lt(25000) && player.cb.highestLevel.gte(15000) && hasUpgrade("s", 23) ?  "You will unlock something at level 25,000! <small>[CRATE TAB] [FRAGMENTATION]</small>" : "" }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],

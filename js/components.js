@@ -2013,7 +2013,7 @@ function loadVue() {
 		template: `
 		<div v-if="petShop[data[0]] && petShop[data[0]][data[1]] && petShop[data[0]][data[1]].unlocked" style="display: grid">
 			<button v-bind:class="{ levelableHolder: true, tooltipBox: true, can: true}" v-bind:style="[{'background-color': petShop[data[0]][data[1]].color}]"
-			v-on:click="player.pet.shopIndex = [data[0], data[1]]" :id='"petShop-" + layer + "-" + data'>
+			v-on:click="player.pet.shopId = [data[0], data[1]]" :id='"petShop-" + layer + "-" + data'>
 				<div class="petShopTop" v-bind:style="[run(petShop[data[0]][data[1]].style, petShop[data[0]][data[1]])]">
 					<div class="petShopName" v-html="!petShop[data[0]][data[1]].name ? '' : petShop[data[0]][data[1]].name"></div>
 					<div class="petShopAmt" v-html="!petShop[data[0]][data[1]].amt ? '' : !petShop[data[0]][data[1]].next ? formatShortestWhole(run(petShop[data[0]][data[1]].amt, petShop[data[0]][data[1]])) : formatShortestWhole(run(petShop[data[0]][data[1]].amt, petShop[data[0]][data[1]]))+'/'+formatShortestWhole(run(petShop[data[0]][data[1]].next, petShop[data[0]][data[1]]))"></div>

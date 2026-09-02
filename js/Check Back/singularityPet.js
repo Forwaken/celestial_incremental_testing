@@ -171,7 +171,7 @@ addLayer("sp", {
             cost(x) { return player.sp.kresPointsMax.div(buyableEffect("pet", 8)) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Capacity Increaser (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/999)"
+                return "Capacity Increaser (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/990)"
             },
             display() {
                 return 'which are boosting kres point capacity by +' + formatWhole(tmp[this.layer].buyables[this.id].effect) + '.\n\
@@ -333,7 +333,7 @@ addLayer("sp", {
             cost(x) { return player.sp.navPointsMax.div(buyableEffect("pet", 8)) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Capacity Increaser (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/999)"
+                return "Capacity Increaser (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/990)"
             },
             display() {
                 return 'which are boosting nav point capacity by +' + formatWhole(tmp[this.layer].buyables[this.id].effect) + '.\n\
@@ -495,7 +495,7 @@ addLayer("sp", {
             cost(x) { return player.sp.selPointsMax.div(buyableEffect("pet", 8)) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Capacity Increaser (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/999)"
+                return "Capacity Increaser (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/990)"
             },
             display() {
                 return 'which are boosting sel point capacity by +' + formatWhole(tmp[this.layer].buyables[this.id].effect) + '.\n\
