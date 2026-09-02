@@ -2422,7 +2422,7 @@ class RitualArena extends SpaceArena {
                         player.cbs.inBattle = false
                         player.cbs.ritualSpiritActive = false
 
-                        pauseUniverseAll(["DS", "A2"], "unpause", true)
+                        if (player.tempPaused) pauseUniverseAll(["DS", "A2"], "unpause", true)
                     }
                 }
             }

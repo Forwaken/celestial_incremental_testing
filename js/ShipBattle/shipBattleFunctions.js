@@ -428,14 +428,14 @@ function SB_exitRun() {
 
     if (player.tab == "ir") {
         player.subtabs["ir"]['stuff'] = 'stages'
-        pauseUniverseAll(["A2", "SB"], "unpause", true)
+        if (player.tempPaused) pauseUniverseAll(["A2", "SB"], "unpause", true)
     }
     if (player.tab == "bl") {
         player.subtabs["bl"]['stuff'] = 'stages'
     }
     if (player.tab == "cbs") {
         player.subtabs["cbs"]['stuff'] = 'Ritual'
-        pauseUniverseAll(["A2", "SB", "DS"], "unpause", true)
+        if (player.tempPaused) pauseUniverseAll(["A2", "SB", "DS"], "unpause", true)
     }
 
     if (arena) {

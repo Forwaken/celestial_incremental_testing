@@ -1142,7 +1142,7 @@ addLayer("pet", {
             player.subtabs.pu["stuff"] = "Collection"
             changeTheme()
 
-            pauseUniverseAll(["D1", "DA", "U3", "A2", "DS", "SB"], "unpause", true)
+            if (player.tempPaused) pauseUniverseAll(["D1", "DA", "U3", "A2", "DS", "SB"], "unpause", true)
 
             layers.pu.generateSelection();
         }

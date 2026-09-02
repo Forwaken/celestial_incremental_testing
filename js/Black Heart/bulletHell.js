@@ -676,7 +676,7 @@ function bulletHellOld(actions, values = {}, exitAction = () => {}) {
             bhState.active = false;
             info.active = false;
             player.subtabs["bh"]["stuff"] = "battle";
-            pauseUniverseAll(["BH"], "unpause", true)
+            if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
             player.universe = "U3"
             options.fullscreen = info.full;
             localStorage.setItem('bhState', JSON.stringify(info));
@@ -697,7 +697,7 @@ function bulletHellOld(actions, values = {}, exitAction = () => {}) {
             bhState.active = false;
             info.active = false;
             player.subtabs["bh"]["stuff"] = "dead";
-            pauseUniverseAll(["BH"], "unpause", true)
+            if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
             player.universe = "U3"
             options.fullscreen = info.full;
             localStorage.setItem('bhState', JSON.stringify(info));
@@ -835,7 +835,7 @@ function bulletHellOld(actions, values = {}, exitAction = () => {}) {
                 bhState.active = false;
                 info.active = false;
                 player.subtabs["bh"]["stuff"] = "battle";
-                pauseUniverseAll(["BH"], "unpause", true)
+                if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
                 player.universe = "U3"
                 options.fullscreen = info.full;
                 localStorage.setItem('bhState', JSON.stringify(info));
@@ -1212,7 +1212,7 @@ function bulletHellOld(actions, values = {}, exitAction = () => {}) {
         bhState.active = false;
         info.active = false;
         player.subtabs["bh"]["stuff"] = "battle";
-        pauseUniverseAll(["BH"], "unpause", true)
+        if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
         player.universe = "U3"
         options.fullscreen = info.full;
         if (info.timed) bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer")
@@ -1252,7 +1252,7 @@ if (storedInfo && storedInfo != "") {
             setTimeout(() => {
                 if (storedInfo.exitAction) storedInfo.exitAction()
                 player.subtabs["bh"]["stuff"] = "battle";
-                pauseUniverseAll(["BH"], "unpause", true)
+                if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
                 player.universe = "U3"
                 bhState.active = false;
                 options.fullscreen = bhState.full;
@@ -1267,7 +1267,7 @@ if (storedInfo && storedInfo != "") {
             if (player && player.subtabs && player.subtabs["bh"]["stuff"] == "bullet") {
                 if (storedInfo.exitAction) storedInfo.exitAction()
                 player.subtabs["bh"]["stuff"] = "battle";
-                pauseUniverseAll(["BH"], "unpause", true)
+                if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
                 player.universe = "U3"
                 if (bhStage) {
                     bhState.active = false;

@@ -286,7 +286,7 @@
             canClick() { return player.le.eclipseShardsToGet.gte(1) },
             unlocked() { return true },
             onClick() {
-                pauseUniverseAll(["D1", "U3", "A2", "SB", "DS"], "unpause", true)
+                if (player.tempPaused) pauseUniverseAll(["D1", "U3", "A2", "SB", "DS"], "unpause", true)
                 player.prj.storedTimeCapsules = player.prj.storedTimeCapsules.add(player.dt.storedToGet)
                 if (!hasAchievement("achievements", 1204) && player.dt.storedToGet.gte(1)) completeAchievement("achievements", 1204);
                 if (!hasAchievement("achievements", 1206) && player.dt.storedToGet.gte(7)) completeAchievement("achievements", 1206);
