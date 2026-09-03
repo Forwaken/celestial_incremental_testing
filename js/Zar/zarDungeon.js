@@ -535,7 +535,7 @@
         24: {
             fullDisplay() {
                 if (!this.canAfford()) return "<h3>Requires beating Zar.</h3>"
-                return "<h3>Piperator</h3><br>Card generators boost pips gain.<br><br>Cost: 500 Pips"
+                return "<h3>Piperator</h3><br>Card generators boost pips gain.<br>Currently: x" + format(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 500 Pips"
             },
             unlocked: true,
             cost: new Decimal(500),
@@ -546,7 +546,6 @@
             effect() {
                 return player.car.cardGenerators.pow(0.5).add(1).log(10).div(20).add(1)
             },
-            effectDisplay() {return "x" + format(upgradeEffect(this.layer, this.id))},
             style() {
                 let look = {borderRadius: "15px", color: "white", border: "2px solid rgba(0,0,0,0.5)", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#363636"
