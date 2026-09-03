@@ -425,10 +425,13 @@
             },
         },
         14: {
-            title: "Lucks Hate",
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires beating Zar.</h3>"
+                return "<h3>Lucks Hate</h3><br>Unlocks Dice Five's \"Fortunes Malace\" skill.<br><br>Cost: 500 Pips"
+            },
             unlocked: true,
-            description: "Unlocks Dice Five's \"Fortunes Malace\" skill.",
             cost: new Decimal(500),
+            canAfford() { return player.zarDungeon.zarDefeated},
             currencyLocation() { return player.zd },
             currencyDisplayName: "Pips",
             currencyInternalName: "pips",
@@ -439,10 +442,13 @@
             },
         },
         15: {
-            title: "Fatal Fortunes",
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires beating Zar.</h3>"
+                return "<h3>Fatal Fortunes</h3><br>Increases Dice Five's base damage by +2.<br><br>Cost: 1,000 Pips"
+            },
             unlocked: true,
-            description: "Increases Dice Five's base damage by +2.",
             cost: new Decimal(1000),
+            canAfford() { return player.zarDungeon.zarDefeated},
             currencyLocation() { return player.zd },
             currencyDisplayName: "Pips",
             currencyInternalName: "pips",
@@ -454,12 +460,13 @@
         },
         16: {
             fullDisplay() {
+                if (!this.canAfford() && !player.zarDungeon.zarDefeated) return "<h3>Requires beating Zar and another sides upgrade.</h3>"
                 if (!this.canAfford()) return "<h3>Requires another sides upgrade.</h3>"
                 return "<h3>Confusing Luck</h3><br>\"Lucky Lift\" now also gives the Haze<small>[10%]</small> attribute to teammates.<br><br>Cost: 2,500 Pips"
             },
             unlocked: true,
             cost: new Decimal(2500),
-            canAfford() { return hasUpgrade("depth2", 101)},
+            canAfford() { return player.zarDungeon.zarDefeated && hasUpgrade("depth2", 101)},
             currencyLocation() { return player.zd },
             currencyDisplayName: "Pips",
             currencyInternalName: "pips",
@@ -526,10 +533,13 @@
             },
         },
         24: {
-            title: "Piperator",
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires beating Zar.</h3>"
+                return "<h3>Piperator</h3><br>Card generators boost pips gain.<br><br>Cost: 500 Pips"
+            },
             unlocked: true,
-            description() {return "Card generators boost pips gain"},
             cost: new Decimal(500),
+            canAfford() { return player.zarDungeon.zarDefeated},
             currencyLocation() { return player.zd },
             currencyDisplayName: "Pips",
             currencyInternalName: "pips",
@@ -544,10 +554,13 @@
             },
         },
         25: {
-            title: "6-Pip",
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires beating Zar.</h3>"
+                return "<h3>6-Pip</h3><br>Unlock 3 more reroll point buyables.<br><br>Cost: 1,000 Pips"
+            },
             unlocked: true,
-            description() {return "Unlock 3 more reroll point buyables"},
             cost: new Decimal(1000),
+            canAfford() { return player.zarDungeon.zarDefeated},
             currencyLocation() { return player.zd },
             currencyDisplayName: "Pips",
             currencyInternalName: "pips",
@@ -558,10 +571,13 @@
             },
         },
         26: {
-            title: "Playful Pips",
+            fullDisplay() {
+                if (!this.canAfford()) return "<h3>Requires beating Zar.</h3>"
+                return "<h3>Playful Pips</h3><br>Unlock joker cards.<br><br>Cost: 2,500 Pips"
+            },
             unlocked: true,
-            description() {return "Unlock joker cards"},
             cost: new Decimal(2500),
+            canAfford() { return player.zarDungeon.zarDefeated},
             currencyLocation() { return player.zd },
             currencyDisplayName: "Pips",
             currencyInternalName: "pips",
