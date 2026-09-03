@@ -224,7 +224,7 @@ addLayer("depth1", {
         103: {
             title: "Exponential Darkness",
             unlocked() {return hasUpgrade("darkTemple", 10)},
-            description: "Unlock Exponentiation in Tav's Domain.",
+            description: "Unlock super amplifiers in amplification.",
             cost: new Decimal(250000),
             currencyLocation() { return player.depth1 },
             currencyDisplayName: "Glooming Umbrite",
