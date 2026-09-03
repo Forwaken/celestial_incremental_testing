@@ -1359,8 +1359,8 @@ class BulletHell {
                     bossCtx.beginPath();
                     bossCtx.moveTo(b.x, b.y);
                     // Draw line in the direction of the knife, long enough to cross the arena
-                    let farX = b.x + Math.cos(b.angle) * (this.width + this.height);
-                    let farY = b.y + Math.sin(b.angle) * (this.width + this.height);
+                    let farX = b.x + Math.cos(b.angle) * (bulletHellNeo.width + bulletHellNeo.height);
+                    let farY = b.y + Math.sin(b.angle) * (bulletHellNeo.width + bulletHellNeo.height);
                     bossCtx.lineTo(farX, farY);
                     bossCtx.stroke();
                     bossCtx.restore();
@@ -1450,8 +1450,8 @@ class BulletHell {
                 bossCtx.beginPath();
                 bossCtx.moveTo(b.x, b.y);
                 // Draw line in the direction of the knife, long enough to cross the arena
-                let farX = b.x + Math.cos(b.angle) * (this.width + this.height);
-                let farY = b.y + Math.sin(b.angle) * (this.width + this.height);
+                let farX = b.x + Math.cos(b.angle) * (bulletHellNeo.width + bulletHellNeo.height);
+                let farY = b.y + Math.sin(b.angle) * (bulletHellNeo.width + bulletHellNeo.height);
                 bossCtx.lineTo(farX, farY);
                 bossCtx.stroke();
                 bossCtx.restore();
@@ -1511,8 +1511,8 @@ class BulletHell {
                 draw(b, bossCtx) {
                     // Draw path line (red, thin) if knife is on screen, or if it left within the last 500ms
                     let knifeOnScreen = (
-                        b.x > 0 && b.x < this.width &&
-                        b.y > 0 && b.y < this.height
+                        b.x > 0 && b.x < bulletHellNeo.width &&
+                        b.y > 0 && b.y < bulletHellNeo.height
                     );
                     if (knifeOnScreen) {
                         b.timer = Date.now();
