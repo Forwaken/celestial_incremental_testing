@@ -3039,12 +3039,19 @@ addLayer("tad", {
             pay(amt) { player.tad.compression = this.currency().sub(amt) },
             effect(x) {
                 let base = new Decimal(0.05).mul(player.tad.compressionMult).add(1)
+                if (base.gte(1.25)) base = base.div(1.25).pow(0.5).mul(1.25)
                 return Decimal.pow(base, getBuyableAmount(this.layer, this.id))
             },
             unlocked: true,
             cost(x) { return (x || getBuyableAmount(this.layer, this.id)).add(1) },
             canAfford() { return this.currency().gte(this.cost()) },
             display() {
+                if (player.tad.compressionMult.gte(5)) {
+                    return "<h3>Accumu-Effect Compressor</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")\n\
+                        x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " Accumulator Effect Scaling\n\
+                        <small style='color:red'>[BASE SOFTCAPPED]</small><br>\n\
+                        Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Compression"
+                }
                 return "<h3>Accumu-Effect Compressor</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")\n\
                     x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " Accumulator Effect Scaling<br>\n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Compression"
@@ -3076,12 +3083,20 @@ addLayer("tad", {
             pay(amt) { player.tad.compression = this.currency().sub(amt) },
             effect(x) {
                 let base = new Decimal(0.2).mul(player.tad.compressionMult).add(1)
+                if (base.gte(2)) base = base.div(2).pow(0.5).mul(2)
                 return Decimal.pow(base, getBuyableAmount(this.layer, this.id))
             },
             unlocked: true,
             cost(x) { return (x || getBuyableAmount(this.layer, this.id)).add(1) },
             canAfford() { return this.currency().gte(this.cost()) },
             display() {
+                if (player.tad.compressionMult.gte(5)) {
+                    return "<h3>Infinitum Compressor</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")\n\
+                    x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " Infinitum Gain\n\
+                        <small style='color:red'>[BASE SOFTCAPPED]</small><br>\n\
+                        Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Compression"
+                }
+
                 return "<h3>Infinitum Compressor</h3><br>(" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")\n\
                     x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + " Infinitum Gain<br>\n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Compression"
@@ -3149,7 +3164,7 @@ addLayer("tad", {
             currency() { return player.tad.compression},
             pay(amt) { player.tad.compression = this.currency().sub(amt) },
             effect(x) {
-                return Decimal.pow(1.05, getBuyableAmount(this.layer, this.id))
+                return getBuyableAmount(this.layer, this.id).div(20).add(1)
             },
             unlocked: true,
             cost(x) { return (x || getBuyableAmount(this.layer, this.id)).add(1) },
