@@ -1,7 +1,7 @@
 ﻿const DOMAIN_TREE = [["tac", "tam"], ["tco", "tsi"], ["tma", "tal"], ["tex"], ["top", "tst"]]
 const OPTIMIZATION_REQS = [new Decimal(1), new Decimal(10), new Decimal(100), new Decimal(1e4), new Decimal(1e6),
     new Decimal(1e8), new Decimal(1e10), new Decimal(1e12), new Decimal(1e15), new Decimal(1e18),
-    new Decimal(1e20)]
+    new Decimal(1e20), new Decimal(1e30), new Decimal(1e40), new Decimal(1e50), new Decimal(1e60)]
 addNode("tac", {
     color: "#5b629a",
     symbol: "Ac",
@@ -92,7 +92,7 @@ addNode("tma", {
 })
 addNode("tal", {
     color: "#927da7",
-    nodeStyle: {marginTop: "10px"},
+    nodeStyle() {return player.tab != "hk" ? {marginTop: "10px"} : {}},
     symbol: "Al",
     universe: "U2",
     tooltip: "Alteration",
@@ -102,6 +102,15 @@ addNode("tal", {
         player.subtabs["tad"]["Domain"] = "Alteration"
     },
     layerShown() {return player.tad.altInfinities.infested.milestone.gte(3)},
+    hotkeys: [
+        {
+            key: "z", 
+            description: "Alter",
+            onPress() {
+                clickClickable("tad", 61)
+            },
+        }
+	]
 })
 addNode("tst", {
     color: "#b9bcd5",
@@ -248,6 +257,7 @@ addLayer("tad", {
         optimizationReq: new Decimal(1),
         autoAccumulator: new Decimal(0),
         autoAmplifier: new Decimal(0),
+        autoSimplifier: new Decimal(0),
 
         // SPECIALIZATION - SPECIALIZATIONS
 
@@ -543,6 +553,10 @@ addLayer("tad", {
 
         // OPTIMIZATION CONTENT
         player.tad.optimizationReq = OPTIMIZATION_REQS[player.tad.optimization] ?? new Decimal("1ee308")
+        if (player.tad.clickables[1008] && player.tad.infinitum.gte(player.tad.optimizationReq)) {
+            player.tad.optimization = player.tad.optimization.add(1)
+            player.tad.optimizationReq = OPTIMIZATION_REQS[player.tad.optimization] ?? new Decimal("1ee308")
+        }
         
         if (player.tad.clickables[1001]) player.tad.autoAccumulator = player.tad.autoAccumulator.add(delta)
         if (player.tad.autoAccumulator.gte(Decimal.div(5, buyableEffect("tad", 1001)))) {clickClickable("tad", 25);player.tad.autoAccumulator = new Decimal(0)}
@@ -552,6 +566,13 @@ addLayer("tad", {
                 buyMaxExBuyable("tad", i)
             }
             player.tad.autoAmplifier = new Decimal(0)
+        }
+        if (player.tad.clickables[1007]) player.tad.autoSimplifier = player.tad.autoSimplifier.add(delta)
+        if (player.tad.autoSimplifier.gte(Decimal.div(5, buyableEffect("tad", 1007)))) {
+            for (let i = 401; i < 405; i++) {
+                buyMaxExBuyable("tad", i)
+            }
+            player.tad.autoSimplifier = new Decimal(0)
         }
 
         // COLLAPSE CODE
@@ -571,7 +592,7 @@ addLayer("tad", {
         player.tad.sinceCollapse = player.tad.sinceCollapse.add(delta)
         
         player.tad.domainIncrease = new Decimal(10)
-        if (hasUpgrade("car", 20)) player.tad.domainIncrease = player.tad.domainIncrease.pow(5)
+        if (hasUpgrade("car", 21)) player.tad.domainIncrease = player.tad.domainIncrease.pow(5)
         if (player.alephsChamber.milestone[25] > 0) player.tad.domainIncrease = player.tad.domainIncrease.pow(5)
 
         // INFINITUM MODIFIERS
@@ -1138,9 +1159,10 @@ addLayer("tad", {
         },
         51: {
             title() {
+                if (player.tad.optimization.gte(15)) return "<h2>Optimize, unlocking a new automation.</h2><br><h3>MAXED</h3>"
                 return "<h2>Optimize, unlocking a new automation.</h2><br><h3>Cost: " + format(player.tad.optimizationReq) + " Infinitum</h3>"
             },
-            canClick() { return player.tad.infinitum.gte(player.tad.optimizationReq)},
+            canClick() { return player.tad.optimization.lt(15) && player.tad.infinitum.gte(player.tad.optimizationReq)},
             unlocked: true,
             onClick() {
                 player.tad.optimization = player.tad.optimization.add(1)
@@ -1148,7 +1170,7 @@ addLayer("tad", {
             },
             style() {
                 let look = {width: "400px", minHeight: "100px", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "15px"}
-                if (this.canClick()) {look.background = "#a75553"} else {look.background = "#bf8f8f"}
+                if (player.tad.optimization.gte(15)) {look.background = "#77bf5f"} else if (this.canClick()) {look.background = "#a75553"} else {look.background = "#bf8f8f"}
                 return look
             },
         },
@@ -1487,6 +1509,57 @@ addLayer("tad", {
             style() {
                 let look = {width: "250px", minHeight: "37px", color: "rgba(0,0,0,0.8)", lineHeight: "0.9", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0 0 16px 16px"}
                 if (player.tad.clickables[1006]) {look.backgroundColor = "#964c4a"} else {look.backgroundColor = "#743b3a"}
+                return look
+            },
+        },
+        1007: {
+            title() {return player.tad.clickables[1007] ? "[ON]" : "[OFF]"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.tad.clickables[1007]) {
+                    player.tad.clickables[1007] = false
+                } else {
+                    player.tad.clickables[1007] = true
+                }
+            },
+            style() {
+                let look = {width: "250px", minHeight: "37px", color: "rgba(0,0,0,0.8)", fontSize: "14px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
+                if (player.tad.clickables[1007]) {look.backgroundColor = "#964c4a"} else {look.backgroundColor = "#743b3a"}
+                return look
+            },
+        },
+        1008: {
+            title() {return player.tad.clickables[1008] ? "[ON]" : "[OFF]"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.tad.clickables[1008]) {
+                    player.tad.clickables[1008] = false
+                } else {
+                    player.tad.clickables[1008] = true
+                }
+            },
+            style() {
+                let look = {width: "250px", minHeight: "37px", color: "rgba(0,0,0,0.8)", fontSize: "14px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0 0 16px 16px"}
+                if (player.tad.clickables[1008]) {look.backgroundColor = "#964c4a"} else {look.backgroundColor = "#743b3a"}
+                return look
+            },
+        },
+        1009: {
+            title() {return player.tad.clickables[1009] ? "[ON]" : "[OFF]"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.tad.clickables[1009]) {
+                    player.tad.clickables[1009] = false
+                } else {
+                    player.tad.clickables[1009] = true
+                }
+            },
+            style() {
+                let look = {width: "250px", minHeight: "37px", color: "rgba(0,0,0,0.8)", fontSize: "14px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0 0 16px 16px"}
+                if (player.tad.clickables[1009]) {look.backgroundColor = "#964c4a"} else {look.backgroundColor = "#743b3a"}
                 return look
             },
         },
@@ -3804,14 +3877,14 @@ addLayer("tad", {
             buy(mult) {
                 if (!mult) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
-                    this.pay(buyonecost)
+                    if (player.tad.optimization.lt(14)) this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (player.tad.optimization.lt(14)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
@@ -3839,14 +3912,14 @@ addLayer("tad", {
             buy(mult) {
                 if (!mult) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
-                    this.pay(buyonecost)
+                    if (player.tad.optimization.lt(14)) this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (player.tad.optimization.lt(14)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
@@ -3874,14 +3947,14 @@ addLayer("tad", {
             buy(mult) {
                 if (!mult) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
-                    this.pay(buyonecost)
+                    if (player.tad.optimization.lt(14)) this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (player.tad.optimization.lt(14)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
@@ -3909,14 +3982,14 @@ addLayer("tad", {
             buy(mult) {
                 if (!mult) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
-                    this.pay(buyonecost)
+                    if (player.tad.optimization.lt(14)) this.pay(buyonecost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
                 } else {
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (player.tad.optimization.lt(14)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
@@ -4313,6 +4386,37 @@ addLayer("tad", {
             },
             style: { width: '250px', height: '105px', color: "rgba(0,0,0,0.8)", backgroundColor: "#964c4a", fontSize: "12px", boxSizing: "border-box"},
         },
+        1007: {
+            costBase() { return new Decimal(1e30) },
+            costGrowth() { return new Decimal(5) },
+            purchaseLimit() { return new Decimal(250) },
+            currency() { return player.tad.infinitum},
+            pay(amt) { player.tad.infinitum = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            display() {
+                return "Divide cooldown by /" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Infinitum"
+            },
+            buy(mult) {
+                if (!mult) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '250px', height: '120px', color: "rgba(0,0,0,0.8)", backgroundColor: "#964c4a", fontSize: "12px", boxSizing: "border-box"},
+        },
     },
     bars: {
         autoAccumulator: {
@@ -4345,6 +4449,22 @@ addLayer("tad", {
             textStyle: {color: "rgba(255,255,255,0.8)", fontSize: "16px", fontFamily: "monospace"},
             display() {
                 return formatTime(player.tad.autoAmplifier) + "/" + formatTime(Decimal.div(5, buyableEffect("tad", 1002)))
+            },
+        },
+        autoSimplifier: {
+            unlocked: true,
+            direction: RIGHT,
+            width: 250,
+            height: 42,
+            progress() {
+                return player.tad.autoSimplifier.div(Decimal.div(5, buyableEffect("tad", 1007)))
+            },
+            baseStyle: {backgroundColor: "#321918"},
+            fillStyle: {backgroundColor: "#854442"},
+            borderStyle: {border: "0px solid #532a29", borderBottom: "4px solid #532a29", borderRadius: "0"},
+            textStyle: {color: "rgba(255,255,255,0.8)", fontSize: "16px", fontFamily: "monospace"},
+            display() {
+                return formatTime(player.tad.autoSimplifier) + "/" + formatTime(Decimal.div(5, buyableEffect("tad", 1007)))
             },
         },
         simplifier1: {
@@ -4532,10 +4652,12 @@ addLayer("tad", {
         if (tier > 3) {
             player.tad.magnification = new Decimal(0)
             player.tad.magnificationGain = new Decimal(0)
-            for (let i = 0; i < player.tad.milestones.length; i++) {
-                if (+player.tad.milestones[i] < 10) {
-                    player.tad.milestones.splice(i, 1);
-                    i--;
+            if (player.tad.clickables[1009]) {
+                for (let i = 0; i < player.tad.milestones.length; i++) {
+                    if (+player.tad.milestones[i] < 10) {
+                        player.tad.milestones.splice(i, 1);
+                        i--;
+                    }
                 }
             }
         }
@@ -5075,7 +5197,7 @@ addLayer("tad", {
                         ["raw-html", () => {return player.tad.alteration.neq(1) ? "You have <h3>" + formatSimple(player.tad.alteration) + "</h3> alterations." : "You have <h3>" + formatSimple(player.tad.alteration) + "</h3> alteration." }, {color: "black", fontSize: "24px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(+" + formatSimple(player.tad.alterationGain) + ")"}, () => {
                             let look = {color: "black", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
-                            player.tad.alterationGain.gt(0) ? look.color = "black" : look.color = "#666"
+                            player.tad.simplification.gte(250) ? look.color = "black" : look.color = "#666"
                             return look
                         }],
                     ]],
@@ -5233,12 +5355,36 @@ addLayer("tad", {
                                 ["style-row", [], {width: "250px", height: "3px", background: "#532a29"}],
                                 ["ex-buyable", 1006],
                             ], () => {return player.tad.optimization.gte(11) ? {width: "250px", height: "250px", background: "#a75553", border: "4px solid #532a29"} : {display: "none !important"}}],
+                            ["style-column", [
+                                ["style-column", [
+                                    ["raw-html", "Simplifier Autobuyer", {color: "rgba(0,0,0,0.8)", fontSize: "18px", fontFamily: "monospace"}],
+                                ], {width: "250px", height: "40px", borderBottom: "4px solid #532a29"}],
+                                ["bar", "autoSimplifier"],
+                                ["clickable", 1007],
+                                ["style-row", [], {width: "250px", height: "3px", background: "#532a29"}],
+                                ["ex-buyable", 1007],
+                            ], () => {return player.tad.optimization.gte(12) ? {width: "250px", height: "250px", background: "#a75553", border: "4px solid #532a29", marginLeft: "10px"} : {display: "none !important"}}],
+                            ["top-column", [
+                                ["style-column", [
+                                    ["style-column", [
+                                        ["raw-html", "Automatically<br>Optimize", {color: "rgba(0,0,0,0.8)", fontSize: "18px", fontFamily: "monospace"}],
+                                    ], {width: "250px", height: "46px", borderBottom: "4px solid #532a29"}],
+                                    ["clickable", 1008],
+                                ], () => {return player.tad.optimization.gte(13) ? {width: "250px", height: "87px", background: "#a75553", border: "4px solid #532a29", borderRadius: "20px", marginLeft: "10px"} : {display: "none !important"}}],
+                                ["blank", "6px"],
+                                ["style-column", [
+                                    ["raw-html", "Simplifiers no longer spend matter", {color: "rgba(0,0,0,0.8)", fontSize: "18px", fontFamily: "monospace"}],
+                                ], () => {return player.tad.optimization.gte(14) ? {width: "250px", height: "48px", background: "#a75553", border: "4px solid #532a29", borderRadius: "20px", marginLeft: "10px"} : {display: "none !important"}}],
+                                ["blank", "6px"],
+                                ["style-column", [
+                                    ["style-column", [
+                                        ["raw-html", "Keep magnification<br>milestones on resets", {color: "rgba(0,0,0,0.8)", fontSize: "18px", fontFamily: "monospace"}],
+                                    ], {width: "250px", height: "46px", borderBottom: "4px solid #532a29"}],
+                                    ["clickable", 1009],
+                                ], () => {return player.tad.optimization.gte(15) ? {width: "250px", height: "87px", background: "#a75553", border: "4px solid #532a29", borderRadius: "20px", marginLeft: "10px"} : {display: "none !important"}}],
+                            ], () => {return player.tad.optimization.gte(13) ? {height: "258px"} : {}}],
                         ], () => {return player.tad.optimization.gte(11) ? {marginTop: "10px"} : {}}],
                     ], {background: "#c18886", border: "3px solid #532a29", borderRadius: "20px", padding: "10px"}],
-                    // Automatically upgrade simplifiers
-                    // Automatically optimize
-                    // Simplifiers no longer cost matter
-                    // Keep magnification milestones on resets
                     // Constant T3 infinity gain
                 ]
             },

@@ -2955,7 +2955,7 @@ function fixOldSave(oldVersion){
 	if (oldVersion < 11500 && player.stagnantSynestia) {
 		if (player.d && player.d.boosterEffects) {
 			player.d.boosterEffects[10] = new Decimal(player.d.boosterEffects[11])
-			player.d.boosterEffects[11] = Decimal.pow(player.d.boosterEffects[11], 0.5)
+			player.d.boosterEffects[11] = Decimal.pow(player.d.boosterEffects[11], 0.5).min(1e6)
 		}
 		if (player.stagnantSynestia) {
 			if (player.stagnantSynestia.milestone[25] > 0) player.stagnantSynestia.milestone[10] = player.stagnantSynestia.milestone[25]

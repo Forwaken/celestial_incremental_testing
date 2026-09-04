@@ -2504,7 +2504,7 @@
             currencyInternalName: "cardGenerators",
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
         },    
@@ -2527,7 +2527,7 @@
             currencyInternalName: "cardGenerators",
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
         },  
@@ -2550,7 +2550,7 @@
             currencyInternalName: "cardGenerators",
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
         },  
@@ -2573,7 +2573,7 @@
             currencyInternalName: "cardGenerators",
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
         },  
@@ -2600,7 +2600,7 @@
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
         }, 
@@ -2623,7 +2623,7 @@
             currencyInternalName: "cardGenerators",
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
         },   
@@ -2646,7 +2646,7 @@
             currencyInternalName: "cardGenerators",
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
         },   
@@ -2669,7 +2669,7 @@
             currencyInternalName: "cardGenerators",
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
         },   
@@ -2692,11 +2692,34 @@
             currencyInternalName: "cardGenerators",
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
-        },   
+        },
         20: {
+            fullDisplay() {
+                return "<div style='height:40px;display:flex;align-items:center'><div>" +
+                "<h3>" + this.title + "</h3>" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:75px;display:flex;align-items:center'><div>" + 
+                this.description + // MIDDLE
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='height:25px;display:flex;align-items:center'><div>" + 
+                "<span style='color:rgb(91, 0, 0)'>" + formatWhole(this.cost) + " " + this.currencyDisplayName + "</span>" // BOTTOM
+                "</div></div>"
+            },
+            title: "The missing booster",
+            unlocked() { return player.zarDungeon.zarDefeated },
+            description: "Unlock a new booster dice effect.",
+            cost: new Decimal(1e20),
+            currencyLocation() { return player.car },
+            currencyDisplayName: "Card Generators",
+            currencyInternalName: "cardGenerators",
+            style() {
+                let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
+                return look
+            },
+        },
+        21: {
             fullDisplay() {
                 return "<div style='height:40px;display:flex;align-items:center'><div>" +
                 "<h3>" + this.title + "</h3>" + // TOP
@@ -2715,10 +2738,33 @@
             currencyInternalName: "cardGenerators",
             style() {
                 let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#bf8f8f" : look.backgroundColor = "#37078f"
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
                 return look
             },
-        },   
+        },
+        22: {
+            fullDisplay() {
+                return "<div style='height:40px;display:flex;align-items:center'><div>" +
+                "<h3>" + this.title + "</h3>" + // TOP
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='padding-left:4px;padding-right:4px;height:75px;display:flex;align-items:center'><div>" + 
+                this.description + // MIDDLE
+                "</div></div><div style='height:" + this.style().borderWidth + ";background-color:" + this.style().borderColor + "'></div><div style='height:25px;display:flex;align-items:center'><div>" + 
+                "<span style='color:rgb(91, 0, 0)'>" + formatWhole(this.cost) + " " + this.currencyDisplayName + "</span>" // BOTTOM
+                "</div></div>"
+            },
+            title: "Improving the original",
+            unlocked() { return player.zarDungeon.zarDefeated },
+            description: "Unlock new dice buyables.",
+            cost: new Decimal(1e50),
+            currencyLocation() { return player.car },
+            currencyDisplayName: "Card Generators",
+            currencyInternalName: "cardGenerators",
+            style() {
+                let look = {borderRadius: "10px", color: "black", borderWidth: "3px", borderColor: "rgb(182, 0, 0)", outline: "3px solid rgba(182, 0, 0, 0.5)", width: "252px", maxHeight: "150px", minHeight: "150px", fontSize: "12px", margin: "6px", padding: "0"}
+                hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "linear-gradient(180deg, #bbb 0%, #999 50%, #bbb 100%)"
+                return look
+            },
+        },
     },
     buyables: {
         11: {
@@ -3291,18 +3337,17 @@
                         ], {width: "800px", height: "250px", background: "#0000007f", borderRadius: "19px 19px 0 0"}],
                         ["style-row", [], {background: "#990909", width: "800px", height: "3px"}],
                         ["style-column", [
-
                             ["style-row", [
-                                    ["upgrade", 11], ["upgrade", 12], ["upgrade", 13],
+                                ["upgrade", 11], ["upgrade", 12], ["upgrade", 13],
                             ],],
                             ["style-row", [
-                                    ["upgrade", 14], ["upgrade", 15], ["upgrade", 16],
+                                ["upgrade", 14], ["upgrade", 15], ["upgrade", 16],
                             ],],
                             ["style-row", [
-                                    ["upgrade", 17], ["upgrade", 18], ["upgrade", 19],
+                                ["upgrade", 17], ["upgrade", 18], ["upgrade", 19],
                             ],],
                             ["style-row", [
-                                ["upgrade", 20],
+                                ["upgrade", 20], ["upgrade", 21], ["upgrade", 22],
                             ]],
                         ], {width: "794px", background: "#000000bf", borderRadius: "0 0 19px 19px", padding: "3px"}],
                     ], {width: "800px",border: "3px solid #990909", borderRadius: "22px", background: "linear-gradient(60deg, rgb(182, 0, 0) 0%, rgb(24, 24, 24) 50%, rgb(182, 0, 0) 100%)"}],

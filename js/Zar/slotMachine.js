@@ -114,14 +114,17 @@
         player.sm.chipsToGet[0] = player.sm.chipsToGet[0].mul(buyableEffect("sm", 11))
         player.sm.chipsToGet[0] = player.sm.chipsToGet[0].mul(player.sm.totalChipMult)
         player.sm.chipsToGet[0] = player.sm.chipsToGet[0].mul(levelableEffect("car", 211)[0])
+        player.sm.chipsToGet[0] = player.sm.chipsToGet[0].mul(buyableEffect("d", 17))
 
         player.sm.chipsToGet[1] = player.sm.chipsToGet[1].mul(buyableEffect("sm", 12))
         player.sm.chipsToGet[1] = player.sm.chipsToGet[1].mul(player.sm.totalChipMult)
         player.sm.chipsToGet[1] = player.sm.chipsToGet[1].mul(levelableEffect("car", 212)[0])
+        player.sm.chipsToGet[1] = player.sm.chipsToGet[1].mul(buyableEffect("d", 17))
 
         player.sm.chipsToGet[2] = player.sm.chipsToGet[2].mul(buyableEffect("sm", 13))
         player.sm.chipsToGet[2] = player.sm.chipsToGet[2].mul(player.sm.totalChipMult)
         player.sm.chipsToGet[2] = player.sm.chipsToGet[2].mul(levelableEffect("car", 213)[0])
+        player.sm.chipsToGet[2] = player.sm.chipsToGet[2].mul(buyableEffect("d", 17))
 
         player.sm.chipsToGet[0] = player.sm.chipsToGet[0].pow(buyableEffect("sm", 117))
         player.sm.chipsToGet[1] = player.sm.chipsToGet[1].pow(buyableEffect("sm", 117))

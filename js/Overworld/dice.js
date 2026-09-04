@@ -58,6 +58,7 @@
             16: new Decimal(1),
             17: new Decimal(1),
             18: new Decimal(1),
+            19: new Decimal(1), // Post-OTF Mult
         },
 
         addDiceEffect: new Decimal(0),
@@ -84,6 +85,12 @@
             buyBuyable("d", 13)
             buyBuyable("d", 14)
             buyBuyable("d", 15)
+            if (hasUpgrade("car", 22)) {
+                buyBuyable("d", 16)
+                buyBuyable("d", 17)
+                buyBuyable("d", 18)
+                buyBuyable("d", 19)
+            }
         }
         if (hasMilestone("s", 16))
         {
@@ -183,10 +190,12 @@
         player.d.diceSides = player.d.diceSides.add(buyableEffect("d", 22))
         if (hasUpgrade("sma", 108)) player.d.diceSides = player.d.diceSides.mul(upgradeEffect("sma", 108)).floor()
         if (player.ir.iriditeDefeated) player.d.diceSides = player.d.diceSides.mul(50)
+        player.d.diceSides = player.d.diceSides.mul(buyableEffect("d", 16))
 
         // LOWEST ROLL
         player.d.lowestRoll = buyableEffect("d", 14)
         player.d.lowestRoll = player.d.lowestRoll.add(buyableEffect("d", 22))
+        player.d.lowestRoll = player.d.lowestRoll.mul(buyableEffect("d", 16))
 
         // CURRENT BOOSTER TEXT
         player.d.currentBoosterText = [
@@ -209,6 +218,7 @@
             "Currently boosting pollinators.",
             "Currently boosting time cubes.",
             "Currently boosting singularity points.",
+            "Currently boosting post-OTF currencies.",
         ]
 
         // BOOSTER DICE COOLDOWN DECREMENTOR
@@ -237,8 +247,10 @@
                         player.d.currentBoosterRoll = getRandomInt(15)
                     } else if (!hasMilestone("r", 24)) {
                         player.d.currentBoosterRoll = getRandomInt(17)
-                    } else {
+                    } else if (!hasUpgrade("car", 20)) {
                         player.d.currentBoosterRoll = getRandomInt(19)
+                    } else {
+                        player.d.currentBoosterRoll = getRandomInt(20)
                     }
                 }
                 while (player.d.previousBoosterRoll == player.d.currentBoosterRoll)
@@ -264,8 +276,8 @@
         player.d.manualCooldown = player.d.manualCooldown.div(buyableEffect("d", 23))
 
         // MAKE SURE CAPS WORK CORRECTLY
-        if (player.d.boosterEffects[12].gt(10)) player.d.boosterEffects[12] = new Decimal(10)
-        if (player.d.boosterEffects[18].gt(100)) player.d.boosterEffects[18] = new Decimal(100)
+        if (player.d.boosterEffects[12].gt(Decimal.pow(10, buyableEffect("d", 18)))) player.d.boosterEffects[12] = new Decimal(10).pow(buyableEffect("d", 18))
+        if (player.d.boosterEffects[18].gt(Decimal.pow(100, buyableEffect("d", 18)))) player.d.boosterEffects[18] = new Decimal(100).pow(buyableEffect("d", 18))
         if (player.d.buyables[14].gt(player.d.diceSides.sub(player.d.buyables[22].mul(2)))) {
             player.d.buyables[14] = player.d.diceSides.sub(player.d.buyables[22].mul(2))
         }
@@ -278,6 +290,7 @@
 
         // START OF CHALLENGE DICE MODIFIERS
         player.d.challengeDicePointsToGet = player.d.dicePoints.pow(0.2).div(3)
+        player.d.challengeDicePointsToGet = player.d.challengeDicePointsToGet.pow(buyableEffect("d", 19))
         player.d.challengeDicePointsToGet = player.d.challengeDicePointsToGet.mul(buyableEffect("d", 24))
         player.d.challengeDicePointsToGet = player.d.challengeDicePointsToGet.mul(buyableEffect("g", 28))
         player.d.challengeDicePointsToGet = player.d.challengeDicePointsToGet.mul(player.co.cores.dice.effect[2])
@@ -406,8 +419,10 @@
                             player.d.currentBoosterRoll = getRandomInt(15)
                         } else if (!hasMilestone("r", 24)) {
                             player.d.currentBoosterRoll = getRandomInt(17)
-                        } else {
+                        } else if (!hasUpgrade("car", 20)) {
                             player.d.currentBoosterRoll = getRandomInt(19)
+                        } else {
+                            player.d.currentBoosterRoll = getRandomInt(20)
                         }
                     }
                     while (player.d.previousBoosterRoll == player.d.currentBoosterRoll)
@@ -615,7 +630,7 @@
             },
         },
         113: {
-            title() { return "Check Back XP<br>x" + format(player.d.boosterEffects[12]) + "<br>(MAX IS x10)" },
+            title() { return "Check Back XP<br>x" + format(player.d.boosterEffects[12]) + "<br>(MAX IS x" + formatSimple(new Decimal(10).pow(buyableEffect("d", 18))) + ")" },
             canClick() { return true },
             unlocked() { return true },
             onClick() {
@@ -699,7 +714,7 @@
             },
         },
         119: {
-            title() { return "Singularity Points<br>x" + format(player.d.boosterEffects[18]) + "<br>(MAX IS x100)" },
+            title() { return "Singularity Points<br>x" + format(player.d.boosterEffects[18]) + "<br>(MAX IS " + formatSimple(Decimal.pow(100, buyableEffect("d", 18))) + ")" },
             canClick() { return true },
             unlocked() { return hasMilestone("r", 24) },
             onClick() {
@@ -709,6 +724,20 @@
                 let look = {width: "125px", minHeight: "125px", color: "white", border: "3px solid white", margin: "5px", borderRadius: "20px"}
                 player.d.currentBoosterRoll == 18 ? look.backgroundColor = "#3b3b3b" : look.backgroundColor = "black"
                 player.d.rigIndex == 18 ? look.border = "3px solid red" : look.border = "3px solid white"
+                return look
+            },
+        },
+        120: {
+            title() { return "Post-OTF Currencies<br>x" + format(player.d.boosterEffects[19]) },
+            canClick() { return true },
+            unlocked() { return hasUpgrade("car", 20) },
+            onClick() {
+                player.d.rigIndex = 19
+            },
+            style() {
+                let look = {width: "125px", minHeight: "125px", color: "white", border: "3px solid white", margin: "5px", borderRadius: "20px"}
+                player.d.currentBoosterRoll == 19 ? look.backgroundColor = "#3b3b3b" : look.backgroundColor = "black"
+                player.d.rigIndex == 19 ? look.border = "3px solid red" : look.border = "3px solid white"
                 return look
             },
         },
@@ -737,79 +766,103 @@
 
         player.d.diceScore = player.d.diceScore.add(1).pow(buyableEffect("zd", 12)).sub(1)
 
-        if (player.d.currentBoosterRoll == 0) {
+        switch (player.d.currentBoosterRoll) {
+            case 0:
                 player.d.addDiceEffect = player.d.diceScore.mul(0.0025).pow(1.1)
                 if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
                 player.d.boosterEffects[0] = player.d.boosterEffects[0].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll  == 1) {
+                break;
+            case 1:
                 player.d.addDiceEffect = player.d.diceScore.mul(0.002).pow(0.95)
                 if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
                 player.d.boosterEffects[1] = player.d.boosterEffects[1].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 2) {
+                break;
+            case 2:
                 player.d.addDiceEffect = player.d.diceScore.mul(0.0016).pow(0.92)
                 if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
                 player.d.boosterEffects[2] = player.d.boosterEffects[2].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 3) {
+                break;
+            case 3:
                 player.d.addDiceEffect = player.d.diceScore.mul(0.0008).pow(0.8)
                 if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
                 player.d.boosterEffects[3] = player.d.boosterEffects[3].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 4) {
+                break;
+            case 4:
                 player.d.addDiceEffect = player.d.diceScore.mul(0.0012).pow(0.8)
                 if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
                 player.d.boosterEffects[4] = player.d.boosterEffects[4].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 5) {
+                break;
+            case 5:
                 player.d.addDiceEffect = player.d.diceScore.mul(0.0008).pow(0.75)
                 if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
                 player.d.boosterEffects[5] = player.d.boosterEffects[5].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 6) {
+                break;
+            case 6:
                 player.d.addDiceEffect = player.d.diceScore.mul(0.0007).pow(0.7)
                 if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
                 player.d.boosterEffects[6] = player.d.boosterEffects[6].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 7) {
+                break;
+            case 7:
                 player.d.addDiceEffect = player.d.diceScore.mul(0.0008).pow(0.7)
                 if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
                 player.d.boosterEffects[7] = player.d.boosterEffects[7].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 8) {
+                break;
+            case 8:
                 player.d.addDiceEffect = player.d.diceScore.mul(0.0005).pow(0.7)
                 if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
                 if (player.d.addDiceEffect.gte(1e6)) player.d.addDiceEffect = player.d.addDiceEffect.div(1e6).pow(0.1).mul(1e6)
                 player.d.boosterEffects[8] = player.d.boosterEffects[8].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 9) {
-            player.d.addDiceEffect = player.d.diceScore.mul(0.0006).pow(0.7)
-            if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
-            player.d.boosterEffects[9] = player.d.boosterEffects[9].add(player.d.addDiceEffect)
-        // TIER 2 EFFECTS
-        } else if (player.d.currentBoosterRoll == 10) {
-            player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00002)
-            if (hasUpgrade("d", 18)) player.d.addDiceEffect = player.d.addDiceEffect.mul(100)
-            player.d.boosterEffects[10] = player.d.boosterEffects[10].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 11) {
-            player.d.addDiceEffect = player.d.diceScore.add(1).log(100).div(1000)
-            player.d.boosterEffects[11] = player.d.boosterEffects[11].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 12) {
-            player.d.addDiceEffect = player.d.diceScore.pow(0.1).mul(0.0001).div(player.d.boosterEffects[12].pow(5))
-            player.d.boosterEffects[12] = player.d.boosterEffects[12].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 13) {
-            player.d.addDiceEffect = player.d.diceScore.mul(0.00001)
-            player.d.boosterEffects[13] = player.d.boosterEffects[13].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 14) {
-            player.d.addDiceEffect = player.d.diceScore.add(1).log(60).mul(0.006)
-            if (player.d.addDiceEffect.gt(60)) player.d.addDiceEffect = player.d.addDiceEffect.div(60).pow(0.3).mul(60)
-            player.d.boosterEffects[14] = player.d.boosterEffects[14].add(player.d.addDiceEffect)
-        // PENT UNLOCKED EFFECTS
-        } else if (player.d.currentBoosterRoll == 15) {
-            player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00005).div(player.d.boosterEffects[15])
-            player.d.boosterEffects[15] = player.d.boosterEffects[15].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 16) {
-            player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00001)
-            player.d.boosterEffects[16] = player.d.boosterEffects[16].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 17) {
-            player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.0005)
-            player.d.boosterEffects[17] = player.d.boosterEffects[17].add(player.d.addDiceEffect)
-        } else if (player.d.currentBoosterRoll == 18) {
-            if (player.d.boosterEffects[18].lt(10)) player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00001).div(player.d.boosterEffects[18])
-            if (player.d.boosterEffects[18].gte(10)) player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00001).div(player.d.boosterEffects[18].pow(2))
-            player.d.boosterEffects[18] = player.d.boosterEffects[18].add(player.d.addDiceEffect)
+                break;
+            case 9:
+                player.d.addDiceEffect = player.d.diceScore.mul(0.0006).pow(0.7)
+                if (player.d.addDiceEffect.gte(1)) player.d.addDiceEffect = player.d.addDiceEffect.pow(player.cs.scraps.dice.effect)
+                player.d.boosterEffects[9] = player.d.boosterEffects[9].add(player.d.addDiceEffect)
+                break;
+            // TIER 2 EFFECTS
+            case 10:
+                player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00002)
+                if (hasUpgrade("d", 18)) player.d.addDiceEffect = player.d.addDiceEffect.mul(100)
+                player.d.boosterEffects[10] = player.d.boosterEffects[10].add(player.d.addDiceEffect)
+                break;
+            case 11:
+                player.d.addDiceEffect = player.d.diceScore.add(1).log(100).div(1000)
+                player.d.boosterEffects[11] = player.d.boosterEffects[11].add(player.d.addDiceEffect)
+                break;
+            case 12:
+                player.d.addDiceEffect = player.d.diceScore.pow(0.1).mul(0.0001).div(player.d.boosterEffects[12].pow(5))
+                player.d.boosterEffects[12] = player.d.boosterEffects[12].add(player.d.addDiceEffect)
+                break;
+            case 13:
+                player.d.addDiceEffect = player.d.diceScore.mul(0.00001)
+                player.d.boosterEffects[13] = player.d.boosterEffects[13].add(player.d.addDiceEffect)
+                break;
+            case 14:
+                player.d.addDiceEffect = player.d.diceScore.add(1).log(60).mul(0.006)
+                if (player.d.addDiceEffect.gt(60)) player.d.addDiceEffect = player.d.addDiceEffect.div(60).pow(0.3).mul(60)
+                player.d.boosterEffects[14] = player.d.boosterEffects[14].add(player.d.addDiceEffect)
+                break;
+            // TIER 3 EFFECTS
+            case 15:
+                player.d.addDiceEffect = player.d.diceScore.pow(0.1).div(10000)
+                player.d.boosterEffects[15] = player.d.boosterEffects[15].add(player.d.addDiceEffect)
+                break;
+            case 16:
+                player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00001)
+                player.d.boosterEffects[16] = player.d.boosterEffects[16].add(player.d.addDiceEffect)
+                break;
+            case 17:
+                player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.0005)
+                player.d.boosterEffects[17] = player.d.boosterEffects[17].add(player.d.addDiceEffect)
+                break;
+            case 18:
+                if (player.d.boosterEffects[18].lt(10)) player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00001).div(player.d.boosterEffects[18])
+                if (player.d.boosterEffects[18].gte(10)) player.d.addDiceEffect = player.d.diceScore.pow(0.5).mul(0.00001).div(player.d.boosterEffects[18].pow(2))
+                player.d.boosterEffects[18] = player.d.boosterEffects[18].add(player.d.addDiceEffect)
+                break;
+            case 19:
+                player.d.addDiceEffect = player.d.diceScore.pow(0.05).div(100000)
+                player.d.boosterEffects[19] = player.d.boosterEffects[19].add(player.d.addDiceEffect)
+                break;
         }
     },
     bars: {},
@@ -1081,6 +1134,142 @@
             },
             style: { width: '275px', height: '150px', backgroundImage: "linear-gradient(0deg, #0061ff -100%, white 100%)", backgroundOrigin: "border-box"}
         },
+        16: {
+            costBase() { return new Decimal("1e50000") },
+            costGrowth() { return new Decimal("1e1000") },
+            purchaseLimit() { return new Decimal(250) },
+            currency() { return player.d.dicePoints},
+            pay(amt) { player.d.dicePoints = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.01, getBuyableAmount(this.layer, this.id)) },
+            unlocked() { return hasUpgrade("car", 22) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Dice Side Replicator"
+            },
+            display() {
+                return "which are increasing sides and reducing lower rolls by x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Dice Points"
+            },
+            buy(mult) {
+                if (mult != true && !hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    if (!hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (!hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', backgroundImage: "linear-gradient(0deg, #0061ff -100%, white 100%)", backgroundOrigin: "border-box"}
+        },
+        17: {
+            costBase() { return new Decimal("1e65000") },
+            costGrowth() { return new Decimal("1e1500") },
+            purchaseLimit() { return new Decimal(250) },
+            currency() { return player.d.dicePoints},
+            pay(amt) { player.d.dicePoints = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.5).div(10).add(1) },
+            unlocked() { return hasUpgrade("car", 22) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Chip Boost"
+            },
+            display() {
+                return "which are boosting all dice space chips by x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Dice Points"
+            },
+            buy(mult) {
+                if (mult != true && !hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    if (!hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (!hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', backgroundImage: "linear-gradient(0deg, #0061ff -100%, white 100%)", backgroundOrigin: "border-box"}
+        },
+        18: {
+            costBase() { return new Decimal("1e80000") },
+            costGrowth() { return new Decimal("1e2000") },
+            purchaseLimit() { return new Decimal(250) },
+            currency() { return player.d.dicePoints},
+            pay(amt) { player.d.dicePoints = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.01, getBuyableAmount(this.layer, this.id).pow(0.7)) },
+            unlocked() { return hasUpgrade("car", 22) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Cap Removal"
+            },
+            display() {
+                return "which are raising booster effect caps by ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 3) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Dice Points"
+            },
+            buy(mult) {
+                if (mult != true && !hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    if (!hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (!hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', backgroundImage: "linear-gradient(0deg, #0061ff -100%, white 100%)", backgroundOrigin: "border-box"}
+        },
+        19: {
+            costBase() { return new Decimal("1e100000") },
+            costGrowth() { return new Decimal("1e2500") },
+            purchaseLimit() { return new Decimal(250) },
+            currency() { return player.d.dicePoints},
+            pay(amt) { player.d.dicePoints = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(0.7).div(100).add(1) },
+            unlocked() { return hasUpgrade("car", 22) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Challenge Improver"
+            },
+            display() {
+                return "which are raising base challenge dice point formula by ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 3) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Dice Points"
+            },
+            buy(mult) {
+                if (mult != true && !hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    if (!hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (!hasUpgrade("d", 11) && player.tad.altInfinities.shattered.milestone.lt(3)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', backgroundImage: "linear-gradient(0deg, #0061ff -100%, white 100%)", backgroundOrigin: "border-box"}
+        },
 
         //challenge dice
         21: {
@@ -1252,7 +1441,10 @@
                         ["raw-html", () => { return "+" + formatWhole(player.d.gainedDicePointsDisplay) + ' DP.'}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],    
                     ], {width: "60%", backgroundColor: "#333333", border: "3px solid white", padding: "5px", borderRadius: "15px"}],
                     ["blank", "25px"],
-                    ["style-row", [["ex-buyable", 12], ["ex-buyable", 13], ["ex-buyable", 14], ["ex-buyable", 15]], {maxWidth: "1200px"}],
+                    ["style-row", [
+                        ["ex-buyable", 12], ["ex-buyable", 13], ["ex-buyable", 14], ["ex-buyable", 15],
+                        ["ex-buyable", 16], ["ex-buyable", 17], ["ex-buyable", 18], ["ex-buyable", 19],
+                    ], {maxWidth: "1200px"}],
                 ]
             },
             "Booster Dice": {
@@ -1277,7 +1469,7 @@
                                     if (player.d.currentBoosterRoll == 12) return player.d.currentBoosterText[player.d.currentBoosterRoll] + "<br>(Currently x" + format(player.d.boosterEffects[player.d.currentBoosterRoll], 3) + ")"
                                     return player.d.currentBoosterText[player.d.currentBoosterRoll] + "<br>(Currently x" + format(player.d.boosterEffects[player.d.currentBoosterRoll]) + ")"
                                 }, { color: "white", fontSize: "24px", fontFamily: "monospace" }],
-                                ["raw-html", () => { return player.d.currentBoosterRoll == 18 ? "(MAX IS x100)" : player.d.currentBoosterRoll == 12 ? "(MAX IS x10)" : "" }, { color: "white", fontSize: "20px", fontFamily: "monospace" }],
+                                ["raw-html", () => { return player.d.currentBoosterRoll == 18 ? "(MAX IS x" + formatSimple(new Decimal(100).pow(buyableEffect("d", 18))) + ")" : player.d.currentBoosterRoll == 12 ? "(MAX IS x" + formatSimple(new Decimal(10).pow(buyableEffect("d", 18))) + ")" : "" }, { color: "white", fontSize: "20px", fontFamily: "monospace" }],
                             ], {width: "540px"}]
                         ]],
                         ["blank", "10px"],
@@ -1301,7 +1493,7 @@
                             ["h-line", "700px"],
                             ["blank", "10px"],
                             ["row", [["clickable", 111], ["clickable", 112], ["clickable", 113], ["clickable", 114], ["clickable", 115]]],
-                            ["row", [["clickable", 116], ["clickable", 117], ["clickable", 118], ["clickable", 119]]],
+                            ["row", [["clickable", 116], ["clickable", 117], ["clickable", 118], ["clickable", 119], ["clickable", 120]]],
                             ["blank", "10px"],
                         ], () => { return hasChallenge("ip", 15) ? {} : {display: "none !important"}}],
                     ], {backgroundColor: "#35654d", border: "3px solid white", borderRadius: "15px", width: "700px"}],

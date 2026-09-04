@@ -72,6 +72,7 @@
         player.zd.zarChipsToGet = player.zd.zarChipsToGet.add(buyableEffect("zd", 15))
         player.zd.zarChipsToGet = player.zd.zarChipsToGet.mul(levelableEffect("pu", 402)[1])
         player.zd.zarChipsToGet = player.zd.zarChipsToGet.mul(buyableEffect("zd", 24))
+        player.zd.zarChipsToGet = player.zd.zarChipsToGet.mul(buyableEffect("d", 17))
 
         player.zd.zarChipsToGet = player.zd.zarChipsToGet.mul(buyableEffect("zd", 17)).floor()
 
