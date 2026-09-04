@@ -48,6 +48,9 @@ addLayer("hre", {
 
         if (hasMilestone("hre", 6) && !inChallenge("hrm", 15)) player.hre.refinement = player.hre.refinement.add(player.hre.refinementGain)
 
+        let effRefinement = player.hre.refinement
+        if (hasUpgrade("tera", "hept12")) effRefinement = effRefinement.mul(Decimal.pow(1.07, player.h.externalRaise))
+
         player.hre.refinementEffect = [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)],
             [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]]
 

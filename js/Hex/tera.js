@@ -135,6 +135,7 @@ addLayer("tera", {
     }},
     update (delta) {
         let sinceGain = new Decimal(1)
+        if (hasUpgrade("tera", "hept11")) sinceGain = sinceGain.mul(Decimal.pow(upgradeEffect("tera", "hept11"), player.h.externalRaise))
         player.tera.sinceTera = player.tera.sinceTera.add(Decimal.mul(delta, sinceGain.mul(player.h.tickspeed)))
         
         for (let i = 101; i < 113; i++) {
@@ -1762,7 +1763,7 @@ addLayer("tera", {
             }
         },
         "hept5": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e14 Holy Power<br><small>[REQ BEING IN HEPT]</small>"},
+            fullDisplay() {return "<h3>Practical Provenance</h3><br>Reduce the cost scaling of provenances past ζ by 14%<br><br>Cost: 1e14 Holy Power<br><small>[REQ BEING IN HEPT]</small>"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hsa.holyPower.gte("1e14")},
             pay() {player.hsa.holyPower = player.hsa.holyPower.sub("1e14")},
@@ -1773,7 +1774,7 @@ addLayer("tera", {
             }
         },
         "hept6": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e480 Curses<br><small>[REQ BEING IN HEPT]</small>"},
+            fullDisplay() {return "<h3>Missing Studies</h3><br>Unlock new grass studies<br>[COMING SOON]<br><br>Cost: 1e480 Curses<br><small>[REQ BEING IN HEPT]</small>"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hcu.curses.gte("1e480")},
             pay() {player.hcu.curses = player.hcu.curses.sub("1e480")},
@@ -1832,10 +1833,11 @@ addLayer("tera", {
             }
         },
         "hept11": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e28 Hept Essence"},
+            fullDisplay() {return "<h3>Septuple Meter</h3><br>Boost effective reset time based on hept essence<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id)) + "<br><br>Cost: 1e28 Hept Essence"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(1e28)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(1e28)},
+            effect() {return player.tera.heptEssence.pow(0.7).add(1).log(7).div(10).add(1)},
             style() {
                 let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"
@@ -1843,7 +1845,7 @@ addLayer("tera", {
             }
         },
         "hept12": {
-            fullDisplay() {return "<h3>???</h3><br>???<br><br>Cost: 1e56 Hept Essence"},
+            fullDisplay() {return "<h3>Refined Refiners</h3><br>Multiply refiner effectiveness by x1.07<br><br>Cost: 1e56 Hept Essence"},
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.tera.heptEssence.gte(1e56)},
             pay() {player.tera.heptEssence = player.tera.heptEssence.sub(1e56)},
@@ -1853,10 +1855,6 @@ addLayer("tera", {
                 return look
             }
         },
-        // HEPT UPGRADES
-        // Slightly reduce T2 provenance cost scaling
-        // New grass studies (cause 7 rows harhar)
-
         // FUTURE POTENTIAL UPGRADES
         // More Pent Milestones Maybe?
         // Miasmic Shadow (hex shadow evo)

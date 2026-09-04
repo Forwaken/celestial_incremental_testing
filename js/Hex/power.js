@@ -76,6 +76,7 @@ addLayer("hpw", {
 
         let sinceGain = new Decimal(1)
         if (hasUpgrade("hpw", 104)) sinceGain = sinceGain.mul(upgradeEffect("hpw", 104))
+        if (hasUpgrade("tera", "hept11")) sinceGain = sinceGain.mul(Decimal.pow(upgradeEffect("tera", "hept11"), player.h.externalRaise))
         player.hpw.sincePower = player.hpw.sincePower.add(Decimal.mul(delta, sinceGain.mul(player.h.tickspeed)))
     },
     powerReset(type) {

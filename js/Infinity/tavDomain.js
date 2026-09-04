@@ -439,7 +439,6 @@ addLayer("tad", {
         for (let i = 301; i < 307; i++) {
             player.tad.amplificationBoost = player.tad.amplificationBoost.add(buyableEffect("tad", i).sub(1))
         }
-        if (hasUpgrade("tad", 144)) player.tad.amplificationBoost = player.tad.amplificationBoost.pow(1.1)
 
         player.tad.amplificationBase = new Decimal(0.1)
         if (hasUpgrade("tad", 116)) player.tad.amplificationBase = player.tad.amplificationBase.mul(1.5)
@@ -452,6 +451,7 @@ addLayer("tad", {
         if (hasUpgrade("tad", 126)) player.tad.amplificationBase = player.tad.amplificationBase.add(upgradeEffect("tad", 126).sub(1))
         
         player.tad.amplificationRaise = new Decimal(1)
+        if (hasUpgrade("tad", 144))  player.tad.amplificationRaise =  player.tad.amplificationRaise.mul(1.1)
         if (hasMilestone("tad", 7)) player.tad.amplificationRaise = player.tad.amplificationRaise.mul(player.tad.magnification.max(64).sub(63).pow(0.5).div(50).add(1))
         player.tad.amplificationRaise = player.tad.amplificationRaise.mul(buyableEffect("tad", 307))
         player.tad.amplificationRaise = player.tad.amplificationRaise.mul(buyableEffect("tad", 308))
@@ -518,6 +518,9 @@ addLayer("tad", {
         if (player.tad.magnificationGain.lt(1)) player.tad.magnificationGain = new Decimal(0)
 
         if (player.tad.clickables[1005]) player.tad.magnification = player.tad.magnification.add(player.tad.magnificationGain)
+
+        // ALTERATION MODIFIERS
+        player.tad.alterationGain = player.tad.simplification.max(250).sub(250).pow(0.3)
 
         // EXPONENTIATION CONTENT
         player.tad.exponentiateGain = player.tad.magnification.sub(64).div(16).floor().sub(player.tad.exponentiateTotal).max(0)
@@ -2002,7 +2005,7 @@ addLayer("tad", {
         144: {
             title: "Infinitum (4:5)",
             unlocked() {return hasUpgrade("bi", 16) && hasUpgrade("tad", 135)},
-            description() {return "Raise final amplification buff by ^1.1."},
+            description() {return "Raise amplifier effects by ^1.1."},
             cost: new Decimal(50000),
             currencyLocation() { return player.tad },
             currencyDisplayName: "Infinitum",
@@ -4273,7 +4276,7 @@ addLayer("tad", {
         // AMPLIFIERS
         player.tad.amplificationBoost = new Decimal(1)
         if (tier > 1) {
-            for (let i = 301; i < 307; i++) {
+            for (let i = 301; i < 310; i++) {
                 player.tad.buyables[i] = new Decimal(0)
             }
         }
@@ -4316,6 +4319,12 @@ addLayer("tad", {
                     i--;
                 }
             }
+        }
+
+        // ALTERATIONS
+        if (tier > 3) {
+            player.tad.alteration = new Decimal(0)
+            player.tad.alterationGain = new Decimal(0)
         }
 
         // EXPONENTIATIONS
@@ -4840,8 +4849,8 @@ addLayer("tad", {
                 unlocked() { return true },
                 content: [
                     ["row", [
-                        ["raw-html", () => {return player.tad.alteration.neq(1) ? "You have <h3>" + formatWhole(player.tad.alteration) + "</h3> alterations." : "You have <h3>" + formatWhole(player.tad.alteration) + "</h3> alteration." }, {color: "black", fontSize: "24px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "(+" + formatWhole(player.tad.alterationGain) + ")"}, () => {
+                        ["raw-html", () => {return player.tad.alteration.neq(1) ? "You have <h3>" + formatSimple(player.tad.alteration) + "</h3> alterations." : "You have <h3>" + formatSimple(player.tad.alteration) + "</h3> alteration." }, {color: "black", fontSize: "24px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "(+" + formatSimple(player.tad.alterationGain) + ")"}, () => {
                             let look = {color: "black", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
                             player.tad.alterationGain.gt(0) ? look.color = "black" : look.color = "#666"
                             return look
