@@ -529,7 +529,7 @@ addLayer("tad", {
         if (player.tad.clickables[1005]) player.tad.magnification = player.tad.magnification.add(player.tad.magnificationGain)
 
         // ALTERATION MODIFIERS
-        player.tad.alterationGain = player.tad.simplification.max(250).sub(250).pow(0.3)
+        player.tad.alterationGain = Decimal.pow(1.01, player.tad.simplification.max(250).sub(250))
         player.tad.alterationGain = player.tad.alterationGain.mul(buyableEffect("tad", 506))
 
         player.tad.alterationEffect = player.tad.alteration.pow(0.3).div(10).add(1)
@@ -5236,8 +5236,9 @@ addLayer("tad", {
                         ], () => {return player.tad.optimization.gte(11) ? {marginTop: "10px"} : {}}],
                     ], {background: "#c18886", border: "3px solid #532a29", borderRadius: "20px", padding: "10px"}],
                     // Automatically upgrade simplifiers
-                    // Keep magnification milestones on resets
+                    // Automatically optimize
                     // Simplifiers no longer cost matter
+                    // Keep magnification milestones on resets
                     // Constant T3 infinity gain
                 ]
             },
