@@ -231,6 +231,7 @@ addLayer("tad", {
         // ALTERATIONS
         alteration: new Decimal(0),
         alterationGain: new Decimal(0),
+        alterationEffect: new Decimal(1),
 
         // STABILIZATION
         stabilizationMax: false,
@@ -498,7 +499,10 @@ addLayer("tad", {
             let currReq = Decimal.pow(1.05, player.tad.simplifiers[i].level).mul(base).mul(player.tad.simplifiers[i].level.add(1))
 
             let divisor = buyableEffect("tad", 401+i)
-            if (i == 0 && player.tad.altInfinities.infested.milestone.gte(1)) divisor = divisor.mul(player.tad.altInfinities.infested.effect1)
+            if (i == 0) {
+                if (player.tad.altInfinities.infested.milestone.gte(1)) divisor = divisor.mul(player.tad.altInfinities.infested.effect1)
+                divisor = divisor.mul(player.tad.alterationEffect)
+            }
             if (hasUpgrade("tad", 156)) divisor = divisor.mul(upgradeEffect("tad", 156))
             divisor = divisor.mul(buyableEffect("tad", 504))
             if (i < 3) divisor = divisor.mul(player.tad.simplifiers[i+1].effect)
@@ -527,6 +531,8 @@ addLayer("tad", {
         // ALTERATION MODIFIERS
         player.tad.alterationGain = player.tad.simplification.max(250).sub(250).pow(0.3)
         player.tad.alterationGain = player.tad.alterationGain.mul(buyableEffect("tad", 506))
+
+        player.tad.alterationEffect = player.tad.alteration.pow(0.3).div(10).add(1)
 
         // EXPONENTIATION CONTENT
         player.tad.exponentiateGain = player.tad.magnification.sub(64).div(16).floor().sub(player.tad.exponentiateTotal).max(0)
@@ -5058,6 +5064,7 @@ addLayer("tad", {
                             return look
                         }],
                     ]],
+                    ["raw-html", () => {return "Reduces 1st simplifier cooldown by /" + formatSimple(player.tad.alterationEffect, 2) + "."}, {fontSize: "20px", color: "black", fontFamily: "monospace"}],
                     ["blank", "10px"],
                     ["clickable", 61],
                     ["blank", "10px"],
