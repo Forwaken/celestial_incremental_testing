@@ -114,6 +114,7 @@ addNode("tal", {
 })
 addNode("tst", {
     color: "#b9bcd5",
+    nodeStyle: {marginTop: "10px"},
     symbol: "St",
     universe: "U2",
     tooltip: "Stabilization",

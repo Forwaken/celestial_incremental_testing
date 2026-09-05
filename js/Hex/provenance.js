@@ -65,7 +65,7 @@ addLayer("hpr", {
         player.hpr.rankReq[5] = layers.h.hexReq(player.hpr.rank[5], player.h.stage.pow(5), Decimal.div(player.h.stage, 5.5), player.hpr.divider)
         player.hpr.rankGain[5] = layers.h.hexGain(player.hpr.rank[4], player.h.stage.pow(5), Decimal.div(player.h.stage, 5.5), player.hpr.divider).sub(player.hpr.rank[5])
 
-        let t2provenanceScaleDiv = 1
+        let t2provenanceScaleDiv = new Decimal(1)
         if (hasUpgrade("hpw", 74)) t2provenanceScaleDiv = t2provenanceScaleDiv.mul(1.25)
         if (hasUpgrade("tera", "hept5")) t2provenanceScaleDiv = t2provenanceScaleDiv.mul(Decimal.pow(1.14, player.h.externalRaise))
 
