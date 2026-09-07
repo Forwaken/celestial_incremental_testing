@@ -153,7 +153,7 @@ addLayer("tera", {
         let softcapStart = new Decimal(1e6)
         if (hasUpgrade("tera", "hex12")) softcapStart = softcapStart.mul(upgradeEffect("tera", "hex12"))
         player.tera.hexEssenceSoftcap = player.tera.hexEssencePerSecond.gte(softcapStart) ? Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e6).pow(0.6).max(1)) : new Decimal(1)
-        if (player.tera.trueHex.gte(5) && player.tera.hexEssenceSoftcap.lt(1)) player.tera.hexEssenceSoftcap = Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e6).pow(0.3).max(1))
+        if (player.tera.trueHex.gte(5) && player.tera.hexEssenceSoftcap.lt(1)) player.tera.hexEssenceSoftcap = Decimal.div(0.6, player.tera.hexEssencePerSecond.div(1e6).add(1).log(1e12).pow(0.6).max(1))
         player.tera.hexEssencePerSecond = player.tera.hexEssencePerSecond.div(softcapStart).pow(player.tera.hexEssenceSoftcap).mul(softcapStart)
         player.tera.hexEssence = player.tera.hexEssence.add(player.tera.hexEssencePerSecond.mul(delta))
 
@@ -1988,7 +1988,7 @@ addLayer("tera", {
                         ["style-row", [
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Creator Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Creator Realm Challenge Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Raises rank, tier, tetr, and pent effects<br>by ^1.18<br>" +
                                     "Multiplies factor base by x120<br>" +
                                     "Multiplies check back xp by x" + formatSimple(upgradeEffect("hpw", 1013)) + " <small>[Based on power]</small></div>"
@@ -2000,7 +2000,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Higher Plane Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Higher Plane Challenge Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Raises prestige points gain by ^1.36<br>" +
                                     "Raises tree gain by ^1.24<br>" +
                                     "Multiplies crystals and steel by x" + formatSimple(upgradeEffect("hpw", 1023)) + "<br><small>[Based on power]</small></div>"
@@ -2012,7 +2012,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Death Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Death Realm Challenge Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Raises grass gain by ^1.18<br>" +
                                     "Raises golden grass gain by ^1.06<br>" +
                                     "Multiplies pollinators by x" + formatSimple(upgradeEffect("hpw", 1033)) + "<br><small>[Based on power]</small></div>"
@@ -2024,7 +2024,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Dimension Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Dimension Realm Challenge Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Raises grasshopper gain by ^1.1<br>" +
                                     "Raises mod gain by ^1.1<br>" +
                                     "Multiplies infinity dimensions by x" + formatSimple(upgradeEffect("hpw", 1043)) + "<br><small>[Based on power]</small></div>"
@@ -2036,7 +2036,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Dream Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Dream Realm Challenge Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Raises AD and antimatter by ^1.05<br>" +
                                     "Multiplies NIP by x100<br>" +
                                     "Raises mastery point effects by ^" + formatSimple(upgradeEffect("hpw", 1053), 2) + "<br><small>[Based on power]</small></div>"
@@ -2048,7 +2048,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Void Realm Challenge Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Void Realm Challenge Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Increases crate roll chance by +25%<br>" +
                                     "Triples replicanti multiplier<br>" +
                                     "Multiplies infinity points by x" + formatSimple(upgradeEffect("hpw", 1063)) + "<br><small>[Based on power]</small></div>"
@@ -2418,7 +2418,7 @@ addLayer("tera", {
                         ["style-row", [
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Envy Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Envy Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Boosts paradox fragment score by x" + formatSimple(player.sins.envy[1]) + "<br>" +
                                     "Boosts paradox pylon energy by x" + formatSimple(player.sins.envy[2]) + "<br>" +
                                     "[Based on Provenances]"
@@ -2430,7 +2430,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Wrath Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Wrath Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Boosts radioactive fragment score by x" + formatSimple(player.sins.wrath[1]) + "<br>" +
                                     "Boosts radioactive pylon energy by x" + formatSimple(player.sins.wrath[2]) + "<br>" +
                                     "[Based on Curses]"
@@ -2442,7 +2442,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Lust Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Lust Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Boosts natural fragment score by x" + formatSimple(player.sins.lust[1]) + "<br>" +
                                     "Boosts natural pylon energy by x" + formatSimple(player.sins.lust[2]) + "<br>" +
                                     "[Based on Purity]"
@@ -2454,7 +2454,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Gluttony Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Gluttony Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Boosts cosmic fragment score by x" + formatSimple(player.sins.gluttony[1]) + "<br>" +
                                     "Boosts cosmic pylon energy by x" + formatSimple(player.sins.gluttony[2]) + "<br>" +
                                     "[Based on Refinements]"
@@ -2466,7 +2466,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Sloth Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Sloth Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Boosts temporal fragment score by x" + formatSimple(player.sins.sloth[1]) + "<br>" +
                                     "Boosts temporal pylon energy by x" + formatSimple(player.sins.sloth[2]) + "<br>" +
                                     "[Based on " + player.h.stageName[0] + " Points]"
@@ -2478,7 +2478,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Greed Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Greed Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Boosts technological fragment score by x" + formatSimple(player.sins.greed[1]) + "<br>" +
                                     "Boosts technological pylon energy by x" + formatSimple(player.sins.greed[2]) + "<br>" +
                                     "[Based on Blessings]"
@@ -2490,7 +2490,7 @@ addLayer("tera", {
                             }],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    return "<div style='line-height:1.2'><h3>Pride Mastery</h3><hr style='border-color:black;width:350px'>" +
+                                    return "<div style='line-height:1.2'><h3>Pride Mastery</h3><hr style='border:1px solid black;width:350px'>" +
                                     "Boosts ancient fragment score by x" + formatSimple(player.sins.pride[1]) + "<br>" +
                                     "Boosts ancient pylon energy by x" + formatSimple(player.sins.pride[2]) + "<br>" +
                                     "[Based on Power Gain]"

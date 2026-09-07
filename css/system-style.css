@@ -1,13 +1,16 @@
 * {
 	transition-duration: 0.5s;
 	text-align: center;
-	font-family: "Inconsolata", monospace;
+	font-family: "Consolas Bold", monospace;
 	font-weight: bold;
 	table-align: center;
 	margin: auto;
 	-webkit-text-size-adjust: none;
 	text-size-adjust: none;
-
+}
+*:focus {
+	outline: none;
+	webkit-outline: none;
 }
 .themeTrack::-webkit-scrollbar-track {
     background: var(--scrollBackground) !important;

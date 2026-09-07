@@ -140,7 +140,7 @@
         player.ro.spacePetXPToGet = player.ro.spacePetXPToGet.mul(levelableEffect("pu", 306)[2]).floor()
         player.ro.spacePetXPToGet = player.ro.spacePetXPToGet.mul(buyableEffect("sme", 163)).floor()
         if (hasMilestone("dgj", 17)) player.ro.spacePetXPToGet = player.ro.spacePetXPToGet.mul(player.dgj.milestone7Effect).floor()
-        if (hasMilestone("gwaTemple", 15)) player.ro.spacePetXPToGet = player.ro.spacePetXPToGet.mul(player.gwaTemple.gwark.pow(0.5).div(100).add(1)).floor()
+        if (hasUpgrade("gwaTemple", 106)) player.ro.spacePetXPToGet = player.ro.spacePetXPToGet.mul(upgradeEffect("gwaTemple", 106)).floor()
         if (player.ro.rarityIndex.eq(2)) player.ro.spacePetXPToGet = player.ro.spacePetXPToGet.pow(0.5).floor()
 
         player.ro.evoCost = Decimal.mul(player.ro.selectedPassengersCommon.length, Decimal.add(7, player.ro.selectedPassengersCommon.length)).add(player.ro.evoShardsReq)
@@ -155,7 +155,7 @@
             player.ro.commonXPToGet[i] = player.ro.commonXPToGet[i].mul(levelableEffect("pu", 306)[2]).floor()
             player.ro.commonXPToGet[i] = player.ro.commonXPToGet[i].mul(buyableEffect("sme", 163)).floor()
             if (hasMilestone("dgj", 17)) player.ro.commonXPToGet[i] = player.ro.commonXPToGet[i].mul(player.dgj.milestone7Effect).floor()
-            if (hasMilestone("gwaTemple", 15)) player.ro.commonXPToGet[i] = player.ro.commonXPToGet[i].mul(player.gwaTemple.gwark.pow(0.5).div(100).add(1)).floor()
+            if (hasUpgrade("gwaTemple", 106)) player.ro.commonXPToGet[i] = player.ro.commonXPToGet[i].mul(upgradeEffect("gwaTemple", 106)).floor()
         }
         for (let i = 0; i < player.ro.selectedPassengersUncommon.length; i++) {
             let lvl = player.pet.levelables[Decimal.add(201, player.ro.selectedPassengersUncommon[i])][0]
@@ -165,7 +165,7 @@
             player.ro.uncommonXPToGet[i] = player.ro.uncommonXPToGet[i].mul(levelableEffect("pu", 306)[2]).floor()
             player.ro.uncommonXPToGet[i] = player.ro.uncommonXPToGet[i].mul(buyableEffect("sme", 163)).floor()
             if (hasMilestone("dgj", 17)) player.ro.uncommonXPToGet[i] = player.ro.uncommonXPToGet[i].mul(player.dgj.milestone7Effect).floor()
-            if (hasMilestone("gwaTemple", 15)) player.ro.uncommonXPToGet[i] = player.ro.uncommonXPToGet[i].mul(player.gwaTemple.gwark.pow(0.5).div(100).add(1)).floor()
+            if (hasUpgrade("gwaTemple", 106)) player.ro.uncommonXPToGet[i] = player.ro.uncommonXPToGet[i].mul(upgradeEffect("gwaTemple", 106)).floor()
         }
         for (let i = 0; i < player.ro.selectedPassengersRare.length; i++) {
             let lvl = player.pet.levelables[Decimal.add(301, player.ro.selectedPassengersRare[i])][0]
@@ -175,7 +175,7 @@
             player.ro.rareXPToGet[i] = player.ro.rareXPToGet[i].mul(levelableEffect("pu", 306)[2]).floor()
             player.ro.rareXPToGet[i] = player.ro.rareXPToGet[i].mul(buyableEffect("sme", 163)).floor()
             if (hasMilestone("dgj", 17)) player.ro.rareXPToGet[i] = player.ro.rareXPToGet[i].mul(player.dgj.milestone7Effect).floor()
-            if (hasMilestone("gwaTemple", 15)) player.ro.rareXPToGet[i] = player.ro.rareXPToGet[i].mul(player.gwaTemple.gwark.pow(0.5).div(100).add(1)).floor()
+            if (hasUpgrade("gwaTemple", 106)) player.ro.rareXPToGet[i] = player.ro.rareXPToGet[i].mul(upgradeEffect("gwaTemple", 106)).floor()
 
             //rare debuff 
             player.ro.rareXPToGet[i] = player.ro.rareXPToGet[i].pow(0.5).floor()

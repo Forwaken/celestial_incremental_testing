@@ -4820,6 +4820,52 @@ addLayer("pet", {
                 return look
             }
         },
+        2101: {
+            image() { return this.canClick() ? "resources/Pets/holyGwaEvoPet.png" : "resources/secret.png"},
+            title() { return "Holy Gwa" },
+            lore() { return "Fusing matter and void has led to Gwa gaining immense holy properties." }, 
+            description() {
+                return "+" + format(this.effect()[0].sub(1)) + " to base gwa points.<br>" +
+                    "x" + format(this.effect()[1]) + " to holy power.<br>" +
+                    "^" + format(this.effect()[2]) + " to matter.<br>"
+            },
+            levelLimit() { return getBuyableAmount("sme", 115).gt(0) ? new Decimal(10).add(buyableEffect("sme", 115)) : new Decimal(10) },
+            effect() { 
+                return [
+                    getLevelableAmount(this.layer, this.id).add(1), // Base Gwa Point Formula
+                    Decimal.pow(1.2, getLevelableAmount(this.layer, this.id)), // Holy Power
+                    getLevelableAmount(this.layer, this.id).div(100).add(1), // Matter
+                ]
+            },
+            evoCan() {return player.po.gwaTemple},
+            evoTooltip() {return "The current OTF has to be Gwa Temple"},
+            evoClick() {
+                if (player.po.gwaTemple) player.tab = "gwaTemple"
+            },
+            levelTooltip() { return "Costs Para Shards." },
+            // CLICK CODE
+            unlocked() { return player.tera.trueHex.gte(1) },
+            canClick() { return getLevelableAmount(this.layer, this.id).gt(0)},
+            onClick() { return layers[this.layer].levelables.index = this.id },
+            // BUY CODE
+            pay(amt) { player.cb.paragonShards = player.cb.paragonShards.sub(amt) },
+            canAfford() { return player.cb.paragonShards.gte(this.xpReq()) },
+            xpReq() { return Decimal.pow(1.5, getLevelableAmount(this.layer, this.id).add(30)).floor() },
+            currency() { return player.cb.paragonShards },
+            buy() {
+                this.pay(this.xpReq())
+                setLevelableAmount(this.layer, this.id, getLevelableAmount(this.layer, this.id).add(1))
+            },
+            // STYLE
+            barShown() { return this.canClick() },
+            barStyle() { return {backgroundColor: "#4C64FF"}},
+            style() {
+                let look = {width: "100px", minHeight: "125px"}
+                this.canClick() ? look.backgroundColor = "#261500" : look.backgroundColor = "#222222"
+                layers[this.layer].levelables.index == this.id ? look.outline = "2px solid white" : look.outline = "0px solid white"
+                return look
+            }
+        },
         2103: {
             // diamondsmith stuff
             image() { return this.canClick() ? "resources/Pets/diamondsmithEvoPet.png" : "resources/secret.png"},
@@ -5374,13 +5420,16 @@ addLayer("pet", {
                             ], () => { return player.cb.highestLevel.gte(250) ? {width: "631px", height: "40px", backgroundColor: "#4c64ff", border: "2px solid #0000007f", userSelect: "none"} : {display: "none !important"}}],
                             ["style-column", [
                                 ["row", [["levelable", 1202], ["levelable", 1302], ["levelable", 1303], ["levelable", 1205], ["levelable", 1106], ["levelable", 1209]]],
+                                ["row", [["levelable", 2101]]],
                             ], () => { return player.cb.highestLevel.gte(250) ? {width: "635px", background: "repeating-linear-gradient(-45deg, #263280 0 15px, #303F9F 0 30px)", padding: "2px"} : {display: "none !important"}}],
+                            
                             ["style-column", [
                                 ["raw-html", "Ascension Shards", {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                             ], () => { return player.cbs.shrineReactivated ? {width: "631px", height: "40px", backgroundColor: "#c6f7ff", border: "2px solid #0000007f", userSelect: "none"} : {display: "none !important"}}],
                             ["style-column", [
                                 ["row", [["levelable", 1401], ["levelable", 2103],]],
                             ], () => { return player.cbs.shrineReactivated ? {width: "635px", background: "repeating-linear-gradient(-45deg, #637c80 0 15px, #7a999e 0 30px)", padding: "2px"} : {display: "none !important"}}],
+                            
                             ["style-column", [
                                 ["raw-html", "Chocolate Shards", {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                             ], () => { return player.ep2.obtainedShards ? {width: "631px", height: "40px", backgroundColor: "#86562E", border: "2px solid #0000007f", userSelect: "none"} : {display: "none !important"}}],

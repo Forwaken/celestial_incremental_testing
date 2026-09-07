@@ -304,7 +304,7 @@
                 return player.po.gwaTemple ? "ON" : ("OFF<br><h6>Req: None</h6>");
             },
             canClick() { return player.po.featureSlots.gte(1)},
-            unlocked() { return player.gwaTemple.gwaWorshipTime.gt(0)},
+            unlocked() { return getLevelableAmount("pet", 2101).gt(0) || player.gwaTemple.gwaWorshipTime.gt(0)},
             onClick() {
                 player.po.gwaTemple = true
             },

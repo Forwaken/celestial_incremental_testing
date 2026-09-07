@@ -1,9 +1,14 @@
 // ************ Save stuff ************
+let firstSave = true
 function save(force) {
 	NaNcheck(player)
 	if (NaNalert && !force) return
 	window.ldb.set(modInfo.id, btoa(unescape(encodeURIComponent(JSON.stringify(player)))));
 	localStorage.setItem(modInfo.id+"_options", btoa(unescape(encodeURIComponent(JSON.stringify(options)))));
+	if (firstSave) {
+		if (!options.persistantData) options.persistantData = navigator.storage.persist()
+		firstSave = false
+	}
 }
 function saveBackup(force) {
 	NaNcheck(player)
@@ -265,8 +270,8 @@ function load() {
 		setupModInfo();
 
 		setupTemp();
-		updateTemp();
-		updateTemp();
+		updateTemp(options.startFullTemp);
+		updateTemp(options.startFullTemp);
 		updateTabFormats()
 		loadVue();
 		if (!player.uni.CB.paused) layers.cb.instantProduction(new Decimal((Date.now() - player.time) / 1000), true)

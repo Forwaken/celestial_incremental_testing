@@ -412,6 +412,7 @@ addLayer("tad", {
         player.tad.matterGain = player.tad.matterGain.mul(levelableEffect("pet", 209)[1])
         if (hasMilestone("tad", 1)) player.tad.matterGain = player.tad.matterGain.mul(player.tad.magnification.pow(1.5).add(1))
 
+        player.tad.matterGain = player.tad.matterGain.mul(levelableEffect("pet", 2101)[2])
         player.tad.matterGain = player.tad.matterGain.pow(player.tad.exponentiateEffect)
         player.tad.matterSoftcap = Decimal.div(1, player.tad.matterGain.div(1.79e308).add(1).log(1.79e308).add(1))
 

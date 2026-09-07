@@ -258,6 +258,9 @@ addLayer('g', {
         if (player.matosLair.milestone[25] > 0) player.g.moonstoneVal = player.g.moonstoneVal.mul(5)
         player.g.moonstoneVal = player.g.moonstoneVal.mul(buyableEffect("al", 204))
 
+        // MOONSTONE RAISES
+        if (hasUpgrade("gwaTemple", 103)) player.g.moonstoneVal = player.g.moonstoneVal.pow(upgradeEffect("gwaTemple", 103))
+
         // MOONSTONE AUTOMATION
         if (hasMilestone("r", 29)) player.g.moonstone = player.g.moonstone.add(player.g.moonstoneVal.mul(Decimal.mul(delta, 0.01)))
 

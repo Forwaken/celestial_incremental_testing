@@ -4,6 +4,8 @@ let options = {}
 
 function getStartOptions() {
 	return {
+		startFullTemp: true,
+		persistantData: undefined,
 		autosave: true,
 		msDisplay: "always",
 		theme: "default",

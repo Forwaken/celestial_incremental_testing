@@ -154,6 +154,16 @@ addLayer("settings", {
             },
             style: { width: '100px', minHeight: '60px', color: "var(--textColor)", background: "var(--miscButton)", fontSize: "8px", lineHeight: "1", borderRadius: '0', border: "3px solid var(--miscButtonDisable)"},
         },
+        40: {
+            title() { return "<small>Load all temp values at start</small><hr style='border:1px solid #888;margin-top:1px'>" + options.startFullTemp },
+            canClick: true,
+            unlocked: true,
+            tooltip: "Will cause slight lag on startup. Having turned off will make paused universes not have the correct values on refresh.",
+            onClick() {
+                toggleOpt('startFullTemp')
+            },
+            style: { width: '100px', minHeight: '60px', color: "var(--textColor)", background: "var(--miscButton)", fontSize: "8px", lineHeight: "1", borderRadius: '0', border: "3px solid var(--miscButtonDisable)"},
+        },
         25: {
             title() { return "Canvas Performance Mode<hr style='border:1px solid #888;margin-top:1px'>" + options.performanceMode },
             canClick: true,
@@ -694,10 +704,10 @@ addLayer("settings", {
                         ["clickable", 24],
                     ], {width: "409px", borderBottom: "3px solid var(--regBorder)"}],
                     ["style-row", [
-                        ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
+                        ["clickable", 40], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
                         ["clickable", 25], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
                         ["clickable", 26], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
-                        ["clickable", 29], ["style-row", [], {width: "3px", height: "60px", background: "var(--regBorder)"}],
+                        ["clickable", 29],
                     ], {width: "409px", borderBottom: "3px solid var(--regBorder)"}],
                     ["style-row", [
                         ["clickable", 27],

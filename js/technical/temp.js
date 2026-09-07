@@ -140,13 +140,13 @@ function setupUniTemp(uniData, tmpData, funcsData) {
 }
 
 
-function updateTemp() {
+function updateTemp(full = false) {
 	if (tmp === undefined)
 		setupTemp()
 
-	updateTempData(layers, tmp, funcs, undefined, true)
+	updateTempData(layers, tmp, funcs, undefined, true, full)
 
-	updateUniTemp(universes, tmp.uni, unifuncs, undefined, true)
+	updateUniTemp(universes, tmp.uni, unifuncs, undefined, true, full)
 
 	for (layer in layers){
 		tmp[layer].resetGain = getResetGain(layer)
@@ -171,13 +171,13 @@ function updateTemp() {
 	}
 }
 
-function updateTempData(layerData, tmpData, funcsData, useThis, firstStep = false) {
+function updateTempData(layerData, tmpData, funcsData, useThis, firstStep = false, full = false) {
 	for (item in funcsData){
 		if (firstStep) {
 			if (layerDeactivated(item)) {
 				tmp[item].deactivated = true
 				tmp[item].layerShown = layers[item].layerShown()
-				continue
+				if (!full) continue
 			} else {
 				tmp[item].deactivated = false
 			}
@@ -199,14 +199,14 @@ function updateTempData(layerData, tmpData, funcsData, useThis, firstStep = fals
 	}	
 }
 
-function updateUniTemp(uniData, tmpData, funcsData, useThis, firstStep = false) {
+function updateUniTemp(uniData, tmpData, funcsData, useThis, firstStep = false, full = false) {
 	for (item in funcsData){
 		if (firstStep) {
 			if (universes[item].deactivated) {
 				if (universes[item].deactivated()) {
 					tmp.uni[item].deactivated = true
 					tmp.uni[item].uniShown = universes[item].uniShown()
-					continue
+					if (!full) continue
 				}
 			}
 		}
