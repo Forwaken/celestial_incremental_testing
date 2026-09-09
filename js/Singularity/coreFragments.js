@@ -128,6 +128,7 @@
             if (hasUpgrade("ir", 26)) player.cof.fragmentScore[i] = player.cof.fragmentScore[i].mul(upgradeEffect("ir", 26));
             player.cof.fragmentScore[i] = player.cof.fragmentScore[i].mul(player.depth4.negComboEffect)
             player.cof.fragmentScore[i] = player.cof.fragmentScore[i].mul(player.prj.modules[2].completionEffect)
+            player.cof.fragmentScore[i] = player.cof.fragmentScore[i].mul(buyableEffect("gwaTemple", 29))
 
             player.cof.coreFragmentsToGet[i] = player.cof.fragmentScore[i].div(100).floor()
             player.cof.coreFragments[i] = player.cof.coreFragments[i].floor()

@@ -1161,7 +1161,7 @@ addLayer("gwaTemple", {
         },
         25: {
             costBase() { return new Decimal(1) },
-            costGrowth() { return new Decimal(1.05) },
+            costGrowth() { return new Decimal(1) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.gwaTemple.gwankest},
             pay(amt) { player.gwaTemple.gwankest = this.currency().sub(amt) },
@@ -1189,7 +1189,7 @@ addLayer("gwaTemple", {
         },
         26: {
             costBase() { return new Decimal(2) },
-            costGrowth() { return new Decimal(1.1) },
+            costGrowth() { return new Decimal(2) },
             purchaseLimit() { return new Decimal(25) },
             currency() { return player.gwaTemple.gwankest},
             pay(amt) { player.gwaTemple.gwankest = this.currency().sub(amt) },
@@ -1207,6 +1207,80 @@ addLayer("gwaTemple", {
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/25)\n\
                     Raise singularity point gain\n\
                     Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Gwankests"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "125px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        27: {
+            costBase() { return new Decimal(1e15) },
+            costGrowth() { return new Decimal(10) },
+            purchaseLimit() { return new Decimal(99) },
+            currency() { return player.gwaTemple.gwank},
+            pay(amt) { player.gwaTemple.gwank = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(10, getBuyableAmount(this.layer, this.id)) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>O-GWA-7</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/99)\n\
+                    Multiply post-otf mult\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Gwanks"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "125px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        28: {
+            costBase() { return new Decimal(1e10) },
+            costGrowth() { return new Decimal(10) },
+            purchaseLimit() { return new Decimal(99) },
+            currency() { return player.gwaTemple.gwanker},
+            pay(amt) { player.gwaTemple.gwanker = this.currency().sub(amt) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()).floor() },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                return "<h3>O-GWA-8</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/99)\n\
+                    Raise negative infinity point gain\n\
+                    Currently: ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Gwankers"
+            },
+            buy() {
+                this.pay(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: {width: "125px", height: "120px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
+        },
+        29: {
+            costBase() { return new Decimal(25) },
+            costGrowth() { return new Decimal(5) },
+            purchaseLimit() { return new Decimal(99) },
+            currency() { return player.gwaTemple.gwankest},
+            pay(amt) { player.gwaTemple.gwankest = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.01, getBuyableAmount(this.layer, this.id)) },
+            unlocked: true,
+            cost(x) { return this.costGrowth().mul(x || getBuyableAmount(this.layer, this.id)).add(this.costBase()).floor() },
+            canAfford() { return this.currency().gte(this.cost())},
+            display() {
+                if (player.gwaTemple.highestGwankest.lte(0) && !hasUpgrade("gwaTemple", 27)) return "<h3>O-GWA-9</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/99)\n\
+                    Multiply Core Fragment Score\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
+                    Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " ???"
+                return "<h3>O-GWA-9</h3>\n\
+                    (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/99)\n\
+                    Multiply Core Fragment Score\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Gwankests"
             },
             buy() {
@@ -1250,7 +1324,7 @@ addLayer("gwaTemple", {
                                     ["buyable", 11], ["buyable", 13], ["buyable", 15],
                                     ["buyable", 12], ["buyable", 14], ["buyable", 16],
                                     ["buyable", 17], ["buyable", 18], ["buyable", 19],
-                                ], {width: "395px", paddingTop: "2px"}],
+                                ], {width: "395px", height: "394px"}],
                             ], {width: "395px", height: "437px"}],
                             ["top-column", [
                                 ["style-column", [
@@ -1259,7 +1333,8 @@ addLayer("gwaTemple", {
                                 ["style-row", [
                                     ["buyable", 21], ["buyable", 23], ["buyable", 25],
                                     ["buyable", 22], ["buyable", 24], ["buyable", 26],
-                                ], {width: "396px", paddingTop: "2px"}],
+                                    ["buyable", 27], ["buyable", 28], ["buyable", 29],
+                                ], {width: "396px", height: "394px"}],
                             ], {width: "396px", height: "437px", borderLeft: "3px solid #29291a"}],
                         ], {width: "794px", height: "437px", borderBottom: "3px solid #29291a"}],
                         ["style-column", [

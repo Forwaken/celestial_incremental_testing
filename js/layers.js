@@ -111,6 +111,7 @@
         if (player.ir.iriditeDefeated) player.i.postOTFMult = player.i.postOTFMult.mul(1e12)
         player.i.postOTFMult = player.i.postOTFMult.mul(player.hre.refinementEffect[6][1])
         player.i.postOTFMult = player.i.postOTFMult.mul(player.d.boosterEffects[19])
+        player.i.postOTFMult = player.i.postOTFMult.mul(buyableEffect("gwaTemple", 27))
 
         player.i.postOTFMult = player.i.postOTFMult.pow(player.i.pylonEnergyEffect3)
         player.i.postOTFMult = player.i.postOTFMult.pow(levelableEffect("car", 302)[0])

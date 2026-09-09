@@ -182,6 +182,7 @@
         // POWER MODIFIERS
         player.ta.negativeInfinityPointsToGet = player.ta.negativeInfinityPointsToGet.pow(buyableEffect("cof", 22))
         player.ta.negativeInfinityPointsToGet = player.ta.negativeInfinityPointsToGet.pow(levelableEffect("ir", 6)[1])
+        player.ta.negativeInfinityPointsToGet = player.ta.negativeInfinityPointsToGet.pow(buyableEffect("gwaTemple", 28))
 
         // ABNORMAL MODIFIERS
         if (player.po.halter.nip.enabled == 1) player.ta.negativeInfinityPointsToGet = player.ta.negativeInfinityPointsToGet.div(player.po.halter.nip.halt)
