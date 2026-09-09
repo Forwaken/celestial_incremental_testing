@@ -93,9 +93,9 @@ function updateStyles() {
 		} else {
 			if (window.matchMedia("(orientation:landscape)").matches) {
 				LAYERHOLDER.style.setProperty("top", "0px", "important")
-				LAYERHOLDER.style.setProperty("left", "400px", "important")
-				LAYERHOLDER.style.setProperty("width", "calc(100% - 400px)", "important")
-				LAYERHOLDER.style.setProperty("min-width", "calc(100% - 400px)", "important")
+				LAYERHOLDER.style.setProperty("left", "405px", "important")
+				LAYERHOLDER.style.setProperty("width", "calc(100% - 405px)", "important")
+				LAYERHOLDER.style.setProperty("min-width", "calc(100% - 405px)", "important")
 				LAYERHOLDER.style.setProperty("height", "100%", "important")
 			} else {
 				LAYERHOLDER.style.setProperty("top", "calc(7% + 307px)", "important")
