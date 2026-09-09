@@ -1054,7 +1054,7 @@ addLayer("gwaTemple", {
                     Multiply \"Gwambler\" mult by x1.1\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " ???"
-                return "<h3>I-GWA-5</h3>\n\
+                return "<h3>I-GWA-9</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/99)\n\
                     Multiply \"Gwambler\" mult by x1.1\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
