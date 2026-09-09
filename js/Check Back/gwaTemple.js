@@ -806,12 +806,18 @@ addLayer("gwaTemple", {
         106: {
             title: "Gwaced Space",
             unlocked: true,
-            description: "Boost space pet xp based on gwarks",
+            description: "Boost space pet xp based on outer gwankables",
             cost() {return new Decimal(2)},
             currencyLocation() { return player.gwaTemple },
             currencyDisplayName: "Gwark",
             currencyInternalName: "gwark",
-            effect() {return player.gwaTemple.gwark.pow(0.5).div(100).add(1)},
+            effect() {
+                let amt = new Decimal(0)
+                for (let i = 21; i < 30; i++) {
+                    amt = amt.add(player.gwaTemple.buyables[i])
+                }
+                return amt.div(1000).add(1)
+            },
             effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
         },
