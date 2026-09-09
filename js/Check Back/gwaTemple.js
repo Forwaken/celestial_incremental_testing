@@ -1080,7 +1080,7 @@ addLayer("gwaTemple", {
             display() {
                 return "<h3>O-GWA-1</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
-                    Increase universe 1 tickspeed\n\
+                    Increase universe 1 tickspeed by x10\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Gwanks"
             },
@@ -1126,7 +1126,7 @@ addLayer("gwaTemple", {
             display() {
                 return "<h3>O-GWA-2</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
-                    Increase universe 2 tickspeed\n\
+                    Increase universe 2 tickspeed by x5\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Gwankers"
             },
@@ -1165,20 +1165,20 @@ addLayer("gwaTemple", {
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.gwaTemple.gwankest},
             pay(amt) { player.gwaTemple.gwankest = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.1, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.02, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().mul(x || getBuyableAmount(this.layer, this.id)).add(this.costBase()).floor() },
             canAfford() { return this.currency().gte(this.cost())},
             display() {
                 if (player.gwaTemple.highestGwankest.lte(0) && !hasUpgrade("gwaTemple", 27)) return "<h3>O-GWA-3</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
-                    Increase universe 3 tickspeed\n\
-                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Increase universe 3 tickspeed by x1.02\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " ???"
                 return "<h3>O-GWA-3</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/50)\n\
-                    Increase universe 3 tickspeed\n\
-                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
+                    Increase universe 3 tickspeed by x1.02\n\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Gwankests"
             },
             buy() {
@@ -1228,7 +1228,7 @@ addLayer("gwaTemple", {
             display() {
                 return "<h3>O-GWA-7</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/99)\n\
-                    Multiply post-otf mult\n\
+                    Multiply post-otf mult by x10\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Gwanks"
             },
@@ -1274,12 +1274,12 @@ addLayer("gwaTemple", {
             display() {
                 if (player.gwaTemple.highestGwankest.lte(0) && !hasUpgrade("gwaTemple", 27)) return "<h3>O-GWA-9</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/99)\n\
-                    Multiply Core Fragment Score\n\
+                    Multiply Core Fragment Score by x1.01\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " ???"
                 return "<h3>O-GWA-9</h3>\n\
                     (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/99)\n\
-                    Multiply Core Fragment Score\n\
+                    Multiply Core Fragment Score by x1.01\n\
                     Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "\n\ \n\
                     Cost: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Gwankests"
             },
