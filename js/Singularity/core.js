@@ -1128,9 +1128,7 @@ addLayer("co", {
         player.hbl.blessingPerSec = new Decimal(0)
         player.hbl.boons = new Decimal(0)
         player.hbl.boonsGain = new Decimal(0)
-        player.hbl.blessAutomation = false
-        player.hbl.minRefineInput = new Decimal(18)
-        player.hbl.minRefine = new Decimal(18)
+        player.hbl.autoToggle = false
         if (!hasMilestone("s", 20)) player.hbl.boosterDeposit = 0.05
         for (let i in player.hbl.boosters) {
             if (hasMilestone("s", 20) && (i == "2" || i == "5")) continue;

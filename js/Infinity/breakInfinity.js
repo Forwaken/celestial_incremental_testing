@@ -90,6 +90,7 @@
                     if (player.po.dice) player.om.diceMasteryPoints = player.om.diceMasteryPoints.add(player.om.diceMasteryPointsToGet)
                     if (player.po.rocketFuel) player.om.rocketFuelMasteryPoints = player.om.rocketFuelMasteryPoints.add(player.om.rocketFuelMasteryPointsToGet)
                     if (player.po.hex || hasUpgrade("s", 18)) player.om.hexMasteryPoints = player.om.hexMasteryPoints.add(player.om.hexMasteryPointsToGet)
+                    if (player.po.gwaTemple) player.om.gwaTempleMasteryPoints = player.om.gwaTempleMasteryPoints.add(player.om.gwaTempleMasteryPointsToGet)
             }
             if (!hasMilestone("ip", 21)) {
                 player.tab = "bigc"
@@ -106,6 +107,7 @@
                         if (player.po.dice) player.om.diceMasteryPoints = player.om.diceMasteryPoints.add(player.om.diceMasteryPointsToGet)
                         if (player.po.rocketFuel) player.om.rocketFuelMasteryPoints = player.om.rocketFuelMasteryPoints.add(player.om.rocketFuelMasteryPointsToGet)
                         if (player.po.hex || hasUpgrade("s", 18)) player.om.hexMasteryPoints = player.om.hexMasteryPoints.add(player.om.hexMasteryPointsToGet)
+                        if (player.po.gwaTemple) player.om.gwaTempleMasteryPoints = player.om.gwaTempleMasteryPoints.add(player.om.gwaTempleMasteryPointsToGet)
                 }
                 if (!hasMilestone("ip", 21)) {
                     player.tab = "bigc"

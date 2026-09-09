@@ -4,6 +4,10 @@ function uniShown(uni){
     return tmp.uni[uni].uniShown;
 }
 
+function uniUnlocked(uni){
+    return tmp.uni[uni].unlocked;
+}
+
 function uniPaused(uni){
     return player.uni[uni].paused || tmp.uni[uni].disabled;
 }
@@ -123,6 +127,7 @@ addUniverse("U1", {
         }
         return style
     },
+    unlocked() { return !player.startedGame || (!player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge)},
     uniShown() { return !player.startedGame || (!player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge)},
 })
 
@@ -143,6 +148,7 @@ addUniverse("UA", {
         }
         return style
     },
+    unlocked() { return player.startedGame && (inChallenge("ip", 13) || player.po.hex || hasUpgrade("s", 18)) && !player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge},
     uniShown() { return player.startedGame && (inChallenge("ip", 13) || player.po.hex || hasUpgrade("s", 18)) && !player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge},
     disabled() {return !player.startedGame || (!inChallenge("ip", 13) && !hasChallenge("ip", 13) && player.s.highestSingularityPoints.lte(0)) || player.cp.cantepocalypseActive},
 })
@@ -170,6 +176,7 @@ addUniverse("U2", {
         }
         return style
     },
+    unlocked() { return player.startedGame && player.in.unlockedInfinity && !player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge},
     uniShown() { return player.startedGame && player.in.unlockedInfinity && !player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge},
     disabled() {return !player.startedGame || (!player.in.unlockedInfinity && player.s.highestSingularityPoints.lte(0)) || player.cp.cantepocalypseActive},
 })
@@ -191,6 +198,7 @@ addUniverse("A1", {
         }
         return style
     },
+    unlocked() { return player.startedGame && (((player.ca.cantepocalypseUnlock && !player.s.highestSingularityPoints.gt(0)) || (player.s.highestSingularityPoints.gt(0) && hasUpgrade("bi", 28))) || hasMilestone("s", 18)) && !player.sma.inStarmetalChallenge},
     uniShown() { return player.startedGame && (((player.ca.cantepocalypseUnlock && !player.s.highestSingularityPoints.gt(0)) || (player.s.highestSingularityPoints.gt(0) && hasUpgrade("bi", 28))) || hasMilestone("s", 18)) && !player.sma.inStarmetalChallenge},
     disabled() {return (!player.startedGame || (!player.ca.cantepocalypseUnlock && player.s.highestSingularityPoints.lte(0))) && !player.ca.cantepocalypsePrep},
 })
@@ -213,6 +221,7 @@ addUniverse("A2", {
         }
         return style
     },
+    unlocked() { return player.startedGame && player.au2.au2Unlocked && !player.sma.inStarmetalChallenge},
     uniShown() { return player.startedGame && player.au2.au2Unlocked && !player.sma.inStarmetalChallenge},
     disabled() {return !player.startedGame || !player.au2.au2Unlocked},
 })
@@ -236,6 +245,7 @@ addUniverse("SB", {
         return style
     },
     uniShown() { return player.startedGame && player.au2.au2Unlocked && !player.sma.inStarmetalChallenge},
+    uniShown: false,
     disabled() {return !player.startedGame || !player.au2.au2Unlocked},
 })
 
@@ -256,6 +266,7 @@ addUniverse("U3", {
         }
         return style
     },
+    unlocked() { return player.startedGame && (player.ca.defeatedCante || player.s.highestSingularityPoints.gt(0)) && !player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge},
     uniShown() { return player.startedGame && (player.ca.defeatedCante || player.s.highestSingularityPoints.gt(0)) && !player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge},
     disabled() {return !player.startedGame || (!player.ca.defeatedCante && player.s.highestSingularityPoints.lte(0))}
 })
@@ -278,6 +289,7 @@ addUniverse("D1", {
         }
         return style
     },
+    unlocked() { return hasUpgrade("s", 21)},
     uniShown() { return player.startedGame && player.sma.inStarmetalChallenge},
 })
 
@@ -299,6 +311,7 @@ addUniverse("DA", {
         }
         return style
     },
+    unlocked() { return player.tera.virtueUnlocks2[0]},
     uniShown() { return player.startedGame && player.sma.inStarmetalChallenge && player.dotf.miasmata},
 })
 
@@ -311,7 +324,8 @@ addUniverse("CB", {
             background: "#094599",
         }
     },
-    uniShown() { return player.startedGame && hasUpgrade("i", 19) || hasMilestone("ip", 12) || hasMilestone("s", 14)},
+    unlocked() { return player.startedGame && hasUpgrade("i", 19) || hasMilestone("ip", 12) || hasMilestone("s", 14)},
+    uniShown: false,
     disabled() {return !player.startedGame || (!hasUpgrade("i", 19) && !player.in.unlockedInfinity && player.s.highestSingularityPoints.lte(0)) || player.cp.cantepocalypseActive},
 })
 
@@ -337,6 +351,7 @@ addUniverse("UB", {
         }
         return style
     },
+    unlocked() { return player.startedGame && player.pol.unlockHive >= 2 && !player.sma.inStarmetalChallenge},
     uniShown() { return player.startedGame && player.pol.unlockHive >= 2 && !player.sma.inStarmetalChallenge},
     disabled() {return !player.startedGame && player.pol.unlockHive < 2}
 })
@@ -360,7 +375,8 @@ addUniverse("BH", {
         }
         return style
     },
-    uniShown() { return player.startedGame && tmp.pu.levelables[302].canClick && !player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge},
+    unlocked() { return player.startedGame && tmp.pu.levelables[302].canClick && !player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge},
+    uniShown: false,
     disabled() {return !player.startedGame || !tmp.pu.levelables[302].canClick}
 })
 
@@ -382,6 +398,7 @@ addUniverse("CH", {
         }
         return style
     },
+    unlocked() { return player.startedGame && player.fu.defeatedJocus && !player.sma.inStarmetalChallenge},
     uniShown() { return player.startedGame && player.fu.defeatedJocus && !player.sma.inStarmetalChallenge},
 })
 
@@ -404,6 +421,7 @@ addUniverse("DS", {
         }
         return style
     },
+    unlocked() { return player.d.diceSpaceUnlocked && !player.sma.inStarmetalChallenge }, //make it something
     uniShown() { return player.d.diceSpaceUnlocked && !player.sma.inStarmetalChallenge }, //make it something
     disabled() {return false}
 })
@@ -426,6 +444,7 @@ addUniverse("UD", {
         }
         return style
     },
+    unlocked() { return player.startedGame && player.lightRift.interspaceUnlocked && !player.sma.inStarmetalChallenge},
     uniShown() { return player.startedGame && player.lightRift.interspaceUnlocked && !player.sma.inStarmetalChallenge},
 })
 
@@ -449,6 +468,7 @@ addUniverse("UZ", {
         }
         return style
     },
+    unlocked() { return false && !player.sma.inStarmetalChallenge },
     uniShown() { return false && !player.sma.inStarmetalChallenge },
     disabled() {return false}
 })
@@ -471,5 +491,6 @@ addUniverse("PF", {
         }
         return style
     },
+    unlocked() { return false && !player.sma.inStarmetalChallenge },
     uniShown() { return false && !player.sma.inStarmetalChallenge },
 })

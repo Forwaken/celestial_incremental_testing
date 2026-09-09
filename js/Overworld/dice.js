@@ -150,6 +150,7 @@
         // POWER MODIFIERS
         player.d.dicePointsMult = player.d.dicePointsMult.pow(player.co.cores.dice.effect[1])
         if (hasUpgrade("za", 17)) player.d.dicePointsMult = player.d.dicePointsMult.pow(upgradeEffect("za", 17))
+        player.d.dicePointsMult = player.d.dicePointsMult.pow(player.om.gwaTempleMasteryPointsEffect)
 
         // DICE POINT EFFECT
         if (player.d.dicePoints.gte(0)) {

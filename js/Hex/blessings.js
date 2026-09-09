@@ -13,9 +13,12 @@ addLayer("hbl", {
         blessingsSoftcap: new Decimal(1),
         boons: new Decimal(0),
         boonsGain: new Decimal(0),
-        blessAutomation: false,
-        minRefineInput: new Decimal(0),
-        minRefine: new Decimal(1),
+
+        autoToggle: false,
+        autoInput: new Decimal(12),
+        autoAmount: new Decimal(1),
+        autoType: false, // False: Amount ; True: Time
+        autoTime: new Decimal(0),
 
         boosters: {
             0: {
@@ -63,11 +66,7 @@ addLayer("hbl", {
         },
         boosterDeposit: 0.05,
     }},
-    automate() {
-        if (player.hbl.blessAutomation && player.hre.refinement.gte(player.hbl.minRefine)) {
-            clickClickable("hbl", 1)
-        }
-    },
+    automate() {},
     update(delta) {
         player.hbl.blessingsGain = new Decimal(0)
         if (player.hre.refinement.gte(player.h.stage.mul(2))) player.hbl.blessingsGain = player.hre.refinement.sub(player.h.stage.mul(2).sub(1).sub(buyableEffect("hte", 31).sub(1))).mul(buyableEffect("hte", 32)).pow(Decimal.div(3.6, player.h.stage.max(4)).add(1).mul(buyableEffect("hte", 33)))
@@ -198,9 +197,23 @@ addLayer("hbl", {
         player.hbl.boosters[6].effect = player.hbl.boosters[6].level.div(100).add(1)
         if (hasMilestone("hre", 4)) player.hbl.boosters[6].effect = player.hbl.boosters[6].effect.add(player.hbl.boosters[6].xp.div(player.hbl.boosters[6].req).div(100))
 
-        // AUTOMATION LIMIT
-        if (player.hbl.minRefineInput.gte(1)) player.hbl.minRefine = player.hbl.minRefineInput.floor()
-        if (player.hbl.minRefineInput.lt(1)) player.hbl.minRefine = new Decimal(1)
+        // Set Autoclick Values
+        if (player.hbl.autoInput.gte(0)) player.hbl.autoAmount = player.hbl.autoInput
+        if (player.hbl.autoInput.lt(0)) player.hbl.autoAmount = new Decimal(1)
+            
+        // Autoclick Functionality
+        if (player.hbl.autoToggle) {
+            if (!player.hbl.autoType && player.hre.refinement.gte(player.hbl.autoAmount) && player.hre.refinement.gte(player.h.stage.mul(2))) {
+                clickClickable("hbl", 1)
+            }
+            if (player.hbl.autoType) {
+                player.hbl.autoTime = player.hbl.autoTime.add(delta);
+                if (player.hbl.autoTime.gte(player.hbl.autoAmount) && player.hre.refinement.gte(player.h.stage.mul(2))) {
+                    player.hbl.autoTime = new Decimal(0)
+                    clickClickable("hbl", 1)
+                }
+            }
+        }
     },
     clickables: {
         1: {
@@ -403,27 +416,6 @@ addLayer("hbl", {
             },
         },
         101: {
-            title() {
-                if (player.hbl.blessAutomation) return "<h2>Automatically click the bless button</h2><br><h3>[ON]</h3>"
-                return "<h2>Automatically click the bless button</h2><br><h3>[OFF]</h3>"
-            },
-            canClick: true,
-            unlocked: true,
-            onClick() {
-                if (player.hbl.blessAutomation) {
-                    player.hbl.blessAutomation = false
-                } else {
-                    player.hbl.blessAutomation = true
-                }
-            },
-            style() {
-                let look = {width: "300px", minHeight: "100px", border: "0px", padding: "10px", borderRadius: "0 0 0 13px"}
-                if (player.hbl.blessAutomation) look.backgroundColor = "#ffbf00"
-                if (!player.hbl.blessAutomation) look.backgroundColor = "#cc9800"
-                return look
-            }
-        },
-        102: {
             title: "5%",
             canClick() { return player.hbl.boosterDeposit != 0.05},
             unlocked() { return true},
@@ -432,7 +424,7 @@ addLayer("hbl", {
             },
             style: {width: "50px", minHeight: "40px", borderRadius: "0px"},
         },
-        103: {
+        102: {
             title: "25%",
             canClick() { return player.hbl.boosterDeposit != 0.25},
             unlocked() { return true},
@@ -441,7 +433,7 @@ addLayer("hbl", {
             },
             style: {width: "50px", minHeight: "40px", borderRadius: "0px"},
         },
-        104: {
+        103: {
             title: "100%",
             canClick() { return player.hbl.boosterDeposit != 1},
             unlocked() { return true},
@@ -449,6 +441,49 @@ addLayer("hbl", {
                 player.hbl.boosterDeposit = 1
             },
             style: {width: "50px", minHeight: "40px", borderRadius: "0 13px 13px 0"},
+        },
+        104: {
+            title() {return player.hbl.autoToggle ? "Autoclick: ON" : "Autoclick: OFF"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.hbl.autoToggle) {
+                    player.hbl.autoToggle = false
+                } else {
+                    player.hbl.autoToggle = true
+                }
+            },
+            style() {
+                let look = {width: "400px", minHeight: "54px", color: "rgba(0,0,0,0.7)", fontSize: "18px", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0 0 12px 12px"}
+                if (player.hbl.autoToggle) {look.backgroundColor = "#b28500"} else {look.backgroundColor = "#7f5f00"}
+                return look
+            },
+        },
+        105: {
+            title() { return "Amount" },
+            canClick() { return player.hbl.autoType },
+            unlocked() { return true },
+            onClick() {
+                player.hbl.autoType = false
+            },
+            style() {
+                let look = {width: "199px", minHeight: "40px", color: "white", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
+                if (player.hbl.autoType) {look.backgroundColor = "#997200"} else {look.backgroundColor = "#332600"}
+                return look
+            },
+        },
+        106: {
+            title() { return "Time" },
+            canClick() { return !player.hbl.autoType },
+            unlocked() { return true },
+            onClick() {
+                player.hbl.autoType = true
+            },
+            style() {
+                let look = {width: "198px", minHeight: "40px", color: "white", border: "3px solid rgba(0,0,0,0.2)", borderRadius: "0px"}
+                if (!player.hbl.autoType) {look.backgroundColor = "#997200"} else {look.backgroundColor = "#332600"}
+                return look
+            },
         },
     },
     upgrades: {
@@ -770,7 +805,7 @@ addLayer("hbl", {
                         ["style-row", [
                             ["raw-html", "Deposit Rate", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ], {width: "98px", height: "40px", borderRight: "2px solid black"}],
-                        ["clickable", 102], ["clickable", 103], ["clickable", 104]
+                        ["clickable", 101], ["clickable", 102], ["clickable", 103]
                     ], {width: "250px", height: "40px", backgroundColor: "#332600", border: "2px solid black", borderRadius: "15px"}],
                 ]
             },
@@ -811,25 +846,21 @@ addLayer("hbl", {
                 buttonStyle() { return {borderRadius: "5px"}},
                 unlocked() {return hasMilestone("hre", 8) && !inChallenge("hrm", 15)},
                 content: [
-                    ["blank", "10px"],
-                    ["row", [
+                    ["blank", "20px"],
+                    ["style-column", [
                         ["style-column", [
-                            ["style-row", [
-                                ["raw-html", "Autoclicker", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                            ], {width: "300px", height: "48px", borderBottom: "2px solid white"}],
-                            ["clickable", 101],
-                        ], {width: "300px", height: "150px", backgroundColor: "#332600", border: "2px solid white", borderRadius: "15px 0 0 15px"}],
+                            ["raw-html", () => { return "Autoclicker" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "400px", height: "30px", backgroundColor: "#7f5f00", borderRadius: "12px 12px 0 0"}],
                         ["style-column", [
-                            ["style-row", [
-                                ["raw-html", "Min. Refinement", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                            ], {width: "300px", height: "48px", borderBottom: "2px solid white"}],
-                            ["style-column", [
-                                ["raw-html", () => { return "Current minimum: " + formatWhole(player.hbl.minRefine)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                                ["blank", "10px"],
-                                ["text-input", "minRefineInput", {backgroundColor: "#191300", color: "white", width: "180px", padding: "0 10px", textAlign: "left", fontSize: "28px", border: "2px solid black"}],
-                            ], {width: "300px", height: "100px"}],
-                        ], {width: "300px", height: "150px", backgroundColor: "#332600", border: "2px solid white", borderLeft: "0px", borderRadius: "0 15px 15px 0"}],
-                    ]],
+                            ["raw-html", () => {return player.hbl.autoType ? "Reset Time" : "Min. Refinement"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return player.hbl.autoType ? formatTime(player.hbl.autoTime) + "/" + formatTime(player.hbl.autoAmount) + " until reset." : "Reset at " + formatWhole(player.hbl.autoAmount) + " refinement."}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                        ], {width: "400px", height: "70px"}],
+                        ["text-input", "autoInput", {width: "350px", height: "50px", backgroundColor: "#332600", color: "white", fontSize: "32px", textAlign: "left", border: "0px", padding: "0px 25px"}],
+                        ["style-column", [
+                            ["style-row", [["clickable", 105], ["style-row", [], {width: "3px", height: "40px", background: "#ffbf00"}], ["clickable", 106]], {width: "400px", borderBottom: "3px solid #ffbf00"}],
+                            ["clickable", 104],
+                        ], {width: "400px", height: "97px", borderTop: "3px solid #ffbf00"}],
+                    ], {width: "400px", height: "250px", backgroundColor: "#664c00", border: "3px solid #ffbf00", borderRadius: "15px"}],
                 ]
             },
         },

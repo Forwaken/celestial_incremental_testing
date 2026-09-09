@@ -176,7 +176,7 @@ addLayer("hpw", {
         player.hbl.blessingPerSec = new Decimal(0)
         player.hbl.boons = new Decimal(0)
         player.hbl.boonsGain = new Decimal(0)
-        player.hbl.blessAutomation = false
+        player.hbl.autoToggle = false
         for (let i in player.hbl.boosters) {
             if (hasMilestone("hpw", 2) && (i == "2" || i == "5")) continue;
             player.hbl.boosters[i].level = new Decimal(0)

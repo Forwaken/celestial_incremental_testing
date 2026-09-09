@@ -161,6 +161,7 @@ addLayer("h", {
         let externalPow = new Decimal(1)
         externalPow = externalPow.mul(levelableEffect("car", 304)[0])
         if (hasAchievement("achievements", 1402)) externalPow = externalPow.mul(1.01)
+        externalPow = externalPow.pow(player.om.gwaTempleMasteryPointsEffect)
 
         externalPow = externalPow.pow(player.h.externalRaise)
         player.h.hexPointGain = player.h.hexPointGain.pow(externalPow)

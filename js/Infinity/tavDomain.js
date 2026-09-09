@@ -792,7 +792,7 @@ addLayer("tad", {
         player.tad.altInfinities.fragmented.effect2 = amt3.div(2).pow(0.2).max(1)
 
         player.tad.altInfinities.corrupted.effect1 = amt4.pow(0.2).div(2).add(1)
-        player.tad.altInfinities.corrupted.effect2 = amt4.pow(0.3).add(1)
+        player.tad.altInfinities.corrupted.effect2 = amt4.pow(0.5).add(1)
         if (player.tad.altInfinities.infected.milestone.gte(3)) player.tad.altInfinities.corrupted.effect2 = player.tad.altInfinities.corrupted.effect2.pow(5)
 
         player.tad.altInfinities.disfigured.effect1 = amt5.max(0.1).mul(10).log(10).pow(0.5).div(10).add(1)

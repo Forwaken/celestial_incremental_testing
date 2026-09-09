@@ -723,7 +723,26 @@ addLayer("gwaTemple", {
             currencyInternalName: "gwark",
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
         },
-        // Gwa Temple Mastery Points + a separate one for the buyables associated with those mastery points
+        108: {
+            title: "Gwagrades 2.0",
+            unlocked: true,
+            description: "Unlock new gwagrades",
+            cost() {return new Decimal(4)},
+            currencyLocation() { return player.gwaTemple },
+            currencyDisplayName: "Gwark",
+            currencyInternalName: "gwark",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
+        },
+        109: {
+            title: "Gwastery",
+            unlocked: true,
+            description: "Unlock gwa temple mastery points in OTF mastery",
+            cost() {return new Decimal(4)},
+            currencyLocation() { return player.gwaTemple },
+            currencyDisplayName: "Gwark",
+            currencyInternalName: "gwark",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
+        },
         // Boost gwarks based on total gwarships
         // Effective gwanks reduce gwankable cost
     },
@@ -1035,16 +1054,12 @@ addLayer("gwaTemple", {
                     ["always-scroll-column", [
                         ["blank", "2px"],
                         ["row", [
-                            ["upgrade", 1], ["upgrade", 2], ["upgrade", 3],
-                            ["upgrade", 4], ["upgrade", 5], ["upgrade", 6],
-                            ["upgrade", 7], ["upgrade", 8], ["upgrade", 9],
-                            ["upgrade", 10], ["upgrade", 11], ["upgrade", 12],
-                            ["upgrade", 13], ["upgrade", 14], ["upgrade", 15],
-                            ["upgrade", 16], ["upgrade", 17], ["upgrade", 18],
-                            ["upgrade", 19], ["upgrade", 20], ["upgrade", 21],
-                            ["upgrade", 22], ["upgrade", 23], ["upgrade", 24],
-                            ["upgrade", 25], ["upgrade", 26], ["upgrade", 27],
-                            ["upgrade", 28], ["upgrade", 29], ["upgrade", 30],
+                            ["upgrade", 1], ["upgrade", 2], ["upgrade", 3], ["upgrade", 4], ["upgrade", 5], ["upgrade", 6],
+                            ["upgrade", 7], ["upgrade", 8], ["upgrade", 9], ["upgrade", 10], ["upgrade", 11], ["upgrade", 12],
+                            ["upgrade", 13], ["upgrade", 14], ["upgrade", 15], ["upgrade", 16], ["upgrade", 17], ["upgrade", 18],
+                            ["upgrade", 19], ["upgrade", 20], ["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 24],
+                            ["upgrade", 25], ["upgrade", 26], ["upgrade", 27], ["upgrade", 28], ["upgrade", 29], ["upgrade", 30],
+                            ["upgrade", 31], ["upgrade", 32], ["upgrade", 33], ["upgrade", 34], ["upgrade", 35], ["upgrade", 36],
                         ]],
                         ["blank", "2px"],
                     ], {width: "794px", height: "480px"}],
@@ -1105,7 +1120,7 @@ addLayer("gwaTemple", {
                             ["blank", "2px"],
                             ["row", [
                                 ["upgrade", 101], ["upgrade", 102], ["upgrade", 103], ["upgrade", 104], ["upgrade", 105], ["upgrade", 106],
-                                ["upgrade", 107],
+                                ["upgrade", 107], ["upgrade", 108], ["upgrade", 109], ["upgrade", 110], ["upgrade", 111], ["upgrade", 112],
                             ]],
                         ], {width: "794px", height: "365px", background: "#393924", borderTop: "3px solid #29291a", borderRadius: "0 0 0 17px"}],
                     ], {width: "794px", height: "480px"}],
@@ -1125,7 +1140,9 @@ addLayer("gwaTemple", {
         ["style-row", [
             ["style-row", [
                 ["raw-html", "<button id='bigCookie' class='bigCookie gwa' onmousedown='player.gwaTemple.worship=true;event.preventDefault()' onmouseup='player.gwaTemple.worship=false' onmouseleave='player.gwaTemple.worship=false' ontouchstart='player.gwaTemple.worship=true' ontouchend='player.gwaTemple.worship=false' ontouchcancel='player.gwaTemple.worship=false' onclick=''>"],
-            ], () => {return {width: "344px", height: "244px", background: `linear-gradient(to right, #ffb ${format(player.gwaTemple.gwaWorshipCooldown.div(player.gwaTemple.gwaWorshipCooldownMax).mul(100).min(100))}%, #bb9 ${format(player.gwaTemple.gwaWorshipCooldown.div(player.gwaTemple.gwaWorshipCooldownMax).mul(100).add(0.25).min(100))}%)`, border: "3px solid #29291a", borderRadius: "20px", margin: "5px"}}],
+                ["raw-html", () => {return player.gwaTemple.highestGwark.gte(1) || hasUpgrade("gwaTemple", 20) ? "You have gwarshipped for " + formatTime(player.gwaTemple.gwaWorshipTime) : ""}, {width: "200px", position: "absolute", left: "calc(50% - 100px)", top: "10px", color: "#29291a", fontSize: "16px", fontFamily: "monospace", userSelect: "none"}],
+                ["raw-html", () => {return hasUpgrade("gwaTemple", 105) ? "You have gwarshipped " + formatShortSimple(player.gwaTemple.gwarshipAmt) + " times this reset" : ""}, {width: "200px", position: "absolute", left: "calc(50% - 100px)", bottom: "10px", color: "#29291a", fontSize: "16px", fontFamily: "monospace", userSelect: "none"}],
+            ], () => {return {position: "relative", width: "344px", height: "244px", lineHeight: "1", background: `linear-gradient(to right, #ffb ${format(player.gwaTemple.gwaWorshipCooldown.div(player.gwaTemple.gwaWorshipCooldownMax).mul(100).min(100))}%, #bb9 ${format(player.gwaTemple.gwaWorshipCooldown.div(player.gwaTemple.gwaWorshipCooldownMax).mul(100).add(0.25).min(100))}%)`, border: "3px solid #29291a", borderRadius: "20px", margin: "5px"}}],
             ["style-column", [
                 ["style-row", [
                     ["style-column", [

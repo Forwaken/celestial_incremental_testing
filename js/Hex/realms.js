@@ -277,7 +277,7 @@ addLayer("hrm", {
                 layers.hpw.powerReset(1)
             },
             onExit() {
-                layers.hpw.powerReset(1)
+                layers.hpw.powerReset(0)
             },
             onComplete() {if (player[this.layer].challenges[this.id] >= 30) player.tera.realmMastery[0] = true},
             style: {width: '250px', height: '204px', backgroundColor: "#c44", border: "6px solid #800", borderRadius: "13px"},
@@ -309,7 +309,7 @@ addLayer("hrm", {
                 layers.hpw.powerReset(1)
             },
             onExit() {
-                layers.hpw.powerReset(1)
+                layers.hpw.powerReset(0)
             },
             onComplete() {if (player[this.layer].challenges[this.id] >= 30) player.tera.realmMastery[1] = true},
             style: {width: '250px', height: '204px', backgroundColor: "#c84", border: "6px solid #840", borderRadius: "13px"},
@@ -341,7 +341,7 @@ addLayer("hrm", {
                 layers.hpw.powerReset(1)
             },
             onExit() {
-                layers.hpw.powerReset(1)
+                layers.hpw.powerReset(0)
             },
             onComplete() {if (player[this.layer].challenges[this.id] >= 30) player.tera.realmMastery[2] = true},
             style: {width: '250px', height: '204px', backgroundColor: "#cc4", border: "6px solid #880", borderRadius: "13px"},
@@ -373,7 +373,7 @@ addLayer("hrm", {
                 layers.hpw.powerReset(1)
             },
             onExit() {
-                layers.hpw.powerReset(1)
+                layers.hpw.powerReset(0)
             },
             onComplete() {if (player[this.layer].challenges[this.id] >= 30) player.tera.realmMastery[3] = true},
             style: {width: '250px', height: '204px', backgroundColor: "#4c4", border: "6px solid #080", borderRadius: "13px"},
@@ -406,7 +406,7 @@ addLayer("hrm", {
                 layers.hpw.powerReset(1)
             },
             onExit() {
-                layers.hpw.powerReset(1)
+                layers.hpw.powerReset(0)
             },
             onComplete() {if (player[this.layer].challenges[this.id] >= 30) player.tera.realmMastery[4] = true},
             style: {width: '250px', height: '204px', backgroundColor: "#44c", border: "6px solid #008", borderRadius: "13px"},
@@ -439,7 +439,7 @@ addLayer("hrm", {
                 layers.hpw.powerReset(1)
             },
             onExit() {
-                layers.hpw.powerReset(1)
+                layers.hpw.powerReset(0)
             },
             onComplete() {if (player[this.layer].challenges[this.id] >= 30) player.tera.realmMastery[5] = true},
             style: {width: '250px', height: '204px', backgroundColor: "#84c", border: "6px solid #408", borderRadius: "13px"},

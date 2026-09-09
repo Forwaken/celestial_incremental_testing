@@ -19,6 +19,9 @@
         hexMasteryPointsEffect: new Decimal(1),
         hexMasteryPointsToGet: new Decimal(0),
 
+        gwaTempleMasteryPoints: new Decimal(0),
+        gwaTempleMasteryPointsEffect: new Decimal(1),
+        gwaTempleMasteryPointsToGet: new Decimal(0),
     }},
     automate() {
         if (hasUpgrade("bi", 109)) {
@@ -76,23 +79,33 @@
 
         player.om.hexMasteryPointsToGet = player.om.hexMasteryPointsToGet.mul(mult)
 
-        player.om.diceMasteryPointsEffect = player.om.diceMasteryPoints.pow(0.1).div(8).add(1).pow(levelableEffect("ir", 6)[0])
-        player.om.rocketFuelMasteryPointsEffect = player.om.rocketFuelMasteryPoints.pow(0.08).div(10).add(1).pow(levelableEffect("ir", 6)[0])
-        player.om.hexMasteryPointsEffect = player.om.hexMasteryPoints.pow(0.16).add(1).pow(levelableEffect("ir", 6)[0])
-        if (hasUpgrade("hpw", 1053) || player.tera.realmMastery[4]) {
-            player.om.diceMasteryPointsEffect = player.om.diceMasteryPointsEffect.pow(upgradeEffect("hpw", 1053))
-            player.om.rocketFuelMasteryPointsEffect = player.om.rocketFuelMasteryPointsEffect.pow(upgradeEffect("hpw", 1053))
-            player.om.hexMasteryPointsEffect = player.om.hexMasteryPointsEffect.pow(upgradeEffect("hpw", 1053))
-        }
-        if (player.ep1.dragonEvolutionIndex >= 6) {
-            player.om.diceMasteryPointsEffect = player.om.diceMasteryPointsEffect.pow(1.1)
-            player.om.rocketFuelMasteryPointsEffect = player.om.rocketFuelMasteryPointsEffect.pow(1.1)
-            player.om.hexMasteryPointsEffect = player.om.hexMasteryPointsEffect.pow(1.1)
-        }
+        if (hasUpgrade("gwaTemple", 109) && player.gwaTemple.gwaPoints.gte(1)) {
+            player.om.gwaTempleMasteryPointsToGet = Decimal.pow(1.5, player.gwaTemple.gwaPoints.add(1).log(1e5).pow(0.5)).sub(1)
+        } else player.om.gwaTempleMasteryPointsToGet = new Decimal(0)
 
-        if (hasUpgrade("s", 12)) player.om.diceMasteryPoints = player.om.diceMasteryPoints.add(Decimal.mul(player.om.diceMasteryPointsToGet.mul(delta), 0.04))
-        if (hasUpgrade("s", 12)) player.om.rocketFuelMasteryPoints = player.om.rocketFuelMasteryPoints.add(Decimal.mul(player.om.rocketFuelMasteryPointsToGet.mul(delta), 0.04))
-        if (hasUpgrade("s", 12)) player.om.hexMasteryPoints = player.om.hexMasteryPoints.add(Decimal.mul(player.om.hexMasteryPointsToGet.mul(delta), 0.04))
+        player.om.gwaTempleMasteryPointsToGet = player.om.gwaTempleMasteryPointsToGet.mul(mult.add(1).log(10))
+
+        player.om.diceMasteryPointsEffect = player.om.diceMasteryPoints.pow(0.1).div(8).add(1)
+        player.om.rocketFuelMasteryPointsEffect = player.om.rocketFuelMasteryPoints.pow(0.08).div(10).add(1)
+        player.om.hexMasteryPointsEffect = player.om.hexMasteryPoints.pow(0.16).add(1)
+        player.om.gwaTempleMasteryPointsEffect = player.om.gwaTempleMasteryPoints.add(1).log(10).pow(0.5).div(100).add(1)
+
+        let effRaise = new Decimal(1)
+        effRaise = effRaise.mul(levelableEffect("ir", 6)[0])
+        if (hasUpgrade("hpw", 1053) || player.tera.realmMastery[4]) effRaise = effRaise.mul(upgradeEffect("hpw", 1053))
+        if (player.ep1.dragonEvolutionIndex >= 6) effRaise = effRaise.mul(1.1)
+
+        player.om.diceMasteryPointsEffect = player.om.diceMasteryPointsEffect.pow(effRaise)
+        player.om.rocketFuelMasteryPointsEffect = player.om.rocketFuelMasteryPointsEffect.pow(effRaise)
+        player.om.hexMasteryPointsEffect = player.om.hexMasteryPointsEffect.pow(effRaise)
+        player.om.gwaTempleMasteryPointsEffect = player.om.gwaTempleMasteryPointsEffect.pow(effRaise.add(1).log(10))
+
+        if (hasUpgrade("s", 12)) {
+            player.om.diceMasteryPoints = player.om.diceMasteryPoints.add(Decimal.mul(player.om.diceMasteryPointsToGet.mul(delta), 0.04))
+            player.om.rocketFuelMasteryPoints = player.om.rocketFuelMasteryPoints.add(Decimal.mul(player.om.rocketFuelMasteryPointsToGet.mul(delta), 0.04))
+            player.om.hexMasteryPoints = player.om.hexMasteryPoints.add(Decimal.mul(player.om.hexMasteryPointsToGet.mul(delta), 0.04))
+            player.om.gwaTempleMasteryPoints = player.om.gwaTempleMasteryPoints.add(Decimal.mul(player.om.gwaTempleMasteryPointsToGet.mul(Decimal.div(delta, player.uni["U2"].tickspeed).mul(player.uni["U2"].tickspeed.add(1).log(10))), 0.04))
+        }
     },
     branches: ["id", "bi"],
     clickables: {},
@@ -323,7 +336,7 @@
                                 return look
                             }],
                         ]],
-                        ["raw-html", () => {return "which boost infinity points by <h3>" + format(player.om.diceMasteryPointsEffect) + "</h3>x." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
+                        ["raw-html", () => {return "Boosts infinity points by x<h3>" + format(player.om.diceMasteryPointsEffect) + "</h3>" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                         ["blank", "10px"],
                         ["row", [
                             ["raw-html", () => {return "You have <h3>" + format(player.om.rocketFuelMasteryPoints) + "</h3> rocket fuel mastery points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -333,7 +346,7 @@
                                 return look
                             }],
                         ]],
-                        ["raw-html", () => {return "which boost negative infinity points by <h3>" + format(player.om.rocketFuelMasteryPointsEffect) + "</h3>x." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
+                        ["raw-html", () => {return "Boosts negative infinity points by x<h3>" + format(player.om.rocketFuelMasteryPointsEffect) + "</h3>" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                         ["blank", "10px"],
                         ["row", [
                             ["raw-html", () => {return "You have <h3>" + format(player.om.hexMasteryPoints) + "</h3> " + player.h.stageName[1] + " mastery points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -343,9 +356,22 @@
                                 return look
                             }],
                         ]],
-                        ["raw-html", () => {return "which boost all antimatter dimensions by <h3>" + format(player.om.hexMasteryPointsEffect) + "</h3>x." }, { "color": "white", "font-size": "20px", "font-family": "monospace" }],
+                        ["raw-html", () => {return "Boosts all antimatter dimensions by x<h3>" + format(player.om.hexMasteryPointsEffect) + "</h3>" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                         ["blank", "10px"],
-                        ["raw-html", "You produce each mastery point based on the respective OTF currency per infinity reset.", { "color": "white", "font-size": "16px", "font-family": "monospace" }],
+                        ["style-column", [
+                            ["row", [
+                                ["raw-html", () => {return "You have <h3>" + format(player.om.gwaTempleMasteryPoints) + "</h3> gwa temple mastery points."}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
+                                ["raw-html", () => {return "(+" + format(player.om.gwaTempleMasteryPointsToGet) + ")"}, () => {
+                                    let look = {fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
+                                    if (player.po.gwaTemple) {look.color = "white"} else {look.color = "gray"}
+                                    return look
+                                }],
+                            ]],
+                            ["raw-html", () => {return "Boosts dice points and rocket fuel by ^<h3>" + format(player.om.gwaTempleMasteryPointsEffect, 3) + "</h3>" }, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "Boosts " + player.h.stageName[1] + " points by ^<h3>" + format(player.om.gwaTempleMasteryPointsEffect.pow(0.3), 3) + "</h3>" }, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "[The effects of Multipliers, Exponents, and Tickspeed are greatly diminished on GTMPs]" }, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                        ], () => {return hasUpgrade("gwaTemple", 109) ? {marginBottom: "10px"} : {display: "none !important"}}],
+                        ["raw-html", "You produce each mastery point based on the respective OTF currency per infinity reset.", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ], {padding: "10px 20px", backgroundColor: "#1b0021", border: "3px solid #450054", borderRadius: "20px"}],
                     ["blank", "25px"],
                     ["style-row", [["ex-buyable", 11], ["ex-buyable", 12], ["ex-buyable", 13],

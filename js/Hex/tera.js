@@ -366,7 +366,7 @@ addLayer("tera", {
         player.hbl.blessingPerSec = new Decimal(0)
         player.hbl.boons = new Decimal(0)
         player.hbl.boonsGain = new Decimal(0)
-        player.hbl.blessAutomation = false
+        player.hbl.autoToggle = false
         for (let i in player.hbl.boosters) {
             player.hbl.boosters[i].level = new Decimal(0)
             player.hbl.boosters[i].xp = new Decimal(0)
@@ -1686,11 +1686,11 @@ addLayer("tera", {
         },
         "hex11": {
             fullDisplay() {return "<h3>Hexed Curses</h3><br>Boost curses based on hex essence.<br>Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e24 Hex Essence"},
-            tooltip: "1.5^(log6(Hex Essence+1))", 
+            tooltip: "1.5^(log6((Hex Essence/1e18)+1))", 
             unlocked() {return player.tera.unsealed},
             canAfford() { return player.tera.hexEssence.gte(1e24)},
             pay() {player.tera.hexEssence = player.tera.hexEssence.sub(1e24)},
-            effect() {return Decimal.pow(1.5, player.tera.hexEssence.add(1).log(6))},
+            effect() {return Decimal.pow(1.5, player.tera.hexEssence.div(1e18).add(1).log(6))},
             style() {
                 let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.background = "#77bf5f" : !canAffordUpgrade(this.layer, this.id) ? look.background =  "#bf8f8f" : look.background = "#85ADE6"

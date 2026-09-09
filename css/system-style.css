@@ -132,6 +132,7 @@
 	z-index: 1000;
 }
 .uniButton {
+	position: relative;
 	display: inline-block;
   	flex: 0 0 auto;
 	margin: 0;
@@ -152,8 +153,21 @@
 	filter: brightness(105%);
 }
 .uniButton:disabled {
-	filter: brightness(30%);
+	filter: brightness(60%);
 	cursor: default;
+}
+.paused {
+	position: absolute;
+	left: calc(50% - 2.25vh);
+	top: calc(50% - 2.25vh);
+	width: 4.5vh;
+	height: 4.5vh;
+	align-content: center;
+	line-height: 0.8;
+	text-align: center;
+	border-radius:50%;
+	background: rgba(0,0,0,0.5);
+	color: white;
 }
 .miscMenu {
 	position: absolute;
@@ -171,6 +185,7 @@
 	z-index: 1000;
 }
 .miscButton {
+	position: relative;
 	width: 60px;
 	height: 100%;
 	display: flex;
@@ -190,6 +205,20 @@
 .miscButton:disabled {
 	background-color: var(--miscButtonDisable);
 	cursor: default;
+}
+.cbpaused {
+	position: absolute;
+	left: calc(50% - 3vh);
+	top: calc(50% - 3vh);
+	width: 6vh;
+	height: 6vh;
+	font-size: 3.5vh;
+	align-content: center;
+	line-height: 0;
+	text-align: center;
+	border-radius:50%;
+	background: rgba(0,0,0,0.5);
+	color: #999;
 }
 .miscImg {
 	width: 6vh;
