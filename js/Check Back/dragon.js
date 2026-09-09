@@ -2276,7 +2276,7 @@ addLayer("ep1", {
                             
                         ], {background: "repeating-linear-gradient(135deg, #272727 0 15px, #2f2f2f 0 30px)", width: "2400px", height: "1600px"}],
                     ], () => {
-                        let look = {position: "absolute", top: "0", left: "0", border: "6px solid #171717", flexFlow: "column"}
+                        let look = {position: "absolute", top: "0", left: "0", background: "#171717", border: "6px solid #171717", flexFlow: "column"}
                         if (window.matchMedia("(orientation:landscape)").matches) {look.width = "calc(100vw - 417px)"; look.height = "calc(100vh - 12px)"}
                         else {look.width = "calc(100vw - 12px)"; look.height = "calc(86vh - 325px)"}
                         return look
