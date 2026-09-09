@@ -324,7 +324,7 @@
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.om.gwaTempleMasteryPoints},
             pay(amt) { player.om.gwaTempleMasteryPoints = this.currency().sub(amt) },
-            effect(x) { return Decimal.pow(1.01, getBuyableAmount(this.layer, this.id)) },
+            effect(x) { return Decimal.pow(1.02, getBuyableAmount(this.layer, this.id)) },
             unlocked() {return hasUpgrade("gwaTemple", 112)},
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
