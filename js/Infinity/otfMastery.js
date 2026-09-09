@@ -31,6 +31,8 @@
             buyBuyable("om", 14)
             buyBuyable("om", 15)
             buyBuyable("om", 16)
+            buyBuyable("om", 17)
+            buyBuyable("om", 18)
         }
     },
     nodeStyle() {
@@ -316,6 +318,74 @@
             },
             style: { width: '275px', height: '150px', backgroundColor: "#4531D4", backgroundImage: "linear-gradient(0deg, #8a00a9, #0061ff)", backgroundOrigin: "border-box", color: "white"},
         },
+        17: {
+            costBase() { return new Decimal(1e6) },
+            costGrowth() { return new Decimal(2) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.om.gwaTempleMasteryPoints},
+            pay(amt) { player.om.gwaTempleMasteryPoints = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.01, getBuyableAmount(this.layer, this.id)) },
+            unlocked() {return hasUpgrade("gwaTemple", 112)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Simplifier Mastery Divider"
+            },
+            display() {
+                return "which are dividing simplifier cooldowns by /" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Gwa Temple Mastery Points"
+            },
+            buy(mult) {
+                if (mult != true && !hasUpgrade("bi", 109) ) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (!hasUpgrade("bi", 109)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', backgroundColor: "#4531D4", backgroundImage: "linear-gradient(0deg, #8a00a9, #0061ff)", backgroundOrigin: "border-box", color: "white"},
+        },
+        18: {
+            costBase() { return new Decimal(1e8) },
+            costGrowth() { return new Decimal(3) },
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.om.gwaTempleMasteryPoints},
+            pay(amt) { player.om.gwaTempleMasteryPoints = this.currency().sub(amt) },
+            effect(x) { return Decimal.pow(1.02, getBuyableAmount(this.layer, this.id)) },
+            unlocked() {return hasUpgrade("gwaTemple", 112)},
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Replicanti Mastery Multiplier"
+            },
+            display() {
+                return "which are multiplying replicanti mult by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Gwa Temple Mastery Points"
+            },
+            buy(mult) {
+                if (mult != true && !hasUpgrade("bi", 109) ) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (!hasUpgrade("bi", 109)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', backgroundColor: "#4531D4", backgroundImage: "linear-gradient(0deg, #8a00a9, #0061ff)", backgroundOrigin: "border-box", color: "white"},
+        },
     },
     milestones: {},
     challenges: {},
@@ -374,8 +444,11 @@
                         ["raw-html", "You produce each mastery point based on the respective OTF currency per infinity reset.", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ], {padding: "10px 20px", backgroundColor: "#1b0021", border: "3px solid #450054", borderRadius: "20px"}],
                     ["blank", "25px"],
-                    ["style-row", [["ex-buyable", 11], ["ex-buyable", 12], ["ex-buyable", 13],
-                        ["ex-buyable", 14], ["ex-buyable", 15], ["ex-buyable", 16]], {maxWidth: "900px"}],
+                    ["style-row", [
+                        ["ex-buyable", 11], ["ex-buyable", 12], ["ex-buyable", 13],
+                        ["ex-buyable", 14], ["ex-buyable", 15], ["ex-buyable", 16],
+                        ["ex-buyable", 17], ["ex-buyable", 18],
+                    ], {maxWidth: "900px"}],
                 ]
             },
         },

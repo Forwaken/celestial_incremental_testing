@@ -126,6 +126,8 @@ addLayer("gwaTemple", {
         if (player.gwaTemple.gwankerEffect.gte(10)) player.gwaTemple.gwankerEffect = player.gwaTemple.gwankerEffect.div(10).pow(0.3).mul(10)
         player.gwaTemple.gwankerEffect2 = player.gwaTemple.gwanker.add(player.gwaTemple.gwankestEffect2).pow(player.gwaTemple.gwankestEffect).floor()
 
+        if (hasUpgrade("gwaTemple", 110)) player.gwaTemple.gwanker = player.gwaTemple.gwanker.add(player.gwaTemple.gwankerGet)
+
         // GWANKEST
         let gwankestDiv = new Decimal(1)
         gwankestDiv = gwankestDiv.mul(buyableEffect("gwaTemple", 16))
@@ -837,6 +839,36 @@ addLayer("gwaTemple", {
             unlocked: true,
             description: "Unlock gwa temple mastery points in OTF mastery",
             cost() {return new Decimal(4)},
+            currencyLocation() { return player.gwaTemple },
+            currencyDisplayName: "Gwark",
+            currencyInternalName: "gwark",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
+        },
+        110: {
+            title: "Gwanstant Gwankers",
+            unlocked: true,
+            description: "Automate gwanker gain",
+            cost() {return new Decimal(8)},
+            currencyLocation() { return player.gwaTemple },
+            currencyDisplayName: "Gwark",
+            currencyInternalName: "gwark",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
+        },
+        111: {
+            title: "???",
+            unlocked: true,
+            description: "???",
+            cost() {return new Decimal(8)},
+            currencyLocation() { return player.gwaTemple },
+            currencyDisplayName: "Gwark",
+            currencyInternalName: "gwark",
+            style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
+        },
+        112: {
+            title: "Further Gwastery",
+            unlocked: true,
+            description: "Unlock GTMP buyables in OTF mastery",
+            cost() {return new Decimal(8)},
             currencyLocation() { return player.gwaTemple },
             currencyDisplayName: "Gwark",
             currencyInternalName: "gwark",

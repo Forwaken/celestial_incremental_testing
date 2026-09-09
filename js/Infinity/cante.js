@@ -98,6 +98,7 @@
         if (hasUpgrade("hpw", 1062) || player.tera.realmMastery[5]) player.ca.replicantiMult = player.ca.replicantiMult.mul(3)
         player.ca.replicantiMult = player.ca.replicantiMult.mul(player.cof.coreFragmentEffects[5])
         player.ca.replicantiMult = player.ca.replicantiMult.mul(player.ca.replicanticantiEffect)
+        player.ca.replicantiMult = player.ca.replicantiMult.mul(buyableEffect("om", 18))
         
         player.ca.replicantiMult = player.ca.replicantiMult.div(player.ca.replicantiSoftcap)
 

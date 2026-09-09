@@ -517,6 +517,7 @@ addLayer("tad", {
             }
             if (hasUpgrade("tad", 156)) divisor = divisor.mul(upgradeEffect("tad", 156))
             divisor = divisor.mul(buyableEffect("tad", 504))
+            divisor = divisor.mul(buyableEffect("om", 17))
             if (i < 3) divisor = divisor.mul(player.tad.simplifiers[i+1].effect)
             player.tad.simplifiers[i].current = player.tad.simplifiers[i].amount.sub(pastReq).div(divisor)
             player.tad.simplifiers[i].next = currReq.sub(pastReq).div(divisor)
