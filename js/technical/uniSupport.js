@@ -244,7 +244,7 @@ addUniverse("SB", {
         }
         return style
     },
-    uniShown() { return player.startedGame && player.au2.au2Unlocked && !player.sma.inStarmetalChallenge},
+    unlocked() { return player.startedGame && player.au2.au2Unlocked && !player.sma.inStarmetalChallenge},
     uniShown: false,
     disabled() {return !player.startedGame || !player.au2.au2Unlocked},
 })
