@@ -131,6 +131,7 @@ addLayer("gwaTemple", {
         // GWANKEST
         let gwankestDiv = new Decimal(1)
         gwankestDiv = gwankestDiv.mul(buyableEffect("gwaTemple", 16))
+        if (hasUpgrade("gwaTemple", 111)) gwankestDiv = gwankestDiv.mul(upgradeEffect("gwaTemple", 111))
         player.gwaTemple.gwankestReq = Decimal.pow(2, player.gwaTemple.gwankest).mul(1000).div(gwankestDiv)
         player.gwaTemple.gwankestGet = hasUpgrade("gwaTemple", 107) ? player.gwaTemple.gwanker.add(1).div(1000).mul(gwankestDiv).ln().div(new Decimal(2).ln()).add(1).sub(player.gwaTemple.gwankest).floor().max(0) : new Decimal(1)
 
@@ -738,7 +739,7 @@ addLayer("gwaTemple", {
         36: {
             title: "???",
             unlocked() {return hasUpgrade("gwaTemple", 108)},
-            description: "Unlock ???",
+            description: "Unlock ???<br><small>[COMING SOON]</small>",
             cost() {return new Decimal(1e65)},
             currencyLocation() { return player.gwaTemple },
             currencyDisplayName: "Gwa Points",
@@ -855,13 +856,15 @@ addLayer("gwaTemple", {
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
         },
         111: {
-            title: "???",
+            title: "Gwankest Gwastery",
             unlocked: true,
-            description: "???",
+            description: "Reduce gwankest cost based on GTMP",
             cost() {return new Decimal(8)},
             currencyLocation() { return player.gwaTemple },
             currencyDisplayName: "Gwark",
             currencyInternalName: "gwark",
+            effect() {return Decimal.pow(1.1, player.om.gwaTempleMasteryPoints.add(1).log(10))},
+            effectDisplay() { return "/" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
         },
         112: {
