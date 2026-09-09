@@ -120,7 +120,7 @@ addLayer("gwaTemple", {
         if (hasUpgrade("gwaTemple", 19)) gwankerDiv = gwankerDiv.mul(upgradeEffect("gwaTemple", 19))
 
         player.gwaTemple.gwankerReq = layers.h.hexReq(player.gwaTemple.gwanker, 10, 1.45, gwankerDiv)
-        player.gwaTemple.gwankerGet = hasUpgrade("gwaTemple", 24) ? layers.h.hexGain(player.gwaTemple.gwank, 10, 1.45, gwankerDiv).sub(player.gwaTemple.gwanker).max(0) : new Decimal(1)
+        player.gwaTemple.gwankerGet = hasUpgrade("gwaTemple", 110) || hasUpgrade("gwaTemple", 24) ? layers.h.hexGain(player.gwaTemple.gwank, 10, 1.45, gwankerDiv).sub(player.gwaTemple.gwanker).max(0) : new Decimal(1)
 
         player.gwaTemple.gwankerEffect = player.gwaTemple.gwanker.add(player.gwaTemple.gwankestEffect2).add(1).log(2).div(2).add(1).pow(0.3).pow(player.gwaTemple.gwankestEffect)
         if (player.gwaTemple.gwankerEffect.gte(10)) player.gwaTemple.gwankerEffect = player.gwaTemple.gwankerEffect.div(10).pow(0.3).mul(10)
