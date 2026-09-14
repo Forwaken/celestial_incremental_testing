@@ -2100,7 +2100,7 @@ addLayer("pu", {
             },
             effect() {
                 let eff = [new Decimal(1), new Decimal(1)]
-                eff[0] = player.dg.generators.pow(0.05).add(1).pow(this.effectScale()).pow(player.pu.rareRaise)
+                eff[0] = player.dg.generators.pow(0.1).add(1).pow(this.effectScale()).pow(player.pu.rareRaise)
                 if (getLevelableAmount(this.layer, this.id).lt(10)) eff[1] = Decimal.pow(10, getLevelableAmount(this.layer, this.id))
                 else eff[1] = Decimal.pow(3, getLevelableAmount(this.layer, this.id).sub(10)).mul(1e10)
                 return eff
