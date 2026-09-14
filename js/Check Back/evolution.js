@@ -221,8 +221,8 @@
             title() { return "<img src='resources/Pets/holyGwaEvoPet.png'style='width:90px;height:90px;margin:0px;margin-bottom:-4px'></img>"
             },
             canClick() {return true},
-            unlocked() { return tmp.pet.levelables[1101].canClick && !player.ev.evolutionsUnlocked[17] && player.tera.trueHex.gte(1)}, // placeholder req
-            tooltip() { return "████ ███ ███████ ██ worship █████████ perfection" }, // Gain the ability to worship potential perfection
+            unlocked() { return tmp.pet.levelables[1101].canClick && !player.ev.evolutionsUnlocked[17] && player.tera.virtueUnlocks2[5]},
+            tooltip() { return "██████ ███ temple █████ ███<br>███ worship █████████ perfection" }, // Unlock the temple where you can worship potential perfection
             onClick() {
                 player.ev.evolutionDisplayIndex = new Decimal(17)
             },

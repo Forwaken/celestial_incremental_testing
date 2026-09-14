@@ -263,7 +263,7 @@ addLayer("hre", {
             requirementDescription() {return "<h3>" + formatWhole(player.h.stage.mul(22)) + " Refinements"},
             effectDescription: "Automate vex gain.",
             done() { return player.hre.refinement.gte(player.h.stage.mul(22)) && player.h.stage.gte(7)},
-            unlocked() { return hasMilestone("hre", 15) && player.h.stage.gte(7) },
+            unlocked() { return hasMilestone("hre", 15) && (player.h.stage.gte(7) || (player.tera.virtueUnlocks2[3] && player.tera.trueHept.gt(0)))},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
         17: {
@@ -273,7 +273,7 @@ addLayer("hre", {
                 return "Automate η-Provenance gain."
             },
             done() { return player.hre.refinement.gte(player.h.stage.mul(24)) && player.h.stage.gte(7)},
-            unlocked() { return hasMilestone("hre", 16) && player.h.stage.gte(7) },
+            unlocked() { return hasMilestone("hre", 16) && player.h.stage.gte(7) || (player.tera.virtueUnlocks2[3] && player.tera.trueHept.gt(0))},
             style: {width: "500px", height: "50px", color: "rgba(0,0,0,0.5)", border: "5px solid rgba(0,0,0,0.5)", borderRadius: "10px", margin: "-2.5px"},
         },
     },

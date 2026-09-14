@@ -33,7 +33,7 @@
 		"Hive/nest.js", "Check Back/gwaTemple.js", "Zar/zarDungeon.js", "Black Heart/creation.js", "DarkU1/rerollPoints.js",
 		"Check Back/diamondDust.js", "Check Back/treasureRoom.js",
 		"Hex/tera.js", "Hex/sins.js", "Hex/tempering.js", "Black Heart/bulletHellNeo.js",
-		"DarkU1/darkOTF.js", "DarkUA/sourceEnergy.js", "DarkUA/meridian.js", "DarkUA/deepBreathing.js", "DarkUA/cleansing.js",
+		"DarkU1/darkOTF.js", "DarkUA/cultivation.js", "DarkUA/circulation.js", "DarkUA/sourceEnergy.js", "DarkUA/meridian.js", "DarkUA/deepBreathing.js", "DarkUA/cleansing.js",
 
 		"Singularity/lightRift.js",
 		"Interspace/well.js", "Interspace/projects.js", "Interspace/prisms.js", "Interspace/blueshift.js", "Interspace/bumpy.js", "Interspace/cere.js", "Check Back/goobert.js",
@@ -317,7 +317,7 @@ function updateStyles() {
 		case "dotf":
 			layerBG = "linear-gradient(45deg, #140019, #000e26)"
 			break;
-		case "mse": case "mme": case "mdb": case "mcl":
+		case "mcu": case "mci": case "mse": case "mme": case "mdb": case "mcl":
 			layerBG = "linear-gradient(0deg, #111, #361010)"
 			break;
 		case "ch": case "mm":
@@ -872,7 +872,7 @@ function updateStyles() {
 	    const eclipse = document.getElementById("solar-eclipse-bg");
     	if (eclipse) eclipse.remove();
 	}
-	if (!options.performanceMode && (player.tab == "mse" || player.tab == "mme" || player.tab == "mdb" || player.tab == "mcl")) {
+	if (!options.performanceMode && (player.tab == "mcu" || player.tab == "mci" || player.tab == "mse" || player.tab == "mme" || player.tab == "mdb" || player.tab == "mcl")) {
 	    if (!document.getElementById("miasma-background")) {
     	    // Create embers background container
 	        const miasmaBg = document.createElement("div");
@@ -1158,7 +1158,7 @@ function updateStyles() {
 		case "za": case "cf": case "wof": case "sm": case "cbs": case "car": case "zd":
             player.musuniverse = "DS"
 			break;
-		case "mse": case "mme": case "mdb": case "mcl":
+		case "mcu": case "mci": case "mse": case "mme": case "mdb": case "mcl":
 			player.musuniverse = "DA"
 			break;
 	}

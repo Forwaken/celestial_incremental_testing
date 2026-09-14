@@ -25,42 +25,49 @@ addLayer("hbl", {
                 level: new Decimal(0),
                 xp: new Decimal(0),
                 req: new Decimal(6),
+                gain: new Decimal(1),
                 effect: new Decimal(1),
             },
             1: {
                 level: new Decimal(0),
                 xp: new Decimal(0),
                 req: new Decimal(12),
+                gain: new Decimal(1),
                 effect: new Decimal(1),
             },
             2: {
                 level: new Decimal(0),
                 xp: new Decimal(0),
                 req: new Decimal(36),
+                gain: new Decimal(1),
                 effect: new Decimal(1),
             },
             3: {
                 level: new Decimal(0),
                 xp: new Decimal(0),
                 req: new Decimal(600),
+                gain: new Decimal(1),
                 effect: new Decimal(1),
             },
             4: {
                 level: new Decimal(0),
                 xp: new Decimal(0),
                 req: new Decimal(3600),
+                gain: new Decimal(1),
                 effect: new Decimal(1),
             },
             5: {
                 level: new Decimal(0),
                 xp: new Decimal(0),
                 req: new Decimal(21600),
+                gain: new Decimal(1),
                 effect: new Decimal(0),
             },
             6: {
                 level: new Decimal(0),
                 xp: new Decimal(0),
                 req: new Decimal(823543),
+                gain: new Decimal(1),
                 effect: new Decimal(0),
             },
         },
@@ -122,6 +129,7 @@ addLayer("hbl", {
         player.hbl.boonsGain = player.hbl.boonsGain.mul(player.tera.virtueEffects[2][2])
 
         // POWER AND AUTOMATION
+        player.hbl.boonsGain = player.hbl.boonsGain.pow(levelableEffect("pu", 217)[1].pow(player.h.externalRaise))
         if (inChallenge("hrm", 12)) player.hbl.boonsGain = player.hbl.boonsGain.pow(Decimal.div(3.6, player.h.stage.max(4)))
 
         if (inChallenge("hrm", 13)) player.hbl.boonsGain = player.hbl.boonsGain.sub(player.hbl.boons.mul(0.05))

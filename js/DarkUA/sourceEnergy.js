@@ -36,7 +36,11 @@ addLayer("mse", {
     update(delta) {
         let onepersec = new Decimal(1)
 
-        player.mse.kiPerSec = new Decimal(0.1)
+        player.mse.kiPerSec = new Decimal(0.2)
+        if (hasMilestone("mci", 11)) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mci.flowEffects[0])
+        if (hasUpgrade("mcu", 12)) player.mse.kiPerSec = player.mse.kiPerSec.mul(upgradeEffect("mcu", 12))
+        if (player.mcu.mantraSelected == 11) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mcu.mantraEffects[11])
+        if (player.mcu.mantraSelected == 12) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mcu.mantraEffects[12])
         player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mdb.focusEffect)
         if (player.mdb.active.gt(0)) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mdb.focusActive)
         player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mme.meridian[1].effect)
@@ -61,6 +65,8 @@ addLayer("mse", {
         player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(Decimal.pow(1.5, player.mme.meridian[0].level))
 
         player.mse.miasmaCap = new Decimal(5)
+        if (hasMilestone("mci", 14)) player.mse.miasmaCap = player.mse.miasmaCap.mul(player.mci.flowEffects[3])
+        if (hasMilestone("mse", 11)) player.mse.miasmaCap = player.mse.miasmaCap.mul(player.mse.storedMiasma.add(1).log(10).div(10).add(1))
         if (player.mse.tempMiasma.gt(0) && player.mdb.active.lte(0)) {
             player.mse.tempMiasma = player.mse.tempMiasma.sub(player.mse.tempMiasma.div(10).max(0.1).mul(delta)).max(0)
 
@@ -83,7 +89,33 @@ addLayer("mse", {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
             player.mse.miasma = new Decimal(0)
+
+            // Cultivation
+            player.mcu.upgrades.splice(0, player.mcu.upgrades.length)
+            player.mcu.mantraSelected = 0
             
+            // Circulation
+            player.mci.circAmt = new Decimal(0)
+            player.mci.circCurrent = new Decimal(0)
+            player.mci.circSpeed = new Decimal(1)
+            player.mci.circMax = new Decimal(5)
+            
+            player.mci.concentrateLow = 40
+            player.mci.concentrateHigh = 60
+            player.mci.concentrateBuff = new Decimal(1)
+            
+            player.mci.flow = new Decimal(0)
+            player.mci.flowGain = new Decimal(0)
+            for (let i in player.mci.flowEffects) {
+                player.mci.flowEffects[i] = new Decimal(1)
+            }
+
+            player.mci.autoClick = false
+            player.mci.clickTime = new Decimal(0)
+
+            player.mci.milestones.splice(0, player.mci.milestones.length)
+
+            // Meridian
             for (let i = 0; i < 21; i++) {
                 player.mme.meridian[i].level = new Decimal(0); player.mme.meridian[i].gain = new Decimal(0)
                 if (i != 0) player.mme.meridian[i].effect = new Decimal(1)
@@ -91,6 +123,7 @@ addLayer("mse", {
             }
             player.mse.meridianSelect = 0
 
+            // Deep Breathing
             player.mdb.focus = new Decimal(0)
             player.mdb.focusGain = new Decimal(0)
             player.mdb.focusPerSec = new Decimal(0)
@@ -177,8 +210,49 @@ addLayer("mse", {
     buyables: {
         1: {
             costBase() { return new Decimal(0.1) },
-            costGrowth() { return new Decimal(1.5) },
-            purchaseLimit() { return new Decimal(50) },
+            costGrowth() { return new Decimal(1.2) },
+            purchaseLimit() { return new Decimal(10) },
+            currency() { return player.mse.sourceEnergy},
+            pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(5).add(1)},
+            unlocked() { return true },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            display() {
+                return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
+                    Boost Ki gain by 20%\
+                    <div style='width:1px;height:calc(100% - 3px);background:white;margin-top:3px'></div><h3 style='padding:2px;margin:2px'>" + formatShortWhole(getBuyableAmount(this.layer, this.id)) + "<hr style='width:20px'>" + formatShortWhole(this.purchaseLimit()) + "</h3></div><div class='innerContainer' style='width:106px;height:30px;border-bottom:1px solid white'><span>\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "<br>" +
+                    "Next: x" + formatSimple(getBuyableAmount(this.layer, this.id).add(1).div(5).add(1)) + "\n\
+                    </span></div><div class='innerContainer' style='width:106px;height:30px'>\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
+                    </div>"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style() {
+                let look = {position: "absolute", left: "2440px", top: "2440px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #436968", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#1b2a29"
+                return look
+            }
+        },
+        2: {
+            costBase() { return new Decimal(0.2) },
+            costGrowth() { return new Decimal(1.1) },
+            purchaseLimit() { return new Decimal(5) },
             currency() { return player.mse.sourceEnergy},
             pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
             effect(x) {return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id))},
@@ -211,11 +285,94 @@ addLayer("mse", {
                 }
             },
             style() {
-                let look = {position: "absolute", left: "1440px", top: "1280px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #436968", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                let look = {position: "absolute", left: "2440px", top: "2440px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #436968", outline: "3px solid #5ab28c", borderRadius: "20px"}
                 getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#1b2a29"
                 return look
             }
         },
+        3: {
+            costBase() { return new Decimal(0.2) },
+            costGrowth() { return new Decimal(1.1) },
+            purchaseLimit() { return new Decimal(5) },
+            currency() { return player.mse.sourceEnergy},
+            pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
+            effect(x) {return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id))},
+            unlocked() { return true },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            display() {
+                return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
+                    Boost Ki gain by 20%\
+                    <div style='width:1px;height:calc(100% - 3px);background:white;margin-top:3px'></div><h3 style='padding:2px;margin:2px'>" + formatShortWhole(getBuyableAmount(this.layer, this.id)) + "<hr style='width:20px'>" + formatShortWhole(this.purchaseLimit()) + "</h3></div><div class='innerContainer' style='width:106px;height:30px;border-bottom:1px solid white'><span>\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "<br>" +
+                    "Next: x" + formatSimple(Decimal.pow(1.2, getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\
+                    </span></div><div class='innerContainer' style='width:106px;height:30px'>\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
+                    </div>"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style() {
+                let look = {position: "absolute", left: "2440px", top: "2440px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #436968", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#1b2a29"
+                return look
+            }
+        },
+        4: {
+            costBase() { return new Decimal(0.2) },
+            costGrowth() { return new Decimal(1.1) },
+            purchaseLimit() { return new Decimal(5) },
+            currency() { return player.mse.sourceEnergy},
+            pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
+            effect(x) {return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id))},
+            unlocked() { return true },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            display() {
+                return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
+                    Boost Ki gain by 20%\
+                    <div style='width:1px;height:calc(100% - 3px);background:white;margin-top:3px'></div><h3 style='padding:2px;margin:2px'>" + formatShortWhole(getBuyableAmount(this.layer, this.id)) + "<hr style='width:20px'>" + formatShortWhole(this.purchaseLimit()) + "</h3></div><div class='innerContainer' style='width:106px;height:30px;border-bottom:1px solid white'><span>\
+                    Currently: x" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "<br>" +
+                    "Next: x" + formatSimple(Decimal.pow(1.2, getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\
+                    </span></div><div class='innerContainer' style='width:106px;height:30px'>\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
+                    </div>"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style() {
+                let look = {position: "absolute", left: "2440px", top: "2440px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #436968", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#1b2a29"
+                return look
+            }
+        },
+        /*
         2: {
             costBase() { return new Decimal(1) },
             costGrowth() { return new Decimal(10) },
@@ -339,6 +496,7 @@ addLayer("mse", {
                 return look
             }
         },
+        */
         111: {
             costBase() { return new Decimal(1e8) },
             costGrowth() { return new Decimal(30) },
@@ -958,7 +1116,7 @@ addLayer("mse", {
     milestones: {
         11: {
             requirementDescription: "5 Stored Miasma",
-            effectDescription() { return "???" },
+            effectDescription() { return "Slightly boost miasma cap based on stored miasma<br>Currently: x" + formatSimple(player.mse.storedMiasma.add(1).log(10).div(10).add(1)) },
             done() { return player.mse.storedMiasma.gte(5) },
             style() {
                 let look = {width: "687px", minHeight: "75px", color: "white", border: "3px solid #4d1d1d", borderTop: "0px", borderRadius: "0px"}
@@ -981,7 +1139,7 @@ addLayer("mse", {
                             ["buyable", 131], ["buyable", 132], ["buyable", 133],
                             ["buyable", 141], ["buyable", 142], ["buyable", 143],
                             ["buyable", 151], ["buyable", 152], ["buyable", 153],
-                        ], () => {return {position: "relative", background: "repeating-linear-gradient(135deg, #87d2d022 0 15px, #87d2d033 0 30px)", width: "3000px", height: "3000px", zoom: player.mse.zoom}}],
+                        ], () => {return {position: "relative", background: "repeating-linear-gradient(135deg, #87d2d022 0 15px, #87d2d033 0 30px)", width: "5000px", height: "5000px", zoom: player.mse.zoom}}],
                     ], {border: "3px solid #5ab28c", width: "800px", height: "700px", flexFlow: "column"}],
                 ]
             },

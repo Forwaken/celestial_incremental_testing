@@ -25,6 +25,7 @@ addLayer("hve", {
         if (hasUpgrade("hpw", 112)) player.hve.vexDiv = player.hve.vexDiv.mul(Decimal.pow10(player.h.stage))
         if (hasUpgrade("hpw", 44)) player.hve.vexDiv = player.hve.vexDiv.mul(upgradeEffect("hpw", 44))
         if (hasUpgrade("hbl", 102)) player.hve.vexDiv = player.hve.vexDiv.mul(upgradeEffect("hbl", 102))
+        player.hve.vexDiv = player.hve.vexDiv.mul(levelableEffect("pu", 216)[1].pow(player.h.externalRaise))
 
         let connect = Decimal.pow10(player.h.stage.mul(player.h.stage.sub(5).mul(2)))
 

@@ -1479,6 +1479,47 @@ function loadVue() {
 		},
 	})
 
+	// data = id of clickable
+	Vue.component('clip-hoverless-clickable', {
+		props: ['layer', 'data'],
+		template: `
+		<button
+			v-if="tmp[layer].clickables && tmp[layer].clickables[data]!== undefined && tmp[layer].clickables[data].unlocked"
+			v-bind:class="{ upg: true, tooltipBox: true, canClipHoverless: tmp[layer].clickables[data].canClick, locked: !tmp[layer].clickables[data].canClick}"
+			v-bind:style="[tmp[layer].clickables[data].canClick ? {'background-color': tmp[layer].color} : {}, run(layers[layer].clickables[data].style, layers[layer].clickables[data])]"
+			v-on:click="if(!interval) clickClickable(layer, data)" :id='"clickable-" + layer + "-" + data' @mousedown="start" @mouseleave="stop" @mouseup="stop" @touchstart="start" @touchend="stop" @touchcancel="stop" @touchmove="hover" @mouseenter="hover">
+			<span v-if= "layers[layer].clickables[data].title" v-bind:style="{'transition-duration': '0s'}"><h2 v-html="run(layers[layer].clickables[data].title, layers[layer].clickables[data])" v-bind:style="{'transition-duration': '0s'}"></h2><br></span>
+			<span v-bind:style="{'white-space': 'pre-line','transition-duration': '0s'}" v-html="run(layers[layer].clickables[data].display, layers[layer].clickables[data])"></span>
+			<node-mark :layer='layer' :data='tmp[layer].clickables[data].marked'></node-mark>
+			<tooltip v-if="layers[layer].clickables[data].tooltip" :text="run(layers[layer].clickables[data].tooltip, layers[layer].clickables[data])"></tooltip>
+
+		</button>
+		`,
+		data() { return { interval: false, time: 0,}},
+		methods: {
+			start() {
+				if (!this.interval && layers[this.layer].clickables[this.data].onHold) {
+					this.interval = setInterval((function() {
+						let c = layers[this.layer].clickables[this.data]
+						if(this.time >= 5 && run(c.canClick, c)) {
+							run(c.onHold, c)
+						}
+						this.time = this.time+1
+					}).bind(this), 50)
+				}
+				this.hover()
+			},
+			stop() {
+				clearInterval(this.interval)
+				this.interval = false
+			  	this.time = 0
+			},
+			hover() {
+				if (layers[this.layer].clickables[this.data].onHover) run(layers[this.layer].clickables[this.data].onHover, layers[this.layer].clickables[this.data])
+			},
+		},
+	})
+
 	Vue.component('master-button', {
 		props: ['layer', 'data'],
 		template: `

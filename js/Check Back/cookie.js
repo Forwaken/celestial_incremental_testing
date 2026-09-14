@@ -177,7 +177,7 @@ addLayer("ep2", {
         upgIndex: 0,
 
         autoClick: false,
-        clickTime: 0,
+        clickTime: new Decimal(0),
     }},
     nodeStyle: {
         background: "radial-gradient(#C19F68, #86562E)",
@@ -290,10 +290,10 @@ addLayer("ep2", {
 
         // Autoclicker
         if (player.ep2.autoClick) {
-            player.ep2.clickTime += 1
-            if (player.ep2.clickTime > 2) {
+            player.ep2.clickTime = Decimal.add(player.ep2.clickTime, delta)
+            if (Decimal.gte(player.ep2.clickTime, 0.1)) {
                 layers.ep2.cookieClick()
-                player.ep2.clickTime = 0
+                player.ep2.clickTime = Decimal.sub(player.ep2.clickTime, 0.1)
             }
         }
 

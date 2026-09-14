@@ -13,6 +13,8 @@
         grassEffect: new Decimal(1),
         grassEclipseEffect: new Decimal(1),
         grassValue: new Decimal(1),
+        grassSoftcapStart: new Decimal(1e100),
+        grassSoftcap: new Decimal(0.2),
         
         maxGrass: new Decimal(1),
 
@@ -50,6 +52,12 @@
                 }
             }
         }
+        
+        player.dgr.grassSoftcapStart = new Decimal(1e100)
+        if (hasMilestone("mci", 12)) player.dgr.grassSoftcapStart = player.dgr.grassSoftcapStart.mul(player.mci.flowEffects[1])
+
+        player.dgr.grassSoftcap = new Decimal(0.2)
+        player.dgr.grassSoftcap = player.dgr.grassSoftcap.add(buyableEffect("rp", 14).sub(1))
 
         // MAX GRASS
         player.dgr.maxGrass = new Decimal(1)
@@ -69,7 +77,7 @@
         player.dgr.maxGrass = player.dgr.maxGrass.mul(levelableEffect("car", 406)[0])
         
         // MAX GRASS SOFTCAP
-        if (player.dgr.maxGrass.gte(1e100)) player.dgr.maxGrass = player.dgr.maxGrass.div(1e100).pow(0.2).mul(1e100)
+        if (player.dgr.maxGrass.gte(player.dgr.grassSoftcapStart)) player.dgr.maxGrass = player.dgr.maxGrass.div(player.dgr.grassSoftcapStart).pow(player.dgr.grassSoftcap).mul(player.dgr.grassSoftcapStart)
 
         //post softcap
         player.dgr.maxGrass = player.dgr.maxGrass.mul(buyableEffect("ds", 103))
@@ -92,7 +100,7 @@
         player.dgr.grassValue = player.dgr.grassValue.mul(levelableEffect("car", 406)[0])
 
         // GRASS VALUE SOFTCAP
-        if (player.dgr.grassValue.gte(1e100)) player.dgr.grassValue = player.dgr.grassValue.div(1e100).pow(Decimal.add(0.2, buyableEffect("rp", 14).sub(1))).mul(1e100)
+        if (player.dgr.grassValue.gte(player.dgr.grassSoftcapStart)) player.dgr.grassValue = player.dgr.grassValue.div(player.dgr.grassSoftcapStart).pow(player.dgr.grassSoftcap).mul(player.dgr.grassSoftcapStart)
 
         //post softcap
         player.dgr.grassValue = player.dgr.grassValue.mul(buyableEffect("ds", 103))
@@ -516,6 +524,7 @@
         ["style-row", [
             ["raw-html", () => {return "Boosts booster effect by ^" + format(player.dgr.grassEclipseEffect)}, {color: "white", fontSize: "20px", fontFamily: "monospace", paddingRight: "10px"}],
         ], () => {return hasUpgrade("dv", 12) && player.pet.legPetTimers[0].current.gt(0) ? {} : {display: "none !important"}}],
+        ["raw-html", () => {return player.dgr.grassValue.gte(player.dgr.grassSoftcapStart) || player.dgr.maxGrass.gte(player.dgr.grassSoftcapStart) ? "UNAVOIDABLE SOFTCAP: Value and cap past " + format(player.dgr.grassSoftcapStart) + " is raised by ^" + formatSimple(player.dgr.grassSoftcap, 3) : ""}, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => { return player.pet.legPetTimers[0].current.gt(0) ? "ECLIPSE IS ACTIVE: " + formatTime(player.pet.legPetTimers[0].current) + "." : ""}, {color: "#FEEF5F", fontSize: "20px", fontFamily: "monospace"}],
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],

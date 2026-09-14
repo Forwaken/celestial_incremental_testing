@@ -217,6 +217,7 @@ addLayer("tera", {
         player.tera.virtueEffects[2][1] = player.tera.virtueEssence[2].gte(49) ? player.tera.virtueEssence[2].div(7).add(1).log(7).pow(0.7).floor() : new Decimal(0)
         player.tera.virtueEffects[2][2] = player.tera.virtueEssence[2].gte(1e9) ? Decimal.pow(3, player.tera.virtueEssence[2].div(1e9).add(1).log(7).pow(0.7)) : new Decimal(1)
         if (!player.tera.virtueUnlocks[2] && player.tera.virtueEssence[2].gte(70000)) player.tera.virtueUnlocks[2] = true
+        if (!player.tera.virtueUnlocks2[2] && player.tera.virtueEssence[2].gte(1e16)) player.tera.virtueUnlocks2[2] = true
         if (player.tera.trueHept.gte(6)) player.tera.virtue[2] = player.tera.virtue[2].add(player.tera.virtueGain[2])
         player.tera.virtueReq[3] = layers.h.hexReq(player.tera.virtue[3], 21, 1.4, new Decimal(1)).floor()
         player.tera.virtueGain[3] = layers.h.hexGain(player.tera.virtue[2], 21, 1.4, new Decimal(1)).sub(player.tera.virtue[3]).max(0).ceil()
@@ -225,6 +226,7 @@ addLayer("tera", {
         player.tera.virtueEffects[3][1] = player.tera.virtueEssence[3].gte(49) ? Decimal.pow(2.5, player.tera.virtueEssence[3].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
         player.tera.virtueEffects[3][2] = player.tera.virtueEssence[3].gte(1e10) ? Decimal.pow(2, player.tera.virtueEssence[3].div(1e10).add(1).log(7).pow(0.5)) : new Decimal(1)
         if (!player.tera.virtueUnlocks[3] && player.tera.virtueEssence[3].gte(350000)) player.tera.virtueUnlocks[3] = true
+        if (!player.tera.virtueUnlocks2[3] && player.tera.virtueEssence[3].gte(1e18)) player.tera.virtueUnlocks2[3] = true
         player.tera.virtueReq[4] = layers.h.hexReq(player.tera.virtue[4], 28, 1.35, new Decimal(1)).floor()
         player.tera.virtueGain[4] = layers.h.hexGain(player.tera.virtue[3], 28, 1.35, new Decimal(1)).sub(player.tera.virtue[4]).max(0).ceil()
         player.tera.virtueEssenceGain[4] = player.tera.virtue[4].div(3).pow(1.22)
@@ -232,6 +234,7 @@ addLayer("tera", {
         player.tera.virtueEffects[4][1] = player.tera.virtueEssence[4].gte(49) ? Decimal.pow(1.2, player.tera.virtueEssence[4].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
         player.tera.virtueEffects[4][2] = player.tera.virtueEssence[4].gte(1e11) ? Decimal.pow(1.5, player.tera.virtueEssence[4].div(1e11).add(1).log(7).pow(0.7)) : new Decimal(1)
         if (!player.tera.virtueUnlocks[4] && player.tera.virtueEssence[4].gte(1.4e6)) player.tera.virtueUnlocks[4] = true
+        if (!player.tera.virtueUnlocks2[4] && player.tera.virtueEssence[4].gte(1e19)) player.tera.virtueUnlocks2[4] = true
         player.tera.virtueReq[5] = layers.h.hexReq(player.tera.virtue[5], 35, 1.3, new Decimal(1)).floor()
         player.tera.virtueGain[5] = layers.h.hexGain(player.tera.virtue[4], 35, 1.3, new Decimal(1)).sub(player.tera.virtue[5]).max(0).ceil()
         player.tera.virtueEssenceGain[5] = player.tera.virtue[5].div(2).pow(1.2)
@@ -239,6 +242,7 @@ addLayer("tera", {
         player.tera.virtueEffects[5][1] = player.tera.virtueEssence[5].gte(49) ? Decimal.pow(1.5, player.tera.virtueEssence[5].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
         player.tera.virtueEffects[5][2] = player.tera.virtueEssence[5].gte(1e12) ? Decimal.pow(2, player.tera.virtueEssence[5].div(1e12).add(1).log(7).pow(0.7)) : new Decimal(1)
         if (!player.tera.virtueUnlocks[5] && player.tera.virtueEssence[5].gte(7e6)) player.tera.virtueUnlocks[5] = true
+        if (!player.tera.virtueUnlocks2[5] && player.tera.virtueEssence[5].gte(1e20)) player.tera.virtueUnlocks2[5] = true
         player.tera.virtueReq[6] = layers.h.hexReq(player.tera.virtue[6], 42, 1.25, new Decimal(1)).floor()
         player.tera.virtueGain[6] = layers.h.hexGain(player.tera.virtue[5], 42, 1.25, new Decimal(1)).sub(player.tera.virtue[6]).max(0).ceil()
         player.tera.virtueEssenceGain[6] = player.tera.virtue[6].pow(1.18)
@@ -246,6 +250,7 @@ addLayer("tera", {
         player.tera.virtueEffects[6][1] = player.tera.virtueEssence[6].gte(49) ? Decimal.pow(1.1, player.tera.virtueEssence[6].div(49).add(1).log(7).pow(0.7)) : new Decimal(1)
         player.tera.virtueEffects[6][2] = player.tera.virtueEssence[6].gte(1e14) ? player.tera.virtueEssence[6].div(1e14).add(1).log(7).pow(0.7).div(100).add(1) : new Decimal(1)
         if (!player.tera.virtueUnlocks[6] && player.tera.virtueEssence[6].gte(3.5e7)) player.tera.virtueUnlocks[6] = true
+        if (!player.tera.virtueUnlocks2[6] && player.tera.virtueEssence[6].gte(1e24)) player.tera.virtueUnlocks2[6] = true
 
         for (let i = 0; i < 7; i++) {
             player.tera.virtueEssence[i] = player.tera.virtueEssence[i].add(player.tera.virtueEssenceGain[i].mul(delta))
@@ -2216,10 +2221,10 @@ addLayer("tera", {
                                 ["style-row", [["raw-html", "1e9", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "Boons: x" + formatSimple(player.tera.virtueEffects[2][2], 2)}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[2].lt(1e9)) {look.background = "#bf8f8f"};return look}],
-                            ["style-row", [
+                            ["style-row", [ // Blessing Booster Bulk Gain
                                 ["style-row", [["raw-html", "1e16", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "[NOT IMPLEMENTED]"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[2].lt(1e16)) {look.background = "#bf8f8f"};return look}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[2] && player.tera.virtueEssence[2].lt(1e16)) {look.background = "#bf8f8f"};return look}],
                         ], {width: "398px", height: "194px", borderLeft: "3px solid #95A6DD", userSelect: "none"}],
                     ], {width: "576px", height: "194px", border: "3px solid #95A6DD", background: "#c59aa1", marginTop: "-3px"}],
                     ["style-row", [
@@ -2259,8 +2264,8 @@ addLayer("tera", {
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[3].lt(1e10)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "1e18", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "[NOT IMPLEMENTED]"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[3].lt(1e18)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", () => {return "Remove universe limits on available refinement milestones"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", lineHeight: "0.75", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[3] && player.tera.virtueEssence[3].lt(1e18)) {look.background = "#bf8f8f"};return look}],
                         ], {width: "398px", height: "194px", borderLeft: "3px solid #95A6DD", userSelect: "none"}],
                     ], {width: "576px", height: "194px", border: "3px solid #95A6DD", background: "#c59c80", marginTop: "-3px"}],
                     ["style-row", [
@@ -2301,7 +2306,7 @@ addLayer("tera", {
                             ["style-row", [
                                 ["style-row", [["raw-html", "1e19", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "[NOT IMPLEMENTED]"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[4].lt(1e19)) {look.background = "#bf8f8f"};return look}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[4] && player.tera.virtueEssence[4].lt(1e19)) {look.background = "#bf8f8f"};return look}],
                         ], {width: "398px", height: "194px", borderLeft: "3px solid #95A6DD", userSelect: "none"}],
                     ], {width: "576px", height: "194px", border: "3px solid #95A6DD", background: "#719696", marginTop: "-3px"}],
                     ["style-row", [
@@ -2339,10 +2344,10 @@ addLayer("tera", {
                                 ["style-row", [["raw-html", "1e12", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "Holy Power: x" + formatSimple(player.tera.virtueEffects[5][2], 2)}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[5].lt(1e12)) {look.background = "#bf8f8f"};return look}],
-                            ["style-row", [ // Buy Max Boosters
+                            ["style-row", [
                                 ["style-row", [["raw-html", "1e20", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "[NOT IMPLEMENTED]"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[5].lt(1e20)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", () => {return "Unlock a new pet evolution"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[5] && player.tera.virtueEssence[5].lt(1e20)) {look.background = "#bf8f8f"};return look}],
                         ], {width: "398px", height: "194px", borderLeft: "3px solid #95A6DD", userSelect: "none"}],
                     ], {width: "576px", height: "194px", border: "3px solid #95A6DD", background: "#c5ba80", marginTop: "-3px"}],
                     ["style-row", [
@@ -2380,10 +2385,10 @@ addLayer("tera", {
                                 ["style-row", [["raw-html", "1e14", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "External Effects: ^" + formatSimple(player.tera.virtueEffects[6][2], 3)}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[6].lt(1e14)) {look.background = "#bf8f8f"};return look}],
-                            ["style-row", [
+                            ["style-row", [ // Unlock for a new dark OTF (idk which one to pick, there are so many)
                                 ["style-row", [["raw-html", "1e24", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "[NOT IMPLEMENTED]"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[6].lt(1e24)) {look.background = "#bf8f8f"};return look}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[6] && player.tera.virtueEssence[6].lt(1e24)) {look.background = "#bf8f8f"};return look}],
                         ], {width: "398px", height: "194px", borderLeft: "3px solid #95A6DD", userSelect: "none"}],
                     ], {width: "576px", height: "194px", border: "3px solid #95A6DD", background: "#7e72a3", marginTop: "-3px"}],
                 ],

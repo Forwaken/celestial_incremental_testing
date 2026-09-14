@@ -319,6 +319,7 @@ addLayer("dgj", {
     },
     milestones: {
         11: {
+            requirementDescription: "1 Grass Jump",
             effectDescription() { return "Increase dark grass value and capacity by 50% per grass jump<br>Currently: x" + format(player.dgj.milestone1Effect) + "." },
             done() { return player.dgj.grassJump.gte(1) },
             style() {
@@ -328,6 +329,7 @@ addLayer("dgj", {
             },
         },
         12: {
+            requirementDescription: "2 Grass Jumps",
             effectDescription() { return "Increase dark celestial point gain by 100% per grass jump<br>Currently: x" + format(player.dgj.milestone2Effect) + "." },
             done() { return player.dgj.grassJump.gte(2) },
             style() {
@@ -337,6 +339,7 @@ addLayer("dgj", {
             },
         },
         13: {
+            requirementDescription: "4 Grass Jumps",
             effectDescription() { return "Decreases eclipse timer tickspeed by 5% per grass jump<br>Currently: /" + format(player.dgj.milestone3Effect) + "." },
             done() { return player.dgj.grassJump.gte(4) },
             style() {
@@ -346,6 +349,7 @@ addLayer("dgj", {
             },
         },
         14: {
+            requirementDescription: "6 Grass Jumps",
             effectDescription() { return "Unlock a new layer in the hive." },
             done() { return player.dgj.grassJump.gte(6) },
             style() {
@@ -355,6 +359,7 @@ addLayer("dgj", {
             },
         },
         15: {
+            requirementDescription: "8 Grass Jumps",
             effectDescription() { return "All forms of dark grass automation are effected by dark grass growth speed<br>Currently: x" + format(player.dgj.milestone5Effect) + "." },
             done() { return player.dgj.grassJump.gte(8) },
             style() {
@@ -364,6 +369,7 @@ addLayer("dgj", {
             },
         },
         16: {
+            requirementDescription: "12 Grass Jumps",
             effectDescription() { return "Replace the formulas for the dark grass buyables and scale the dark grass buyables by 1% per grass jump, starting at 12<br>Currently: x" + format(player.dgj.milestone6Effect) + "." },
             done() { return player.dgj.grassJump.gte(12) },
             style() {
@@ -373,6 +379,7 @@ addLayer("dgj", {
             },
         },
         17: {
+            requirementDescription: "16 Grass Jumps",
             effectDescription() { return "Increase space pet xp gain by 5% per grass jump, starting at 16<br>Currently: x" + format(player.dgj.milestone7Effect) + "." },
             done() { return player.dgj.grassJump.gte(16) },
             style() {

@@ -866,7 +866,7 @@ addLayer("gwaTemple", {
         111: {
             title: "Gwankest Gwastery",
             unlocked: true,
-            description: "Reduce gwankest cost scaling based on GTMP",
+            description: "Reduce gwankest cost scaling based on GTMPs",
             cost() {return new Decimal(8)},
             currencyLocation() { return player.gwaTemple },
             currencyDisplayName: "Gwark",
@@ -885,6 +885,7 @@ addLayer("gwaTemple", {
             currencyInternalName: "gwark",
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "2px", borderRadius: "15px"},
         },
+        // Boost something based on effective gwa level
     },
     buyables: {
         11: {

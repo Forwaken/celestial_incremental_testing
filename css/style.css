@@ -927,6 +927,14 @@ h1, h2, h3, b, input {
 		background:rgba(255,255,255,0.2);
 	}
 
+.canClipHoverless {
+	cursor: pointer;
+}
+
+.canClipHoverless:hover {
+	filter: brightness(120%);
+}
+
 .hide {
 	display: none !important;
 	margin: 0px !important;
@@ -2195,4 +2203,25 @@ button > * {
 	width: 90%;
 	height: 15px;
 	font-size: 13px;
+}
+
+.concentrateButton {
+	transition-duration: 0 !important;
+	position: relative;
+	cursor: pointer;
+	width: 600px;
+	height: 103px;
+	padding-top: 10px;
+	background: #253626;
+	color: white;
+	font-size: 14px;
+	line-height: 1;
+	border: 3px solid #446346;
+	border-radius: 0;
+	border-top-left-radius: 297px 97px;
+	border-top-right-radius: 297px 97px;
+}
+
+.concentrateButton:hover {
+	filter: brightness(120%);
 }
