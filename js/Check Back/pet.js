@@ -1963,52 +1963,57 @@ addLayer("pet", {
             canClick() {return player.cb.petPoints.gte(player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].cost) && player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].current.lt(0)},
             unlocked() {return true},
             onClick() {
-                if (!hasAchievement("achievements", 104)) completeAchievement("achievements", 104)
-                let petId = 101
-                player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].cost)
-                player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].current = player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].max
+                if (player.pet.shopInput.gte(1)) player.pet.shopBulk = player.pet.shopInput.floor()
+                player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].cost = petShop[player.pet.shopId[0]][player.pet.shopId[1]].base.mul(player.pet.shopBulk.pow(player.pet.shopBulk.log(10).mul(Decimal.div(petShop[player.pet.shopId[0]][player.pet.shopId[1]].scale, player.pet.shopScaleDiv)).add(1)))
+                
+                if (player.cb.petPoints.gte(player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].cost) && player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].current.lt(0)) {
+                    if (!hasAchievement("achievements", 104)) completeAchievement("achievements", 104)
+                    let petId = 101
+                    player.cb.petPoints = player.cb.petPoints.sub(player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].cost)
+                    player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].current = player.pet.shop[player.pet.shopId[0]][player.pet.shopId[1]].max
 
-                if (player.pet.shopId[0] == "shard") {
-                    switch (player.pet.shopId[1]) {
-                        case 0:
-                            player.cb.evolutionShards = player.cb.evolutionShards.add(player.pet.shopBulk);
-                            doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Evolution Shard!", "Shard Obtained!", 5, "#d487fd", "resources/evoShard.png")
-                            break;
-                        case 1:
-                            player.cb.paragonShards = player.cb.paragonShards.add(player.pet.shopBulk);
-                            doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Paragon Shard!", "Shard Obtained!", 5, "#4c64ff", "resources/paragonShard.png")
-                            break;
-                        case 2:
-                            player.ep2.chocoShards = player.ep2.chocoShards.add(player.pet.shopBulk);
-                            doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Chocolate Shard!", "Shard Obtained!", 5, "#2D6C95", "resources/checkback/choco_shard.png")
-                            break;
-                        case 3:
-                            player.cbs.ascensionshards = player.cbs.ascensionshards.add(player.pet.shopBulk);
-                            doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Ascension Shard!", "Shard Obtained!", 5, "#5cafbf", "resources/ascensionShard.png")
-                            break;
+                    if (player.pet.shopId[0] == "shard") {
+                        switch (player.pet.shopId[1]) {
+                            case 0:
+                                player.cb.evolutionShards = player.cb.evolutionShards.add(player.pet.shopBulk);
+                                doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Evolution Shard!", "Shard Obtained!", 5, "#d487fd", "resources/evoShard.png")
+                                break;
+                            case 1:
+                                player.cb.paragonShards = player.cb.paragonShards.add(player.pet.shopBulk);
+                                doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Paragon Shard!", "Shard Obtained!", 5, "#4c64ff", "resources/paragonShard.png")
+                                break;
+                            case 2:
+                                player.ep2.chocoShards = player.ep2.chocoShards.add(player.pet.shopBulk);
+                                doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Chocolate Shard!", "Shard Obtained!", 5, "#2D6C95", "resources/checkback/choco_shard.png")
+                                break;
+                            case 3:
+                                player.cbs.ascensionshards = player.cbs.ascensionshards.add(player.pet.shopBulk);
+                                doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " Ascension Shard!", "Shard Obtained!", 5, "#5cafbf", "resources/ascensionShard.png")
+                                break;
+                        }
+                    } else if (player.pet.shopId[0] == "crate") {
+                        switch (player.pet.shopId[1]) {
+                            case 0: layers.cb.petButton1(player.pet.shopBulk); break;
+                            case 1: layers.cb.petButton2(player.pet.shopBulk); break;
+                            case 2: layers.cb.petButton3(player.pet.shopBulk); break;
+                            case 3: layers.cb.petButton4(player.pet.shopBulk); break;
+                            case 4: layers.cb.petButton5(player.pet.shopBulk); break;
+                            case 5: layers.cb.petButton6(player.pet.shopBulk); break;
+                            case 6: layers.cb.petButton7(player.pet.shopBulk); break;
+                        }
+                    } else if (player.pet.shopId[0] == "common") {
+                        petId = 101 + player.pet.shopId[1]
+                        addLevelableXP("pet", petId, new Decimal(player.pet.shopBulk))
+                        doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#9bedff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
+                    } else if (player.pet.shopId[0] == "uncommon") {
+                        petId = 201 + player.pet.shopId[1]
+                        addLevelableXP("pet", petId, new Decimal(player.pet.shopBulk))
+                        doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#88e688", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
+                    } else if (player.pet.shopId[0] == "rare") {
+                        petId = 301 + player.pet.shopId[1]
+                        addLevelableXP("pet", petId, new Decimal(player.pet.shopBulk))
+                        doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#4e7cff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
                     }
-                } else if (player.pet.shopId[0] == "crate") {
-                    switch (player.pet.shopId[1]) {
-                        case 0: layers.cb.petButton1(player.pet.shopBulk); break;
-                        case 1: layers.cb.petButton2(player.pet.shopBulk); break;
-                        case 2: layers.cb.petButton3(player.pet.shopBulk); break;
-                        case 3: layers.cb.petButton4(player.pet.shopBulk); break;
-                        case 4: layers.cb.petButton5(player.pet.shopBulk); break;
-                        case 5: layers.cb.petButton6(player.pet.shopBulk); break;
-                        case 6: layers.cb.petButton7(player.pet.shopBulk); break;
-                    }
-                } else if (player.pet.shopId[0] == "common") {
-                    petId = 101 + player.pet.shopId[1]
-                    addLevelableXP("pet", petId, new Decimal(player.pet.shopBulk))
-                    doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#9bedff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
-                } else if (player.pet.shopId[0] == "uncommon") {
-                    petId = 201 + player.pet.shopId[1]
-                    addLevelableXP("pet", petId, new Decimal(player.pet.shopBulk))
-                    doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#88e688", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
-                } else if (player.pet.shopId[0] == "rare") {
-                    petId = 301 + player.pet.shopId[1]
-                    addLevelableXP("pet", petId, new Decimal(player.pet.shopBulk))
-                    doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#4e7cff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
                 }
             },
             onHold() { clickClickable(this.layer, this.id) },
