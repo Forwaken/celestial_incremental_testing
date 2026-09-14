@@ -1999,12 +1999,15 @@ addLayer("pet", {
                     }
                 } else if (player.pet.shopId[0] == "common") {
                     petId = 101 + player.pet.shopId[1]
+                    addLevelableXP("pet", petId, new Decimal(player.pet.shopBulk))
                     doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#9bedff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
                 } else if (player.pet.shopId[0] == "uncommon") {
                     petId = 201 + player.pet.shopId[1]
+                    addLevelableXP("pet", petId, new Decimal(player.pet.shopBulk))
                     doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#88e688", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
                 } else if (player.pet.shopId[0] == "rare") {
                     petId = 301 + player.pet.shopId[1]
+                    addLevelableXP("pet", petId, new Decimal(player.pet.shopBulk))
                     doPopup("none", "+" + formatWhole(player.pet.shopBulk) + " " + run(layers.pet.levelables[petId].title, layers.pet.levelables[petId]), "Pet Obtained!", 5, "#4e7cff", run(layers.pet.levelables[petId].image, layers.pet.levelables[petId]))
                 }
             },
