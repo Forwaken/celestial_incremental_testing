@@ -1227,7 +1227,7 @@
             "Punchcards": {
                 buttonStyle() { return { border: "2px solid #384166", borderRadius: "10px" } },
                 unlocked() { return true },
-                shouldNotify() {return !player.pu.clickables[101] && player.pu.storedSelections.gt(0)},
+                shouldNotify() {return !player.pu.clickables[101] && player.pu.storedSelections.gt(0) && player.pu.selectedPunchcards[0] != 0},
                 glowColor: "#bbf",
                 embedLayer: 'pu',
             },

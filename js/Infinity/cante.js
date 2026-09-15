@@ -195,7 +195,7 @@
 
         // Effects
         if (player.ca.replicanticanti.gt(1)) { player.ca.replicanticantiEffect = Decimal.pow(1.2, player.ca.replicanticanti.add(1).log(10)).mul(player.ca.replicanticanti.add(1).log(10).add(1)) } else { player.ca.replicanticantiEffect = new Decimal(1) }
-        if (player.ca.replicanticanti.gt(1)) { player.ca.replicanticantiEffect2 = player.ca.replicanticanti.add(1).log(2).add(1) } else { player.ca.replicanticantiEffect2 = new Decimal(1) }
+        if (player.ca.replicanticanti.gt(1)) { player.ca.replicanticantiEffect2 = player.ca.replicanticanti.add(1).log(2).pow(0.7).add(1) } else { player.ca.replicanticantiEffect2 = new Decimal(1) }
     },
     gainCanteCore() {
         let cost = Decimal.sumArithmeticSeries(player.ca.canteCoreGain, 100, 10, player.ca.canteCores)
