@@ -566,6 +566,14 @@ addLayer("jukebox", {
             file: "music/akashCutscene.mp3",
             unlocked() {return false},
         },
+        "dalpha": {
+            artist: "Icecreamdude",
+            name: "N/A",
+            description: "Dark Universe Alpha",
+            img: "resources/music/dalpha.png",
+            file: "music/dalpha.mp3",
+            unlocked() {return player.dotf.selMiaBefore},
+        },
     },
     microtabs: {
         stuff: {
@@ -581,7 +589,7 @@ addLayer("jukebox", {
                         ["jukebox", "eclipse"], ["jukebox", "hall-of-celestials"], ["jukebox", "alt-2"], ["jukebox", "space-battle"],
                         ["jukebox", "iridite-fight"], ["jukebox", "hive"], ["jukebox", "dice-space"], ["jukebox", "casino"],
                         ["jukebox", "blood-battle"], ["jukebox", "nox"], ["jukebox", "ascension-spirit"], ["jukebox", "zar-fight"],
-                        ["jukebox", "interspace"],
+                        ["jukebox", "interspace"], ["jukebox", "dalpha"],
                     ]],
                     ["blank", "2px"],
                 ],

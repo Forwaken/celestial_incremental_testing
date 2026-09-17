@@ -85,6 +85,7 @@ addLayer("mse", {
             player.mse.storedMiasma = player.mse.storedMiasma.add(player.mse.miasma)
 
             // Reset
+            player.tab = "mcu"
             player.mse.sourceEnergyGain = player.mse.sourceEnergyBase
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
