@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default", "bright", "dark", "wood", "gold", "silver", "moss", "coral", "midnight", "teal", "blossom"]
+var themes = ["default", "bright", "dark", "wood", "gold", "silver", "moss", "coral", "midnight", "teal", "miasma", "blossom"]
 
 //var(--points)
 var colors = {
@@ -321,6 +321,38 @@ var colors = {
 		darkScroll3: "#142420",
 		darkScroll4: "#172924",
 		darkSelected: "#515e5b",
+		darkTextColor: "#ccc",
+	},
+	miasma: {
+		regBorder: "#722B2B",
+		menuBackground: "#0b0404",
+		layerBackground: "#160808",
+		miscButton: "#2d1111",
+		miscButtonHover: "#441919",
+		miscButtonDisable: "#220c0c",
+		titleGradient: "linear-gradient(90deg, #4f1e1e 0%, #391515 50%, #4f1e1e 100%)",
+		tabTitle: "#441919",
+		scrollBackground: "#000",
+		scroll1: "#2d1111",
+		scroll2: "#391515",
+		scroll3: "#441919",
+		scroll4: "#4f1e1e",
+		selected: "#b89595",
+		textColor: "#ccc",
+
+		darkLayerBackground: "#000",
+		darkBorder: "#391515",
+		darkButton: "#160808",
+		darkButtonHover: "#220c0c",
+		darkButtonDisable: "#110606",
+		darkTitleGradient: "linear-gradient(90deg, #270f0f 0%, #1c0a0a 50%, #270f0f 100%)",
+		darkTabTitle: "#220c0c",
+		darkScrollBackground: "#000",
+		darkScroll1: "#160808",
+		darkScroll2: "#1c0a0a",
+		darkScroll3: "#220c0c",
+		darkScroll4: "#270f0f",
+		darkSelected: "#5C4A4A",
 		darkTextColor: "#ccc",
 	},
 	blossom: {

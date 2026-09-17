@@ -11,6 +11,8 @@ addLayer("dotf", {
         featureScaling: new Decimal(1),
         penumbral: false,
         miasmata: false,
+
+        selMiaBefore: false,
     }},
     automate() {},
     nodeStyle() {},
@@ -51,6 +53,7 @@ addLayer("dotf", {
             onClick() {
                 player.dotf.miasmata = true
                 player.pu.storedSelections = player.pu.storedSelections.sub(new Decimal(5).pow(player.dotf.featureScaling).floor())
+                if (!player.dotf.selMiaBefore) player.dotf.selMiaBefore = true
             },
             style() {
                 let look = {width: '250px', minHeight: '75px', maxHeight: '75px', backgroundOrigin: "border-box", border: "3px solid #0000003f", fontSize: '20px', borderRadius: "0px 0px 10px 10px"}

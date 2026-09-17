@@ -1228,6 +1228,9 @@ function updateStyles() {
 						if (player.ir.inBattle && arena && !arena.bossActive) playAndLoopAudio("music/bloodBattle.mp3", options.musicVolume/10);
 			    		if (player.ir.inBattle && arena && arena.bossActive) playAndLoopAudio("music/nox.mp3", options.musicVolume/10);
 						break;
+					case "DA":
+						playAndLoopAudio("music/dalpha.mp3", options.musicVolume/10)
+						break;
 					case "CH":
 						if (player.tab == "ch" || player.tab == "mm") playAndLoopAudio("music/hallOfCelestials.mp3", options.musicVolume/10)
 						//if (player.tab == "ch" && player.subtabs["ch"]["stuff"] != "???") playAndLoopAudio("music/aniciffoCutscene.mp3", options.musicVolume/10)

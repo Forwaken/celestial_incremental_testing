@@ -624,6 +624,34 @@ addLayer("settings", {
                 return look
             },
         },
+        112: {
+            title() {return player.dotf.selMiaBefore ? "Miasma Theme" : "[LOCKED]"},
+            canClick() {return options.theme != "miasma" && player.dotf.selMiaBefore},
+            unlocked: "true",
+            tooltip() {return !player.dotf.selMiaBefore ? "Access a corrupted universe." : ""},
+            onClick() {
+                options.theme = "miasma"
+	            changeTheme();
+	            resizeCanvas();
+            },
+            style() {
+                let look = {width: '100px', minHeight: '45px', color: "white", borderRadius: '0'}
+                if (!player.sma.inStarmetalChallenge && !options.themeDarken) {
+                    if (this.canClick()) {
+                        look.background = colors["miasma"].miscButton;look.border = "3px solid " + colors["miasma"].miscButtonDisable
+                    } else {
+                        look.background = colors["miasma"].miscButtonDisable;look.border = "3px solid " + colors["miasma"].layerBackground
+                    }
+                } else {
+                    if (this.canClick()) {
+                        look.background = colors["miasma"].darkButton;look.border = "3px solid " + colors["miasma"].darkButtonDisable
+                    } else {
+                        look.background = colors["miasma"].darkButtonDisable;look.border = "3px solid " + colors["miasma"].darkLayerBackground
+                    }
+                }
+                return look
+            },
+        },
     },
     tabFormat: [
         ["row", [["clickable", 2], ["clickable", 7], ["clickable", 4], ["clickable", 5]]],
@@ -676,6 +704,7 @@ addLayer("settings", {
                     ["style-row", [
                         ["style-row", [], {width: "3px", height: "45px", background: "var(--regBorder)"}],
                         ["clickable", 110], ["style-row", [], {width: "3px", height: "45px", background: "var(--regBorder)"}],
+                        ["clickable", 112], ["style-row", [], {width: "3px", height: "45px", background: "var(--regBorder)"}],
                         ["clickable", 111], //["style-row", [], {width: "3px", height: "45px", background: "var(--regBorder)"}],
                     ], {width: "306px", borderBottom: "3px solid var(--regBorder)"}],
                     ["style-row", [
