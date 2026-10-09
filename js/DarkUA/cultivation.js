@@ -307,11 +307,11 @@ addLayer("mcu", {
                     ], {width: "755px", height: "40px", background: "#b8860b44", border: "3px solid #735307", borderRadius: "15px 15px 0 0", marginBottom: "-3px"}],
                     ["style-column", [
                         ["blank", "5px"],
-                        ["row", [["clickable", 11], ["clickable", 12]]],
-                        ["row", [["clickable", 21], ["clickable", 22]]],
-                        ["row", [["clickable", 31], ["clickable", 32]]],
+                        ["style-row", [["clickable", 11], ["clickable", 12]], {width: "755px"}],
+                        ["style-row", [["clickable", 21], ["clickable", 22]], {borderTop: "3px solid #503a04"}],
+                        ["style-row", [["clickable", 31], ["clickable", 32]], () => {return hasUpgrade("mcu", 18) ? {borderTop: "3px solid #503a04"} : {display: "none !important"}}],
                         ["blank", "5px"],
-                    ], {width: "755px", background: "#b8860b22", border: "3px solid #735307"}],
+                    ], {width: "755px", background: "#b8860b11", border: "3px solid #735307"}],
                     ["style-column", [
                         ["raw-html", "Swapping mantras does not reset anything", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ], {width: "755px", height: "30px", background: "#b8860b44", border: "3px solid #735307", borderRadius: "0 0 15px 15px", marginTop: "-3px"}],
