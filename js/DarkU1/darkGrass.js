@@ -57,6 +57,7 @@
         if (hasMilestone("mci", 12)) player.dgr.grassSoftcapStart = player.dgr.grassSoftcapStart.mul(player.mci.flowEffects[1])
 
         player.dgr.grassSoftcap = new Decimal(0.2)
+        if (hasMilestone("mci", 14)) player.dgr.grassSoftcap = player.dgr.grassSoftcap.add(player.mci.flowEffects[3])
         player.dgr.grassSoftcap = player.dgr.grassSoftcap.add(buyableEffect("rp", 14).sub(1))
 
         // MAX GRASS
@@ -82,6 +83,8 @@
         //post softcap
         player.dgr.maxGrass = player.dgr.maxGrass.mul(buyableEffect("ds", 103))
         player.dgr.maxGrass = player.dgr.maxGrass.mul(buyableEffect("rp", 11))
+        player.dgr.maxGrass = player.dgr.maxGrass.mul(buyableEffect("dgr", 17))
+
         // GRASS VALUE
         player.dgr.grassValue = new Decimal(1)
         player.dgr.grassValue = player.dgr.grassValue.mul(buyableEffect("dgr", 12))
@@ -105,6 +108,7 @@
         //post softcap
         player.dgr.grassValue = player.dgr.grassValue.mul(buyableEffect("ds", 103))
         player.dgr.grassValue = player.dgr.grassValue.mul(buyableEffect("rp", 11))
+        player.dgr.grassValue = player.dgr.grassValue.mul(buyableEffect("dgr", 17))
 
         let autoMult = new Decimal(1)
         if (hasMilestone("dgj", 15)) autoMult = autoMult.mul(player.dgj.milestone5Effect)
@@ -342,8 +346,8 @@
             currency() { return player.dgr.grass},
             pay(amt) { player.dgr.grass = this.currency().sub(amt) },
             effect(x) {
-                if (hasMilestone("dgj", 16)) return Decimal.pow(Decimal.mul(1.2, player.dgj.milestone6Effect), getBuyableAmount(this.layer, this.id)).mul(getBuyableAmount(this.layer, this.id).add(1))
-                return getBuyableAmount(this.layer, this.id).mul(0.5).add(1).pow(1.2)
+                if (hasMilestone("dgj", 16)) return Decimal.pow(Decimal.mul(1.2, player.dgj.milestone6Effect), getBuyableAmount(this.layer, this.id)).mul(getBuyableAmount(this.layer, this.id).add(1)).pow(buyableEffect("dgr", 18))
+                return getBuyableAmount(this.layer, this.id).mul(0.5).add(1).pow(1.2).pow(buyableEffect("dgr", 18))
             },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
@@ -385,8 +389,8 @@
             currency() { return player.dgr.grass},
             pay(amt) { player.dgr.grass = this.currency().sub(amt) },
             effect(x) {
-                if (hasMilestone("dgj", 16)) return Decimal.pow(Decimal.mul(1.25, player.dgj.milestone6Effect), getBuyableAmount(this.layer, this.id)).mul(getBuyableAmount(this.layer, this.id).add(1))
-                return getBuyableAmount(this.layer, this.id).mul(0.5).add(1).pow(1.25)
+                if (hasMilestone("dgj", 16)) return Decimal.pow(Decimal.mul(1.25, player.dgj.milestone6Effect), getBuyableAmount(this.layer, this.id)).mul(getBuyableAmount(this.layer, this.id).add(1)).pow(buyableEffect("dgr", 18))
+                return getBuyableAmount(this.layer, this.id).mul(0.5).add(1).pow(1.25).pow(buyableEffect("dgr", 18))
             },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
@@ -428,8 +432,8 @@
             currency() { return player.dgr.grass},
             pay(amt) { player.dgr.grass = this.currency().sub(amt) },
             effect(x) {
-                if (hasMilestone("dgj", 16)) return Decimal.pow(Decimal.mul(1.3, player.dgj.milestone6Effect), getBuyableAmount(this.layer, this.id)).mul(getBuyableAmount(this.layer, this.id).add(1))
-                return getBuyableAmount(this.layer, this.id).mul(0.5).add(1).pow(1.3)
+                if (hasMilestone("dgj", 16)) return Decimal.pow(Decimal.mul(1.3, player.dgj.milestone6Effect), getBuyableAmount(this.layer, this.id)).mul(getBuyableAmount(this.layer, this.id).add(1)).pow(buyableEffect("dgr", 18))
+                return getBuyableAmount(this.layer, this.id).mul(0.5).add(1).pow(1.3).pow(buyableEffect("dgr", 18))
             },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
@@ -457,6 +461,119 @@
                 }
             },
             style: { width: '275px', height: '150px', color: "white", backgroundColor: "#003522", borderColor: "#006a44" }
+        },
+        17: {
+            costBase() {return new Decimal("1e300")},
+            costGrowth() {return new Decimal(1e60)},
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.dgr.grass},
+            pay(amt) { player.dgr.grass = this.currency().sub(amt) },
+            effect(x) {
+                return Decimal.pow(25, getBuyableAmount(this.layer, this.id))
+            },
+            unlocked() { return hasMilestone("mci", 16) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) },
+            title() {
+                return "Super Grass Multiplier"
+            },
+            display() {
+                return "which are multiplying grass value and capacity after softcap by x" + formatSimple(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Dark Grass"
+            },
+            buy(mult) {
+                if (mult != true && !hasUpgrade("dn", 13) && !hasMilestone("db", 16)) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (!hasUpgrade("dn", 13) && !hasMilestone("db", 16)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', color: "white", backgroundColor: "#003522", borderColor: "#006a44" }
+        },
+        18: {
+            costBase() {return new Decimal("1e400")},
+            costGrowth() {return new Decimal(1e80)},
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.dgr.grass},
+            pay(amt) { player.dgr.grass = this.currency().sub(amt) },
+            effect(x) {
+                return getBuyableAmount(this.layer, this.id).div(50).add(1)
+            },
+            unlocked() { return hasMilestone("mci", 16) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost())},
+            title() {
+                return "Super External Boosts"
+            },
+            display() {
+                return "which are raising external boosting grass buyables by ^" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Dark Grass"
+            },
+            buy(mult) {
+                if (mult != true && !hasUpgrade("dn", 13) && !hasMilestone("db", 16)) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (!hasUpgrade("dn", 13) && !hasMilestone("db", 16)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style: { width: '275px', height: '150px', color: "white", backgroundColor: "#003522", borderColor: "#006a44" }
+        },
+        19: {
+            costBase() {return new Decimal("1e500")},
+            costGrowth() {return new Decimal(1e100)},
+            purchaseLimit() { return new Decimal(100) },
+            currency() { return player.dgr.grass},
+            pay(amt) { player.dgr.grass = this.currency().sub(amt) },
+            effect(x) {
+                return Decimal.pow(3, getBuyableAmount(this.layer, this.id))
+            },
+            unlocked() { return getBuyableAmount(this.layer, this.id).gt(0) || hasMilestone("mci", 16) },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) && hasMilestone("mci", 16)},
+            title() {
+                return "Super Grassjump Req. Reducer"
+            },
+            display() {
+                return "which are reducing grass jump requirement by /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + ".\n\
+                    Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Dark Grass\n\
+                    <i style='color:#fbb'>[Does not reset on D1 exit]</i>"
+            },
+            buy(mult) {
+                if (mult != true && !hasUpgrade("dn", 13) && !hasMilestone("db", 16)) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (!hasUpgrade("dn", 13) && !hasMilestone("db", 16)) this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style() {
+                let look = {width: '275px', height: '150px', color: "white", backgroundColor: "#003522", borderColor: "#006a44"}
+                if (!hasMilestone("mci", 16)) look.filter = "brightness(70%)"
+                return look
+            }
         },
     },
     milestones: {},
@@ -506,8 +623,11 @@
                 unlocked() { return true },
                 content: [
                     ["blank", "25px"],
-                    ["style-row", [["dark-buyable", 11], ["dark-buyable", 12], ["dark-buyable", 13],
-                        ["dark-buyable", 14], ["dark-buyable", 15], ["dark-buyable", 16]], {maxWidth: "900px"}],
+                    ["style-row", [
+                        ["dark-buyable", 11], ["dark-buyable", 12], ["dark-buyable", 13],
+                        ["dark-buyable", 14], ["dark-buyable", 15], ["dark-buyable", 16],
+                        ["dark-buyable", 17], ["dark-buyable", 18], ["dark-buyable", 19],
+                    ], {maxWidth: "900px"}],
                 ]
             },
         },

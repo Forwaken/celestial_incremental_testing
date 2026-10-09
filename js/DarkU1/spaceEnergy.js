@@ -171,6 +171,8 @@
         player.dgr.buyables[14] = new Decimal(0)
         player.dgr.buyables[15] = new Decimal(0)
         player.dgr.buyables[16] = new Decimal(0)
+        player.dgr.buyables[17] = new Decimal(0)
+        player.dgr.buyables[18] = new Decimal(0)
     },
     upgrades: {},
     buyables: {

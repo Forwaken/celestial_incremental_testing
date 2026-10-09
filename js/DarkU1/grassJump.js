@@ -40,6 +40,7 @@ addLayer("dgj", {
         if (getLevelableTier("pu", 113, true)) grassJumpDiv = grassJumpDiv.mul(levelableEffect("pu", 113)[0])
         if (getLevelableTier("pu", 213, true)) grassJumpDiv = grassJumpDiv.mul(levelableEffect("pu", 213)[0])
         grassJumpDiv = grassJumpDiv.mul(levelableEffect("spet", 305)[0])
+        grassJumpDiv = grassJumpDiv.mul(buyableEffect("dgr", 19))
         
         player.dgj.grassJumpReq = Decimal.pow(1e10, player.dgj.grassJump).mul(1e20).div(grassJumpDiv)
         

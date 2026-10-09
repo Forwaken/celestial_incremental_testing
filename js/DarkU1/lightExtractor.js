@@ -528,6 +528,8 @@
         player.dgr.buyables[14] = new Decimal(0)
         player.dgr.buyables[15] = new Decimal(0)
         player.dgr.buyables[16] = new Decimal(0)
+        player.dgr.buyables[17] = new Decimal(0)
+        player.dgr.buyables[18] = new Decimal(0)
 
         player.db.boosters = new Decimal(0)
         for (let i = 0; i < player.db.milestones.length; i++) {
@@ -615,6 +617,8 @@
         player.dgr.buyables[14] = new Decimal(0)
         player.dgr.buyables[15] = new Decimal(0)
         player.dgr.buyables[16] = new Decimal(0)
+        player.dgr.buyables[17] = new Decimal(0)
+        player.dgr.buyables[18] = new Decimal(0)
 
         player.dn.normality = new Decimal(0)
         player.dn.buyables[11] = new Decimal(0)

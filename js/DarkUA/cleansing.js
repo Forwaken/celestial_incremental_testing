@@ -32,6 +32,6 @@ addLayer("mcl", {
         ], {width: "710px", height: "46px"}],
         ["blank", "25px"],
     ],
-    layerShown() { return getBuyableAmount("mse", 4).gt(0) ? true : 'ghost' },
+    layerShown() { return /*getBuyableAmount("mse", 4).gt(0)*/false ? true : 'ghost' },
     deactivated() { return !player.sma.inStarmetalChallenge},
 });

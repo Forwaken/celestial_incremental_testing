@@ -137,6 +137,8 @@
         player.dgr.buyables[14] = new Decimal(0)
         player.dgr.buyables[15] = new Decimal(0)
         player.dgr.buyables[16] = new Decimal(0)
+        player.dgr.buyables[17] = new Decimal(0)
+        player.dgr.buyables[18] = new Decimal(0)
 
         if (hasUpgrade("dv", 11)) player.dv.upgrades = [11, 14];
         else player.dv.upgrades = [14];
