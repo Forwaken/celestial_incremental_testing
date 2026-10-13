@@ -152,7 +152,7 @@ addLayer("mcu", {
             onPurchase() {player.mse.miasma = player.mse.miasma.add(0.5);layers.mse.resetCheck()},
             currencyLocation() { return player.mse },
             currencyInternalName: "ki",
-            effect() {return player.mci.concentrateBuff.pow(0.7).pow(buyableEffect("mse", 3))},
+            effect() {return player.mci.concentrateBuff.pow(0.7).pow(buyableEffect("mse", "ki3"))},
             style() {
                 let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"

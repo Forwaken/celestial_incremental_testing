@@ -1533,9 +1533,10 @@
 
                                     // Connections
                                     
-                                    ["style-column", [
-                                        createConnectionComponent(0, 0, 100, 0, "#f57171"),
-                                    ], () => {
+                                    ["style-column", () => {
+                                        if (typeof createConnectionComponent !== "undefined") [createConnectionComponent(0, 0, 100, 0, "#f57171")]
+                                        else return []
+                                    }, () => {
                                         return {display: hasUpgrade("bl", 11) ? "" : "none !important", width: "0", height: "0"}
                                     }],
 
