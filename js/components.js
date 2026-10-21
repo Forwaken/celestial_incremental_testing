@@ -1826,7 +1826,7 @@ function loadVue() {
 		props: ['layer', 'data'],
 		template: `
 			<div class="tooltipBox">
-			<tooltip :text="player[layer][data[0]]"></tooltip><input type="range" v-model="player[layer][data[0]]" :min="data[1]" :max="data[2]"></div>
+			<tooltip :text="player[layer][data[0]]"></tooltip><input type="range" v-model="player[layer][data[0]]" :min="data[1]" :max="data[2]" :step="data[3]?data[3]:1"></div>
 		`
 	})
 

@@ -6,14 +6,10 @@ const MERIDIANS = {
         scale: [new Decimal(100)],
         resource() {return [player.mse.ki]},
         resourceName: ["Ki"],
-        effect() {return [
-            Decimal.pow(1.5, player.mme.meridian[0].level),
-            Decimal.pow(1.01, player.mme.meridian[0].level),
-        ]},
+        effect() {return Decimal.pow(1.5, player.mme.meridian[0].level)},
         effectDisplay() {
             let eff = this.effect()
-            return "x" + formatSimple(eff[0]) + " Source Energy<small> [Next: x" + formatSimple(Decimal.pow(1.5, player.mme.meridian[0].level.add(player.mme.meridian[0].gain))) + "]</small>" +
-            "<br>^" + formatSimple(eff[1], 3) + " Ki<small> [Next: ^" + formatSimple(Decimal.pow(1.01, player.mme.meridian[0].level.add(player.mme.meridian[0].gain)), 3) + "]</small>"
+            return "x" + formatSimple(this.effect()) + " Source Energy<small> [Next: x" + formatSimple(Decimal.pow(1.5, player.mme.meridian[0].level.add(player.mme.meridian[0].gain))) + "]</small>"
         },
         mBase: new Decimal(1),
         mScale: new Decimal(10), // mult increase per
@@ -57,14 +53,15 @@ const MERIDIANS = {
     },
     3: {
         name: "Yang Linking Vessel",
-        base: () => [new Decimal(10).div(buyableEffect("mse", 142))],
-        scale: [new Decimal(2.5)],
+        exponential: true,
+        base: () => [new Decimal(8).div(buyableEffect("mse", 142))],
+        scale: [new Decimal(2)],
         resource() {return [player.mme.meridian[2].level]},
         resourceName: ["He:P Levels"],
         effect() {return player.mme.meridian[3].level.div(20).add(1).pow(buyableEffect("mse", 141))},
         effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Penalty<small> [Next: /" + formatSimple(player.mme.meridian[3].level.add(player.mme.meridian[3].gain).div(20).add(1).pow(buyableEffect("mse", 141)), 2) + "]"},
-        mBase: () => new Decimal(0.1).div(buyableEffect("mse", 143)),
-        mScale: new Decimal(1.15), // mult increase per magnitude
+        mBase: () => new Decimal(5).div(buyableEffect("mse", 143)),
+        mScale: new Decimal(2), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -74,14 +71,14 @@ const MERIDIANS = {
     4: {
         name: "Yang Heel Vessel",
         exponential: true,
-        base: () => [new Decimal(27).div(buyableEffect("mse", 152))],
+        base: () => [new Decimal(9).div(buyableEffect("mse", 152))],
         scale: [new Decimal(3)],
         resource() {return [player.mme.meridian[3].level]},
         resourceName: ["YaL:V Levels"],
         effect() {return player.mme.meridian[4].level.div(50).add(1).pow(buyableEffect("mse", 151))},
         effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Reqs<small> [Next: /" + formatSimple(player.mme.meridian[4].level.add(player.mme.meridian[4].gain).div(50).add(1).pow(buyableEffect("mse", 151)), 2) + "]"},
-        mBase: () => new Decimal(3).div(buyableEffect("mse", 153)),
-        mScale: new Decimal(1.5), // mult increase per magnitude
+        mBase: () => new Decimal(10).div(buyableEffect("mse", 153)),
+        mScale: new Decimal(5), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -443,6 +440,7 @@ addLayer("mme", {
         meridianTotal: new Decimal(0),
         meridianDiv: new Decimal(1),
         meridianKiDiv: new Decimal(1),
+        baseCap: new Decimal(5),
         penaltyDiv: new Decimal(1),
         meridianEffect: new Decimal(1),
 
@@ -465,13 +463,21 @@ addLayer("mme", {
 
         player.mme.meridianDiv = new Decimal(1)
         player.mme.meridianDiv = player.mme.meridianDiv.mul(player.mme.meridian[4].effect)
+        player.mme.meridianDiv = player.mme.meridianDiv.mul(buyableEffect("mse", "me3"))
 
         player.mme.meridianKiDiv = new Decimal(1)
         if (player.mcu.mantraSelected == 31) player.mme.meridianKiDiv = player.mme.meridianKiDiv.mul(player.mcu.mantraEffects[31])
+        player.mme.meridianKiDiv = player.mme.meridianKiDiv.mul(buyableEffect("mse", "me1"))
 
         player.mme.penaltyDiv = new Decimal(1)
         if (player.mcu.mantraSelected == 32) player.mme.penaltyDiv = player.mme.penaltyDiv.mul(player.mcu.mantraEffects[32])
-        player.mme.penaltyDiv = player.mme.penaltyDiv.div(player.mme.meridian[3].effect)
+        if (getBuyableAmount("mse", "gen2").gt(0)) player.mme.penaltyDiv = player.mme.penaltyDiv.mul(1.2)
+        player.mme.penaltyDiv = player.mme.penaltyDiv.mul(player.mme.meridian[3].effect)
+        player.mme.penaltyDiv = player.mme.penaltyDiv.mul(buyableEffect("mse", "me2"))
+
+        player.mme.baseCap = new Decimal(5)
+        if (hasUpgrade("mcu", 19)) player.mme.baseCap = player.mme.baseCap.add(1)
+        player.mme.baseCap = player.mme.baseCap.add(buyableEffect("mse", "me4").sub(1))
 
         player.mme.meridianEffect = new Decimal(1)
         player.mme.meridianTotal = new Decimal(0)
@@ -492,7 +498,7 @@ addLayer("mme", {
                 else merGains.splice(k-1, 1)
             }
             player.mme.meridian[i].gain = merGains[0].floor()
-            if (i != 0) player.mme.meridian[i].gain = player.mme.meridian[i].gain.min(Decimal.pow(5, player.mme.meridian[i].cap).floor().sub(player.mme.meridian[i].level))
+            if (i != 0) player.mme.meridian[i].gain = player.mme.meridian[i].gain.min(Decimal.pow(player.mme.baseCap, player.mme.meridian[i].cap).floor().sub(player.mme.meridian[i].level))
             if (MERIDIANS[i].effect) player.mme.meridian[i].effect = run(MERIDIANS[i].effect, MERIDIANS[i])
             if (i > 0)player.mme.meridianEffect = player.mme.meridianEffect.mul(Decimal.pow(1.05, player.mme.meridian[i].level.add(1).log(10)))
             if (i > 0) player.mme.meridianTotal = player.mme.meridianTotal.add(player.mme.meridian[i].level)
@@ -500,7 +506,7 @@ addLayer("mme", {
     },
     levelup(index, type = 0) {
         let trigger = false
-        if (index != 0 && (type == 2 || type == 0 && player.mme.meridian[index].level.gte(Decimal.pow(5, player.mme.meridian[index].cap).floor()))) {
+        if (index != 0 && (type == 2 || type == 0 && player.mme.meridian[index].level.gte(Decimal.pow(player.mme.baseCap, player.mme.meridian[index].cap).floor()))) {
             player.mse.miasma = player.mse.miasma.add(Decimal.pow(run(MERIDIANS[index].mScale), player.mme.meridian[index].cap.sub(1)).mul(run(MERIDIANS[index].mBase)).div(player.mme.penaltyDiv).mul(10).floor().div(10))
             player.mme.meridian[index].cap = player.mme.meridian[index].cap.add(1)
             layers.mse.resetCheck()
@@ -513,7 +519,7 @@ addLayer("mme", {
     },
     tooltipDisplay(index) {
         let str = formatShortWhole(player.mme.meridian[index].level)
-        if (index == 0) {str = str.concat(" " + MERIDIANS[index].name)} else str = str.concat("/" + formatShortWhole(Decimal.pow(5, player.mme.meridian[index].cap).floor()) + " " + MERIDIANS[index].name)
+        if (index == 0) {str = str.concat(" " + MERIDIANS[index].name)} else str = str.concat("/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[index].cap).floor()) + " " + MERIDIANS[index].name)
         if (player.mme.meridian[index].gain.gt(0)) str = str.concat(" (+" + formatShortWhole(player.mme.meridian[index].gain) + ")")
         str = str.concat("<hr>")
         if (MERIDIANS[index].effectDisplay) str = str.concat(run(MERIDIANS[index].effectDisplay, MERIDIANS[index]) + "<hr>")
@@ -550,7 +556,7 @@ addLayer("mme", {
         },
         2: {
             title() {return "Increase Cap<br><small>[Increases Miasma]</small>"},
-            canClick() { return player.mme.meridianSelect != 0 && player.mme.meridian[player.mme.meridianSelect].level.gte(Decimal.pow(5, player.mme.meridian[player.mme.meridianSelect].cap).floor()) },
+            canClick() { return player.mme.meridianSelect != 0 && player.mme.meridian[player.mme.meridianSelect].level.gte(Decimal.pow(player.mme.baseCap, player.mme.meridian[player.mme.meridianSelect].cap).floor()) },
             unlocked: true,
             onClick() {
                 layers.mme.levelup(player.mme.meridianSelect, 2)
@@ -615,7 +621,7 @@ addLayer("mme", {
             },
         },
         101: {
-            title() {return "<div style='height:5px'></div>Lu:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[1].level) + "/" + formatShortWhole(Decimal.pow(5, player.mme.meridian[1].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>Lu:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[1].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[1].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(1)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[1].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked: true,
@@ -634,7 +640,7 @@ addLayer("mme", {
             },
         },
         102: {
-            title() {return "<div style='height:5px'></div>He:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[2].level) + "/" + formatShortWhole(Decimal.pow(5, player.mme.meridian[2].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>He:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[2].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[2].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(2)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[2].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked: true,
@@ -653,10 +659,10 @@ addLayer("mme", {
             },
         },
         103: {
-            title() {return "<div style='height:5px'></div>YaL:V<br><small style='font-size:10px'>Lv" + formatShortWhole(player.mme.meridian[3].level) + "</small>"},
+            title() {return "<div style='height:5px'></div>YaL:V<br><small style='font-size:10px'>" + formatShortWhole(player.mme.meridian[3].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[3].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(3)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[3].gain.gt(0) && player.mse.ki.gt(0) : true},
-            unlocked: false,
+            unlocked() {return hasUpgrade("mcu", 20)},
             branches: [[102, "#4d1d1d", 10]],
             onClick() {
                 if (player.mme.clickables[4]) layers.mme.levelup(3)
@@ -672,10 +678,10 @@ addLayer("mme", {
             },
         },
         104: {
-            title() {return "<div style='height:5px'></div>YaH:V<br><small style='font-size:10px'>Lv" + formatShortWhole(player.mme.meridian[4].level) + "</small>"},
+            title() {return "<div style='height:5px'></div>YaH:V<br><small style='font-size:10px'>" + formatShortWhole(player.mme.meridian[4].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[4].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(4)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[4].gain.gt(0) && player.mse.ki.gt(0) : true},
-            unlocked: false,
+            unlocked() {return hasUpgrade("mcu", 20)},
             branches: [[103, "#4d1d1d", 10]],
             onClick() {
                 if (player.mme.clickables[4]) layers.mme.levelup(4)
@@ -691,7 +697,7 @@ addLayer("mme", {
             },
         },
         105: {
-            title() {return "<div style='height:5px'></div>Pe:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[5].level) + "/" + formatShortWhole(Decimal.pow(5, player.mme.meridian[5].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>Pe:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[5].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[5].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(5)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[5].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked: true,
@@ -710,7 +716,7 @@ addLayer("mme", {
             },
         },
         106: {
-            title() {return "<div style='height:5px'></div>TB:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[6].level) + "/" + formatShortWhole(Decimal.pow(5, player.mme.meridian[6].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>TB:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[6].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[6].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(6)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[6].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked: true,
@@ -1066,19 +1072,22 @@ addLayer("mme", {
         },
     },
     tabFormat: [
-        ["style-row", [
-            ["style-column", [
-                ["raw-html", () => {return layers.mse.effects()}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-            ], {width: "350px", height: "40px", lineHeight: "0.8", background: "#1b2a29", border: "3px solid #283f3e", borderRightWidth: "2px", borderRadius: "20px 0 0 20px"}],
-            ["layer-proxy", ["mse", [["bar", "miasmaBar"]]]],
-        ], {width: "710px", height: "46px"}],
+        ["layer-proxy", ["mse", [
+            ["row", [
+                ["style-column", [
+                    ["raw-html", () => {return layers.mse.effects()}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                ], {width: "300px", height: "40px", lineHeight: "0.8", background: "#1b2a29", border: "3px solid #283f3e", borderRightWidth: "2px", borderRadius: "20px 0 0 20px"}],
+                ["clickable", 11],
+                ["bar", "miasmaBar"],
+            ]],
+        ]]],
         ["blank", "25px"],
         ["style-column", [
             ["style-column", [
                 ["style-column", [
                     ["raw-html", () => {
                         let str = formatShortWhole(player.mme.meridian[player.mme.meridianSelect].level)
-                        if (player.mme.meridianSelect != 0) str = str.concat("/" + formatShortWhole(Decimal.pow(5, player.mme.meridian[player.mme.meridianSelect].cap).floor()) + " " + MERIDIANS[player.mme.meridianSelect].name)
+                        if (player.mme.meridianSelect != 0) str = str.concat("/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[player.mme.meridianSelect].cap).floor()) + " " + MERIDIANS[player.mme.meridianSelect].name)
                         else str = str.concat(" " + MERIDIANS[player.mme.meridianSelect].name)
                         if (player.mme.meridian[player.mme.meridianSelect].gain.gt(0)) str = str.concat(" (+" + formatShortWhole(player.mme.meridian[player.mme.meridianSelect].gain) + ")")
                         return str

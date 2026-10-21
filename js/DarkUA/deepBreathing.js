@@ -97,12 +97,15 @@ addLayer("mdb", {
         },
     },
     tabFormat: [
-        ["style-row", [
-            ["style-column", [
-                ["raw-html", () => {return layers.mse.effects()}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-            ], {width: "350px", height: "40px", lineHeight: "0.8", background: "#1b2a29", border: "3px solid #283f3e", borderRightWidth: "2px", borderRadius: "20px 0 0 20px"}],
-            ["layer-proxy", ["mse", [["bar", "miasmaBar"]]]],
-        ], {width: "710px", height: "46px"}],
+        ["layer-proxy", ["mse", [
+            ["row", [
+                ["style-column", [
+                    ["raw-html", () => {return layers.mse.effects()}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                ], {width: "300px", height: "40px", lineHeight: "0.8", background: "#1b2a29", border: "3px solid #283f3e", borderRightWidth: "2px", borderRadius: "20px 0 0 20px"}],
+                ["clickable", 11],
+                ["bar", "miasmaBar"],
+            ]],
+        ]]],
         ["blank", "25px"],
         ["style-row", [
             ["style-column", [

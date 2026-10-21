@@ -15,6 +15,7 @@ addLayer("mci", {
         concentrateLow: 40,
         concentrateHigh: 60,
         concentrateBuff: new Decimal(1),
+        concentrateCap: new Decimal(50),
 
         flow: new Decimal(0),
         flowGain: new Decimal(1),
@@ -45,14 +46,23 @@ addLayer("mci", {
         player.mci.flowGain = new Decimal(1)
         if (hasMilestone("mci", 13)) player.mci.flowGain = player.mci.flowGain.mul(player.mci.flowEffects[2])
         if (hasUpgrade("mcu", 17)) player.mci.flowGain = player.mci.flowGain.mul(upgradeEffect("mcu", 17))
+        if (getBuyableAmount("mse", "gen2").gt(0)) player.mci.flowGain = player.mci.flowGain.mul(1.5)
+        player.mci.flowGain = player.mci.flowGain.mul(buyableEffect("mse", "ci3"))
+        player.mci.flowGain = player.mci.flowGain.mul(buyableEffect("mse", "ci6"))
 
         // Concentrating
-        if (player.mci.concentrateBuff.gt(1)) player.mci.concentrateBuff = player.mci.concentrateBuff.sub(player.mci.concentrateBuff.div(100).mul(delta)).max(1)
+        player.mci.concentrateCap = new Decimal(50)
+
+        let concentrateChange = player.mci.concentrateBuff.div(100).max(0.1).mul("-1").div(buyableEffect("mse", "ci5"))
+        concentrateChange = concentrateChange.add(buyableEffect("mse", "ci4").sub(1))
+
+        if (player.mci.concentrateBuff.gt(0)) player.mci.concentrateBuff = player.mci.concentrateBuff.add(concentrateChange.mul(delta)).max(0).min(player.mci.concentrateCap)
 
         // Circulation Speed
         player.mci.circSpeed = new Decimal(1)
-        player.mci.circSpeed = player.mci.circSpeed.mul(player.mci.concentrateBuff)
+        if (hasUpgrade("mcu", 12)) player.mci.circSpeed = player.mci.circSpeed.mul(upgradeEffect("mcu", 12))
         if (player.mcu.mantraSelected == 21) player.mci.circSpeed = player.mci.circSpeed.mul(player.mcu.mantraEffects[21])
+        player.mci.circSpeed = player.mci.circSpeed.mul(buyableEffect("mse", "ci1"))
 
         if (hasUpgrade("mcu", 11)) player.mci.circCurrent = player.mci.circCurrent.add(Decimal.mul(player.mci.circSpeed, delta))
 
@@ -70,24 +80,26 @@ addLayer("mci", {
         }
 
         // Flow Effects
-        player.mci.flowEffects[0] = player.mci.flow.pow(0.5).div(2).add(1)
-        player.mci.flowEffects[1] = player.mci.flow.add(1).pow(1.1)
-        player.mci.flowEffects[2] = player.mci.flow.pow(0.3).div(10).add(1)
-        player.mci.flowEffects[3] = player.mci.flow.add(1).log(10).pow(0.7).div(100).min(0.3)
-        player.mci.flowEffects[4] = player.mci.flow.add(1).log(5).pow(0.7).mul(10).floor().div(10)
+        let effFlow = player.mci.flow.pow(player.mci.concentrateBuff.div(100).add(1))
+        player.mci.flowEffects[0] = effFlow.pow(0.5).div(2).add(1)
+        player.mci.flowEffects[1] = effFlow.add(1).pow(1.1)
+        player.mci.flowEffects[2] = effFlow.pow(0.3).div(10).add(1)
+        player.mci.flowEffects[3] = effFlow.add(1).log(10).pow(0.7).div(100).min(0.3)
+        player.mci.flowEffects[4] = effFlow.add(1).log(5).pow(0.7).mul(10).floor().div(10)
     },
     clickables: {
         1: {
-            title() {return "<h3>Concentrate to speed up circulation</h3><br>[Currently: x" + format(player.mci.concentrateBuff) + " Circulation Speed]<br><small>(Click when bar is at highlighted area)</small>"},
+            title() {return "<h3>Concentrate to improve circulation</h3><br>You have " + formatSimple(player.mci.concentrateBuff) + "/" + formatSimple(player.mci.concentrateCap) + " Concentration<br>Boosts flow effectiveness by ^" + formatSimple(player.mci.concentrateBuff.div(100).add(1), 3) + "<br><small>(Click when bar is at highlighted area)</small>"},
             unlocked: true,
             canClick: true,
             onClick() {
-                let effectiveness = 0.06
+                let effectiveness = 2
                 if (hasUpgrade("mcu", 14)) effectiveness *= 2
                 if (player.mcu.mantraSelected == 22) effectiveness *= player.mcu.mantraEffects[22].toNumber()
+                effectiveness = effectiveness.mul(buyableEffect("mse", "ci2"))
                 let currPercent = player.mci.circCurrent.div(player.mci.circMax).mul(100)
                 if (currPercent.gte(player.mci.concentrateLow) && currPercent.lte(player.mci.concentrateHigh)) {
-                    player.mci.concentrateBuff = player.mci.concentrateBuff.add(effectiveness)
+                    player.mci.concentrateBuff = player.mci.concentrateBuff.add(effectiveness).min(player.mci.concentrateCap)
                     player.mci.circCurrent = new Decimal(0)
                     player.mci.circAmt = player.mci.circAmt.add(1)
                     player.mci.flow = player.mci.flow.add(player.mci.flowGain)
@@ -168,12 +180,15 @@ addLayer("mci", {
         },
     },
     tabFormat: [
-        ["style-row", [
-            ["style-column", [
-                ["raw-html", () => {return layers.mse.effects()}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-            ], {width: "350px", height: "40px", lineHeight: "0.8", background: "#1b2a29", border: "3px solid #283f3e", borderRightWidth: "2px", borderRadius: "20px 0 0 20px"}],
-            ["layer-proxy", ["mse", [["bar", "miasmaBar"]]]],
-        ], {width: "710px", height: "46px"}],
+        ["layer-proxy", ["mse", [
+            ["row", [
+                ["style-column", [
+                    ["raw-html", () => {return layers.mse.effects()}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                ], {width: "300px", height: "40px", lineHeight: "0.8", background: "#1b2a29", border: "3px solid #283f3e", borderRightWidth: "2px", borderRadius: "20px 0 0 20px"}],
+                ["clickable", 11],
+                ["bar", "miasmaBar"],
+            ]],
+        ]]],
         ["blank", "25px"],
         ["style-column", [
             ["style-column", [
