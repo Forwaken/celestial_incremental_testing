@@ -39,8 +39,8 @@ addLayer("mse", {
         player.mse.kiPerSec = new Decimal(0.2)
         player.mse.kiPerSec = player.mse.kiPerSec.add(buyableEffect("mse", "ki1").sub(1))
         if (hasMilestone("mci", 11)) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mci.flowEffects[0])
-        if (player.mcu.mantraSelected == 11) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mcu.mantraEffects[11])
-        if (player.mcu.mantraSelected == 12) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mcu.mantraEffects[12])
+        if (player.mcu.mantraSelected[0] == 1) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mcu.mantraEffects[11])
+        if (player.mcu.mantraSelected[0] == 2) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mcu.mantraEffects[12])
         if (hasUpgrade("mcu", 15)) player.mse.kiPerSec = player.mse.kiPerSec.mul(upgradeEffect("mcu", 15))
         if (getBuyableAmount("mse", "gen1").gt(0)) player.mse.kiPerSec = player.mse.kiPerSec.mul(1.5)
         player.mse.kiPerSec = player.mse.kiPerSec.mul(buyableEffect("mse", "ki2"))
@@ -102,7 +102,7 @@ addLayer("mse", {
             // Cultivation
             player.subtabs["mcu"]["stuff"] = "Upgrades"
             player.mcu.upgrades.splice(0, player.mcu.upgrades.length)
-            player.mcu.mantraSelected = 0
+            player.mcu.mantraSelected = [0, 0, 0, 0, 0]
             
             // Circulation
             player.mci.circAmt = new Decimal(0)

@@ -61,7 +61,7 @@ addLayer("mci", {
         // Circulation Speed
         player.mci.circSpeed = new Decimal(1)
         if (hasUpgrade("mcu", 12)) player.mci.circSpeed = player.mci.circSpeed.mul(upgradeEffect("mcu", 12))
-        if (player.mcu.mantraSelected == 21) player.mci.circSpeed = player.mci.circSpeed.mul(player.mcu.mantraEffects[21])
+        if (player.mcu.mantraSelected[1] == 1) player.mci.circSpeed = player.mci.circSpeed.mul(player.mcu.mantraEffects[21])
         player.mci.circSpeed = player.mci.circSpeed.mul(buyableEffect("mse", "ci1"))
 
         if (hasUpgrade("mcu", 11)) player.mci.circCurrent = player.mci.circCurrent.add(Decimal.mul(player.mci.circSpeed, delta))
@@ -95,8 +95,8 @@ addLayer("mci", {
             onClick() {
                 let effectiveness = 2
                 if (hasUpgrade("mcu", 14)) effectiveness *= 2
-                if (player.mcu.mantraSelected == 22) effectiveness *= player.mcu.mantraEffects[22].toNumber()
-                effectiveness = effectiveness.mul(buyableEffect("mse", "ci2"))
+                if (player.mcu.mantraSelected[1] == 2) effectiveness *= player.mcu.mantraEffects[22].toNumber()
+                effectiveness = effectiveness *= buyableEffect("mse", "ci2").toNumber()
                 let currPercent = player.mci.circCurrent.div(player.mci.circMax).mul(100)
                 if (currPercent.gte(player.mci.concentrateLow) && currPercent.lte(player.mci.concentrateHigh)) {
                     player.mci.concentrateBuff = player.mci.concentrateBuff.add(effectiveness).min(player.mci.concentrateCap)

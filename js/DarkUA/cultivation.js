@@ -7,7 +7,7 @@ addLayer("mcu", {
     startData() { return {
         unlocked: true,
 
-        mantraSelected: 0,
+        mantraSelected: [0, 0, 0, 0, 0],
         mantraEffects: {
             11: new Decimal(1),
             12: new Decimal(1),
@@ -42,10 +42,10 @@ addLayer("mcu", {
     clickables: {
         11: {
             title() { return "<h3>Mantra 1:1</h3><hr style='width:200px;border:1px solid white'>Boost Ki based on Ki<br>Currently: x" + formatSimple(player.mcu.mantraEffects[11]) },
-            canClick() { return player.mcu.mantraSelected != 11},
+            canClick() { return player.mcu.mantraSelected[0] != 1},
             unlocked() { return true },
             onClick() {
-                player.mcu.mantraSelected = 11
+                player.mcu.mantraSelected[0] = 1
             },
             style() {
                 let look = {width: "225px", minHeight: "100px", borderRadius: "15px", color: "white", border: "3px solid #735307", margin: "5px"}
@@ -55,10 +55,10 @@ addLayer("mcu", {
         },
         12: {
             title() { return "<h3>Mantra 1:2</h3><hr style='width:200px;border:1px solid white'>Boost Ki based on Miasma<br>Currently: x" + formatSimple(player.mcu.mantraEffects[12]) },
-            canClick() { return player.mcu.mantraSelected != 12},
+            canClick() { return player.mcu.mantraSelected[0] != 2},
             unlocked() { return true },
             onClick() {
-                player.mcu.mantraSelected = 12
+                player.mcu.mantraSelected[0] = 2
             },
             style() {
                 let look = {width: "225px", minHeight: "100px", borderRadius: "15px", color: "white", border: "3px solid #735307", margin: "5px"}
@@ -68,10 +68,10 @@ addLayer("mcu", {
         },
         21: {
             title() { return "<h3>Mantra 2:1</h3><hr style='width:200px;border:1px solid white'>Boost Circulation Speed based on Flow<br>Currently: x" + formatSimple(player.mcu.mantraEffects[21]) },
-            canClick() { return player.mcu.mantraSelected != 21},
+            canClick() { return player.mcu.mantraSelected[1] != 1},
             unlocked() { return true },
             onClick() {
-                player.mcu.mantraSelected = 21
+                player.mcu.mantraSelected[1] = 1
             },
             style() {
                 let look = {width: "225px", minHeight: "100px", borderRadius: "15px", color: "white", border: "3px solid #735307", margin: "5px"}
@@ -81,10 +81,10 @@ addLayer("mcu", {
         },
         22: {
             title() { return "<h3>Mantra 2:2</h3><hr style='width:200px;border:1px solid white'><small>Boost Concentration gain based on Circulations</small><br>Currently: x" + formatSimple(player.mcu.mantraEffects[22]) },
-            canClick() { return player.mcu.mantraSelected != 22},
+            canClick() { return player.mcu.mantraSelected[1] != 2},
             unlocked() { return true },
             onClick() {
-                player.mcu.mantraSelected = 22
+                player.mcu.mantraSelected[1] = 2
             },
             style() {
                 let look = {width: "225px", minHeight: "100px", borderRadius: "15px", color: "white", border: "3px solid #735307", margin: "5px"}
@@ -94,10 +94,10 @@ addLayer("mcu", {
         },
         31: {
             title() { return "<h3>Mantra 3:1</h3><hr style='width:200px;border:1px solid white'><small>Reduce meridian ki cost based on total meridian levels</small><br>Currently: /" + formatSimple(player.mcu.mantraEffects[31]) },
-            canClick() { return player.mcu.mantraSelected != 31},
+            canClick() { return player.mcu.mantraSelected[2] != 1},
             unlocked() { return hasUpgrade("mcu", 18) },
             onClick() {
-                player.mcu.mantraSelected = 31
+                player.mcu.mantraSelected[2] = 1
             },
             style() {
                 let look = {width: "225px", minHeight: "100px", borderRadius: "15px", color: "white", border: "3px solid #735307", margin: "5px"}
@@ -108,10 +108,10 @@ addLayer("mcu", {
         32: {
             title() { return "<h3>Mantra 3:2</h3><hr style='width:200px;border:1px solid white'><small>Reduce miasma cap penalty based on total meridian levels</small><br>Currently: /" + formatSimple(player.mcu.mantraEffects[32], 2) },
             tooltip: "Miasma rounds to the nearest tenth",
-            canClick() { return player.mcu.mantraSelected != 32},
+            canClick() { return player.mcu.mantraSelected[2] != 2},
             unlocked() { return hasUpgrade("mcu", 18) },
             onClick() {
-                player.mcu.mantraSelected = 32
+                player.mcu.mantraSelected[2] = 2
             },
             style() {
                 let look = {width: "225px", minHeight: "100px", borderRadius: "15px", color: "white", border: "3px solid #735307", margin: "5px"}
@@ -349,8 +349,9 @@ addLayer("mcu", {
                         ["blank", "5px"],
                     ], {width: "755px", background: "#b8860b11", border: "3px solid #735307"}],
                     ["style-column", [
+                        ["raw-html", "You can activate one mantra from each row", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                         ["raw-html", "Swapping mantras does not reset anything", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                    ], {width: "755px", height: "30px", background: "#b8860b44", border: "3px solid #735307", borderRadius: "0 0 15px 15px", marginTop: "-3px"}],
+                    ], {width: "755px", height: "40px", background: "#b8860b44", border: "3px solid #735307", borderRadius: "0 0 15px 15px", marginTop: "-3px"}],
                 ],
             },
         },
