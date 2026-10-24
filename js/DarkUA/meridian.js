@@ -16,7 +16,6 @@ const MERIDIANS = {
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
-            for (let i = 1; i < 21; i++) {player.mme.meridian[i].level = new Decimal(0); player.mme.meridian[i].gain = new Decimal(0)}
         },
     },
     1: {
@@ -540,8 +539,7 @@ addLayer("mme", {
     clickables: {
         1: {
             title() {
-                if (player.mme.meridianSelect == 0) return "Level Up<br><small>[Resets Ki and Meridians]"
-                if (player.mme.meridianSelect == 1 || player.mme.meridianSelect == 5 || player.mme.meridianSelect == 12) return "Level Up<br><small>[Resets Ki]"
+                if (player.mme.meridianSelect == 0 || player.mme.meridianSelect == 1 || player.mme.meridianSelect == 5 || player.mme.meridianSelect == 12) return "Level Up<br><small>[Resets Ki]"
                 return "Level Up<br><small>[Resets Ki and Previous Branches]"
             },
             canClick() {return player.mme.meridian[player.mme.meridianSelect].gain.gt(0) && player.mse.ki.gt(0)},
