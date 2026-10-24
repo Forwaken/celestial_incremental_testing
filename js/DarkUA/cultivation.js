@@ -307,6 +307,24 @@ addLayer("mcu", {
                 return look
             }
         },
+        21: {
+            fullDisplay() {
+                return "<h3>Deep Breaths</h3><br>" +
+                    "Unlock Deep Breathing<br><br>" +
+                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
+                    "Penalty: +5 Miasma"
+            },
+            unlocked() { return true },
+            cost: new Decimal(1e8),
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(5);layers.mse.resetCheck()},
+            currencyLocation() { return player.mse },
+            currencyInternalName: "ki",
+            style() {
+                let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
+                return look
+            }
+        },
         // Upgrade that unlocks deep breathing
         // Upgrade that raises ki by ^1.01 per hara level
         // Upgrade that unlocks more meridian nodes
@@ -327,6 +345,7 @@ addLayer("mcu", {
                         ["style-row", [
                             ["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15],
                             ["upgrade", 16], ["upgrade", 17], ["upgrade", 18], ["upgrade", 19], ["upgrade", 20],
+                            ["upgrade", 21],
                         ], {maxWidth: "680px"}],
                         ["blank", "5px"],
                     ], {width: "680px", background: "#b8860b22", border: "3px solid #735307"}],

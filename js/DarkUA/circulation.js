@@ -46,7 +46,7 @@ addLayer("mci", {
         player.mci.flowGain = new Decimal(1)
         if (hasMilestone("mci", 13)) player.mci.flowGain = player.mci.flowGain.mul(player.mci.flowEffects[2])
         if (hasUpgrade("mcu", 17)) player.mci.flowGain = player.mci.flowGain.mul(upgradeEffect("mcu", 17))
-        if (getBuyableAmount("mse", "gen2").gt(0)) player.mci.flowGain = player.mci.flowGain.mul(1.5)
+        if (getBuyableAmount("mse", "gen3").gt(0)) player.mci.flowGain = player.mci.flowGain.mul(1.3)
         player.mci.flowGain = player.mci.flowGain.mul(buyableEffect("mse", "ci3"))
         player.mci.flowGain = player.mci.flowGain.mul(buyableEffect("mse", "ci6"))
 
@@ -62,6 +62,7 @@ addLayer("mci", {
         player.mci.circSpeed = new Decimal(1)
         if (hasUpgrade("mcu", 12)) player.mci.circSpeed = player.mci.circSpeed.mul(upgradeEffect("mcu", 12))
         if (player.mcu.mantraSelected[1] == 1) player.mci.circSpeed = player.mci.circSpeed.mul(player.mcu.mantraEffects[21])
+        if (getBuyableAmount("mse", "gen3").gt(0)) player.mci.circSpeed = player.mci.circSpeed.mul(1.3)
         player.mci.circSpeed = player.mci.circSpeed.mul(buyableEffect("mse", "ci1"))
 
         if (hasUpgrade("mcu", 11)) player.mci.circCurrent = player.mci.circCurrent.add(Decimal.mul(player.mci.circSpeed, delta))
