@@ -39,6 +39,7 @@ addLayer("mse", {
         player.mse.kiPerSec = new Decimal(0.2)
         player.mse.kiPerSec = player.mse.kiPerSec.add(buyableEffect("mse", "ki1").sub(1))
         if (hasMilestone("mci", 11)) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mci.flowEffects[0])
+        if (hasMilestone("mci", 12)) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mci.flowEffects[1])
         if (player.mcu.mantraSelected[0] == 1) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mcu.mantraEffects[11])
         if (player.mcu.mantraSelected[0] == 2) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mcu.mantraEffects[12])
         if (hasUpgrade("mcu", 15)) player.mse.kiPerSec = player.mse.kiPerSec.mul(upgradeEffect("mcu", 15))
@@ -1051,20 +1052,20 @@ addLayer("mse", {
         "me1": {
             costBase() { return new Decimal(5) },
             costGrowth() { return new Decimal(1.3) },
-            purchaseLimit() { return new Decimal(8) },
+            purchaseLimit() { return new Decimal(10) },
             currency() { return player.mse.sourceEnergy},
             pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
-            effect(x) {return getBuyableAmount(this.layer, this.id).div(4).add(1)},
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(10).add(1)},
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["gen4"], 0)},
             branches: ["gen4"],
             display() {
                 return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
-                    Reduce meridian ki costs by -25%\
+                    Reduce meridian requirements by -10%\
                     <div style='width:1px;height:calc(100% - 3px);background:white;margin-top:3px'></div><h3 style='padding:2px;margin:2px'>" + formatShortWhole(getBuyableAmount(this.layer, this.id)) + "<hr style='width:20px'>" + formatShortWhole(this.purchaseLimit()) + "</h3></div><div class='innerContainer' style='width:106px;height:30px;border-bottom:1px solid white'><span>\
-                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "<br>" +
-                    "Next: /" + formatSimple(getBuyableAmount(this.layer, this.id).div(4).add(1.25), 2) + "\n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "<br>" +
+                    "Next: /" + formatSimple(getBuyableAmount(this.layer, this.id).div(10).add(1.1)) + "\n\
                     </span></div><div class='innerContainer' style='width:106px;height:30px'>\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
                     </div>"
@@ -1091,6 +1092,48 @@ addLayer("mse", {
             }
         },
         "me2": {
+            costBase() { return new Decimal(12) },
+            costGrowth() { return new Decimal(1.5) },
+            purchaseLimit() { return new Decimal(10) },
+            currency() { return player.mse.sourceEnergy},
+            pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(4).add(1)},
+            unlocked() { return true },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["me1"], 0)},
+            branches: ["me1"],
+            display() {
+                return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
+                    Reduce meridian ki requirements by -25%\
+                    <div style='width:1px;height:calc(100% - 3px);background:white;margin-top:3px'></div><h3 style='padding:2px;margin:2px'>" + formatShortWhole(getBuyableAmount(this.layer, this.id)) + "<hr style='width:20px'>" + formatShortWhole(this.purchaseLimit()) + "</h3></div><div class='innerContainer' style='width:106px;height:30px;border-bottom:1px solid white'><span>\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "<br>" +
+                    "Next: /" + formatSimple(getBuyableAmount(this.layer, this.id).div(4).add(1.25), 2) + "\n\
+                    </span></div><div class='innerContainer' style='width:106px;height:30px'>\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
+                    </div>"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style() {
+                let look = {position: "absolute", left: "3420px", top: "2440px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #4c2c5e", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#171e24"
+                return look
+            }
+        },
+        "me3": {
             costBase() { return new Decimal(20) },
             costGrowth() { return new Decimal(2) },
             purchaseLimit() { return new Decimal(5) },
@@ -1132,23 +1175,23 @@ addLayer("mse", {
                 return look
             }
         },
-        "me3": {
+        "me4": {
             costBase() { return new Decimal(100) },
-            costGrowth() { return new Decimal(5) },
+            costGrowth() { return new Decimal(3) },
             purchaseLimit() { return new Decimal(5) },
             currency() { return player.mse.sourceEnergy},
             pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
-            effect(x) {return getBuyableAmount(this.layer, this.id).div(20).add(1)},
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(10).add(1)},
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
-            canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["me2"], 0)},
-            branches: ["me2"],
+            canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["me3"], 0)},
+            branches: ["me3"],
             display() {
                 return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
-                    Reduce meridian requirements by -5%\
+                    Further reduce meridian requirements by -10%\
                     <div style='width:1px;height:calc(100% - 3px);background:white;margin-top:3px'></div><h3 style='padding:2px;margin:2px'>" + formatShortWhole(getBuyableAmount(this.layer, this.id)) + "<hr style='width:20px'>" + formatShortWhole(this.purchaseLimit()) + "</h3></div><div class='innerContainer' style='width:106px;height:30px;border-bottom:1px solid white'><span>\
-                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "<br>" +
-                    "Next: /" + formatSimple(getBuyableAmount(this.layer, this.id).div(20).add(1.05), 2) + "\n\
+                    Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect) + "<br>" +
+                    "Next: /" + formatSimple(getBuyableAmount(this.layer, this.id).div(10).add(1.1)) + "\n\
                     </span></div><div class='innerContainer' style='width:106px;height:30px'>\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
                     </div>"
@@ -1174,7 +1217,7 @@ addLayer("mse", {
                 return look
             }
         },
-        "me4": {
+        "me5": {
             costBase() { return new Decimal(1000) },
             costGrowth() { return new Decimal(100) },
             purchaseLimit() { return new Decimal(3) },
@@ -1183,8 +1226,8 @@ addLayer("mse", {
             effect(x) {return getBuyableAmount(this.layer, this.id).add(1)},
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
-            canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["me3"], 0)},
-            branches: ["me3"],
+            canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["me4"], 0)},
+            branches: ["me4"],
             display() {
                 return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
                     Increase meridian caps by +1\
@@ -1222,17 +1265,17 @@ addLayer("mse", {
             purchaseLimit() { return new Decimal(99) },
             currency() { return player.mse.sourceEnergy},
             pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
-            effect(x) {return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id))},
+            effect(x) {return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id))},
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["me1"], 0)},
             branches: ["me1"],
             display() {
                 return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
-                    Reduce Lu:P Requirement by /1.2\
+                    Reduce Lu:P Requirement by /1.5\
                     <div style='width:1px;height:calc(100% - 3px);background:white;margin-top:3px'></div><h3 style='padding:2px;margin:2px'>" + formatShortWhole(getBuyableAmount(this.layer, this.id)) + "<hr style='width:20px'>" + formatShortWhole(this.purchaseLimit()) + "</h3></div><div class='innerContainer' style='width:106px;height:30px;border-bottom:1px solid white'><span>\
                     Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "<br>" +
-                    "Next: /" + formatSimple(Decimal.pow(1.2, getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\
+                    "Next: /" + formatSimple(Decimal.pow(1.5, getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\
                     </span></div><div class='innerContainer' style='width:106px;height:30px'>\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
                     </div>"
@@ -1390,17 +1433,17 @@ addLayer("mse", {
             purchaseLimit() { return new Decimal(99) },
             currency() { return player.mse.sourceEnergy},
             pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
-            effect(x) {return Decimal.pow(1.2, getBuyableAmount(this.layer, this.id))},
+            effect(x) {return Decimal.pow(1.5, getBuyableAmount(this.layer, this.id))},
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["meb1"], 0)},
             branches: ["meb1"],
             display() {
                 return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
-                    Reduce Pe:P Requirement by /1.2\
+                    Reduce Pe:P Requirement by /1.5\
                     <div style='width:1px;height:calc(100% - 3px);background:white;margin-top:3px'></div><h3 style='padding:2px;margin:2px'>" + formatShortWhole(getBuyableAmount(this.layer, this.id)) + "<hr style='width:20px'>" + formatShortWhole(this.purchaseLimit()) + "</h3></div><div class='innerContainer' style='width:106px;height:30px;border-bottom:1px solid white'><span>\
                     Currently: /" + formatSimple(tmp[this.layer].buyables[this.id].effect, 2) + "<br>" +
-                    "Next: /" + formatSimple(Decimal.pow(1.2, getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\
+                    "Next: /" + formatSimple(Decimal.pow(1.5, getBuyableAmount(this.layer, this.id).add(1)), 2) + "\n\
                     </span></div><div class='innerContainer' style='width:106px;height:30px'>\
                     Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
                     </div>"
@@ -1656,7 +1699,7 @@ addLayer("mse", {
                 ["buyable", "ki1"], ["buyable", "ki2"], ["buyable", "ki3"], ["buyable", "ki4"],
                 ["buyable", "mia1"], ["buyable", "mia2"], ["buyable", "mia3"], ["buyable", "mia4"],
                 ["buyable", "ci1"], ["buyable", "ci2"], ["buyable", "ci3"], ["buyable", "ci4"], ["buyable", "ci5"], ["buyable", "ci6"],
-                ["buyable", "me1"], ["buyable", "me2"], ["buyable", "me3"], ["buyable", "me4"],
+                ["buyable", "me1"], ["buyable", "me2"], ["buyable", "me3"], ["buyable", "me4"], ["buyable", "me5"],
                 ["buyable", "mea1"], ["buyable", "mea2"], ["buyable", "meb1"], ["buyable", "meb2"],
                 ["buyable", "mec1"], ["buyable", "mec2"], ["buyable", "med1"], ["buyable", "med2"],
                 ["buyable", "se1"], ["buyable", "se2"], ["buyable", "se3"], ["buyable", "se4"],

@@ -463,22 +463,23 @@ addLayer("mme", {
         player.mme.meridianDiv = new Decimal(1)
         player.mme.meridianDiv = player.mme.meridianDiv.mul(player.mme.meridian[3].effect)
         player.mme.meridianDiv = player.mme.meridianDiv.mul(player.mme.meridian[4].effect)
+        if (player.mcu.mantraSelected[2] == 1) player.mme.meridianDiv = player.mme.meridianDiv.mul(player.mcu.mantraEffects[31])
         if (getBuyableAmount("mse", "gen4").gt(0)) player.mme.meridianDiv = player.mme.meridianDiv.mul(1.1)
-        player.mme.meridianDiv = player.mme.meridianDiv.mul(buyableEffect("mse", "me3"))
+        player.mme.meridianDiv = player.mme.meridianDiv.mul(buyableEffect("mse", "me1"))
+        player.mme.meridianDiv = player.mme.meridianDiv.mul(buyableEffect("mse", "me4"))
         if (hasMilestone("mci", 16)) player.mme.meridianDiv = player.mme.meridianDiv.mul(player.mci.flowEffects[5])
 
         player.mme.meridianKiDiv = new Decimal(1)
-        if (player.mcu.mantraSelected[2] == 1) player.mme.meridianKiDiv = player.mme.meridianKiDiv.mul(player.mcu.mantraEffects[31])
-        player.mme.meridianKiDiv = player.mme.meridianKiDiv.mul(buyableEffect("mse", "me1"))
+        player.mme.meridianKiDiv = player.mme.meridianKiDiv.mul(buyableEffect("mse", "me2"))
 
         player.mme.penaltyDiv = new Decimal(1)
         if (player.mcu.mantraSelected[2] == 2) player.mme.penaltyDiv = player.mme.penaltyDiv.mul(player.mcu.mantraEffects[32])
         if (getBuyableAmount("mse", "gen4").gt(0)) player.mme.penaltyDiv = player.mme.penaltyDiv.mul(1.2)
-        player.mme.penaltyDiv = player.mme.penaltyDiv.mul(buyableEffect("mse", "me2"))
+        player.mme.penaltyDiv = player.mme.penaltyDiv.mul(buyableEffect("mse", "me3"))
 
         player.mme.baseCap = new Decimal(5)
         if (hasUpgrade("mcu", 19)) player.mme.baseCap = player.mme.baseCap.add(1)
-        player.mme.baseCap = player.mme.baseCap.add(buyableEffect("mse", "me4").sub(1))
+        player.mme.baseCap = player.mme.baseCap.add(buyableEffect("mse", "me5").sub(1))
 
         player.mme.meridianEffect = new Decimal(1)
         player.mme.meridianTotal = new Decimal(0)

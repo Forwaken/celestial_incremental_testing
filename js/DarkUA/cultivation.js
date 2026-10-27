@@ -39,8 +39,8 @@ addLayer("mcu", {
         player.mcu.mantraEffects[12] = player.mse.miasma.add(player.mse.tempMiasma).add(1).log(2).add(1).pow(mantraPower)
         player.mcu.mantraEffects[21] = player.mci.flow.add(1).log(10).div(2).add(1).pow(mantraPower)
         player.mcu.mantraEffects[22] = player.mci.circAmt.add(1).log(2).div(5).add(1).pow(mantraPower)
-        player.mcu.mantraEffects[31] = player.mme.meridianTotal.add(1).log(2).div(5).add(1).pow(mantraPower)
-        player.mcu.mantraEffects[32] = player.mme.meridianTotal.add(1).log(3).div(50).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[31] = player.mme.meridianTotal.add(1).log(2).div(30).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[32] = player.mme.meridianTotal.add(1).log(3).div(30).add(1).pow(mantraPower)
     },
     clickables: {
         11: {
@@ -96,7 +96,7 @@ addLayer("mcu", {
             },
         },
         31: {
-            title() { return "<h3>Mantra 3:1</h3><hr style='width:200px;border:1px solid white'><small>Reduce meridian ki cost based on total meridian levels</small><br>Currently: /" + formatSimple(player.mcu.mantraEffects[31]) },
+            title() { return "<h3>Mantra 3:1</h3><hr style='width:200px;border:1px solid white'><small>Reduce meridian requirements based on total meridian levels</small><br>Currently: /" + formatSimple(player.mcu.mantraEffects[31], 2) },
             canClick() { return player.mcu.mantraSelected[2] != 1},
             unlocked() { return hasUpgrade("mcu", 18) },
             onClick() {
