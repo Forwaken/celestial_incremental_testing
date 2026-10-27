@@ -25,6 +25,15 @@ addLayer("mci", {
             2: new Decimal(1),
             3: new Decimal(0),
             4: new Decimal(0),
+            5: new Decimal(0),
+        },
+        flowEffects2: {
+            0: new Decimal(1),
+            1: new Decimal(1),
+            2: new Decimal(1),
+            3: new Decimal(0),
+            4: new Decimal(0),
+            5: new Decimal(0),
         },
     }},
     automate() {},
@@ -82,11 +91,22 @@ addLayer("mci", {
 
         // Flow Effects
         let effFlow = player.mci.flow.pow(player.mci.concentrateBuff.div(100).add(1))
-        player.mci.flowEffects[0] = effFlow.pow(0.5).div(2).add(1)
-        player.mci.flowEffects[1] = effFlow.add(1).pow(1.1)
-        player.mci.flowEffects[2] = effFlow.pow(0.3).div(10).add(1)
-        player.mci.flowEffects[3] = effFlow.add(1).log(10).pow(0.7).div(100).min(0.3)
-        player.mci.flowEffects[4] = effFlow.add(1).log(5).pow(0.7).mul(10).floor().div(10)
+        player.mci.flowEffects[0] = effFlow.pow(0.4).div(3).add(1) // Ki based on flow
+        player.mci.flowEffects2[0] = effFlow.add(1).pow(1.1) // Extend grass softcap based on flow
+
+        player.mci.flowEffects[1] = Decimal.pow(1.2, player.mci.milestones.length) // Ki based on milestones
+        player.mci.flowEffects2[1] = Decimal.pow(1.3, player.mci.milestones.length) // D1 tickspeed based on milestones
+
+        player.mci.flowEffects[2] = effFlow.pow(0.3).div(10).add(1) // Flow based on flow
+        player.mci.flowEffects2[2] = effFlow.add(1).log(10).pow(0.7).div(100).min(0.3).add(1) // Dark grass softcap exponent based on flow
+
+        player.mci.flowEffects[3] = effFlow.add(1).log(5).div(50).add(1) // Mantra power based on flow
+        player.mci.flowEffects2[3] = effFlow.add(1).log(2).div(5).add(1) // Prestige effect based on flow
+
+        player.mci.flowEffects[4] = player.mci.flow.add(1).log(5).pow(0.7).mul(10).floor().div(10).add(1) // Miasma cap based on flow
+        
+        player.mci.flowEffects[5] = effFlow.add(1).log(5).div(50).add(1) // Meridian req based on flow
+        player.mci.flowEffects2[5] = Decimal.div(1, effFlow.add(1).log(5).div(50).add(1)) // Dark point softcap based on flow
     },
     clickables: {
         1: {
@@ -121,17 +141,17 @@ addLayer("mci", {
             effectDescription() { return "Boost ki gain based on flow<br>Currently: x" + format(player.mci.flowEffects[0]) + "." },
             done() { return player.mci.flow.gte(1) },
             style() {
-                let look = {width: "562px", height: "50px", color: "white", border: "0", borderRadius: "0px"}
+                let look = {width: "275px", height: "50px", color: "white", fontSize: "13px", lineHeight: "1", border: "0", borderRadius: "0px"}
                 if (hasMilestone("mci", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
         12: {
             requirementDescription: "5 Flow",
-            effectDescription() { return "Extend dark grass softcap based on flow<br>Currently: x" + format(player.mci.flowEffects[1]) + "." },
+            effectDescription() { return "Boost ki gain based on milestones<br>Currently: x" + format(player.mci.flowEffects[1]) + "." },
             done() { return player.mci.flow.gte(5) },
             style() {
-                let look = {width: "562px", height: "50px", color: "white", border: "0", borderRadius: "0px"}
+                let look = {width: "275px", height: "50px", color: "white", fontSize: "13px", lineHeight: "1", border: "0", borderRadius: "0px"}
                 if (hasMilestone("mci", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
@@ -141,40 +161,37 @@ addLayer("mci", {
             effectDescription() { return "Boost flow gain based on flow<br>Currently: x" + format(player.mci.flowEffects[2]) + "." },
             done() { return player.mci.flow.gte(25) },
             style() {
-                let look = {width: "562px", height: "50px", color: "white", border: "0", borderRadius: "0px"}
+                let look = {width: "275px", height: "50px", color: "white", fontSize: "13px", lineHeight: "1", border: "0", borderRadius: "0px"}
                 if (hasMilestone("mci", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
         14: {
             requirementDescription: "125 Flow",
-            effectDescription() {
-                if (player.mci.flowEffects[3].gte(0.3)) return "Increase dark grass softcap exponent based on flow<br>Currently: +" + format(player.mci.flowEffects[3]) + ". <small style='color:red'>[HARDCAPPED]</small>"
-                return "Increase dark grass softcap exponent based on flow<br>Currently: +" + format(player.mci.flowEffects[3]) + "."
-            },
+            effectDescription() { return "Boost mantra power based on flow<br>Currently: ^" + format(player.mci.flowEffects[3]) + "." },
             done() { return player.mci.flow.gte(125) },
             style() {
-                let look = {width: "562px", height: "50px", color: "white", border: "0", borderRadius: "0px"}
+                let look = {width: "275px", height: "50px", color: "white", fontSize: "13px", lineHeight: "1", border: "0", borderRadius: "0px"}
                 if (hasMilestone("mci", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
         15: {
             requirementDescription: "625 Flow",
-            effectDescription() { return "Boost miasma cap based on flow<br>Currently: +" + formatSimple(player.mci.flowEffects[4]) + "." },
+            effectDescription() { return "Boost miasma cap based on flow<br><small>[Ignoring concentration]</small><br>Currently: +" + formatSimple(player.mci.flowEffects[4].sub(1)) + "." },
             done() { return player.mci.flow.gte(625) },
             style() {
-                let look = {width: "562px", height: "50px", color: "white", border: "0", borderRadius: "0px"}
+                let look = {width: "275px", height: "50px", color: "white", fontSize: "13px", lineHeight: "1", border: "0", borderRadius: "0px"}
                 if (hasMilestone("mci", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
         16: {
             requirementDescription: "3,125 Flow",
-            effectDescription() { return "Unlock 3 new dark grass buyables." },
+            effectDescription() { return "Reduce meridian requirement based on flow<br>Currently: /" + format(player.mci.flowEffects[5]) + "." },
             done() { return player.mci.flow.gte(3125) },
             style() {
-                let look = {width: "562px", height: "50px", color: "white", border: "0", borderRadius: "0px"}
+                let look = {width: "275px", height: "50px", color: "white", fontSize: "13px", lineHeight: "1", border: "0", borderRadius: "0px"}
                 if (hasMilestone("mci", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
@@ -221,40 +238,85 @@ addLayer("mci", {
             ], {width: "700px", height: "47px", background: "#1b271b", borderBottom: "3px solid #446346"}],
             ["top-column", [
                 ["style-row", [
+                    ["titleless-milestone", 11],
                     ["style-column", [
                         ["raw-html", "1", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                    ], {backgroundColor: "#253626", borderRight: "3px solid #446346", borderRadius: "0px", width: "125px", height: "50px"}],
-                    ["titleless-milestone", 11],
+                    ], {backgroundColor: "#253626", borderLeft: "3px solid #446346", borderRight: "3px solid #446346", borderRadius: "0px", width: "124px", height: "50px"}],
+                    ["style-column", [
+                        ["raw-html", () => {return "Extend dark grass softcap based on flow<br>Currently: x" + format(player.mci.flowEffects2[0]) + "."}, {color: "white", fontSize: "13px"}],
+                    ], () => {
+                        let look = {width: "275px", height: "50px", padding: "0 5px", lineHeight: "0.8"}
+                        hasMilestone("mci", 11) ? look.background = "#1a3b0f" : look.background = "#361e1e"
+                        return look
+                    }],
                 ], {borderBottom: "3px solid #446346"}],
                 ["style-row", [
+                    ["titleless-milestone", 12],
                     ["style-column", [
                         ["raw-html", "5", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                    ], {backgroundColor: "#253626", borderRight: "3px solid #446346", borderRadius: "0px", width: "125px", height: "50px"}],
-                    ["titleless-milestone", 12],
+                    ], {backgroundColor: "#253626", borderLeft: "3px solid #446346", borderRight: "3px solid #446346", borderRadius: "0px", width: "124px", height: "50px"}],
+                    ["style-column", [
+                        ["raw-html", () => {return "Boost D1 tickspeed based on milestones<br>Currently: x" + format(player.mci.flowEffects2[1]) + "."}, {color: "white", fontSize: "13px"}],
+                    ], () => {
+                        let look = {width: "275px", height: "50px", padding: "0 5px", lineHeight: "0.8"}
+                        hasMilestone("mci", 12) ? look.background = "#1a3b0f" : look.background = "#361e1e"
+                        return look
+                    }],
                 ], {borderBottom: "3px solid #446346"}],
                 ["style-row", [
+                    ["titleless-milestone", 13],
                     ["style-column", [
                         ["raw-html", "25", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                    ], {backgroundColor: "#253626", borderRight: "3px solid #446346", borderRadius: "0px", width: "125px", height: "50px"}],
-                    ["titleless-milestone", 13],
+                    ], {backgroundColor: "#253626", borderLeft: "3px solid #446346", borderRight: "3px solid #446346", borderRadius: "0px", width: "124px", height: "50px"}],
+                    ["style-column", [
+                        ["raw-html", () => {
+                            if (player.mci.flowEffects2[2].gte(1.3)) return "Increase dark grass softcap exponent based on flow<br>Currently: +" + format(player.mci.flowEffects2[2].sub(1)) + ". <small style='color:red'>[HARDCAPPED]</small>"
+                            return "Increase dark grass softcap exponent based on flow<br>Currently: +" + format(player.mci.flowEffects2[2].sub(1)) + "."
+                        }, {color: "white", fontSize: "13px"}],
+                    ], () => {
+                        let look = {width: "275px", height: "50px", padding: "0 5px", lineHeight: "0.8"}
+                        hasMilestone("mci", 13) ? look.background = "#1a3b0f" : look.background = "#361e1e"
+                        return look
+                    }],
                 ], {borderBottom: "3px solid #446346"}],
                 ["style-row", [
+                    ["titleless-milestone", 14],
                     ["style-column", [
                         ["raw-html", "125", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                    ], {backgroundColor: "#253626", borderRight: "3px solid #446346", borderRadius: "0px", width: "125px", height: "50px"}],
-                    ["titleless-milestone", 14],
+                    ], {backgroundColor: "#253626", borderLeft: "3px solid #446346", borderRight: "3px solid #446346", borderRadius: "0px", width: "124px", height: "50px"}],
+                    ["style-column", [
+                        ["raw-html", () => {return "Boost dark prestige effect based on flow<br>Currently: ^" + format(player.mci.flowEffects2[3]) + "."}, {color: "white", fontSize: "13px"}],
+                    ], () => {
+                        let look = {width: "275px", height: "50px", padding: "0 5px", lineHeight: "0.8"}
+                        hasMilestone("mci", 14) ? look.background = "#1a3b0f" : look.background = "#361e1e"
+                        return look
+                    }],
                 ], {borderBottom: "3px solid #446346"}],
                 ["style-row", [
+                    ["titleless-milestone", 15],
                     ["style-column", [
                         ["raw-html", "625", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                    ], {backgroundColor: "#253626", borderRight: "3px solid #446346", borderRadius: "0px", width: "125px", height: "50px"}],
-                    ["titleless-milestone", 15],
+                    ], {backgroundColor: "#253626", borderLeft: "3px solid #446346", borderRight: "3px solid #446346", borderRadius: "0px", width: "124px", height: "50px"}],
+                    ["style-column", [
+                        ["raw-html", () => {return "Unlock 3 new dark grass buyables."}, {color: "white", fontSize: "13px"}],
+                    ], () => {
+                        let look = {width: "275px", height: "50px", padding: "0 5px", lineHeight: "0.8"}
+                        hasMilestone("mci", 15) ? look.background = "#1a3b0f" : look.background = "#361e1e"
+                        return look
+                    }],
                 ], {borderBottom: "3px solid #446346"}],
                 ["style-row", [
+                    ["titleless-milestone", 16],
                     ["style-column", [
                         ["raw-html", "3,125", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                    ], {backgroundColor: "#253626", borderRight: "3px solid #446346", borderRadius: "0px", width: "125px", height: "50px"}],
-                    ["titleless-milestone", 16],
+                    ], {backgroundColor: "#253626", borderLeft: "3px solid #446346", borderRight: "3px solid #446346", borderRadius: "0px", width: "124px", height: "50px"}],
+                    ["style-column", [
+                        ["raw-html", () => {return "Reduce dark point softcap based on flow<br>Currently: ^" + format(player.mci.flowEffects2[5]) + "."}, {color: "white", fontSize: "13px"}],
+                    ], () => {
+                        let look = {width: "275px", height: "50px", padding: "0 5px", lineHeight: "0.8"}
+                        hasMilestone("mci", 16) ? look.background = "#1a3b0f" : look.background = "#361e1e"
+                        return look
+                    }],
                 ], {borderBottom: "3px solid #446346"}],
             ], {height: "470px", background: "#00000088"}],
             ["style-column", [], {width: "700px", height: "24px", background: "#1b271b", borderTop: "3px solid #446346", borderRadius: "0 0 17px 17px"}],

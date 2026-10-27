@@ -76,6 +76,7 @@
         player.du.pointSoftcap = player.du.pointSoftcap.pow(levelableEffect("spet", 201)[0])
         player.du.pointSoftcap = player.du.pointSoftcap.pow(player.dv.cloudEffect)
         player.du.pointSoftcap = player.du.pointSoftcap.pow(buyableEffect("rp", 12))
+        if (hasMilestone("mci", 16)) player.du.pointSoftcap = player.du.pointSoftcap.mul(player.mci.flowEffects2[5])
 
         // SOFTCAP 2
         player.du.pointSoftcap2 = new Decimal(0.1)
@@ -104,6 +105,7 @@
         player.uni["D1"].tickspeed = player.uni["D1"].tickspeed.mul(player.dt.timeCapsuleEffect)
         player.uni["D1"].tickspeed = player.uni["D1"].tickspeed.mul(buyableEffect("dt", 14))
         if (getLevelableTier("pu", 309, true)) player.uni["D1"].tickspeed = player.uni["D1"].tickspeed.mul(levelableEffect("pu", 309)[0])
+        if (hasMilestone("mci", 12)) player.uni["D1"].tickspeed = player.uni["D1"].tickspeed.mul(player.mci.flowEffects2[1])
             
         if (player.sma.inStarmetalChallenge) {
             player.du.points = player.du.points.add(player.du.pointGain.mul(delta))

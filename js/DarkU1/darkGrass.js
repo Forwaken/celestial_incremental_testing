@@ -54,10 +54,10 @@
         }
         
         player.dgr.grassSoftcapStart = new Decimal(1e100)
-        if (hasMilestone("mci", 12)) player.dgr.grassSoftcapStart = player.dgr.grassSoftcapStart.mul(player.mci.flowEffects[1])
+        if (hasMilestone("mci", 11)) player.dgr.grassSoftcapStart = player.dgr.grassSoftcapStart.mul(player.mci.flowEffects2[0])
 
         player.dgr.grassSoftcap = new Decimal(0.2)
-        if (hasMilestone("mci", 14)) player.dgr.grassSoftcap = player.dgr.grassSoftcap.add(player.mci.flowEffects[3])
+        if (hasMilestone("mci", 13)) player.dgr.grassSoftcap = player.dgr.grassSoftcap.add(player.mci.flowEffects2[2].sub(1))
         player.dgr.grassSoftcap = player.dgr.grassSoftcap.add(buyableEffect("rp", 14).sub(1))
 
         // MAX GRASS
@@ -471,7 +471,7 @@
             effect(x) {
                 return Decimal.pow(25, getBuyableAmount(this.layer, this.id))
             },
-            unlocked() { return hasMilestone("mci", 16) },
+            unlocked() { return hasMilestone("mci", 15) },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
@@ -507,7 +507,7 @@
             effect(x) {
                 return getBuyableAmount(this.layer, this.id).div(50).add(1)
             },
-            unlocked() { return hasMilestone("mci", 16) },
+            unlocked() { return hasMilestone("mci", 15) },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
             title() {
@@ -543,9 +543,9 @@
             effect(x) {
                 return Decimal.pow(3, getBuyableAmount(this.layer, this.id))
             },
-            unlocked() { return getBuyableAmount(this.layer, this.id).gt(0) || hasMilestone("mci", 16) },
+            unlocked() { return getBuyableAmount(this.layer, this.id).gt(0) || hasMilestone("mci", 15) },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
-            canAfford() { return this.currency().gte(this.cost()) && hasMilestone("mci", 16)},
+            canAfford() { return this.currency().gte(this.cost()) && hasMilestone("mci", 15)},
             title() {
                 return "Super Grassjump Req. Reducer"
             },
@@ -571,7 +571,7 @@
             },
             style() {
                 let look = {width: '275px', height: '150px', color: "white", backgroundColor: "#003522", borderColor: "#006a44"}
-                if (!hasMilestone("mci", 16)) look.filter = "brightness(70%)"
+                if (!hasMilestone("mci", 15)) look.filter = "brightness(70%)"
                 return look
             }
         },

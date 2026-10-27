@@ -61,6 +61,7 @@
         player.dp.prestigePointsToGet = player.dp.prestigePointsToGet.mul(buyableEffect("ds", 101))
 
         player.dp.prestigePointsEffect = player.dp.prestigePoints.pow(0.4).add(1)
+        if (hasMilestone("mci", 14)) player.dp.prestigePointsEffect = player.dp.prestigePointsEffect.pow(player.mci.flowEffects2[3])
 
         player.dp.prestigePoints = player.dp.prestigePoints.add(player.dp.prestigePointsToGet.mul(buyableEffect("dn", 12)).mul(delta))
         if (hasUpgrade("sma", 202)) {

@@ -20,13 +20,13 @@ const MERIDIANS = {
     },
     1: {
         name: "Lung Point",
-        base: () => [new Decimal(500).div(player.mme.meridianKiDiv).div(buyableEffect("mse", 112))],
+        base: () => [new Decimal(500).div(player.mme.meridianKiDiv).div(buyableEffect("mse", "mea1"))],
         scale: [new Decimal(1.8)],
         resource() {return [player.mse.ki]},
         resourceName: ["Ki"],
-        effect() {return player.mme.meridian[1].level.pow(0.7).div(3).add(1).pow(buyableEffect("mse", 111))},
-        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[1].level.add(player.mme.meridian[1].gain).pow(0.7).div(3).add(1).pow(buyableEffect("mse", 111)), 2) + "]"},
-        mBase: () => new Decimal(1).div(buyableEffect("mse", 113)),
+        effect() {return player.mme.meridian[1].level.pow(0.7).div(3).add(1)},
+        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[1].level.add(player.mme.meridian[1].gain).pow(0.7).div(3).add(1), 2) + "]"},
+        mBase: new Decimal(1),
         mScale: new Decimal(1.2),
         reset() {
             player.mse.ki = new Decimal(0)
@@ -35,13 +35,13 @@ const MERIDIANS = {
     },
     2: {
         name: "Heart Point",
-        base: () => [new Decimal(3).div(buyableEffect("mse", 122))],
+        base: () => [new Decimal(3).div(buyableEffect("mse", "meb1"))],
         scale: [new Decimal(1.45)],
         resource() {return [player.mme.meridian[1].level]},
         resourceName: ["Lu:P Levels"],
-        effect() {return player.mme.meridian[2].level.pow(0.725).div(2).add(1).pow(buyableEffect("mse", 121))},
-        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[2].level.add(player.mme.meridian[2].gain).pow(0.725).div(2).add(1).pow(buyableEffect("mse", 121)), 2) + "]"},
-        mBase: () => new Decimal(1).div(buyableEffect("mse", 123)),
+        effect() {return player.mme.meridian[2].level.pow(0.725).div(2).add(1)},
+        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[2].level.add(player.mme.meridian[2].gain).pow(0.725).div(2).add(1), 2) + "]"},
+        mBase: new Decimal(1),
         mScale: new Decimal(1.5), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
@@ -53,13 +53,13 @@ const MERIDIANS = {
     3: {
         name: "Yang Linking Vessel",
         exponential: true,
-        base: () => [new Decimal(4).div(buyableEffect("mse", 142))],
+        base: () => [new Decimal(4)],
         scale: [new Decimal(2)],
         resource() {return [player.mme.meridian[2].level]},
         resourceName: ["He:P Levels"],
-        effect() {return player.mme.meridian[3].level.div(50).add(1).pow(buyableEffect("mse", 141))},
-        effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Reqs<small> [Next: /" + formatSimple(player.mme.meridian[3].level.add(player.mme.meridian[3].gain).div(50).add(1).pow(buyableEffect("mse", 141)), 2) + "]"},
-        mBase: () => new Decimal(5).div(buyableEffect("mse", 143)),
+        effect() {return player.mme.meridian[3].level.div(50).add(1)},
+        effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Reqs<small> [Next: /" + formatSimple(player.mme.meridian[3].level.add(player.mme.meridian[3].gain).div(50).add(1), 2) + "]"},
+        mBase: new Decimal(5),
         mScale: new Decimal(2), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
@@ -70,13 +70,13 @@ const MERIDIANS = {
     4: {
         name: "Yang Heel Vessel",
         exponential: true,
-        base: () => [new Decimal(3).div(buyableEffect("mse", 152))],
+        base: () => [new Decimal(3)],
         scale: [new Decimal(3)],
         resource() {return [player.mme.meridian[3].level]},
         resourceName: ["YaL:V Levels"],
-        effect() {return player.mme.meridian[4].level.div(20).add(1).pow(buyableEffect("mse", 151))},
-        effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Reqs<small> [Next: /" + formatSimple(player.mme.meridian[4].level.add(player.mme.meridian[4].gain).div(20).add(1).pow(buyableEffect("mse", 151)), 2) + "]"},
-        mBase: () => new Decimal(10).div(buyableEffect("mse", 153)),
+        effect() {return player.mme.meridian[4].level.div(20).add(1)},
+        effectDisplay() {return "/" + formatSimple(this.effect(), 2) + " Meridian Reqs<small> [Next: /" + formatSimple(player.mme.meridian[4].level.add(player.mme.meridian[4].gain).div(20).add(1), 2) + "]"},
+        mBase: new Decimal(10),
         mScale: new Decimal(5), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
@@ -86,13 +86,13 @@ const MERIDIANS = {
     },
     5: {
         name: "Pericardium Point",
-        base: () => [new Decimal(10000).div(player.mme.meridianKiDiv).div(buyableEffect("mse", 132))],
+        base: () => [new Decimal(10000).div(player.mme.meridianKiDiv).div(buyableEffect("mse", "mec1"))],
         scale: [new Decimal(2)],
         resource() {return [player.mse.ki]},
         resourceName: ["Ki"],
-        effect() {return player.mme.meridian[5].level.pow(0.72).div(4).add(1).pow(buyableEffect("mse", 131))},
-        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[5].level.add(player.mme.meridian[5].gain).pow(0.72).div(4).add(1).pow(buyableEffect("mse", 131)), 2) + "]"},
-        mBase: () => new Decimal(1.5).div(buyableEffect("mse", 133)),
+        effect() {return player.mme.meridian[5].level.pow(0.72).div(4).add(1)},
+        effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[5].level.add(player.mme.meridian[5].gain).pow(0.72).div(4).add(1), 2) + "]"},
+        mBase: new Decimal(1.5),
         mScale: new Decimal(1.3), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
@@ -101,7 +101,7 @@ const MERIDIANS = {
     },
     6: {
         name: "Triple Burner Point",
-        base: [new Decimal(5), new Decimal(3)],
+        base: () => [new Decimal(5).div(buyableEffect("mse", "med1")), new Decimal(3).div(buyableEffect("mse", "med1"))],
         scale: [new Decimal(1.45), new Decimal(1.5)],
         resource() {return [player.mme.meridian[2].level, player.mme.meridian[5].level]},
         resourceName: ["He:P Levels", "Pe:P Levels"],
@@ -465,6 +465,7 @@ addLayer("mme", {
         player.mme.meridianDiv = player.mme.meridianDiv.mul(player.mme.meridian[4].effect)
         if (getBuyableAmount("mse", "gen4").gt(0)) player.mme.meridianDiv = player.mme.meridianDiv.mul(1.1)
         player.mme.meridianDiv = player.mme.meridianDiv.mul(buyableEffect("mse", "me3"))
+        if (hasMilestone("mci", 16)) player.mme.meridianDiv = player.mme.meridianDiv.mul(player.mci.flowEffects[5])
 
         player.mme.meridianKiDiv = new Decimal(1)
         if (player.mcu.mantraSelected[2] == 1) player.mme.meridianKiDiv = player.mme.meridianKiDiv.mul(player.mcu.mantraEffects[31])

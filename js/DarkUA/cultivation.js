@@ -32,12 +32,15 @@ addLayer("mcu", {
     update(delta) {
         let onepersec = new Decimal(1)
 
-        player.mcu.mantraEffects[11] = player.mse.ki.add(1).log(10).add(1)
-        player.mcu.mantraEffects[12] = player.mse.miasma.add(player.mse.tempMiasma).add(1).log(2).add(1)
-        player.mcu.mantraEffects[21] = player.mci.flow.add(1).log(10).div(2).add(1)
-        player.mcu.mantraEffects[22] = player.mci.circAmt.add(1).log(2).div(5).add(1)
-        player.mcu.mantraEffects[31] = player.mme.meridianTotal.add(1).log(2).div(5).add(1)
-        player.mcu.mantraEffects[32] = player.mme.meridianTotal.add(1).log(3).div(50).add(1)
+        let mantraPower = new Decimal(1)
+        if (hasMilestone("mci", 14)) mantraPower = mantraPower.mul(player.mci.flowEffects[3])
+
+        player.mcu.mantraEffects[11] = player.mse.ki.add(1).log(10).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[12] = player.mse.miasma.add(player.mse.tempMiasma).add(1).log(2).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[21] = player.mci.flow.add(1).log(10).div(2).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[22] = player.mci.circAmt.add(1).log(2).div(5).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[31] = player.mme.meridianTotal.add(1).log(2).div(5).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[32] = player.mme.meridianTotal.add(1).log(3).div(50).add(1).pow(mantraPower)
     },
     clickables: {
         11: {
