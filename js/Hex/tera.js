@@ -2339,7 +2339,7 @@ addLayer("tera", {
                             ["style-row", [
                                 ["style-row", [["raw-html", "7,000,000", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "Unlock hex of sacrifice<br>permanently in hex universe."}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", lineHeight: "0.75", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[5].lt(7e6) || player.tera.virtueUnlocks[5]) {look.background = "#bf8f8f"};return look}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", lineHeight: "0.75", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks[5] && player.tera.virtueEssence[5].lt(7e6)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "1e12", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
                                 ["style-row", [["raw-html", () => {return "Holy Power: x" + formatSimple(player.tera.virtueEffects[5][2], 2)}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
