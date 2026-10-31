@@ -7,13 +7,15 @@ addLayer("mdb", {
     startData() { return {
         unlocked: true,
 
-        focus: new Decimal(0),
-        focusGain: new Decimal(0),
-        focusPerSec: new Decimal(0),
-        focusActive: new Decimal(1),
-        focusEffect: new Decimal(1),
+        inhalation: new Decimal(0),
+        inhalationGain: new Decimal(1),
 
-        active: new Decimal(0),
+        exhalation: new Decimal(0),
+        exhalationGain: new Decimal(1),
+
+        breath: new Decimal(0),
+        breathCap: new Decimal(10),
+        decayRate: new Decimal(0.9),
     }},
     automate() {},
     nodeStyle() {
@@ -25,70 +27,105 @@ addLayer("mdb", {
         };
     },
     tooltip: "Deep Breathing",
-    branches: [["mme", "#4d1d1d"]],
+    branches: [["mcu", "#4d1d1d"]],
     color: "#555566",
     update(delta) {
-        let onepersec = new Decimal(1)
+        // Gain code
+        player.mdb.inhalationGain = new Decimal(1)
+        if (hasUpgrade("mdb", 11)) player.mdb.inhalationGain = player.mdb.inhalationGain.mul(2)
 
-        player.mdb.focusGain = new Decimal(1)
-        if (hasUpgrade("mdb", 11)) player.mdb.focusGain = player.mdb.focusGain.mul(upgradeEffect("mdb", 11))
 
-        player.mdb.focusEffect = player.mdb.focus.pow(0.2).div(2).add(1)
-        player.mdb.focusActive = hasUpgrade("mdb", 12) ? new Decimal(2) : new Decimal(1)
+        // Breath calculation code
+        let prev = player.mdb.breath
+        player.mdb.breath = player.mdb.breath.add(delta)
 
-        if (player.mdb.active.gt(0)) {
-            player.mdb.active = player.mdb.active.sub(delta).max(0)
-            player.mdb.focus = player.mdb.focus.add(player.mdb.focusGain.mul(delta))
-            player.mse.tempMiasma = player.mse.tempMiasma.add(player.mdb.focusGain.div(10).mul(delta))
+        let cyclesPast = Decimal.div(delta, player.mdb.breathCap).floor()
+        player.mdb.breath = player.mdb.breath.sub(cyclesPast.mul(player.mdb.breathCap))
+
+        // Temporary variables to prevent weird conflicts
+        let currChange = [new Decimal(0), new Decimal(0)]
+
+        if (Decimal.gte(cyclesPast, 1)) {
+            let half = player.mdb.breathCap.div(2)
+            currChange[0] = currChange[0].add(player.mdb.inhalationGain.mul(cyclesPast).mul(half).mul(Decimal.sub(1, player.mdb.decayRate)))
+            currChange[1] = currChange[1].add(player.mdb.exhalationGain.mul(cyclesPast).mul(half).mul(Decimal.sub(1, player.mdb.decayRate)))
         }
+
+        if (Decimal.gt(cyclesPast, 0)) {
+            let firstSeg = layers.mdb.remainderCheck(Decimal.modulo(prev, player.mdb.breathCap), player.mdb.breathCap)
+            let secondSeg = layers.mdb.remainderCheck(new Decimal(0), Decimal.modulo(player.mdb.breath, player.mdb.breathCap))
+            currChange[0] = currChange[0].add(firstSeg[0]).add(secondSeg[0])
+            currChange[1] = currChange[1].add(firstSeg[1]).add(secondSeg[1])
+        } else {
+            let seg = layers.mdb.remainderCheck(Decimal.modulo(prev, player.mdb.breathCap), Decimal.modulo(player.mdb.breath, player.mdb.breathCap))
+            currChange[0] = currChange[0].add(seg[0])
+            currChange[1] = currChange[1].add(seg[1])
+        }
+
+        player.mdb.inhalation = player.mdb.inhalation.add(currChange[0]).max(0)
+        player.mdb.exhalation = player.mdb.exhalation.add(currChange[1]).max(0)
+        if (player.mdb.breath.gt(player.mdb.breathCap)) player.mdb.breath = new Decimal(0)
     },
-    clickables: {
-        1: {
-            title: "",
-            canClick: true,
+    remainderCheck(start, end) {
+        let half = player.mdb.breathCap.div(2)
+        let changes = [new Decimal(0), new Decimal(0)]
+
+        // Inhale
+        if (Decimal.lt(start, half)) {
+            let inhaleTime = Decimal.min(end, half).sub(start)
+            changes[0] = changes[0].add(player.mdb.inhalationGain.mul(inhaleTime))
+            changes[1] = changes[1].sub(player.mdb.exhalationGain.mul(inhaleTime).mul(player.mdb.decayRate))
+        }
+
+        // Exhale
+        if (Decimal.gt(end, half)) {
+            let exhaleTime = Decimal.sub(end, Decimal.max(start, half))
+            changes[1] = changes[1].add(player.mdb.exhalationGain.mul(exhaleTime))
+            changes[0] = changes[0].sub(player.mdb.inhalationGain.mul(exhaleTime).mul(player.mdb.decayRate))
+        }
+
+        return changes
+    },
+    bars: {
+        breath: {
             unlocked: true,
-            onClick() {player.mdb.active = new Decimal(0.1)},
-            onHold() {player.mdb.active = new Decimal(0.1)},
-            style() {
-                let look = {width: "200px", minHeight: "200px", background: "repeating-radial-gradient(#556 0px, #445, 20px, #556 30px)", color: "rgba(0,0,0,0.6)", border: "10px solid rgba(0,0,0,0.6)", borderRadius: "100px"}
-                if (player.mdb.active.lte(0)) look.filter = "brightness(0.7)"
-                return look
+            direction: RIGHT,
+            width: 700,
+            height: 50,
+            progress() {
+                let cycleTime = player.mdb.breath.modulo(player.mdb.breathCap)
+                let half = player.mdb.breathCap.div(2)
+                if (Decimal.lt(cycleTime, half)) {
+                    return Decimal.div(cycleTime, half)
+                } else {
+                    return Decimal.sub(1, cycleTime.sub(half).div(half))
+                }
             },
+            borderStyle: {border: "0px", borderRadius: "0"},
+            baseStyle() {return player.mdb.breath.lt(player.mdb.breathCap.div(2)) ? {background: "#6328"} : {background: "#3348"}},
+            fillStyle() {return player.mdb.breath.lt(player.mdb.breathCap.div(2)) ? {background: "#3348"} : {background: "#6328"}},
+            textStyle: {color: "white", fontSize: "20px", lineHeight: "0.8", fontFamily: "monospace"},
+            display() {
+                let halfCap = player.mdb.breathCap.div(2)
+                let str = formatTime(player.mdb.breath.modulo(halfCap)) + "/" + formatTime(halfCap)
+                return player.mdb.breath.lt(halfCap) ? str.concat("<br><small>[Breathing In]</small>") : str.concat("<br><small>[Breathing Out]</small>")
+            },
+
         },
     },
     upgrades: {
         11: {
             fullDisplay() {
-                return "<h3>DB Upgrade I</h3><br>" +
-                    "Boost Focus gain based on Ki<br>" +
-                    "Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>" + 
-                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Focus<br>" +
-                    "Penalty: +0.25 Miasma"
+                return "<h3>Inhalation I</h3><br>" +
+                    "Double inhalation gain<br><br>" +
+                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Inhalation<br>" +
+                    "Penalty: +0.5 Temp Miasma"
             },
             unlocked: true,
-            cost: new Decimal(20),
-            onPurchase() {player.mse.miasma = player.mse.miasma.add(0.25);layers.mse.resetCheck()},
+            cost: new Decimal(5),
+            onPurchase() {player.mse.tempMiasma = player.mse.tempMiasma.add(0.5);layers.mse.resetCheck()},
             currencyLocation() { return player.mdb },
-            currencyInternalName: "focus",
-            effect() {return player.mse.ki.add(1).log(10).div(4).add(1)},
-            style() {
-                let look = {width: "150px", minHeight: "100px", borderRadius: "10px", color: "white", border: "2px solid #555566", margin: "1.5px"}
-                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#19191e"
-                return look
-            }
-        },
-        12: {
-            fullDisplay() {
-                return "<h3>DB Upgrade II</h3><br>" +
-                    "Double Ki while deep breathing<br><br>" +
-                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Focus<br>" +
-                    "Penalty: +0.5 Miasma"
-            },
-            unlocked: true,
-            cost: new Decimal(50),
-            onPurchase() {player.mse.miasma = player.mse.miasma.add(0.5);layers.mse.resetCheck()},
-            currencyLocation() { return player.mdb },
-            currencyInternalName: "focus",
+            currencyInternalName: "inhalation",
             style() {
                 let look = {width: "150px", minHeight: "100px", borderRadius: "10px", color: "white", border: "2px solid #555566", margin: "1.5px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#19191e"
@@ -107,38 +144,25 @@ addLayer("mdb", {
             ]],
         ]]],
         ["blank", "25px"],
-        ["style-row", [
-            ["style-column", [
-                ["clickable", 1],
-            ], {width: "250px", height: "250px", background: "#55556644", borderRight: "3px solid #555566", borderRadius: "17px 0 0 0"}],
-            ["style-column", [
-                ["style-column", [
-                    ["row", [
-                        ["raw-html", () => {return "You Have " + formatSimple(player.mdb.focus) + " Focus"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return player.mdb.focusPerSec.gt(0) ? "<span style='margin-left:10px'>(+" + formatSimple(player.mdb.focusPerSec) + "/s)</span>" : ""}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                    ]],
-                    ["raw-html", () => {return "Boosts Ki gain by x" + formatSimple(player.mdb.focusEffect)}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                ], {width: "447px", height: "60px", borderBottom: "3px solid #555566"}],
-                ["top-column", [
-                    ["blank", "25px"],
-                    ["raw-html", "While deep breathing:", {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                    ["blank", "10px"],
-                    ["raw-html", () => {
-                        let str = "Gain +" + formatSimple(player.mdb.focusGain) + " Focus per second<br>" + 
-                        "Gain +" + formatSimple(player.mdb.focusGain.div(10)) + " Temporary Miasma per second"
-                        if (hasUpgrade("mdb", 12)) str = str.concat("<br>Boost Ki gain by x" + formatSimple(player.mdb.focusActive))
-                        return str
-                    }, () => {
-                        let look = {color: "white", fontSize: "16px", fontFamily: "monospace", marginLeft: "10px"}
-                        if (player.mdb.active.lte(0)) look.color = "gray"
-                        return look
-                    }],
-                ], {width: "447px", height: "144px"}],
-                ["style-row", [
-                    ["raw-html", "<i>Hold or click on orb to deep breathe</i>", {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                ], {width: "447px", height: "40px", borderTop: "3px solid #555566"}],
-            ], {width: "447px", height: "250px", background: "#55556666", borderRadius: "0 17px 0 0"}],
-        ], {width: "700px", height: "250px", border: "3px solid #555566", borderRadius: "20px 20px 0 0"}],
+        ["style-column", [
+            ["style-row", [
+                    ["style-column", [
+                        ["raw-html", () => {return "You Have " + formatSimple(player.mdb.inhalation) + " Inhalation"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", () => {
+                            let currGain = player.mdb.breath.lt(player.mdb.breathCap.div(2)) ? player.mdb.inhalationGain : player.mdb.inhalationGain.mul(player.mdb.decayRate).mul(-1)
+                            return currGain.gt(0) ? "(+" + formatSimple(currGain) + "/s)" : "(" + formatSimple(currGain) + "/s)"
+                        }, () => {let look = {color: "white", fontSize: "18px", fontFamily: "monospace"};if (player.mdb.breath.gt(player.mdb.breathCap.div(2))) look.color = "#fbb";return look}],
+                    ], {width: "348px", height: "77px", borderRight: "3px solid #555566"}],
+                    ["style-column", [
+                        ["raw-html", () => {return "You Have " + formatSimple(player.mdb.exhalation) + " Exhalation"}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
+                        ["raw-html", () => {
+                            let currGain = player.mdb.breath.gt(player.mdb.breathCap.div(2)) ? player.mdb.exhalationGain : player.mdb.exhalationGain.mul(player.mdb.decayRate).mul(-1)
+                            return currGain.gt(0) ? "(+" + formatSimple(currGain) + "/s)" : "(" + formatSimple(currGain) + "/s)"
+                        }, () => {let look = {color: "white", fontSize: "18px", fontFamily: "monospace"};if (player.mdb.breath.lt(player.mdb.breathCap.div(2))) look.color = "#fbb";return look}],
+                    ], {width: "349px", height: "77px"}],
+            ], {width: "700px", height: "77px", background: "#55556666", borderBottom: "3px solid #555566", borderRadius: "17px 17px 0 0"}],
+            ["bar", "breath"],
+        ], {width: "700px", height: "130px", border: "3px solid #555566", borderRadius: "20px 20px 0 0"}],
         ["style-row", [
             ["upgrade", 11], ["upgrade", 12],
         ], {width: "700px", height: "120px", background: "#55556688", border: "3px solid #555566", borderRadius: "0 0 20px 20px", marginTop: "-3px"}],

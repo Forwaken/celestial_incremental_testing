@@ -2374,7 +2374,7 @@ var doNotCallTheseFunctionsEveryTick = [
 	"resetPrices", "addDiceEffect", "diceRoll", "evoCutscenes", "rocketFuelReset",
 	"rocketFuelAbility", "petButton3","bigCrunch", "startCutscene4", "startCutscene5",
 	"dimBoostReset", "startCutscene6", "galaxyReset", "startCutscene7", "startCutscene8",
-	"petButton4", "hexReq", "hexGain", "resetCheck",
+	"petButton4", "hexReq", "hexGain", "resetCheck", "remainderCheck",
 	"startCutscene9", "startCutscene10", "startCutscene11","crunch", "startCutscene12",
 	"startCutscene13", "startCutscene14", "negativeInfinityReset", "reverseCrunch",
 	"startCutscene15", "startCutscene16", "startCutscene17", "startCutscene18", "breakInfinities",

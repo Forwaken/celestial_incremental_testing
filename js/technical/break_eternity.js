@@ -2803,6 +2803,11 @@
         return D(value).reciprocate();
       }
     }, {
+      key: "modulo",
+      value: function modulo(value, other) {
+        return D(value).modulo(other);
+      }
+    }, {
       key: "cmp",
       value: function cmp(value, other) {
         return D(value).cmp(other);

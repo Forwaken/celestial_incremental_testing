@@ -45,8 +45,6 @@ addLayer("mse", {
         if (hasUpgrade("mcu", 15)) player.mse.kiPerSec = player.mse.kiPerSec.mul(upgradeEffect("mcu", 15))
         if (getBuyableAmount("mse", "gen1").gt(0)) player.mse.kiPerSec = player.mse.kiPerSec.mul(2)
         player.mse.kiPerSec = player.mse.kiPerSec.mul(buyableEffect("mse", "ki2"))
-        player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mdb.focusEffect)
-        if (player.mdb.active.gt(0)) player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mdb.focusActive)
         player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mme.meridian[1].effect)
         player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mme.meridian[2].effect)
         player.mse.kiPerSec = player.mse.kiPerSec.mul(player.mme.meridian[5].effect)
@@ -72,7 +70,7 @@ addLayer("mse", {
         player.mse.miasmaCap = player.mse.miasmaCap.mul(buyableEffect("mse", "mia2"))
         player.mse.miasmaCap = player.mse.miasmaCap.mul(buyableEffect("mse", "mia4"))
 
-        if (player.mse.tempMiasma.gt(0) && player.mdb.active.lte(0)) {
+        if (player.mse.tempMiasma.gt(0)) {
             player.mse.tempMiasma = player.mse.tempMiasma.sub(player.mse.tempMiasma.div(10).max(0.1).mul(delta)).max(0)
 
         }
@@ -133,13 +131,12 @@ addLayer("mse", {
             player.mse.meridianSelect = 0
 
             // Deep Breathing
-            player.mdb.focus = new Decimal(0)
-            player.mdb.focusGain = new Decimal(0)
-            player.mdb.focusPerSec = new Decimal(0)
-            player.mdb.focusActive = new Decimal(1)
-            player.mdb.focusEffect = new Decimal(1)
+            player.mdb.inhalation = new Decimal(0)
+            player.mdb.inhalationGain = new Decimal(0)
+            player.mdb.exhalation = new Decimal(0)
+            player.mdb.exhalationGain = new Decimal(0)
 
-            player.mdb.active = new Decimal(0)
+            player.mdb.breath = new Decimal(0)
 
             player.mdb.upgrades.splice(0, player.mdb.upgrades.length)
             
