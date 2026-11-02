@@ -29,8 +29,25 @@
 
         spissitude: new Decimal(1),
         spissitudePerSecond: new Decimal(0),
+
+        buyableBoost: new Decimal(1),
     }},
-    automate() {},
+    automate() {
+        if (hasUpgrade("ani", 18)) {
+            buyBuyable("ds", 11)
+            buyBuyable("ds", 12)
+            buyBuyable("ds", 13)
+            if (getLevelableTier("pu", 212, true)) buyBuyable("ds", 14)
+
+            buyBuyable("ds", 101)
+            buyBuyable("ds", 102)
+            buyBuyable("ds", 103)
+            buyBuyable("ds", 104)
+            buyBuyable("ds", 105)
+            buyBuyable("ds", 106)
+            if (hasUpgrade("depth1", 104)) buyBuyable("ds", 107)
+        }
+    },
     nodeStyle() {
         return {
             background: "linear-gradient(0deg, #221473ff 0%, #c5c5c5ff 50%, #147363 100%)",
@@ -57,7 +74,9 @@
 
         // SPACE ENERGY SOFTCAP
         if (player.ds.spaceEnergyToGet.gte(1000)) player.ds.spaceEnergyToGet = player.ds.spaceEnergyToGet.div(1000).pow(0.3).mul(1000)
+        if (player.ds.spaceEnergyToGet.gte(1e35)) player.ds.spaceEnergyToGet = player.ds.spaceEnergyToGet.div(1e35).pow(0.15).mul(1e35)
 
+        if (hasUpgrade("mr", 17) && !player.pet.legPetTimers[0].active) player.ds.spaceEnergy = player.ds.spaceEnergy.add(player.ds.spaceEnergyToGet.mul(Decimal.mul(delta, 0.1)))
         //space
         player.ds.space = player.ds.length.mul(player.ds.width).mul(player.ds.depth).mul(player.ds.spissitude)
         player.ds.spaceEffect = player.ds.space.plus(1).log(10).div(3).add(1)
@@ -91,6 +110,10 @@
         //stored
         player.ds.storedSpaceEnergyToGet = player.ds.spaceEnergy.mul(0.05).pow(0.6)
         if (hasUpgrade("laboratory", 15)) player.ds.storedSpaceEnergyToGet = player.ds.spaceEnergy.div(5).pow(0.8)
+
+        //buyable
+        player.ds.buyableBoost = new Decimal(1)
+        if (getLevelableTier("pu", 403, true)) player.ds.buyableBoost = player.ds.buyableBoost.mul(player.mr.radiation.effect2)
         if (hasMilestone("prj", 104)) player.ds.storedSpaceEnergyToGet = player.ds.storedSpaceEnergyToGet.mul(player.sma.starmetalExitTime.min(21600).div(900).add(1).pow(0.4));
         player.ds.storedSpaceEnergyToGet = player.ds.storedSpaceEnergyToGet.mul(buyableEffect("st", 207))
 
@@ -182,7 +205,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.spaceEnergy},
             pay(amt) { player.ds.spaceEnergy = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.3).mul(0.01) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.3).pow(player.ds.buyableBoost).mul(0.01) },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -194,7 +217,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space Energy"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -203,7 +226,7 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
@@ -216,7 +239,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.spaceEnergy},
             pay(amt) { player.ds.spaceEnergy = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.2).mul(0.001) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.2).pow(player.ds.buyableBoost).mul(0.001) },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -228,7 +251,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space Energy"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -237,7 +260,7 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
@@ -250,7 +273,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.spaceEnergy},
             pay(amt) { player.ds.spaceEnergy = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.1).mul(0.0001) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.1).pow(player.ds.buyableBoost).mul(0.0001) },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -262,7 +285,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space Energy"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -271,7 +294,7 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
@@ -284,7 +307,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.spaceEnergy},
             pay(amt) { player.ds.spaceEnergy = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.2).mul(0.01) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.2).pow(player.ds.buyableBoost).mul(0.01) },
             unlocked() { return getLevelableTier("pu", 212, true) },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -296,7 +319,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space Energy"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -305,7 +328,7 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
@@ -320,7 +343,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.space},
             pay(amt) { player.ds.space = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).mul(20).pow(2.8).add(1).pow(buyableEffect("ds", 107)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).mul(20).pow(2.8).add(1).pow(buyableEffect("ds", 107)).pow(player.ds.buyableBoost) },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -332,7 +355,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -345,13 +368,15 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
 
-                    player.ds.length = new Decimal(1)
-                    player.ds.width = new Decimal(1)
-                    player.ds.depth = new Decimal(1)
+                    if (!hasUpgrade("ani", 18)) {
+                        player.ds.length = new Decimal(1)
+                        player.ds.width = new Decimal(1)
+                        player.ds.depth = new Decimal(1)
+                    }
                 }
             },
             style: { width: '275px', height: '150px', color: "white" }
@@ -362,7 +387,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.space},
             pay(amt) { player.ds.space = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).mul(15).pow(2.5).add(1).pow(buyableEffect("ds", 107)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).mul(15).pow(2.5).add(1).pow(buyableEffect("ds", 107)).pow(player.ds.buyableBoost) },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -374,7 +399,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -387,13 +412,15 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
 
-                    player.ds.length = new Decimal(1)
-                    player.ds.width = new Decimal(1)
-                    player.ds.depth = new Decimal(1)
+                    if (!hasUpgrade("ani", 18)) {
+                        player.ds.length = new Decimal(1)
+                        player.ds.width = new Decimal(1)
+                        player.ds.depth = new Decimal(1)
+                    }
                 }
             },
             style: { width: '275px', height: '150px', color: "white" }
@@ -404,7 +431,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.space},
             pay(amt) { player.ds.space = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).mul(10).pow(1.8).add(1).pow(buyableEffect("ds", 107)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).mul(10).pow(1.8).add(1).pow(buyableEffect("ds", 107)).pow(player.ds.buyableBoost) },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -416,7 +443,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -429,13 +456,15 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
 
-                    player.ds.length = new Decimal(1)
-                    player.ds.width = new Decimal(1)
-                    player.ds.depth = new Decimal(1)
+                    if (!hasUpgrade("ani", 18)) {
+                        player.ds.length = new Decimal(1)
+                        player.ds.width = new Decimal(1)
+                        player.ds.depth = new Decimal(1)
+                    }
                 }
             },
             style: { width: '275px', height: '150px', color: "white" }
@@ -446,7 +475,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.space},
             pay(amt) { player.ds.space = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).mul(8).pow(1.6).add(1).pow(buyableEffect("ds", 107)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).mul(8).pow(1.6).add(1).pow(buyableEffect("ds", 107)).pow(player.ds.buyableBoost) },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -458,7 +487,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -471,13 +500,15 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
 
-                    player.ds.length = new Decimal(1)
-                    player.ds.width = new Decimal(1)
-                    player.ds.depth = new Decimal(1)
+                    if (!hasUpgrade("ani", 18)) {
+                        player.ds.length = new Decimal(1)
+                        player.ds.width = new Decimal(1)
+                        player.ds.depth = new Decimal(1)
+                    }
                 }
             },
             style: { width: '275px', height: '150px', color: "white" }
@@ -488,7 +519,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.space},
             pay(amt) { player.ds.space = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.2).mul(0.5).add(1).pow(buyableEffect("ds", 107)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.2).mul(0.5).add(1).pow(buyableEffect("ds", 107)).pow(player.ds.buyableBoost) },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -500,7 +531,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -513,13 +544,15 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
 
-                    player.ds.length = new Decimal(1)
-                    player.ds.width = new Decimal(1)
-                    player.ds.depth = new Decimal(1)
+                    if (!hasUpgrade("ani", 18)) {
+                        player.ds.length = new Decimal(1)
+                        player.ds.width = new Decimal(1)
+                        player.ds.depth = new Decimal(1)
+                    }
                 }
             },
             style: { width: '275px', height: '150px', color: "white" }
@@ -530,7 +563,7 @@
             purchaseLimit() { return new Decimal(1000) },
             currency() { return player.ds.space},
             pay(amt) { player.ds.space = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.2).mul(0.5).add(1).pow(buyableEffect("ds", 107)) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).pow(1.2).mul(0.5).add(1).pow(buyableEffect("ds", 107)).pow(player.ds.buyableBoost) },
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -542,7 +575,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -555,13 +588,15 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
 
-                    player.ds.length = new Decimal(1)
-                    player.ds.width = new Decimal(1)
-                    player.ds.depth = new Decimal(1)
+                    if (!hasUpgrade("ani", 18)) {
+                        player.ds.length = new Decimal(1)
+                        player.ds.width = new Decimal(1)
+                        player.ds.depth = new Decimal(1)
+                    }
                 }
             },
             style: { width: '275px', height: '150px', color: "white" }
@@ -584,7 +619,7 @@
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Space"
             },
             buy(mult) {
-                if (!mult) {
+                if (!mult && (!hasUpgrade("ani", 18))) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
 
@@ -597,13 +632,15 @@
                     let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
                     if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
                     let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
-                    this.pay(cost)
+                    if (!hasUpgrade("ani", 18)) this.pay(cost)
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
 
-                    player.ds.length = new Decimal(1)
-                    player.ds.width = new Decimal(1)
-                    player.ds.depth = new Decimal(1)
+                    if (!hasUpgrade("ani", 18)) {
+                        player.ds.length = new Decimal(1)
+                        player.ds.width = new Decimal(1)
+                        player.ds.depth = new Decimal(1)
+                    }
                 }
             },
             style: { width: '275px', height: '150px', color: "white" }
@@ -631,7 +668,8 @@
                             return look
                         }],
                     ]],
-                    ["raw-html", () => { return player.ds.spaceEnergyToGet.gte(1000) ? "[SOFTCAPPED]" : ""}, {color: "red", fontSize: "18px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return player.ds.spaceEnergyToGet.gte(1000) && player.ds.spaceEnergyToGet.lt(1e35) ? "[SOFTCAPPED]" : ""}, {color: "red", fontSize: "18px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return player.ds.spaceEnergyToGet.gte(1e35) ? "[SOFTCAPPED^2]" : ""}, {color: "red", fontSize: "18px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "Extends unavoidable point softcap<sup>2</sup> by ^" + format(player.ds.spaceEnergyEffect)}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "You will store " + format(player.ds.storedSpaceEnergyToGet) + " space energy when you leave D1."}, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
                     ["blank", "25px"],
