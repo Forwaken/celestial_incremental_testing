@@ -775,13 +775,14 @@ function celestialiteReward(gain) {
         bhLog("<span style='color: #a3a3a3'>" + str + "You gained " + formatWhole(gain.pips) + " dice pips! (You have " + formatWhole(player.zd.pips) + ")")
     }
     if (gain.celestialRadiation) {
-        gain.celestialRadiation = gain.celestialRadiation.mul(generalMult).floor()
-        if (player.anl.aniciffoDefeated) gain.celestialRadiation = gain.celestialRadiation.mul(2)
+        let celMult = generalMult
+        if (player.anl.aniciffoDefeated) celMult = celMult.mul(2)
+        gain.celestialRadiation = chanceRemainder(gain.celestialRadiation.mul(celMult))
         player.anl.celestialRadiation = player.anl.celestialRadiation.add(gain.celestialRadiation)
         bhLog("<span style='color: #6491e6'>" + str + "You gained " + formatWhole(gain.celestialRadiation) + " celestial radiation! (You have " + formatWhole(player.anl.celestialRadiation) + ")")
     }
     if (gain.ascensionShards) {
-        gain.ascensionShards = gain.ascensionShards.mul(generalMult).floor()
+        gain.ascensionShards = chanceRemainder(gain.ascensionShards.mul(generalMult))
         player.cbs.ascensionShards = player.cbs.ascensionShards.add(gain.ascensionShards)
         bhLog("<span style='color: #c6f7ff'>" + str + "WOW! You gained " + formatWhole(gain.ascensionShards) + " shards of ascension! (You have " + formatWhole(player.cbs.ascensionShards) + ")")
     }
@@ -1548,7 +1549,7 @@ function launchZaWarudoDOMEffect(startX, startY, durationMs) {
     ZAWARUDOOOR.volume = options.musicVolume / 10;
 
     // Play sound
-    if (options.musicToggle) ZAWARUDOOO.play();
+    if (options.soundToggle) ZAWARUDOOO.play();
 
     // 1. Create a unique ID so we can clean up easily later
     const effectId = 'za-warudo-' + Date.now();
@@ -1620,7 +1621,7 @@ function launchZaWarudoDOMEffect(startX, startY, durationMs) {
         targetsToFreeze.forEach(el => el.classList.remove('zw-frozen-world'));
 
         //play resume sound
-        if (options.musicToggle) ZAWARUDOOOR.play();
+        if (options.soundToggle) ZAWARUDOOOR.play();
 
         
 
@@ -1634,7 +1635,7 @@ function resumeZaWarudoTime() {
     ZAWARUDOOOR.volume = options.musicVolume / 10;
 
     // Play resume sound
-    if (options.musicToggle) ZAWARUDOOOR.play();
+    if (options.soundToggle) ZAWARUDOOOR.play();
 
     // No global variables needed: query the DOM directly for any frozen element
     const frozenElements = document.querySelectorAll('.zw-frozen-world');
@@ -1652,7 +1653,7 @@ function resumeZaWarudoTime() {
 function bloodGlow(duration) {
     // Remove any existing blood glow
     heartbeatSound.volume = options.musicVolume / 10;
-    if (options.musicToggle) heartbeatSound.play();
+    if (options.soundToggle) heartbeatSound.play();
     const old = document.getElementById("blood-glow-overlay");
     if (old) {
         clearInterval(old._pulseInterval);
@@ -1704,7 +1705,7 @@ const navNecromanceSound = new Audio('music/necromance.mp3');
 function navNecromanceEffect(x, y)
 {
     navNecromanceSound.volume = options.musicVolume / 10;
-    if (options.musicToggle) navNecromanceSound.play(); // Assuming a corresponding sound exists
+    if (options.soundToggle) navNecromanceSound.play(); // Assuming a corresponding sound exists
     if (typeof options !== 'undefined' && options.toggleParticle === false) return;
 
     // create a small skull SVG generator used for particle images
@@ -1846,7 +1847,7 @@ function navNecromanceEffect(x, y)
 const flipsideSound = new Audio('music/flipside.wav');
 function tempInvertColors(durationInSeconds = 4) {
     flipsideSound.volume = options.musicVolume / 10;
-    if (options.musicToggle) flipsideSound.play();
+    if (options.soundToggle) flipsideSound.play();
 	// Apply the CSS filter to invert colors on the root html element
 	document.documentElement.style.filter = 'invert(100%) hue-rotate(180deg)';
 	document.documentElement.style.transition = 'filter 2s ease';

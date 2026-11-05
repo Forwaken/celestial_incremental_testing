@@ -757,9 +757,8 @@ addLayer("settings", {
                         ["raw-html", "Credits", {color: "var(--textColor)", fontSize: "20px", fontFamily: "monospace"}],
                     ], {width: "30409px6px", height: "30px", borderBottom: "3px solid var(--regBorder)"}],
                     ["top-column", [
-                        ["blank", "10px"]
-                        ["raw-html", "Game by Icecreamdude", {color: "var(--textColor)", fontSize: "14px", fontFamily: "monospace"}],
-                        ["raw-html", "<h5>Game by Icecreamdude.<br>" + 
+                        ["blank", "10px"],
+                        ["raw-html", "Game by Icecreamdude.<br>" + 
                             "Music by Icecreamdude and 150percent.<br>" + 
                             "Content by Icecreamdude, Forwaken, Bumpy, Akash.<br>" + 
                             "Additional development by Ruzz and Deusovi.<br>" + 

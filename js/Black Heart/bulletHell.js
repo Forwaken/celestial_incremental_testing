@@ -1825,17 +1825,7 @@ window.bhAttack = function(damage, index = 3, slot = 0, target = "randomPlayer",
 }
 
 // --- AUTO-RESUME ON RELOAD ---
-// Wrapper for a blue-diamond, platformer-style bulletHell
-function bulletHellBlue(actions, values = {}, exitAction = () => {}) {
-    values = values || {};
-    values.blueMode = true;
-    // sensible defaults for platformer feel
-    if (typeof values.gravity === 'undefined') values.gravity = 0.6;
-    if (typeof values.jumpStrength === 'undefined') values.jumpStrength = -12;
-    return bulletHell(actions, values, exitAction);
-}
-// Ensure global accessibility
-try { window.bulletHellBlue = bulletHellBlue } catch (e) { /* ignore in non-browser env */ } //
+
 let storedInfo = localStorage.getItem('bhState')
 if (storedInfo && storedInfo != "") {
     storedInfo = JSON.parse(storedInfo)
@@ -1928,15 +1918,15 @@ BHB.diamondAttack = {
         // Update each diamond's orbit and position, and handle shooting
         for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "diamond") {
-                b.orbitAngle += b.orbitSpeed * (bulletHellNeo.dt ?? 1);
+                b.orbitAngle += b.orbitSpeed * bulletHellNeo.delta;
                 const playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.px;
                 const playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.py;
                 const targetBx = playerGlobalX + b.orbitRadius * Math.cos(b.orbitAngle);
                 const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
                 // Smoothly move boss towards target position (lerp)
-                const lerpFactor = 1 - Math.pow(1 - 0.05, bulletHellNeo.dt ?? 1);
-                b.x += (targetBx - b.x) * lerpFactor * 60 * bulletHellNeo.delta;
-                b.y += (targetBy - b.y) * lerpFactor * 60 * bulletHellNeo.delta;
+                const lerpFactor = 1 - Math.pow(1 - 0.05, bulletHellNeo.delta ?? 1);
+                b.x += (targetBx - b.x) * lerpFactor * bulletHellNeo.delta;
+                b.y += (targetBy - b.y) * lerpFactor * bulletHellNeo.delta;
 
                 // Each diamond shoots at its own interval
                 const speed = bulletHellNeo.actions["diamondAttack"].enemySpeed ?? 5
@@ -1984,13 +1974,13 @@ BHB.rotatingCircleRadialBurst = {
 
         for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "circle") {
-                b.orbitAngle += b.orbitSpeed * (bulletHellNeo.dt ?? 1);
+                b.orbitAngle += b.orbitSpeed * (bulletHellNeo.delta ?? 1);
                 const playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.actions["rotatingCircleRadialBurst"].locX;
                 const playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.actions["rotatingCircleRadialBurst"].locY;
                 const targetBx = playerGlobalX + b.orbitRadius * Math.cos(b.orbitAngle);
                 const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
                 // Smoothly move boss towards target position (frame-rate independent lerp)
-                const lerpFactor = 1 - Math.pow(1 - 0.05, info.dt ?? 1);
+                const lerpFactor = 1 - Math.pow(1 - 0.05, bulletHellNeo.delta ?? 1);
                 b.x += (targetBx - b.x) * lerpFactor;
                 b.y += (targetBy - b.y) * lerpFactor;
 
@@ -2663,92 +2653,83 @@ BHB.chargingBee = {
                     if (!options.performanceMode) bossCtx.shadowColor = b.pulsingRed ? '#e22' : "#fff";
                     if (!options.performanceMode) bossCtx.shadowBlur = 2;
                     // Wings
-                    ctx.beginPath();
-                    ctx.arcTo(0, 0, -b.r / 2, b.r / 2, b.r / 4);
-                    ctx.arcTo(-b.r / 2, b.r / 2, -b.r, 0, b.r / 4);
-                    ctx.arcTo(-b.r, 0, -b.r / 2, -b.r / 2, b.r / 4);
-                    ctx.arcTo(-b.r / 2, -b.r / 2, 0, 0, b.r / 4);
-                    ctx.arcTo(0, 0, b.r / 2, b.r / 2, b.r / 4);
-                    ctx.arcTo(b.r / 2, b.r / 2, b.r, 0, b.r / 4);
-                    ctx.arcTo(b.r, 0, b.r / 2, -b.r / 2, b.r / 4);
-                    ctx.arcTo(b.r / 2, -b.r / 2, 0, 0, b.r / 4);
-                    ctx.closePath();
-                    ctx.fillStyle = b.pulsingRed ? '#e22' : "#aaf";
-                    ctx.fill();
-                    ctx.stroke();
+                    bossCtx.beginPath();
+                    bossCtx.arcTo(0, 0, -b.r / 2, b.r / 2, b.r / 4);
+                    bossCtx.arcTo(-b.r / 2, b.r / 2, -b.r, 0, b.r / 4);
+                    bossCtx.arcTo(-b.r, 0, -b.r / 2, -b.r / 2, b.r / 4);
+                    bossCtx.arcTo(-b.r / 2, -b.r / 2, 0, 0, b.r / 4);
+                    bossCtx.arcTo(0, 0, b.r / 2, b.r / 2, b.r / 4);
+                    bossCtx.arcTo(b.r / 2, b.r / 2, b.r, 0, b.r / 4);
+                    bossCtx.arcTo(b.r, 0, b.r / 2, -b.r / 2, b.r / 4);
+                    bossCtx.arcTo(b.r / 2, -b.r / 2, 0, 0, b.r / 4);
+                    bossCtx.closePath();
+                    bossCtx.fillStyle = b.pulsingRed ? '#e22' : "#aaf";
+                    bossCtx.fill();
+                    bossCtx.stroke();
 
                     // Abdomen
-                    ctx.beginPath();
-                    ctx.arcTo(0, 0, b.r / 4, b.r / 4, b.r / 4);
-                    ctx.arcTo(b.r / 4, b.r / 4, b.r / 2, (b.r * 3) / 4, b.r / 4);
-                    ctx.arcTo(b.r / 2, (b.r * 3) / 4, 0, b.r + (b.r / 2), b.r / 3);
-                    ctx.arcTo(0, b.r + (b.r / 2), -b.r / 2, (b.r * 3) / 4, b.r / 3);
-                    ctx.arcTo(-b.r / 2, (b.r * 3) / 4, -b.r / 4, b.r / 4, b.r / 3);
-                    ctx.arcTo(-b.r / 4, b.r / 4, 0, 0, b.r / 4);
-                    ctx.closePath();
-                    ctx.fillStyle = "#E9AB17";
-                    ctx.fill();
-                    ctx.stroke();
+                    bossCtx.beginPath();
+                    bossCtx.arcTo(0, 0, b.r / 4, b.r / 4, b.r / 4);
+                    bossCtx.arcTo(b.r / 4, b.r / 4, b.r / 2, (b.r * 3) / 4, b.r / 4);
+                    bossCtx.arcTo(b.r / 2, (b.r * 3) / 4, 0, b.r + (b.r / 2), b.r / 3);
+                    bossCtx.arcTo(0, b.r + (b.r / 2), -b.r / 2, (b.r * 3) / 4, b.r / 3);
+                    bossCtx.arcTo(-b.r / 2, (b.r * 3) / 4, -b.r / 4, b.r / 4, b.r / 3);
+                    bossCtx.arcTo(-b.r / 4, b.r / 4, 0, 0, b.r / 4);
+                    bossCtx.closePath();
+                    bossCtx.fillStyle = "#E9AB17";
+                    bossCtx.fill();
+                    bossCtx.stroke();
 
                     // Stripes
-                    ctx.beginPath();
-                    ctx.moveTo(b.r / 4, b.r / 4);
-                    ctx.quadraticCurveTo(b.r / 4, b.r / 2, 0, b.r / 2);
-                    ctx.moveTo(-b.r / 4, b.r / 4);
-                    ctx.quadraticCurveTo(-b.r / 4, b.r / 2, 0, b.r / 2);
-                    ctx.moveTo(b.r / 2 - 1, (b.r * 3) / 4);
-                    ctx.quadraticCurveTo(b.r / 3 - 1, b.r, 0, b.r);
-                    ctx.moveTo(-b.r / 2 + 1, (b.r * 3) / 4);
-                    ctx.quadraticCurveTo(-b.r / 3 + 1, b.r, 0, b.r);
-                    ctx.stroke();
+                    bossCtx.beginPath();
+                    bossCtx.moveTo(b.r / 4, b.r / 4);
+                    bossCtx.quadraticCurveTo(b.r / 4, b.r / 2, 0, b.r / 2);
+                    bossCtx.moveTo(-b.r / 4, b.r / 4);
+                    bossCtx.quadraticCurveTo(-b.r / 4, b.r / 2, 0, b.r / 2);
+                    bossCtx.moveTo(b.r / 2 - 1, (b.r * 3) / 4);
+                    bossCtx.quadraticCurveTo(b.r / 3 - 1, b.r, 0, b.r);
+                    bossCtx.moveTo(-b.r / 2 + 1, (b.r * 3) / 4);
+                    bossCtx.quadraticCurveTo(-b.r / 3 + 1, b.r, 0, b.r);
+                    bossCtx.stroke();
 
                     // Head
-                    ctx.beginPath();
-                    ctx.arcTo(0, 0, b.r / 2, -b.r / 2, b.r / 3);
-                    ctx.arcTo(b.r / 2, -b.r / 2, 0, -b.r, b.r / 3);
-                    ctx.arcTo(0, -b.r, -b.r / 2, -b.r / 2, b.r / 3);
-                    ctx.arcTo(-b.r / 2, -b.r / 2, 0, 0, b.r / 3);
-                    ctx.closePath();
-                    ctx.fillStyle = "#E9AB17";
-                    ctx.fill();
-                    ctx.stroke();
+                    bossCtx.beginPath();
+                    bossCtx.arcTo(0, 0, b.r / 2, -b.r / 2, b.r / 3);
+                    bossCtx.arcTo(b.r / 2, -b.r / 2, 0, -b.r, b.r / 3);
+                    bossCtx.arcTo(0, -b.r, -b.r / 2, -b.r / 2, b.r / 3);
+                    bossCtx.arcTo(-b.r / 2, -b.r / 2, 0, 0, b.r / 3);
+                    bossCtx.closePath();
+                    bossCtx.fillStyle = "#E9AB17";
+                    bossCtx.fill();
+                    bossCtx.stroke();
 
                     // Antennae
-                    ctx.beginPath();
-                    ctx.moveTo(-b.r / 4, -(b.r * 3) / 4);
-                    ctx.quadraticCurveTo(-b.r / 8, -(b.r + (b.r / 4)), (-b.r * 3) / 8, -(b.r + (b.r / 8)));
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(b.r / 4, -(b.r * 3) / 4);
-                    ctx.quadraticCurveTo(b.r / 8, -(b.r + (b.r / 4)), (b.r * 3) / 8, -(b.r + (b.r / 8)));
-                    ctx.stroke();
+                    bossCtx.beginPath();
+                    bossCtx.moveTo(-b.r / 4, -(b.r * 3) / 4);
+                    bossCtx.quadraticCurveTo(-b.r / 8, -(b.r + (b.r / 4)), (-b.r * 3) / 8, -(b.r + (b.r / 8)));
+                    bossCtx.stroke();
+                    bossCtx.beginPath();
+                    bossCtx.moveTo(b.r / 4, -(b.r * 3) / 4);
+                    bossCtx.quadraticCurveTo(b.r / 8, -(b.r + (b.r / 4)), (b.r * 3) / 8, -(b.r + (b.r / 8)));
+                    bossCtx.stroke();
 
-                    ctx.restore();
+                    bossCtx.restore();
                 }
             });
         }
     },
     moveFunc() {
-        let dt = Date.now() - (bulletHellNeo.actions["chargingBee"].lastTick || Date.now());
-        bulletHellNeo.actions["chargingBee"].lastTick = Date.now();
+        const dt = bulletHellNeo.deltaMs || 16.67;
+        const speed = bulletHellNeo.actions["chargingBee"].enemySpeed || 5;
+
         for (let b of bulletHellNeo.bullets) {
-            if (b.name && b.name == "chargeBee") {
-                // Lunge logic
-                if (!b.pulsingRed && b.lungeCooldown <= 0) {
-                    b.lungeTimer = 750;
-                    let dx = bulletHellNeo.px - b.x - 50 + (Math.random()*100);
-                    let dy = bulletHellNeo.py - b.y - 50 + (Math.random()*100);
-                    let dist = Math.hypot(dx, dy);
-                    b.vx = (dx / dist) * bulletHellNeo.actions["chargingBee"].enemySpeed;
-                    b.vy = (dy / dist) * bulletHellNeo.actions["chargingBee"].enemySpeed;
-                    b.angle = Math.atan2(dy, dx) + Math.PI/2
-                    b.pulsingRed = true;
-                } else if (!b.pulsingRed) {
+            if (b.name === "chargeBee") {
+                if (!b.pulsingRed) {
                     b.lungeCooldown -= dt;
                     if (b.lungeCooldown <= 0) {
                         b.lungeTimer = 750;
-                        const targetX = info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-                        const targetY = info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+                        const targetX = bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+                        const targetY = bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
                         const dx = (targetX + (Math.random() - 0.5) * 60) - b.x;
                         const dy = (targetY + (Math.random() - 0.5) * 60) - b.y;
                         const dist = Math.hypot(dx, dy) || 1;
@@ -2767,9 +2748,9 @@ BHB.chargingBee = {
                         b.lungeCooldown = 1000 + Math.random() * 800;
 
                         // Reposition above if they lunged past the arena floor
-                        if (b.y > info.height + 20) b.y = -30;
-                        if (b.x < -20) b.x = info.width + 10;
-                        if (b.x > info.width + 20) b.x = -10;
+                        if (b.y > bulletHellNeo.height + 20) b.y = -30;
+                        if (b.x < -20) b.x = bulletHellNeo.width + 10;
+                        if (b.x > bulletHellNeo.width + 20) b.x = -10;
                     }
                 }
             }
@@ -3224,8 +3205,8 @@ BHB.firingBees = {
                 const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
                 // Smoothly move boss towards target position (lerp)
                 const lerpFactor = 0.05;
-                b.x += (targetBx - b.x) * lerpFactor * 60 * bulletHellNeo.delta;
-                b.y += (targetBy - b.y) * lerpFactor * 60 * bulletHellNeo.delta;
+                b.x += (targetBx - b.x) * lerpFactor * bulletHellNeo.delta;
+                b.y += (targetBy - b.y) * lerpFactor * bulletHellNeo.delta;
 
                 // Each bee shoots at its own interval
                 const speed = bulletHellNeo.actions["firingBees"].enemySpeed ?? 5
@@ -3409,13 +3390,13 @@ BHB.diceAttack = {
         // Update each dice's orbit and position, and handle shooting
         for (let b of bulletHellNeo.bullets) {
             if (b.name && b.name == "dice") {
-                b.orbitAngle += b.orbitSpeed * (bulletHellNeo.dt ?? 1);
+                b.orbitAngle += b.orbitSpeed * (bulletHellNeo.delta ?? 1);
                 const playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.px;
                 const playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.py;
                 const targetBx = playerGlobalX + b.orbitRadius * Math.cos(b.orbitAngle);
                 const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
                 // Smoothly move boss towards target position (frame-rate independent lerp)
-                const lerpFactor = 1 - Math.pow(1 - 0.05, bulletHellNeo.dt ?? 1);
+                const lerpFactor = 1 - Math.pow(1 - 0.05, bulletHellNeo.delta ?? 1);
                 b.x += (targetBx - b.x) * lerpFactor;
                 b.y += (targetBy - b.y) * lerpFactor;
 
@@ -3567,7 +3548,7 @@ BHB.diceAttackNoOrbit = {
                 const targetBx = playerGlobalX + b.orbitRadius * Math.cos(b.orbitAngle);
                 const targetBy = playerGlobalY + b.orbitRadius * Math.sin(b.orbitAngle);
                 // Smoothly move boss towards target position (frame-rate independent lerp)
-                const lerpFactor = 1 - Math.pow(1 - 0.05, bulletHellNeo.dt ?? 1);
+                const lerpFactor = 1 - Math.pow(1 - 0.05, bulletHellNeo.delta ?? 1);
                 b.x += (targetBx - b.x) * lerpFactor;
                 b.y += (targetBy - b.y) * lerpFactor;
 
@@ -3725,8 +3706,8 @@ BHB.diceSpikes = {
         // update existing bullets' positions
         for (let b of bulletHellNeo.bullets) {
             if (b.vx !== undefined) {
-                b.x += b.vx * 60 * bulletHellNeo.delta;
-                b.y += b.vy * 60 * bulletHellNeo.delta;
+                b.x += b.vx * bulletHellNeo.delta;
+                b.y += b.vy * bulletHellNeo.delta;
             }
         }
 
@@ -3919,7 +3900,7 @@ BHB.spikePlatformAttack = {
         // Update platforms positions
         if (bulletHellNeo.platforms) {
             for (let p of bulletHellNeo.platforms) {
-                p.x += (p.vx * 60 * bulletHellNeo.delta);
+                p.x += (p.vx * bulletHellNeo.delta);
                 // wrap-around horizontally
                 if (p.vx > 0 && p.x > bulletHellNeo.width) p.x = -p.w;
                 if (p.vx < 0 && p.x + p.w < 0) p.x = bulletHellNeo.width;
@@ -4265,7 +4246,7 @@ BHB.zarUltimateAttack = {
         // Update platforms positions
         if (bulletHellNeo.platforms) {
             for (let p of bulletHellNeo.platforms) {
-                p.x += (p.vx * 60 * bulletHellNeo.delta);
+                p.x += (p.vx * bulletHellNeo.delta);
                 // wrap-around horizontally
                 if (p.vx > 0 && p.x > bulletHellNeo.width) p.x = -p.w;
                 if (p.vx < 0 && p.x + p.w < 0) p.x = bulletHellNeo.width;
@@ -4332,15 +4313,6 @@ BHB.zarUltimateAttack = {
         }
     },
 }
-
-
-// Wrapper for a green-diamond, shield-deflection bulletHell (Undertale green soul)
-function bulletHellGreen(actions, values = {}, exitAction = () => {}) {
-    values = values || {};
-    values.greenMode = true;
-    return bulletHell(actions, values, exitAction);
-}
-try { window.bulletHellGreen = bulletHellGreen; } catch (e) { /* ignore in non-browser env */ }
 
 //  BHB action: green spear rain 
 // Spears are spawned from one of the 8 cardinal/diagonal directions and travel

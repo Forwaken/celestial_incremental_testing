@@ -184,7 +184,7 @@
             player.le.starmetalAlloyToGet = player.le.starmetalAlloyToGet.add(player.le.starmetalAlloyToGetToGet)
         }
         if (player.sme.autoLeaveToggle && player.le.starmetalAlloyToGetTrue.gte(player.sme.leaveAmount) && !player.pet.legPetTimers[0].active) {
-            if (player.tempPaused) pauseUniverseAll(["D1", "DA", "A2", "SB", "BH"], "unpause", true)
+            if (player.tempPaused) pauseUniverseAll(["D1", "AD1", "DA", "A2", "SB", "BH"], "unpause", true)
             player.sb.storedSpaceEnergy = player.sb.storedSpaceEnergy.add(player.ds.storedSpaceEnergyToGet)
             player.prj.storedTimeCapsules = player.prj.storedTimeCapsules.add(player.dt.storedToGet)
             if (!hasAchievement("achievements", 1204) && player.dt.storedToGet.gte(1)) completeAchievement("achievements", 1204);
@@ -277,7 +277,7 @@
             canClick() { return player.le.starmetalAlloyToGet.gte(1) },
             unlocked() { return true },
             onClick() {
-                if (player.tempPaused) pauseUniverseAll(["D1", "DA", "A2", "SB", "BH"], "unpause", true)
+                if (player.tempPaused) pauseUniverseAll(["D1", "AD1", "DA", "A2", "SB", "BH"], "unpause", true)
                 player.sb.storedSpaceEnergy = player.sb.storedSpaceEnergy.add(player.ds.storedSpaceEnergyToGet)
 
                 player.sma.starmetalAlloy = player.sma.starmetalAlloy.add(player.le.starmetalAlloyToGetTrue.mul(10).floor().div(10))
@@ -343,7 +343,7 @@
             canClick() { return player.le.eclipseShardsToGet.gte(1) },
             unlocked() { return true },
             onClick() {
-                if (player.tempPaused) pauseUniverseAll(["D1", "DA", "A2", "SB", "BH"], "unpause", true)
+                if (player.tempPaused) pauseUniverseAll(["D1", "AD1", "DA", "A2", "SB", "BH"], "unpause", true)
                 player.prj.storedTimeCapsules = player.prj.storedTimeCapsules.add(player.dt.storedToGet)
                 if (!hasAchievement("achievements", 1204) && player.dt.storedToGet.gte(1)) completeAchievement("achievements", 1204);
                 if (!hasAchievement("achievements", 1206) && player.dt.storedToGet.gte(7)) completeAchievement("achievements", 1206);

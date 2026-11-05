@@ -1353,7 +1353,7 @@ let credits = `<h1>Credits:</h1><br>
 
 let changelog = `<h1>Changelog:</h1><br>
 	<h2 style='color:#ff3f3f'>MAJOR SPOILERS BELOW</h2><br><br>
-	<h3>v1.15 - The Novasent Update Part IV: Tera [UNFINISHED]</h3><br>
+	<h3>v1.16 - The Novasent Update Part IV: Tera [UNFINISHED]</h3><br>
 		Content:<br>
 			- Added Tera, and its subsequent content.<br>
 			- Completely rebalanced uni-alpha.<br>
@@ -1382,7 +1382,6 @@ let changelog = `<h1>Changelog:</h1><br>
 			- Added -D1's song to the jukebox.<br>
 			- Added global black heart stats to character page.<br><br>
 		Balancing:<br>
-			- Completely rebalanced uni-alpha.<br>
 			- Black heart currency drops now roll the remainder instead of flooring.<br>
 			- Fixed combo scaling before dice space.<br>
 			- Halved the time skip cooldown in Stagnant Synestia.<br>
