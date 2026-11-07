@@ -286,11 +286,13 @@ class BulletHell {
         this.blindnessOffscreen = document.createElement("canvas");
         this.blindnessOffscreen.width = this.enemyCanvas.width;
         this.blindnessOffscreen.height = this.enemyCanvas.height;
+        this.blindnessOffscreen.style.visibility = "hidden";
         this.overlay.appendChild(this.blindnessOffscreen)
 
         this.blindnessDark = document.createElement("canvas");
         this.blindnessDark.width = this.enemyCanvas.width;
         this.blindnessDark.height = this.enemyCanvas.height;
+        this.blindnessDark.style.visibility = "hidden";
         this.overlay.appendChild(this.blindnessDark)
 
         // Append elements to document, and make canvas variables
@@ -1200,12 +1202,12 @@ class BulletHell {
             }
 
             // Step 2: Clip offscreen layer to visible circle and stamp onto enemyCanvas
-            this.bossCtx.save();
-            this.bossCtx.beginPath();
-            this.bossCtx.arc(screenX, screenY, radius, 0, Math.PI * 2);
-            this.bossCtx.clip();
-            this.bossCtx.drawImage(offscreen, 0, 0);
-            this.bossCtx.restore();
+            this.enemyCtx.save();
+            this.enemyCtx.beginPath();
+            this.enemyCtx.arc(screenX, screenY, radius, 0, Math.PI * 2);
+            this.enemyCtx.clip();
+            this.enemyCtx.drawImage(offscreen, 0, 0);
+            this.enemyCtx.restore();
 
             // Step 3: Draw solid black screen on darkCanvas
             // Reset to source-over so fillRect paints opaque black over the cleared canvas
@@ -1227,7 +1229,7 @@ class BulletHell {
             darkCtx.globalCompositeOperation = "source-over";
 
             // Stamp the darkness mask over bossCanvas
-            this.bossCtx.drawImage(darkCanvas, 0, 0);
+            this.enemyCtx.drawImage(darkCanvas, 0, 0);
         } else {
             this.enemyCtx.save()
             if (!options.performanceMode) {
