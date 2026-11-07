@@ -870,8 +870,9 @@ class BulletHell {
             if (b._dead || b._hitPlayer) {
                 keep = false;
             } else if (b.offScreen) {
-                keep = (b.x > this.boxLeft && b.x < this.boxLeft + this.width &&
-                        b.y > this.boxTop && b.y < this.boxTop + this.height);
+                let leeway = b.leeway ? b.leeway + b.r : b.r
+                keep = (b.x > -this.boxLeft - leeway && b.x < this.boxLeft + this.width + leeway &&
+                    b.y > -this.boxTop - leeway && b.y < this.boxTop + this.height + leeway)
             } else if (b.name && (b.name == "bomb" || b.name == "minibomb") && b.exploded) {
                 keep = false;
             } else if (b.name && b.name == "greenSpear") {
@@ -1894,7 +1895,7 @@ class BulletHell {
             centerX += this.subx
             centerY += this.suby
         }
-        const spawnRadius = Math.max(this.width, this.height) * 0.75 + 200; // farther than arena edge
+        const spawnRadius = (Math.max(this.width, this.height) * 0.75) + 200; // farther than arena edge
         const count = this.actions[id]?.bulletsPerBurst || 5;
         const kLen = this.actions[id]?.knifeLength || 64;
         const kWid = this.actions[id]?.knifeWidth || 16;
