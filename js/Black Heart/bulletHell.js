@@ -3711,8 +3711,6 @@ BHB.diceSpikes = {
                 b.y += b.vy * bulletHellNeo.delta;
             }
         }
-
-        return bulletHellNeo;
     },
 }
 BHB.diceSpikesPlatformer = {
@@ -4500,17 +4498,16 @@ BHB.greenSpearRain = {
 //   }, { width: 500, height: 500, duration: 20 })
 
 BHB.greenSpearChoreography = {
-    codeFunc(info, id) {
-        const act = info.actions[id];
+    codeFunc() {
+        const act = bulletHellNeo.actions["greenSpearChoreography"];
         // Timestamp when this action started (used to compute relative delays)
         act._seqStart  = Date.now();
         // Index of the next spear in the sequence yet to be fired
         act._seqIndex  = 0;
-        return info;
     },
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
-        if (!act.sequence || act.sequence.length === 0) return info;
+    moveFunc() {
+        const act = bulletHellNeo.actions["greenSpearChoreography"];
+        if (!act.sequence || act.sequence.length === 0) return;
 
         // Initialise start time lazily (in case codeFunc wasn't called)
         if (!act._seqStart) act._seqStart = Date.now();
@@ -4556,12 +4553,12 @@ BHB.greenSpearChoreography = {
             const angle = Math.atan2(vy, vx);
 
             const margin = len + 16;
-            const cx = info.subArena && info.moveWithSub ? info.subx + info.px : info.px;
-            const cy = info.subArena && info.moveWithSub ? info.suby + info.py : info.py;
-            const bx = cx + Math.cos(outAngle) * (Math.max(info.width, info.height) * 0.75 + margin);
-            const by = cy + Math.sin(outAngle) * (Math.max(info.width, info.height) * 0.75 + margin);
+            const cx = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx + bulletHellNeo.px : bulletHellNeo.px;
+            const cy = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby + bulletHellNeo.py : bulletHellNeo.py;
+            const bx = cx + Math.cos(outAngle) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
+            const by = cy + Math.sin(outAngle) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
 
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "greenSpear",
                 boxRender: true,
                 x: bx, y: by,
@@ -4628,12 +4625,12 @@ BHB.greenSpearChoreography = {
 
         //  Update yellow spear orbit state for spears spawned by this action 
         // _orbitTick guard prevents double-processing when multiple actions run the same loop.
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (!b.yellow || b._yellowDeflected || b._yellowState === "striking") continue;
-            if (b._orbitTick === ticks) continue;
-            b._orbitTick = ticks;
-            const px   = info.px;
-            const py   = info.py;
+            if (b._orbitTick === Date.now()) continue;
+            b._orbitTick = Date.now();
+            const px   = bulletHellNeo.px;
+            const py   = bulletHellNeo.py;
             const dx   = b.x - px;
             const dy   = b.y - py;
             const dist = Math.sqrt(dx * dx + dy * dy);
@@ -4649,7 +4646,7 @@ BHB.greenSpearChoreography = {
                 b.vx = 0;
                 b.vy = 0;
             } else if (b._yellowState === "orbiting") {
-                const orbitStep = orbitSpd * b._orbitDir * (info.dt ?? 1);
+                const orbitStep = orbitSpd * b._orbitDir * (bulletHellNeo.delta ?? 1);
                 b._orbitAngle += orbitStep;
                 b._orbitAngle  = ((b._orbitAngle + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
                 const orbitR   = b._orbitRadius ?? trigDist;
@@ -4661,7 +4658,7 @@ BHB.greenSpearChoreography = {
                 b.vy = 0;
                 let targetNorm = ((b._orbitTarget + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
                 let diff = Math.abs(((b._orbitAngle - targetNorm + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI);
-                if (diff < orbitSpd * 1.5 * (info.dt ?? 1)) {
+                if (diff < orbitSpd * 1.5 * (bulletHellNeo.delta ?? 1)) {
                     b._yellowState = "striking";
                     b._orbitAngle  = targetNorm;
                     b.x = px + Math.cos(targetNorm) * orbitR;
@@ -4675,8 +4672,6 @@ BHB.greenSpearChoreography = {
                 }
             }
         }
-
-        return info;
     },
 }
 
@@ -4720,8 +4715,8 @@ bulletHellGreen({
 //     }
 //   }, { width: 500, height: 500, duration: 15 })
 BHB.yellowSpearRain = {
-    moveFunc(info, ticks, id) {
-        const act       = info.actions[id];
+    moveFunc() {
+        const act       = bulletHellNeo.actions["yellowSpearRain"];
         const len       = act.spearLength      ?? 80;
         const wid       = act.spearWidth       ?? 12;
         const speed     = act.spearSpeed       ?? 4;
@@ -4731,8 +4726,8 @@ BHB.yellowSpearRain = {
         const fourDir   = act.fourDir          ?? false;
         const noRepeatDir = act.noRepeatDir ?? false;
 
-        if (!act.lastTime) act.lastTime = ticks;
-        const toSpawn = Math.floor(((ticks - act.lastTime) / 1000) * perSec);
+        if (!act.lastTime) act.lastTime = Date.now();
+        const toSpawn = Math.floor(((Date.now() - act.lastTime) / 1000) * perSec);
 
         const DIR_ANGLES = [0, Math.PI/4, Math.PI/2, 3*Math.PI/4, Math.PI, 5*Math.PI/4, 3*Math.PI/2, 7*Math.PI/4];
 
@@ -4753,12 +4748,12 @@ BHB.yellowSpearRain = {
             const vx = Math.cos(inboundAngle) * speed;
             const vy = Math.sin(inboundAngle) * speed;
             const margin = len + 16;
-            const cx = info.subArena && info.moveWithSub ? info.subx + info.px : info.px;
-            const cy = info.subArena && info.moveWithSub ? info.suby + info.py : info.py;
-            const bx = cx + Math.cos(outAngle) * (Math.max(info.width, info.height) * 0.75 + margin);
-            const by = cy + Math.sin(outAngle) * (Math.max(info.width, info.height) * 0.75 + margin);
+            const cx = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx + bulletHellNeo.px : bulletHellNeo.px;
+            const cy = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby + bulletHellNeo.py : bulletHellNeo.py;
+            const bx = cx + Math.cos(outAngle) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
+            const by = cy + Math.sin(outAngle) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
 
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "greenSpear",
                 boxRender: true,
                 x: bx, y: by,
@@ -4805,16 +4800,16 @@ BHB.yellowSpearRain = {
                 }
             });
         }
-        if (toSpawn > 0) act.lastTime = ticks;
+        if (toSpawn > 0) act.lastTime = Date.now();
 
         //  Update yellow spear orbit state 
         // _orbitTick guard prevents double-processing when multiple actions run the same loop.
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (!b.yellow || b._yellowDeflected || b._yellowState === "striking") continue;
-            if (b._orbitTick === ticks) continue;
-            b._orbitTick = ticks;
-            const px   = info.px;
-            const py   = info.py;
+            if (b._orbitTick === Date.now()) continue;
+            b._orbitTick = Date.now();
+            const px   = bulletHellNeo.px;
+            const py   = bulletHellNeo.py;
             const dx   = b.x - px;
             const dy   = b.y - py;
             const dist = Math.sqrt(dx * dx + dy * dy);
@@ -4830,7 +4825,7 @@ BHB.yellowSpearRain = {
                 b.vx = 0;
                 b.vy = 0;
             } else if (b._yellowState === "orbiting") {
-                const oStep = oSpd * b._orbitDir * (info.dt ?? 1);
+                const oStep = oSpd * b._orbitDir * (bulletHellNeo.delta ?? 1);
                 b._orbitAngle += oStep;
                 b._orbitAngle  = ((b._orbitAngle + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
                 const orbitR   = b._orbitRadius ?? td;
@@ -4841,7 +4836,7 @@ BHB.yellowSpearRain = {
                 b.vy = 0;
                 const targetNorm = ((b._orbitTarget + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
                 const diff = Math.abs(((b._orbitAngle - targetNorm + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI);
-                if (diff < oSpd * 1.5 * (info.dt ?? 1)) {
+                if (diff < oSpd * 1.5 * (bulletHellNeo.delta ?? 1)) {
                     b._yellowState = "striking";
                     b.x = px + Math.cos(targetNorm) * orbitR;
                     b.y = py + Math.sin(targetNorm) * orbitR;
@@ -4853,8 +4848,6 @@ BHB.yellowSpearRain = {
                 }
             }
         }
-
-        return info;
     },
 }
 
@@ -4874,8 +4867,8 @@ BHB.yellowSpearRain = {
 //
 // Usage: bulletHellGreen({"blueSpearRain": {spearPerSec: 1.5, spearSpeed: 5, spearLength: 80, spearWidth: 12}}, {width:500, height:500, duration:15})
 BHB.blueSpearRain = {
-    moveFunc(info, ticks, id) {
-        const act    = info.actions[id];
+    moveFunc() {
+        const act    = bulletHellNeo.actions["blueSpearRain"];
         const len    = act.spearLength ?? 80;
         const wid    = act.spearWidth  ?? 12;
         const speed  = act.spearSpeed  ?? 5;
@@ -4883,8 +4876,8 @@ BHB.blueSpearRain = {
         const fourDir     = act.fourDir     ?? false;
         const noRepeatDir = act.noRepeatDir ?? false;
 
-        if (!act.lastTime) act.lastTime = ticks;
-        const toSpawn = Math.floor(((ticks - act.lastTime) / 1000) * perSec);
+        if (!act.lastTime) act.lastTime = Date.now();
+        const toSpawn = Math.floor(((Date.now() - act.lastTime) / 1000) * perSec);
 
         const DIR_ANGLES = [0, Math.PI/4, Math.PI/2, 3*Math.PI/4, Math.PI, 5*Math.PI/4, 3*Math.PI/2, 7*Math.PI/4];
 
@@ -4905,12 +4898,12 @@ BHB.blueSpearRain = {
             const vx = Math.cos(inboundAngle) * speed;
             const vy = Math.sin(inboundAngle) * speed;
             const margin = len + 16;
-            const cx = info.subArena && info.moveWithSub ? info.subx + info.px : info.px;
-            const cy = info.subArena && info.moveWithSub ? info.suby + info.py : info.py;
-            const bx = cx + Math.cos(outAngle) * (Math.max(info.width, info.height) * 0.75 + margin);
-            const by = cy + Math.sin(outAngle) * (Math.max(info.width, info.height) * 0.75 + margin);
+            const cx = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx + bulletHellNeo.px : bulletHellNeo.px;
+            const cy = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby + bulletHellNeo.py : bulletHellNeo.py;
+            const bx = cx + Math.cos(outAngle) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
+            const by = cy + Math.sin(outAngle) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
 
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "greenSpear",
                 boxRender: true,
                 x: bx, y: by,
@@ -4952,9 +4945,7 @@ BHB.blueSpearRain = {
                 }
             });
         }
-        if (toSpawn > 0) act.lastTime = ticks;
-
-        return info;
+        if (toSpawn > 0) act.lastTime = Date.now();
     },
 }
 
@@ -4976,15 +4967,14 @@ BHB.blueSpearRain = {
 //     }
 //   }, { width: 500, height: 500, duration: 20 })
 BHB.blueSpearChoreography = {
-    codeFunc(info, id) {
-        const act      = info.actions[id];
+    codeFunc() {
+        const act      = bulletHellNeo.actions["blueSpearChoreography"];
         act._seqStart  = Date.now();
         act._seqIndex  = 0;
-        return info;
     },
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
-        if (!act.sequence || act.sequence.length === 0) return info;
+    moveFunc() {
+        const act = bulletHellNeo.actions["blueSpearChoreography"];
+        if (!act.sequence || act.sequence.length === 0) return
 
         if (!act._seqStart) act._seqStart = Date.now();
         if (act._seqIndex == null) act._seqIndex = 0;
@@ -5010,12 +5000,12 @@ BHB.blueSpearChoreography = {
             const vy = Math.sin(inboundAngle) * speed;
 
             const margin = len + 16;
-            const cx = info.subArena && info.moveWithSub ? info.subx + info.px : info.px;
-            const cy = info.subArena && info.moveWithSub ? info.suby + info.py : info.py;
-            const bx = cx + Math.cos(outAngle) * (Math.max(info.width, info.height) * 0.75 + margin);
-            const by = cy + Math.sin(outAngle) * (Math.max(info.width, info.height) * 0.75 + margin);
+            const cx = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx + bulletHellNeo.px : bulletHellNeo.px;
+            const cy = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby + bulletHellNeo.py : bulletHellNeo.py;
+            const bx = cx + Math.cos(outAngle) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
+            const by = cy + Math.sin(outAngle) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
 
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "greenSpear",
                 boxRender: true,
                 x: bx, y: by,
@@ -5066,22 +5056,17 @@ BHB.blueSpearChoreography = {
             act._seqStart = Date.now();
             act._seqIndex = 0;
         }
-
-        return info;
     },
 }
 
-
-
-
 BHB.darkKnifeThrow = {
     // Usage: bulletHell({"darkKnifeThrow": {katanaLength: 90, katanaWidth: 12, knivesPerThrow: 2, enemySpeed: 14, knifePerSec: 2, aimTime: 600}}, {width: window.innerWidth, height: window.innerHeight, duration: 15, blindness: 200})
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["darkKnifeThrow"];
         
-        if (!act.lastTime) act.lastTime = ticks;
+        if (!act.lastTime) act.lastTime = Date.now();
         
-        const knivesToSpawn = Math.floor(((ticks - act.lastTime) / 1000) * (act.knifePerSec || 2));
+        const knivesToSpawn = Math.floor(((Date.now() - act.lastTime) / 1000) * (act.knifePerSec || 2));
         
         for (let i = 0; i < knivesToSpawn; i++) {
             for (let j = 0; j < (act.knivesPerThrow || 2); j++) {
@@ -5091,12 +5076,12 @@ BHB.darkKnifeThrow = {
                 let bx, by;
                 
                 // Spawn exactly 1 pixel inside the strict culling boundaries
-                if (edge === 0) { bx = Math.random() * info.width; by = -length + 1; } // Top
-                else if (edge === 1) { bx = info.width + length - 1; by = Math.random() * info.height; } // Right
-                else if (edge === 2) { bx = Math.random() * info.width; by = info.height + length - 1; } // Bottom
-                else { bx = -length + 1; by = Math.random() * info.height; } // Left
+                if (edge === 0) { bx = Math.random() * bulletHellNeo.width; by = -length + 1; } // Top
+                else if (edge === 1) { bx = bulletHellNeo.width + length - 1; by = Math.random() * bulletHellNeo.height; } // Right
+                else if (edge === 2) { bx = Math.random() * bulletHellNeo.width; by = bulletHellNeo.height + length - 1; } // Bottom
+                else { bx = -length + 1; by = Math.random() * bulletHellNeo.height; } // Left
 
-                info.bullets.push({
+                bulletHellNeo.bullets.push({
                     name: "katanaTelegraph", // Harmless while aiming
                     boxRender: true,
                     x: bx,
@@ -5118,8 +5103,8 @@ BHB.darkKnifeThrow = {
                         // 1. Handle Aiming & Telegraph Line
                         if (b.state === "aiming") {
                             // Continuously track player local coordinates
-                            let playerLocalX = info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-                            let playerLocalY = info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+                            let playerLocalX = bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+                            let playerLocalY = bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
                             b.angle = Math.atan2(playerLocalY - b.y, playerLocalX - b.x);
 
                             let opacity = Math.min(1, age / aimTime);
@@ -5169,11 +5154,11 @@ BHB.darkKnifeThrow = {
             }
         }
         
-        if (knivesToSpawn > 0) act.lastTime = ticks;
+        if (knivesToSpawn > 0) act.lastTime = Date.now();
 
         // Update Physics & Transition States
         const aimTime = act.aimTime || 600;
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             // Apply logic only to this attack's specific bullets
             if (b.spawnTime && (b.name === "katanaTelegraph" || b.name === "knife")) {
                 let age = Date.now() - b.spawnTime;
@@ -5191,89 +5176,86 @@ BHB.darkKnifeThrow = {
                 }
             }
         }
-
-        return info;
     }
 }
 BHB.darkRain = {
-    moveFunc(info, ticks, id) {
+    moveFunc() {
         // Rain Bullets
         //bulletHell({"darkRain": {bulletPerSec: 7}}, {width: window.innerWidth, height: window.innerHeight, duration: 15, blindness: 200})
-        const bulletRadius = info.actions[id].bulletRadius ?? 12;
-        const bulletSpeed = info.actions[id].bulletSpeed ?? 2;
-        if (!info.actions[id].lastTime) info.actions[id].lastTime = ticks;
-        const bulletsToSpawn = Math.floor(((ticks - info.actions[id].lastTime) / 1000) * info.actions[id].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
+        const bulletRadius = bulletHellNeo.actions["darkRain"].bulletRadius ?? 12;
+        const bulletSpeed = bulletHellNeo.actions["darkRain"].bulletSpeed ?? 2;
+        if (!bulletHellNeo.actions["darkRain"].lastTime) bulletHellNeo.actions["darkRain"].lastTime = Date.now();
+        const bulletsToSpawn = Math.floor(((Date.now() - bulletHellNeo.actions["darkRain"].lastTime) / 1000) * bulletHellNeo.actions["darkRain"].bulletPerSec); // LAST NUMBER IS AMOUNT OF BULLETS PER SECOND
         for (let i = 0; i < bulletsToSpawn; i++) {
-            let bx = Math.random() * info.width + info.boxLeft;
+            let bx = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by = -bulletRadius;
             let bul = {x: bx, y: by, vx: bulletSpeed, vy: bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#88f";bossCtx.fill()}}
-            info.bullets.push(bul);
-            let bx2 = Math.random() * info.width + info.boxLeft;
+            bulletHellNeo.bullets.push(bul);
+            let bx2 = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by2 = window.innerHeight + bulletRadius;
             let bul2 = {x: bx2, y: by2, vx: bulletSpeed, vy: -bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#88f";bossCtx.fill()}}
-            info.bullets.push(bul2);
+            bulletHellNeo.bullets.push(bul2);
             let bx3 = window.innerWidth + bulletRadius;
-            let by3 = Math.random() * info.height + info.boxTop
+            let by3 = Math.random() * bulletHellNeo.height + bulletHellNeo.boxTop
             let bul3 = {x: bx3, y: by3, vx: -bulletSpeed, vy: bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#88f";bossCtx.fill()}}
-            info.bullets.push(bul3);
+            bulletHellNeo.bullets.push(bul3);
             let bx4 = 0;
-            let by4 = Math.random() * info.height + info.boxTop;
+            let by4 = Math.random() * bulletHellNeo.height + bulletHellNeo.boxTop;
             let bul4 = {x: bx4, y: by4, vx: -bulletSpeed, vy: -bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#88f";bossCtx.fill()}}
-            info.bullets.push(bul4);
-            let bx5 = Math.random() * info.width + info.boxLeft;
+            bulletHellNeo.bullets.push(bul4);
+            let bx5 = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by5 = -bulletRadius;
             let bul5 = {x: bx5, y: by5, vx: 0, vy: bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#88f";bossCtx.fill()}}
-            info.bullets.push(bul5);
-            let bx6 = Math.random() * info.width + info.boxLeft;
+            bulletHellNeo.bullets.push(bul5);
+            let bx6 = Math.random() * bulletHellNeo.width + bulletHellNeo.boxLeft;
             let by6 = window.innerHeight + bulletRadius;
             let bul6 = {x: bx6, y: by6, vx: 0, vy: -bulletSpeed,r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#88f";bossCtx.fill()}}
-            info.bullets.push(bul6);
+            bulletHellNeo.bullets.push(bul6);
             let bx7 = window.innerWidth + bulletRadius;
-            let by7 = Math.random() * info.height + info.boxTop
+            let by7 = Math.random() * bulletHellNeo.height + bulletHellNeo.boxTop
             let bul7 = {x: bx7, y: by7, vx: 0, vy: bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#88f";bossCtx.fill()}}
-            info.bullets.push(bul7);
+            bulletHellNeo.bullets.push(bul7);
             let bx8 = 0;
-            let by8 = Math.random() * info.height + info.boxTop;
+            let by8 = Math.random() * bulletHellNeo.height + bulletHellNeo.boxTop;
             let bul8 = {x: bx8, y: by8, vx: 0, vy: -bulletSpeed, r: bulletRadius, draw(b, bossCtx) {bossCtx.beginPath();bossCtx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);bossCtx.fillStyle = "#88f";bossCtx.fill()}}
-            info.bullets.push(bul8);
+            bulletHellNeo.bullets.push(bul8);
         }
-        if (bulletsToSpawn > 0) info.actions[id].lastTime = ticks;        // Rain Bullets
-        return info
+        if (bulletsToSpawn > 0) bulletHellNeo.actions["darkRain"].lastTime = Date.now(); // Rain Bullets
     },
 }
 //bulletHell({"darkKnifeThrow": {knifeLength: 80, knifeWidth: 20, knivesPerThrow: 1, enemySpeed: 9, knifePerSec: 2}}, {width: window.innerWidth,height: window.innerHeight, duration: 50, timed: true, cellSize: 75, start: "cell", goal: "cell", blindness: 150})
 BHB.delayHomingSwarm = {
     // Usage: bulletHell({"delayHomingSwarm": {spawnPerSec: 4, driftTime: 1200, lockTime: 600, fireSpeed: 12, radius: 16}}, {width: window.innerWidth,height: window.innerHeight, duration: 15, blindness: 800})
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["delayHomingSwarm"];
         
         // 1. Spawn the drifting orbs
-        if (!act.lastTime) act.lastTime = ticks;
-        const toSpawn = Math.floor(((ticks - act.lastTime) / 1000) * (act.spawnPerSec || 3));
+        if (!act.lastTime) act.lastTime = Date.now();
+        const toSpawn = Math.floor(((Date.now() - act.lastTime) / 1000) * (act.spawnPerSec || 3));
         
         for (let i = 0; i < toSpawn; i++) {
             let bx, by, distToPlayer;
             
             // Get the precise global coordinates of the player to calculate the safe zone
-            let playerGlobalX = info.boxLeft + info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-            let playerGlobalY = info.boxTop + info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+            let playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+            let playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
             
             // Randomly spawn anywhere in or slightly around the arena
             // The loop ensures they never spawn directly on top of the player
             do {
-                bx = info.boxLeft - 30 + Math.random() * (info.width + 60);
-                by = info.boxTop - 30 + Math.random() * (info.height + 60);
+                bx = bulletHellNeo.boxLeft - 30 + Math.random() * (bulletHellNeo.width + 60);
+                by = bulletHellNeo.boxTop - 30 + Math.random() * (bulletHellNeo.height + 60);
                 distToPlayer = Math.hypot(playerGlobalX - bx, playerGlobalY - by);
             } while (distToPlayer < 80); // 80px safe zone
             
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "hunterOrb",
                 x: bx,
                 y: by,
                 vx: (Math.random() - 0.5) * 4, // Lazy drift velocity
                 vy: (Math.random() - 0.5) * 4,
                 r: act.radius || 15,
-                spawnTime: ticks,
+                spawnTime: Date.now(),
                 state: "drifting", // State machine: drifting -> locked -> firing
                 draw(b, bossCtx) {
                     bossCtx.save();
@@ -5299,16 +5281,16 @@ BHB.delayHomingSwarm = {
                 }
             });
         }
-        if (toSpawn > 0) act.lastTime = ticks;
+        if (toSpawn > 0) act.lastTime = Date.now();
 
         // 2. Update the state machine for each orb
         const driftTime = act.driftTime || 1200;
         const lockTime = act.lockTime || 600;
         const fireSpeed = act.fireSpeed || 12;
 
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name === "hunterOrb") {
-                let age = ticks - b.spawnTime;
+                let age = Date.now() - b.spawnTime;
                 
                 if (b.state === "drifting" && age > driftTime) {
                     // Lock onto player position and stop drifting
@@ -5320,8 +5302,8 @@ BHB.delayHomingSwarm = {
                     // Fire directly at the player
                     b.state = "firing";
                     
-                    let playerGlobalX = info.boxLeft + info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-                    let playerGlobalY = info.boxTop + info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+                    let playerGlobalX = bulletHellNeo.boxLeft + bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+                    let playerGlobalY = bulletHellNeo.boxTop + bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
                     
                     let dx = playerGlobalX - b.x;
                     let dy = playerGlobalY - b.y;
@@ -5332,20 +5314,19 @@ BHB.delayHomingSwarm = {
                 }
             }
         }
-        return info;
     }
 }
 BHB.abyssalCrossfire = {
     // Usage: bulletHell({"abyssalCrossfire": {laserPerSec: 0.8, katanaPerSec: 1.5, laserCharge: 1200, katanaAim: 800, katanaSpeed: 14}}, {width: window.innerWidth, height: window.innerHeight, duration: 20})
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["abyssalCrossfire"];
         
         // Initialize separate timers for independent spawn rates
-        if (!act.lastLaserTime) act.lastLaserTime = ticks;
-        if (!act.lastKatanaTime) act.lastKatanaTime = ticks;
+        if (!act.lastLaserTime) act.lastLaserTime = Date.now();
+        if (!act.lastKatanaTime) act.lastKatanaTime = Date.now();
         
-        const toSpawnLasers = Math.floor(((ticks - act.lastLaserTime) / 1000) * (act.laserPerSec || 0.8));
-        const toSpawnKatanas = Math.floor(((ticks - act.lastKatanaTime) / 1000) * (act.katanaPerSec || 1.5));
+        const toSpawnLasers = Math.floor(((Date.now() - act.lastLaserTime) / 1000) * (act.laserPerSec || 0.8));
+        const toSpawnKatanas = Math.floor(((Date.now() - act.lastKatanaTime) / 1000) * (act.katanaPerSec || 1.5));
         
         // ==========================================
         // 1. SPAWN LASERS (Area Denial)
@@ -5353,12 +5334,12 @@ BHB.abyssalCrossfire = {
         for (let i = 0; i < toSpawnLasers; i++) {
             let edge = Math.floor(Math.random() * 4);
             let bx, by;
-            if (edge === 0) { bx = Math.random() * info.width; by = 10; } 
-            else if (edge === 1) { bx = info.width - 10; by = Math.random() * info.height; } 
-            else if (edge === 2) { bx = Math.random() * info.width; by = info.height - 10; } 
-            else { bx = 10; by = Math.random() * info.height; } 
+            if (edge === 0) { bx = Math.random() * bulletHellNeo.width; by = 10; } 
+            else if (edge === 1) { bx = bulletHellNeo.width - 10; by = Math.random() * bulletHellNeo.height; } 
+            else if (edge === 2) { bx = Math.random() * bulletHellNeo.width; by = bulletHellNeo.height - 10; } 
+            else { bx = 10; by = Math.random() * bulletHellNeo.height; } 
             
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 attackType: "laser",
                 name: "crossfireTelegraph", // Harmless name
                 boxRender: true,
@@ -5426,7 +5407,7 @@ BHB.abyssalCrossfire = {
                 }
             });
         }
-        if (toSpawnLasers > 0) act.lastLaserTime = ticks;
+        if (toSpawnLasers > 0) act.lastLaserTime = Date.now();
 
         // ==========================================
         // 2. SPAWN KATANAS (Targeted Pressure)
@@ -5436,12 +5417,12 @@ BHB.abyssalCrossfire = {
             let edge = Math.floor(Math.random() * 4);
             let bx, by;
             
-            if (edge === 0) { bx = Math.random() * info.width; by = -length + 1; } 
-            else if (edge === 1) { bx = info.width + length - 1; by = Math.random() * info.height; } 
-            else if (edge === 2) { bx = Math.random() * info.width; by = info.height + length - 1; } 
-            else { bx = -length + 1; by = Math.random() * info.height; } 
+            if (edge === 0) { bx = Math.random() * bulletHellNeo.width; by = -length + 1; } 
+            else if (edge === 1) { bx = bulletHellNeo.width + length - 1; by = Math.random() * bulletHellNeo.height; } 
+            else if (edge === 2) { bx = Math.random() * bulletHellNeo.width; by = bulletHellNeo.height + length - 1; } 
+            else { bx = -length + 1; by = Math.random() * bulletHellNeo.height; } 
 
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 attackType: "katana",
                 name: "crossfireTelegraph", // Harmless name
                 boxRender: true,
@@ -5502,7 +5483,7 @@ BHB.abyssalCrossfire = {
                 }
             });
         }
-        if (toSpawnKatanas > 0) act.lastKatanaTime = ticks;
+        if (toSpawnKatanas > 0) act.lastKatanaTime = Date.now();
 
         // ==========================================
         // 3. PHYSICS & STATE MACHINES
@@ -5512,10 +5493,10 @@ BHB.abyssalCrossfire = {
         const laserFire = act.laserFire || 400;
         const katanaAim = act.katanaAim || 800;
         
-        let playerLocalX = info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-        let playerLocalY = info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+        let playerLocalX = bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+        let playerLocalY = bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
 
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (!b.attackType) continue; // Skip generic bullets if any exist
             let age = Date.now() - b.spawnTime;
             
@@ -5554,35 +5535,33 @@ BHB.abyssalCrossfire = {
                 } 
                 else if (b.state === "firing") {
                     // Manual Garbage Collection for standard projectiles
-                    let isOffScreen = b.x < -200 || b.x > info.width + 200 || b.y < -200 || b.y > info.height + 200;
+                    let isOffScreen = b.x < -200 || b.x > bulletHellNeo.width + 200 || b.y < -200 || b.y > bulletHellNeo.height + 200;
                     if (isOffScreen) b._dead = true;
                 }
             }
         }
         
         // 4. CLEANUP
-        info.bullets = info.bullets.filter(b => !b._dead);
-        
-        return info;
+        bulletHellNeo.bullets = bulletHellNeo.bullets.filter(b => !b._dead);
     }
 }
 BHB.abyssalLasers = {
     // Usage: bulletHell({"abyssalLasers": {laserPerSec: 2.5, chargeTime: 1200, lockDelay: 300, fireTime: 400, beamWidth: 24}}, {width: window.innerWidth, height: window.innerHeight, duration: 15, blindness: 500})
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["abyssalLasers"];
         
-        if (!act.lastTime) act.lastTime = ticks;
-        const toSpawn = Math.floor(((ticks - act.lastTime) / 1000) * (act.laserPerSec || 1.5));
+        if (!act.lastTime) act.lastTime = Date.now();
+        const toSpawn = Math.floor(((Date.now() - act.lastTime) / 1000) * (act.laserPerSec || 1.5));
         
         for (let i = 0; i < toSpawn; i++) {
             let edge = Math.floor(Math.random() * 4);
             let bx, by;
-            if (edge === 0) { bx = Math.random() * info.width; by = 10; } // top
-            else if (edge === 1) { bx = info.width - 10; by = Math.random() * info.height; } // right
-            else if (edge === 2) { bx = Math.random() * info.width; by = info.height - 10; } // bottom
-            else { bx = 10; by = Math.random() * info.height; } // left
+            if (edge === 0) { bx = Math.random() * bulletHellNeo.width; by = 10; } // top
+            else if (edge === 1) { bx = bulletHellNeo.width - 10; by = Math.random() * bulletHellNeo.height; } // right
+            else if (edge === 2) { bx = Math.random() * bulletHellNeo.width; by = bulletHellNeo.height - 10; } // bottom
+            else { bx = 10; by = Math.random() * bulletHellNeo.height; } // left
             
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "laserTelegraph",
                 boxRender: true,
                 x: bx,
@@ -5661,20 +5640,20 @@ BHB.abyssalLasers = {
                 }
             });
         }
-        if (toSpawn > 0) act.lastTime = ticks;
+        if (toSpawn > 0) act.lastTime = Date.now();
 
         const chargeTime = act.chargeTime || 1200;
         const lockDelay = act.lockDelay || 300; // How long it freezes before firing
         const fireTime = act.fireTime || 400;
         
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name === "laserTelegraph" || b.name === "knife") {
                 let age = Date.now() - b.spawnTime;
                 
                 if (b.state === "charging") {
                     // Track player position while charging
-                    let playerLocalX = info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-                    let playerLocalY = info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+                    let playerLocalX = bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+                    let playerLocalY = bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
                     b.angle = Math.atan2(playerLocalY - b.y, playerLocalX - b.x);
                     
                     // Transition to locked state right before firing
@@ -5700,15 +5679,13 @@ BHB.abyssalLasers = {
             }
         }
         
-        info.bullets = info.bullets.filter(b => !b._dead);
-        
-        return info;
+        bulletHellNeo.bullets = bulletHellNeo.bullets.filter(b => !b._dead);
     }
 }
 BHB.spinningKatanaGrid = {
     // Usage: bulletHell({"spinningKatanaGrid": {spacing: 150, speed: 1.5, spinSpeed: 0.02, katanaLength: 70, katanaWidth: 14}}, {width: window.innerWidth, height: window.innerHeight, transparent: true, duration: 15, blindness: 300})
-    codeFunc(info, id) {
-        const act = info.actions[id];
+    codeFunc() {
+        const act = bulletHellNeo.actions["spinningKatanaGrid"];
         
         act.spacing = act.spacing || 150;
         act.katanaLength = act.katanaLength || 60;
@@ -5716,8 +5693,8 @@ BHB.spinningKatanaGrid = {
         act.speed = act.speed || 4;
 
         // Calculate grid dimensions to cover the screen plus a buffer
-        act.cols = Math.ceil(info.width / act.spacing) + 20;
-        act.rows = Math.ceil(info.height / act.spacing) + 20;
+        act.cols = Math.ceil(bulletHellNeo.width / act.spacing) + 20;
+        act.rows = Math.ceil(bulletHellNeo.height / act.spacing) + 20;
         act.gridWidth = act.cols * act.spacing;
         act.gridHeight = act.rows * act.spacing;
 
@@ -5734,7 +5711,7 @@ BHB.spinningKatanaGrid = {
 
                 let currentSpin = (r + c) % 2 === 0 ? act.spinSpeed : act.spinSpeed;
 
-                info.bullets.push({
+                bulletHellNeo.bullets.push({
                     name: "knife", 
                     boxRender: true,
                     x: bx,
@@ -5787,32 +5764,31 @@ BHB.spinningKatanaGrid = {
                 });
             }
         }
-        return info;
     },
     
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["spinningKatanaGrid"];
         
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             // Target only the grid katanas using the custom visualR property
             if (b.visualR !== undefined) {
                 
                 // Wrap-around logic to create the infinite scrolling illusion
-                if (b.vx > 0 && b.x > info.width + act.spacing) {
+                if (b.vx > 0 && b.x > bulletHellNeo.width + act.spacing) {
                     b.x -= act.gridWidth;
                 } else if (b.vx < 0 && b.x < -act.spacing) {
                     b.x += act.gridWidth;
                 }
 
-                if (b.vy > 0 && b.y > info.height + act.spacing) {
+                if (b.vy > 0 && b.y > bulletHellNeo.height + act.spacing) {
                     b.y -= act.gridHeight;
                 } else if (b.vy < 0 && b.y < -act.spacing) {
                     b.y += act.gridHeight;
                 }
 
                 // Dynamically toggle hitbox status based on screen visibility
-                let insideX = b.x >= -b.visualR && b.x <= info.width + b.visualR;
-                let insideY = b.y >= -b.visualR && b.y <= info.height + b.visualR;
+                let insideX = b.x >= -b.visualR && b.x <= bulletHellNeo.width + b.visualR;
+                let insideY = b.y >= -b.visualR && b.y <= bulletHellNeo.height + b.visualR;
                 
                 if (insideX && insideY) {
                     b.r = b.visualR;         // Normal length
@@ -5823,22 +5799,21 @@ BHB.spinningKatanaGrid = {
                 }
             }
         }
-        return info;
     }
 }
 BHB.safeZoneLasers = {
     // Usage: bulletHell({"safeZoneLasers": {interval: 2000, safeWidth: 120, chargeTime: 1000, fireTime: 500}}, {width: window.innerWidth, transparent: true, height: window.innerHeight, duration: 20, blindness: 300})
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["safeZoneLasers"];
         
-        if (!act.lastTime) act.lastTime = ticks;
+        if (!act.lastTime) act.lastTime = Date.now();
         
-        if (ticks - act.lastTime > (act.interval || 5000)) {
+        if (Date.now() - act.lastTime > (act.interval || 5000)) {
             let safeWidth = act.safeWidth || 120; 
             
             // Pick a random point somewhat near the center of the arena
-            let safeX = (info.width / 2) + (Math.random() - 0.5) * (info.width * 0.5);
-            let safeY = (info.height / 2) + (Math.random() - 0.5) * (info.height * 0.5);
+            let safeX = (bulletHellNeo.width / 2) + (Math.random() - 0.5) * (bulletHellNeo.width * 0.5);
+            let safeY = (bulletHellNeo.height / 2) + (Math.random() - 0.5) * (bulletHellNeo.height * 0.5);
             
             // Pick any random angle for the safe strip
             let angle = Math.random() * Math.PI; 
@@ -5849,7 +5824,7 @@ BHB.safeZoneLasers = {
             let offsetDistance = (safeWidth / 2) + (dangerWidth / 2);
 
             const createZone = (bx, by, bAngle) => {
-                info.bullets.push({
+                bulletHellNeo.bullets.push({
                     name: "knife", // MUST remain "knife" to use the OBB math!
                     boxRender: true,
                     x: bx,
@@ -5921,13 +5896,13 @@ BHB.safeZoneLasers = {
             let dz2y = safeY - Math.sin(perpAngle) * offsetDistance;
             createZone(dz2x, dz2y, angle);
             
-            act.lastTime = ticks;
+            act.lastTime = Date.now();
         }
 
         const chargeTime = act.chargeTime || 1500;
         const fireTime = act.fireTime || 500;
         
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             // Target the wipes using targetWidth instead of name, since name is now "knife"
             if (b.targetWidth !== undefined) {
                 let age = Date.now() - b.spawnTime;
@@ -5942,24 +5917,22 @@ BHB.safeZoneLasers = {
             }
         }
         
-        info.bullets = info.bullets.filter(b => !b._dead);
-        
-        return info;
+        bulletHellNeo.bullets = bulletHellNeo.bullets.filter(b => !b._dead);
     }
 }
 BHB.abyssalSanctuary = {
     // Usage: bulletHell({"abyssalSanctuary": {}}, {width: window.innerWidth, height: window.innerHeight,transparent: true, duration: 32, blindness: })
-    codeFunc(info, id) {
-        const act = info.actions[id];
+    codeFunc() {
+        const act = bulletHellNeo.actions["abyssalSanctuary"];
         act.startTime = Date.now();
 
         // 1. Spawn the Background Temple 
-        info.bullets.push({
+        bulletHellNeo.bullets.push({
             attackType: "temple",
             name: "knife", // MUST be "knife" to bypass the engine's generic circular collision
             boxRender: true,
-            x: info.width / 2,
-            y: info.height / 2,
+            x: bulletHellNeo.width / 2,
+            y: bulletHellNeo.height / 2,
             r: 16000, 
             width: -1000, // Mathematically impossible to collide with
             angle: 0, 
@@ -6011,17 +5984,15 @@ BHB.abyssalSanctuary = {
                 ctx.restore();
             }
         });
-
-        return info;
     },
 
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["abyssalSanctuary"];
         const now = Date.now();
         let elapsed = now - act.startTime;
 
-        let playerLocalX = info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-        let playerLocalY = info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+        let playerLocalX = bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+        let playerLocalY = bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
 
         // ==========================================
         // SPAWN HELPERS
@@ -6029,12 +6000,12 @@ BHB.abyssalSanctuary = {
         const spawnRandomLaser = () => {
             let edge = Math.floor(Math.random() * 4);
             let bx, by;
-            if (edge === 0) { bx = Math.random() * info.width; by = 10; } 
-            else if (edge === 1) { bx = info.width - 10; by = Math.random() * info.height; } 
-            else if (edge === 2) { bx = Math.random() * info.width; by = info.height - 10; } 
-            else { bx = 10; by = Math.random() * info.height; } 
+            if (edge === 0) { bx = Math.random() * bulletHellNeo.width; by = 10; } 
+            else if (edge === 1) { bx = bulletHellNeo.width - 10; by = Math.random() * bulletHellNeo.height; } 
+            else if (edge === 2) { bx = Math.random() * bulletHellNeo.width; by = bulletHellNeo.height - 10; } 
+            else { bx = 10; by = Math.random() * bulletHellNeo.height; } 
 
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 attackType: "randomLaser",
                 name: "knife", 
                 boxRender: true,
@@ -6089,12 +6060,12 @@ BHB.abyssalSanctuary = {
             let length = 80;
             let edge = Math.floor(Math.random() * 4);
             let bx, by;
-            if (edge === 0) { bx = Math.random() * info.width; by = -length + 1; } 
-            else if (edge === 1) { bx = info.width + length - 1; by = Math.random() * info.height; } 
-            else if (edge === 2) { bx = Math.random() * info.width; by = info.height + length - 1; } 
-            else { bx = -length + 1; by = Math.random() * info.height; } 
+            if (edge === 0) { bx = Math.random() * bulletHellNeo.width; by = -length + 1; } 
+            else if (edge === 1) { bx = bulletHellNeo.width + length - 1; by = Math.random() * bulletHellNeo.height; } 
+            else if (edge === 2) { bx = Math.random() * bulletHellNeo.width; by = bulletHellNeo.height + length - 1; } 
+            else { bx = -length + 1; by = Math.random() * bulletHellNeo.height; } 
 
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 attackType: "katana",
                 name: "knife",
                 boxRender: true,
@@ -6139,14 +6110,14 @@ BHB.abyssalSanctuary = {
             let bulletsToSpawn = Math.floor(((now - act.lastRain) / 1000) * 2); 
             
             for (let i = 0; i < bulletsToSpawn; i++) {
-                info.bullets.push({ name: "ultOrb", boxRender: true, x: Math.random() * info.width, y: -bulletRadius, vx: bulletSpeed, vy: bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
-                info.bullets.push({ name: "ultOrb", boxRender: true, x: Math.random() * info.width, y: info.height + bulletRadius, vx: bulletSpeed, vy: -bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
-                info.bullets.push({ name: "ultOrb", boxRender: true, x: info.width + bulletRadius, y: Math.random() * info.height, vx: -bulletSpeed, vy: bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
-                info.bullets.push({ name: "ultOrb", boxRender: true, x: -bulletRadius, y: Math.random() * info.height, vx: -bulletSpeed, vy: -bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
-                info.bullets.push({ name: "ultOrb", boxRender: true, x: Math.random() * info.width, y: -bulletRadius, vx: 0, vy: bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
-                info.bullets.push({ name: "ultOrb", boxRender: true, x: Math.random() * info.width, y: info.height + bulletRadius, vx: 0, vy: -bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
-                info.bullets.push({ name: "ultOrb", boxRender: true, x: info.width + bulletRadius, y: Math.random() * info.height, vx: -bulletSpeed, vy: 0, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
-                info.bullets.push({ name: "ultOrb", boxRender: true, x: -bulletRadius, y: Math.random() * info.height, vx: bulletSpeed, vy: 0, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
+                bulletHellNeo.bullets.push({ name: "ultOrb", boxRender: true, x: Math.random() * bulletHellNeo.width, y: -bulletRadius, vx: bulletSpeed, vy: bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
+                bulletHellNeo.bullets.push({ name: "ultOrb", boxRender: true, x: Math.random() * bulletHellNeo.width, y: bulletHellNeo.height + bulletRadius, vx: bulletSpeed, vy: -bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
+                bulletHellNeo.bullets.push({ name: "ultOrb", boxRender: true, x: bulletHellNeo.width + bulletRadius, y: Math.random() * bulletHellNeo.height, vx: -bulletSpeed, vy: bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
+                bulletHellNeo.bullets.push({ name: "ultOrb", boxRender: true, x: -bulletRadius, y: Math.random() * bulletHellNeo.height, vx: -bulletSpeed, vy: -bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
+                bulletHellNeo.bullets.push({ name: "ultOrb", boxRender: true, x: Math.random() * bulletHellNeo.width, y: -bulletRadius, vx: 0, vy: bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
+                bulletHellNeo.bullets.push({ name: "ultOrb", boxRender: true, x: Math.random() * bulletHellNeo.width, y: bulletHellNeo.height + bulletRadius, vx: 0, vy: -bulletSpeed, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
+                bulletHellNeo.bullets.push({ name: "ultOrb", boxRender: true, x: bulletHellNeo.width + bulletRadius, y: Math.random() * bulletHellNeo.height, vx: -bulletSpeed, vy: 0, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
+                bulletHellNeo.bullets.push({ name: "ultOrb", boxRender: true, x: -bulletRadius, y: Math.random() * bulletHellNeo.height, vx: bulletSpeed, vy: 0, r: bulletRadius, draw(b, ctx) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI); ctx.fillStyle = "#88f"; ctx.fill() } });
             }
             if (bulletsToSpawn > 0) act.lastRain = now;
 
@@ -6171,15 +6142,15 @@ BHB.abyssalSanctuary = {
             if (!act.lastCircleLaser || now - act.lastCircleLaser > 80) { 
                 act.circleAngle = (act.circleAngle || 0) + 0.22; // Rotates perfectly around the arena
                 
-                let cx = info.width / 2;
-                let cy = info.height / 2;
-                let R = Math.max(info.width, info.height) * 0.65;
+                let cx = bulletHellNeo.width / 2;
+                let cy = bulletHellNeo.height / 2;
+                let R = Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.65;
                 
                 let bx = cx + Math.cos(act.circleAngle) * R;
                 let by = cy + Math.sin(act.circleAngle) * R;
                 let aimAngle = act.circleAngle + Math.PI; // Aim directly at the center
                 
-                info.bullets.push({
+                bulletHellNeo.bullets.push({
                     attackType: "circleLaser",
                     name: "knife",
                     boxRender: true,
@@ -6244,7 +6215,7 @@ BHB.abyssalSanctuary = {
         // ==========================================
         // PHYSICS & STATE MACHINE UPDATES
         // ==========================================
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (!b.attackType) continue; 
             let age = now - b.spawnTime;
 
@@ -6279,7 +6250,7 @@ BHB.abyssalSanctuary = {
                         b.vy = Math.sin(b.angle) * speed;
                     }
                 } else if (b.state === "firing") {
-                    let isOffScreen = b.x < -300 || b.x > info.width + 300 || b.y < -300 || b.y > info.height + 300;
+                    let isOffScreen = b.x < -300 || b.x > bulletHellNeo.width + 300 || b.y < -300 || b.y > bulletHellNeo.height + 300;
                     if (isOffScreen) b._dead = true;
                 }
             }
@@ -6298,14 +6269,12 @@ BHB.abyssalSanctuary = {
             }
             
             else if (b.name === "ultOrb") {
-                let isOffScreen = b.x < -100 || b.x > info.width + 100 || b.y < -100 || b.y > info.height + 100;
+                let isOffScreen = b.x < -100 || b.x > bulletHellNeo.width + 100 || b.y < -100 || b.y > bulletHellNeo.height + 100;
                 if (isOffScreen) b._dead = true;
             }
         }
 
-        info.bullets = info.bullets.filter(b => !b._dead);
-
-        return info;
+        bulletHellNeo.bullets = bulletHellNeo.bullets.filter(b => !b._dead);
     }
 };
 
@@ -6441,12 +6410,12 @@ function BHB_drawAniciffo(
 
 const BHB_AniciffoProjectiles = {
     // Helper to find any existing Aniciffo boss in the arena
-    getBoss(info) {
-        return info.bullets.find(b => b.isAniciffoBoss || b.name === "aniciffoIcon" || b.name === "bossAniciffo");
+    getBoss() {
+        return bulletHellNeo.bullets.find(b => b.isAniciffoBoss || b.name === "aniciffoIcon" || b.name === "bossAniciffo");
     },
 
     // ── A. BOMBS (Grid, Ground, and Air Bombs) ─────────────────────────────
-    spawnBomb(info, x, y, vx, vy, options = {}) {
+    spawnBomb(x, y, vx, vy, options = {}) {
         const fuse = options.fuse ?? 38;
         const b = {
             name: "aniciffoBomb",
@@ -6469,17 +6438,17 @@ const BHB_AniciffoProjectiles = {
             gravity: options.gravity ?? 0,
             hitPlayer: false,
             draw(bomb, ctx) {
-                BHB_AniciffoProjectiles.drawBomb(bomb, ctx, info);
+                BHB_AniciffoProjectiles.drawBomb(bomb, ctx);
             }
         };
-        info.bullets.push(b);
+        bulletHellNeo.bullets.push(b);
         return b;
     },
 
-    drawBomb(b, ctx, info) {
+    drawBomb(b, ctx) {
         ctx.save();
         ctx.translate(b.x, b.y);
-        const fullReach = Math.max(info.width, info.height) * 2;
+        const fullReach = Math.max(bulletHellNeo.width, bulletHellNeo.height) * 2;
 
         if (b.detonating > 0) {
             const beamAlpha = Math.min(1, b.detonating / 8);
@@ -6579,8 +6548,8 @@ const BHB_AniciffoProjectiles = {
     },
 
     // ── B. MINI-BOMBS & ISOTOPE ORBS ──────────────────────────────────────
-    spawnMiniBomb(info, x, y, vx, vy, r = 6) {
-        info.bullets.push({
+    spawnMiniBomb(x, y, vx, vy, r = 6) {
+        bulletHellNeo.bullets.push({
             name: "aniciffoMiniBomb",
             boxRender: true,
             offScreen: true,
@@ -6618,10 +6587,10 @@ const BHB_AniciffoProjectiles = {
     },
 
     // ── C. LASERS (Parallel, Cross, and Sky Lasers) ────────────────────────
-    spawnLaser(info, x, y, angle, options = {}) {
+    spawnLaser(x, y, angle, options = {}) {
         const fuse = options.fuseTicks ?? 48;
         const detonating = options.detonatingTicks ?? 24;
-        info.bullets.push({
+        bulletHellNeo.bullets.push({
             name: "knife",
             isAniciffoLaser: true,
             boxRender: true,
@@ -6696,8 +6665,8 @@ const BHB_AniciffoProjectiles = {
     },
 
     // ── D. RADIOACTIVE ARROWS (Red, Green, Yellow) ────────────────────────
-    spawnArrow(info, x, y, vx, vy, colorType, options = {}) {
-        info.bullets.push({
+    spawnArrow(x, y, vx, vy, colorType, options = {}) {
+        bulletHellNeo.bullets.push({
             name: "knife",
             isArrowBullet: true,
             boxRender: true,
@@ -6775,8 +6744,8 @@ const BHB_AniciffoProjectiles = {
     },
 
     // ── E. ENLARGED CRESCENT SLASH PROJECTILES ────────────────────────────
-    spawnSlash(info, x, y, vx, vy, options = {}) {
-        info.bullets.push({
+    spawnSlash(x, y, vx, vy, options = {}) {
+        bulletHellNeo.bullets.push({
             name: "crescentSlash",
             boxRender: true,
             x: x,
@@ -6832,47 +6801,46 @@ const BHB_AniciffoProjectiles = {
 // ==========================================
 
 BHB.aniciffoBomb = {
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
-        if (!act.lastTime) act.lastTime = ticks;
-        const bombsToSpawn = Math.floor(((ticks - act.lastTime) / 1000) * (act.bombsPerSecond || 1));
+    moveFunc() {
+        const act = bulletHellNeo.actions["aniciffoBomb"];
+        if (!act.lastTime) act.lastTime = Date.now();
+        const bombsToSpawn = Math.floor(((Date.now() - act.lastTime) / 1000) * (act.bombsPerSecond || 1));
 
         for (let i = 0; i < bombsToSpawn; i++) {
-            let x = 60 + Math.random() * (info.width - 120);
-            BHB_AniciffoProjectiles.spawnBomb(info, x, -24, 0, act.bombFallSpeed || 4, {
+            let x = 60 + Math.random() * (bulletHellNeo.width - 120);
+            BHB_AniciffoProjectiles.spawnBomb(x, -24, 0, act.bombFallSpeed || 4, {
                 radius: 24,
                 fuse: 9999,
                 miniBombCount: act.miniBombCount || 3,
                 miniBombSpeed: act.miniBombSpeed || 5
             });
         }
-        if (bombsToSpawn > 0) act.lastTime = ticks;
+        if (bombsToSpawn > 0) act.lastTime = Date.now();
 
-        for (let b of info.bullets) {
-            if (b.name === "aniciffoBomb" && !b.exploded && b.y > info.height * 0.7) {
+        for (let b of bulletHellNeo.bullets) {
+            if (b.name === "aniciffoBomb" && !b.exploded && b.y > bulletHellNeo.height * 0.7) {
                 b.exploded = true;
                 b._dead = true;
                 for (let j = 0; j < (act.miniBombCount || 3); j++) {
                     let angle = (2 * Math.PI * j) / (act.miniBombCount || 3);
-                    BHB_AniciffoProjectiles.spawnMiniBomb(info, b.x, b.y, Math.cos(angle) * (act.miniBombSpeed || 5), Math.sin(angle) * (act.miniBombSpeed || 5), 12);
+                    BHB_AniciffoProjectiles.spawnMiniBomb(b.x, b.y, Math.cos(angle) * (act.miniBombSpeed || 5), Math.sin(angle) * (act.miniBombSpeed || 5), 12);
                 }
             }
         }
-        return info;
     }
 };
 
 BHB.aniciffoBombs = {
-    codeFunc(info, id) {
-        const act = info.actions[id];
+    codeFunc() {
+        const act = bulletHellNeo.actions["aniciffoBombs"];
         // Only spawn Aniciffo if not already present from an earlier attack
-        if (!BHB_AniciffoProjectiles.getBoss(info)) {
-            let cx = act.locX != null ? act.locX : info.boxLeft + info.width / 2;
-            let cy = act.locY != null ? act.locY : info.boxTop + Math.max(80, info.height * 0.22);
-            info.bullets.push({
+        if (!BHB_AniciffoProjectiles.getBoss()) {
+            let cx = act.locX != null ? act.locX : bulletHellNeo.boxLeft + bulletHellNeo.width / 2;
+            let cy = act.locY != null ? act.locY : bulletHellNeo.boxTop + Math.max(80, bulletHellNeo.height * 0.22);
+            bulletHellNeo.bullets.push({
                 name: "aniciffoIcon",
                 isAniciffoBoss: true,
-                bossOwner: id, // Claims ownership of boss movement/state
+                bossOwner: "aniciffoBombs", // Claims ownership of boss movement/state
                 x: cx,
                 y: cy,
                 vx: 0,
@@ -6884,11 +6852,10 @@ BHB.aniciffoBombs = {
                 }
             });
         }
-        return info;
     },
 
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["aniciffoBombs"];
         const bombsPerBurst = act.bombsPerBurst ?? 3;
         const burstInterval = act.burstInterval ?? 2200;
         const bombSpeed     = act.bombSpeed     ?? 10;
@@ -6897,15 +6864,15 @@ BHB.aniciffoBombs = {
         const miniBombSpeed = act.miniBombSpeed ?? 4;
         const enemySpeed    = act.enemySpeed    ?? 3;
 
-        if (!act.lastTime) act.lastTime = ticks;
+        if (!act.lastTime) act.lastTime = Date.now();
 
-        let playerGX = info.boxLeft + info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-        let playerGY = info.boxTop  + info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+        let playerGX = bulletHellNeo.boxLeft + bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+        let playerGY = bulletHellNeo.boxTop  + bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
 
-        let icon = BHB_AniciffoProjectiles.getBoss(info);
+        let icon = BHB_AniciffoProjectiles.getBoss();
 
         // Only update Aniciffo's stance and position if this attack owns him
-        if (icon && icon.bossOwner === id) {
+        if (icon && icon.bossOwner === "aniciffoBombs") {
             let dx = playerGX - icon.x;
             let dy = playerGY - icon.y;
             let dist = Math.hypot(dx, dy) || 1;
@@ -6926,19 +6893,19 @@ BHB.aniciffoBombs = {
 
             icon.vx *= 0.90;
             icon.vy *= 0.90;
-            icon.x  += icon.vx * (info.dt ?? 1);
-            icon.y  += icon.vy * (info.dt ?? 1);
+            icon.x  += icon.vx * (bulletHellNeo.delta ?? 1);
+            icon.y  += icon.vy * (bulletHellNeo.delta ?? 1);
 
-            let timeToBurst = burstInterval - (ticks - act.lastTime);
-            icon.swordAng = timeToBurst < 500 ? -1.4 : -0.4 + Math.sin(ticks * 0.003) * 0.25;
+            let timeToBurst = burstInterval - (Date.now() - act.lastTime);
+            icon.swordAng = timeToBurst < 500 ? -1.4 : -0.4 + Math.sin(Date.now() * 0.003) * 0.25;
         }
 
         // Drop bombs regardless of boss owner (spawns from current boss position)
-        if (ticks - act.lastTime >= burstInterval) {
-            act.lastTime = ticks;
-            let originX = icon ? icon.x : info.width / 2 + info.boxLeft;
-            let originY = icon ? icon.y : info.height / 2 + info.boxTop;
-            if (icon && icon.bossOwner === id) icon.swordAng = 1.4;
+        if (Date.now() - act.lastTime >= burstInterval) {
+            act.lastTime = Date.now();
+            let originX = icon ? icon.x : bulletHellNeo.width / 2 + bulletHellNeo.boxLeft;
+            let originY = icon ? icon.y : bulletHellNeo.height / 2 + bulletHellNeo.boxTop;
+            if (icon && icon.bossOwner === "aniciffoBombs") icon.swordAng = 1.4;
 
             let baseAng = Math.atan2(playerGY - originY, playerGX - originX);
             for (let b = 0; b < bombsPerBurst; b++) {
@@ -6946,7 +6913,7 @@ BHB.aniciffoBombs = {
                 let ang = baseAng + spread + (Math.random() - 0.5) * 0.2;
                 let spd = bombSpeed + Math.random() * 4;
 
-                BHB_AniciffoProjectiles.spawnBomb(info, originX, originY, Math.cos(ang) * spd, Math.sin(ang) * spd, {
+                BHB_AniciffoProjectiles.spawnBomb(originX, originY, Math.cos(ang) * spd, Math.sin(ang) * spd, {
                     fuse: fuseTicks,
                     miniBombCount: miniBombCount,
                     miniBombSpeed: miniBombSpeed
@@ -6955,12 +6922,12 @@ BHB.aniciffoBombs = {
         }
 
         // Process bombs
-        for (let i = info.bullets.length - 1; i >= 0; i--) {
-            let b = info.bullets[i];
+        for (let i = bulletHellNeo.bullets.length - 1; i >= 0; i--) {
+            let b = bulletHellNeo.bullets[i];
             if (b.name !== "aniciffoBomb") continue;
 
-            b.x += b.vx * (info.dt ?? 1);
-            b.y += b.vy * (info.dt ?? 1);
+            b.x += b.vx * (bulletHellNeo.delta ?? 1);
+            b.y += b.vy * (bulletHellNeo.delta ?? 1);
             b.vx *= 0.92;
             b.vy *= 0.92;
             b.pinRot = (b.pinRot || 0) + 0.25;
@@ -6971,52 +6938,51 @@ BHB.aniciffoBombs = {
                     b.detonating = b.maxDetonating;
                     for (let j = 0; j < b.miniBombCount; j++) {
                         let ang = (2 * Math.PI * j) / b.miniBombCount;
-                        BHB_AniciffoProjectiles.spawnMiniBomb(info, b.x, b.y, Math.cos(ang) * b.miniBombSpeed, Math.sin(ang) * b.miniBombSpeed);
+                        BHB_AniciffoProjectiles.spawnMiniBomb(b.x, b.y, Math.cos(ang) * b.miniBombSpeed, Math.sin(ang) * b.miniBombSpeed);
                     }
                 }
             } else if (b.detonating > 0) {
                 b.detonating--;
                 if (!b.hitPlayer) {
-                    let relX = (info.boxLeft + info.px) - b.x;
-                    let relY = (info.boxTop  + info.py) - b.y;
+                    let relX = (bulletHellNeo.boxLeft + bulletHellNeo.px) - b.x;
+                    let relY = (bulletHellNeo.boxTop  + bulletHellNeo.py) - b.y;
                     let cosA = Math.cos(b.angle || 0), sinA = Math.sin(b.angle || 0);
                     let perpH = Math.abs(-relX * sinA + relY * cosA);
                     let perpV = Math.abs(relX * cosA + relY * sinA);
-                    if (perpH < 10 + info.pr || perpV < 10 + info.pr) {
+                    if (perpH < 10 + bulletHellNeo.pr || perpV < 10 + bulletHellNeo.pr) {
                         b.hitPlayer = true;
                         if (typeof bhAttack === "function") bhAttack(32, 3, 0, "allPlayer");
                     }
                 }
-                if (b.detonating <= 0) info.bullets.splice(i, 1);
+                if (b.detonating <= 0) bulletHellNeo.bullets.splice(i, 1);
             }
         }
 
         // Mini bomb player collision
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name === "aniciffoMiniBomb" && !b.hitPlayer) {
-                if (Math.hypot((info.boxLeft + info.px) - b.x, (info.boxTop + info.py) - b.y) < b.r + info.pr) {
+                if (Math.hypot((bulletHellNeo.boxLeft + bulletHellNeo.px) - b.x, (bulletHellNeo.boxTop + bulletHellNeo.py) - b.y) < b.r + bulletHellNeo.pr) {
                     b.hitPlayer = true;
                     b._dead = true;
                     if (typeof bhAttack === "function") bhAttack(4, 3, 0, "allPlayer");
                 }
             }
         }
-        return info;
     }
 };
 
 BHB.aniciffoDash = {
     // Restored continuous dashing loop until minigame finishes
-    codeFunc(info, id) {
-        const act = info.actions[id];
-        if (!BHB_AniciffoProjectiles.getBoss(info)) {
-            let sx = info.boxLeft + Math.random() * info.width;
-            let sy = info.boxTop + 54;
+    codeFunc() {
+        const act = bulletHellNeo.actions["aniciffoDash"];
+        if (!BHB_AniciffoProjectiles.getBoss()) {
+            let sx = bulletHellNeo.boxLeft + Math.random() * bulletHellNeo.width;
+            let sy = bulletHellNeo.boxTop + 54;
 
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "aniciffoIcon",
                 isAniciffoBoss: true,
-                bossOwner: id,
+                bossOwner: "aniciffoDash",
                 x: sx,
                 y: sy,
                 vx: 0,
@@ -7081,12 +7047,11 @@ BHB.aniciffoDash = {
                 }
             });
         }
-        return info;
     },
 
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
-        const dt = info.dt ?? 1;
+    moveFunc() {
+        const act = bulletHellNeo.actions["aniciffoDash"];
+        const dt = bulletHellNeo.delta ?? 1;
 
         const dashSpeed      = act.dashSpeed      ?? 18;
         const dashDistance   = act.dashDistance   ?? Infinity;
@@ -7096,11 +7061,11 @@ BHB.aniciffoDash = {
         const projCount      = act.projCount      ?? 8;
         const projSpeed      = act.projSpeed      ?? 14;
 
-        let playerGX = info.boxLeft + info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-        let playerGY = info.boxTop  + info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+        let playerGX = bulletHellNeo.boxLeft + bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+        let playerGY = bulletHellNeo.boxTop  + bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
 
-        let icon = BHB_AniciffoProjectiles.getBoss(info);
-        if (!icon) return info;
+        let icon = BHB_AniciffoProjectiles.getBoss();
+        if (!icon) return;
 
         if (icon.slashEffect > 0) {
             if (icon.slashHoldTimer > 0) {
@@ -7112,7 +7077,7 @@ BHB.aniciffoDash = {
         }
 
         // Only progress the state machine if this action owns the boss
-        if (icon.bossOwner === id) {
+        if (icon.bossOwner === "aniciffoDash") {
             if (icon.dashPhase === "telegraph") {
                 icon.vx = 0;
                 icon.vy = 0;
@@ -7164,7 +7129,6 @@ BHB.aniciffoDash = {
                         for (let s = -halfCount; s <= halfCount; s++) {
                             let pAng = icon.aimAng + s * 0.32;
                             BHB_AniciffoProjectiles.spawnMiniBomb(
-                                info, 
                                 icon.x + Math.cos(pAng) * 54, 
                                 icon.y + Math.sin(pAng) * 54, 
                                 Math.cos(pAng) * projSpeed, 
@@ -7176,18 +7140,18 @@ BHB.aniciffoDash = {
                 }
 
                 // Continuous loop: snap to edge and immediately restart telegraph
-                let offLeft   = icon.x < info.boxLeft - icon.r;
-                let offRight  = icon.x > info.boxLeft + info.width  + icon.r;
-                let offTop    = icon.y < info.boxTop  - icon.r;
-                let offBottom = icon.y > info.boxTop  + info.height + icon.r;
+                let offLeft   = icon.x < bulletHellNeo.boxLeft - icon.r;
+                let offRight  = icon.x > bulletHellNeo.boxLeft + bulletHellNeo.width  + icon.r;
+                let offTop    = icon.y < bulletHellNeo.boxTop  - icon.r;
+                let offBottom = icon.y > bulletHellNeo.boxTop  + bulletHellNeo.height + icon.r;
 
                 if (offLeft || offRight || offTop || offBottom || icon.dashTravelled >= dashDistance) {
                     let edge = Math.floor(Math.random() * 4);
                     let margin = 54;
-                    if      (edge === 0) { icon.x = info.boxLeft + Math.random() * info.width;  icon.y = info.boxTop + margin; }
-                    else if (edge === 1) { icon.x = info.boxLeft + Math.random() * info.width;  icon.y = info.boxTop + info.height - margin; }
-                    else if (edge === 2) { icon.x = info.boxLeft + margin;                       icon.y = info.boxTop + Math.random() * info.height; }
-                    else                 { icon.x = info.boxLeft + info.width - margin;           icon.y = info.boxTop + Math.random() * info.height; }
+                    if      (edge === 0) { icon.x = bulletHellNeo.boxLeft + Math.random() * bulletHellNeo.width;  icon.y = bulletHellNeo.boxTop + margin; }
+                    else if (edge === 1) { icon.x = bulletHellNeo.boxLeft + Math.random() * bulletHellNeo.width;  icon.y = bulletHellNeo.boxTop + bulletHellNeo.height - margin; }
+                    else if (edge === 2) { icon.x = bulletHellNeo.boxLeft + margin;                       icon.y = bulletHellNeo.boxTop + Math.random() * bulletHellNeo.height; }
+                    else                 { icon.x = bulletHellNeo.boxLeft + bulletHellNeo.width - margin;           icon.y = bulletHellNeo.boxTop + Math.random() * bulletHellNeo.height; }
 
                     icon.vx             = 0;
                     icon.vy             = 0;
@@ -7203,31 +7167,30 @@ BHB.aniciffoDash = {
         }
 
         // Orb player collision
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name !== "aniciffoMiniBomb") continue;
-            let px = info.px, py = info.py;
-            if (info.subArena && info.moveWithSub) { px += info.subx; py += info.suby; }
-            if (!b.hitPlayer && Math.hypot((info.boxLeft + px) - b.x, (info.boxTop + py) - b.y) < b.r + info.pr) {
+            let px = bulletHellNeo.px, py = bulletHellNeo.py;
+            if (bulletHellNeo.subArena && options.bhKeyboard) { px += bulletHellNeo.subx; py += bulletHellNeo.suby; }
+            if (!b.hitPlayer && Math.hypot((bulletHellNeo.boxLeft + px) - b.x, (bulletHellNeo.boxTop + py) - b.y) < b.r + bulletHellNeo.pr) {
                 b.hitPlayer = true;
                 b._dead = true;
                 if (typeof bhAttack === "function") bhAttack(slashDamage * 0.6, 3, 0, "allPlayer");
             }
         }
 
-        return info;
     }
 };
 
 BHB.aniciffoParallelLasers = {
-    codeFunc(info, id) {
-        const act = info.actions[id];
-        if (!BHB_AniciffoProjectiles.getBoss(info)) {
-            let cx = act.locX != null ? act.locX : info.boxLeft + info.width / 2;
-            let cy = act.locY != null ? act.locY : info.boxTop + Math.max(80, info.height * 0.22);
-            info.bullets.push({
+    codeFunc() {
+        const act = bulletHellNeo.actions["aniciffoParallelLasers"];
+        if (!BHB_AniciffoProjectiles.getBoss()) {
+            let cx = act.locX != null ? act.locX : bulletHellNeo.boxLeft + bulletHellNeo.width / 2;
+            let cy = act.locY != null ? act.locY : bulletHellNeo.boxTop + Math.max(80, bulletHellNeo.height * 0.22);
+            bulletHellNeo.bullets.push({
                 name: "knife",
                 isAniciffoBoss: true,
-                bossOwner: id,
+                bossOwner: "aniciffoParallelLasers",
                 boxRender: true,
                 x: cx,
                 y: cy,
@@ -7242,24 +7205,23 @@ BHB.aniciffoParallelLasers = {
                 }
             });
         }
-        return info;
     },
 
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["aniciffoParallelLasers"];
         const waveInterval = act.waveInterval ?? 2500;
         const spacing      = act.spacing      ?? 190;
         const columnCount  = act.columnCount  ?? 3;
 
-        if (!act.lastTime) act.lastTime = ticks;
+        if (!act.lastTime) act.lastTime = Date.now();
 
-        let boss = BHB_AniciffoProjectiles.getBoss(info);
-        if (boss && boss.bossOwner === id) {
-            boss.swordAng = (ticks - act.lastTime >= waveInterval - 400) ? -1.4 : -0.4 + Math.sin(ticks * 0.003) * 0.25;
+        let boss = BHB_AniciffoProjectiles.getBoss();
+        if (boss && boss.bossOwner === "aniciffoParallelLasers") {
+            boss.swordAng = (Date.now() - act.lastTime >= waveInterval - 400) ? -1.4 : -0.4 + Math.sin(Date.now() * 0.003) * 0.25;
         }
 
-        if (ticks - act.lastTime >= waveInterval) {
-            act.lastTime = ticks;
+        if (Date.now() - act.lastTime >= waveInterval) {
+            act.lastTime = Date.now();
             let waveAngle = act.angleMode === "cardinal" ? (Math.random() < 0.5 ? 0 : Math.PI / 2) : Math.random() * Math.PI;
             let perpAngle = waveAngle + Math.PI / 2;
             let normX = Math.cos(perpAngle), normY = Math.sin(perpAngle);
@@ -7267,9 +7229,9 @@ BHB.aniciffoParallelLasers = {
 
             for (let i = -halfCount; i <= halfCount; i++) {
                 let distOffset = i * spacing;
-                let anchorX = info.px + normX * distOffset;
-                let anchorY = info.py + normY * distOffset;
-                BHB_AniciffoProjectiles.spawnLaser(info, anchorX, anchorY, waveAngle, {
+                let anchorX = bulletHellNeo.px + normX * distOffset;
+                let anchorY = bulletHellNeo.py + normY * distOffset;
+                BHB_AniciffoProjectiles.spawnLaser(anchorX, anchorY, waveAngle, {
                     beamWidth: act.beamWidth ?? 16,
                     fuseTicks: act.warningTicks ?? 48,
                     detonatingTicks: act.detonatingTicks ?? 24
@@ -7277,8 +7239,8 @@ BHB.aniciffoParallelLasers = {
             }
         }
 
-        for (let i = info.bullets.length - 1; i >= 0; i--) {
-            let b = info.bullets[i];
+        for (let i = bulletHellNeo.bullets.length - 1; i >= 0; i--) {
+            let b = bulletHellNeo.bullets[i];
             if (!b.isAniciffoLaser) continue;
             if (b.fuse > 0) {
                 b.fuse--;
@@ -7290,23 +7252,22 @@ BHB.aniciffoParallelLasers = {
                 b.detonating--;
                 if (b.detonating <= 0) {
                     b._dead = true;
-                    info.bullets.splice(i, 1);
+                    bulletHellNeo.bullets.splice(i, 1);
                 }
             }
         }
-        return info;
     }
 };
 
 BHB.aniciffoArrowChaos = {
-    codeFunc(info, id) {
-        if (!BHB_AniciffoProjectiles.getBoss(info)) {
-            info.bullets.push({
+    codeFunc(id = "aniciffoArrowChaos") {
+        if (!BHB_AniciffoProjectiles.getBoss()) {
+            bulletHellNeo.bullets.push({
                 name: "knife",
                 isAniciffoBoss: true,
                 bossOwner: id,
                 boxRender: true,
-                x: info.width / 2,
+                x: bulletHellNeo.width / 2,
                 y: 90,
                 vx: 0,
                 vy: 0,
@@ -7319,59 +7280,58 @@ BHB.aniciffoArrowChaos = {
                 }
             });
         }
-        return info;
     },
 
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc(id = "aniciffoArrowChaos") {
+        const act = bulletHellNeo.actions[id];
         const arrowPerSec = act.arrowPerSec ?? 2.2;
         const arrowSpeed  = act.arrowSpeed  ?? 4.8;
         const redChance   = act.redChance   ?? 0.33;
         const yellowChance= act.yellowChance?? 0.33;
 
-        if (!act.lastTime) act.lastTime = ticks;
-        const arrowsToSpawn = Math.floor(((ticks - act.lastTime) / 1000) * arrowPerSec);
+        if (!act.lastTime) act.lastTime = Date.now();
+        const arrowsToSpawn = Math.floor(((Date.now() - act.lastTime) / 1000) * arrowPerSec);
 
         for (let i = 0; i < arrowsToSpawn; i++) {
             const roll = Math.random();
             const colorType = roll < redChance ? "red" : (roll < redChance + yellowChance ? "yellow" : "green");
 
             const spawnAngle = Math.random() * Math.PI * 2;
-            const spawnDist = Math.max(info.width, info.height) * 0.60 + 80;
-            const spawnX = (info.width / 2) + Math.cos(spawnAngle) * spawnDist;
-            const spawnY = (info.height / 2) + Math.sin(spawnAngle) * spawnDist;
+            const spawnDist = Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.60 + 80;
+            const spawnX = (bulletHellNeo.width / 2) + Math.cos(spawnAngle) * spawnDist;
+            const spawnY = (bulletHellNeo.height / 2) + Math.sin(spawnAngle) * spawnDist;
 
-            const aimAngle = Math.atan2(info.py - spawnY, info.px - spawnX);
-            BHB_AniciffoProjectiles.spawnArrow(info, spawnX, spawnY, Math.cos(aimAngle) * arrowSpeed, Math.sin(aimAngle) * arrowSpeed, colorType, {
+            const aimAngle = Math.atan2(bulletHellNeo.py - spawnY, bulletHellNeo.px - spawnX);
+            BHB_AniciffoProjectiles.spawnArrow(spawnX, spawnY, Math.cos(aimAngle) * arrowSpeed, Math.sin(aimAngle) * arrowSpeed, colorType, {
                 speed: arrowSpeed
             });
         }
-        if (arrowsToSpawn > 0) act.lastTime = ticks;
+        if (arrowsToSpawn > 0) act.lastTime = Date.now();
 
         // Arrow mechanics & collision
-        for (let i = info.bullets.length - 1; i >= 0; i--) {
-            let b = info.bullets[i];
+        for (let i = bulletHellNeo.bullets.length - 1; i >= 0; i--) {
+            let b = bulletHellNeo.bullets[i];
             if (!b.isArrowBullet) continue;
 
-            if (b.x >= 0 && b.x <= info.width && b.y >= 0 && b.y <= info.height) b._entered = true;
+            if (b.x >= 0 && b.x <= bulletHellNeo.width && b.y >= 0 && b.y <= bulletHellNeo.height) b._entered = true;
 
             if (b.colorType === "yellow") {
-                const dist = Math.hypot(info.px - b.x, info.py - b.y);
+                const dist = Math.hypot(bulletHellNeo.px - b.x, bulletHellNeo.py - b.y);
                 if (b._yellowState === "approaching" && dist <= b._orbitRadius) {
                     b._yellowState = "orbiting";
-                    b._orbitAngle = Math.atan2(b.y - info.py, b.x - info.px);
+                    b._orbitAngle = Math.atan2(b.y - bulletHellNeo.py, b.x - bulletHellNeo.px);
                     b._orbitRemaining = Math.PI;
                     b.vx = 0; b.vy = 0;
                 } else if (b._yellowState === "orbiting") {
-                    b._orbitAngle += b._orbitSpeed * (info.dt ?? 1);
-                    b._orbitRemaining -= b._orbitSpeed * (info.dt ?? 1);
-                    b.x = info.px + Math.cos(b._orbitAngle) * b._orbitRadius;
-                    b.y = info.py + Math.sin(b._orbitAngle) * b._orbitRadius;
+                    b._orbitAngle += b._orbitSpeed * (bulletHellNeo.delta ?? 1);
+                    b._orbitRemaining -= b._orbitSpeed * (bulletHellNeo.delta ?? 1);
+                    b.x = bulletHellNeo.px + Math.cos(b._orbitAngle) * b._orbitRadius;
+                    b.y = bulletHellNeo.py + Math.sin(b._orbitAngle) * b._orbitRadius;
                     b.angle = b._orbitAngle + Math.PI / 2;
 
                     if (b._orbitRemaining <= 0) {
                         b._yellowState = "striking";
-                        let strike = Math.atan2(info.py - b.y, info.px - b.x);
+                        let strike = Math.atan2(bulletHellNeo.py - b.y, bulletHellNeo.px - b.x);
                         b.vx = Math.cos(strike) * (b.arrowSpeed * 1.25);
                         b.vy = Math.sin(strike) * (b.arrowSpeed * 1.25);
                         b.angle = strike;
@@ -7379,13 +7339,13 @@ BHB.aniciffoArrowChaos = {
                 }
             }
 
-            const dist = Math.hypot(info.px - b.x, info.py - b.y);
-            const isHit = dist <= (info.pr + b.headSize * 0.85);
+            const dist = Math.hypot(bulletHellNeo.px - b.x, bulletHellNeo.py - b.y);
+            const isHit = dist <= (bulletHellNeo.pr + b.headSize * 0.85);
 
             if (b.colorType === "red") {
                 if (isHit) {
                     b._dead = true;
-                } else if (b._entered && (b.x < -40 || b.x > info.width + 40 || b.y < -40 || b.y > info.height + 40)) {
+                } else if (b._entered && (b.x < -40 || b.x > bulletHellNeo.width + 40 || b.y < -40 || b.y > bulletHellNeo.height + 40)) {
                     b._dead = true;
                     if (typeof bhAttack === "function") bhAttack(40, 3, 0, "randomPlayer");
                 }
@@ -7394,22 +7354,21 @@ BHB.aniciffoArrowChaos = {
                 if (typeof bhAttack === "function") bhAttack(40, 3, 0, "randomPlayer");
             }
         }
-        return info;
     }
 };
 
 BHB.aniciffoBombDash = {
     // Restored original alternating state machine: bombing -> telegraph -> dashing -> rest
-    codeFunc(info, id) {
-        const act = info.actions[id];
-        if (!BHB_AniciffoProjectiles.getBoss(info)) {
-            let cx = act.locX != null ? act.locX : info.boxLeft + info.width / 2;
-            let cy = act.locY != null ? act.locY : info.boxTop + Math.max(80, info.height * 0.22);
+    codeFunc() {
+        const act = bulletHellNeo.actions["aniciffoBombDash"];
+        if (!BHB_AniciffoProjectiles.getBoss()) {
+            let cx = act.locX != null ? act.locX : bulletHellNeo.boxLeft + bulletHellNeo.width / 2;
+            let cy = act.locY != null ? act.locY : bulletHellNeo.boxTop + Math.max(80, bulletHellNeo.height * 0.22);
 
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "aniciffoIcon",
                 isAniciffoBoss: true,
-                bossOwner: id,
+                bossOwner: "aniciffoBombDash",
                 x: cx,
                 y: cy,
                 vx: 0,
@@ -7477,11 +7436,10 @@ BHB.aniciffoBombDash = {
                 }
             });
         }
-        return info;
     },
 
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
+    moveFunc() {
+        const act = bulletHellNeo.actions["aniciffoBombDash"];
 
         const bombsPerBurst = act.bombsPerBurst ?? 3;
         const bombSpeed     = act.bombSpeed     ?? 10;
@@ -7498,13 +7456,13 @@ BHB.aniciffoBombDash = {
         const projCount      = act.projCount      ?? 6;
         const projSpeed      = act.projSpeed      ?? 12;
 
-        if (!act.lastTime) act.lastTime = ticks;
+        if (!act.lastTime) act.lastTime = Date.now();
 
-        let playerGX = info.boxLeft + info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-        let playerGY = info.boxTop  + info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+        let playerGX = bulletHellNeo.boxLeft + bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+        let playerGY = bulletHellNeo.boxTop  + bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
 
-        let icon = BHB_AniciffoProjectiles.getBoss(info);
-        if (!icon) return info;
+        let icon = BHB_AniciffoProjectiles.getBoss();
+        if (!icon) return;
 
         if (icon.slashEffect > 0) {
             if (icon.slashHoldTimer > 0) {
@@ -7518,7 +7476,7 @@ BHB.aniciffoBombDash = {
         }
 
         // Only manage alternating cycle if this action owns the boss
-        if (icon.bossOwner === id) {
+        if (icon.bossOwner === "aniciffoBombDash") {
             icon.subTimer--;
 
             if (icon.subState === "bombing") {
@@ -7542,16 +7500,16 @@ BHB.aniciffoBombDash = {
 
                 icon.vx *= 0.90;
                 icon.vy *= 0.90;
-                icon.x  += icon.vx * (info.dt ?? 1);
-                icon.y  += icon.vy * (info.dt ?? 1);
+                icon.x  += icon.vx * (bulletHellNeo.delta ?? 1);
+                icon.y  += icon.vy * (bulletHellNeo.delta ?? 1);
 
-                icon.swordAng = icon.subTimer < 25 ? -1.4 : -0.4 + Math.sin(ticks * 0.003) * 0.25;
+                icon.swordAng = icon.subTimer < 25 ? -1.4 : -0.4 + Math.sin(Date.now() * 0.003) * 0.25;
 
                 let margin = icon.r + 10;
-                let boxL = info.boxLeft + margin;
-                let boxR = info.boxLeft + info.width  - margin;
-                let boxT = info.boxTop  + margin;
-                let boxB = info.boxTop  + info.height - margin;
+                let boxL = bulletHellNeo.boxLeft + margin;
+                let boxR = bulletHellNeo.boxLeft + bulletHellNeo.width  - margin;
+                let boxT = bulletHellNeo.boxTop  + margin;
+                let boxB = bulletHellNeo.boxTop  + bulletHellNeo.height - margin;
                 if (icon.x < boxL) { icon.x = boxL; icon.vx =  Math.abs(icon.vx); }
                 if (icon.x > boxR) { icon.x = boxR; icon.vx = -Math.abs(icon.vx); }
                 if (icon.y < boxT) { icon.y = boxT; icon.vy =  Math.abs(icon.vy); }
@@ -7567,7 +7525,7 @@ BHB.aniciffoBombDash = {
                         let ang = baseAng + spread + (Math.random() - 0.5) * 0.2;
                         let spd = bombSpeed + Math.random() * 4;
 
-                        BHB_AniciffoProjectiles.spawnBomb(info, icon.x, icon.y, Math.cos(ang) * spd, Math.sin(ang) * spd, {
+                        BHB_AniciffoProjectiles.spawnBomb(icon.x, icon.y, Math.cos(ang) * spd, Math.sin(ang) * spd, {
                             fuse: fuseTicks,
                             miniBombCount: miniBombCount,
                             miniBombSpeed: miniBombSpeed
@@ -7605,9 +7563,9 @@ BHB.aniciffoBombDash = {
             } else if (icon.subState === "dashing") {
                 icon.vx = 0;
                 icon.vy = 0;
-                icon.x += icon._dvx * (info.dt ?? 1);
-                icon.y += icon._dvy * (info.dt ?? 1);
-                icon.dashTravelled += Math.hypot(icon._dvx, icon._dvy) * (info.dt ?? 1);
+                icon.x += icon._dvx * (bulletHellNeo.delta ?? 1);
+                icon.y += icon._dvy * (bulletHellNeo.delta ?? 1);
+                icon.dashTravelled += Math.hypot(icon._dvx, icon._dvy) * (bulletHellNeo.delta ?? 1);
 
                 let dx   = playerGX - icon.x;
                 let dy   = playerGY - icon.y;
@@ -7628,17 +7586,17 @@ BHB.aniciffoBombDash = {
                         let halfCount = Math.floor(projCount / 2);
                         for (let s = -halfCount; s <= halfCount; s++) {
                             let pAng = icon.aimAng + s * 0.32;
-                            BHB_AniciffoProjectiles.spawnMiniBomb(info, icon.x + Math.cos(pAng) * 54, icon.y + Math.sin(pAng) * 54, Math.cos(pAng) * projSpeed, Math.sin(pAng) * projSpeed, 9);
+                            BHB_AniciffoProjectiles.spawnMiniBomb(icon.x + Math.cos(pAng) * 54, icon.y + Math.sin(pAng) * 54, Math.cos(pAng) * projSpeed, Math.sin(pAng) * projSpeed, 9);
                         }
                     }
                 }
 
-                let offLeft   = icon.x < info.boxLeft + icon.r;
-                let offRight  = icon.x > info.boxLeft + info.width  - icon.r;
-                let offTop    = icon.y < info.boxTop   + icon.r;
-                let offBottom = icon.y > info.boxTop   + info.height - icon.r;
+                let offLeft   = icon.x < bulletHellNeo.boxLeft + icon.r;
+                let offRight  = icon.x > bulletHellNeo.boxLeft + bulletHellNeo.width  - icon.r;
+                let offTop    = icon.y < bulletHellNeo.boxTop   + icon.r;
+                let offBottom = icon.y > bulletHellNeo.boxTop   + bulletHellNeo.height - icon.r;
 
-                if (offLeft || offRight || offTop || offBottom || icon.dashTravelled >= Math.max(info.width, info.height) * 1.2) {
+                if (offLeft || offRight || offTop || offBottom || icon.dashTravelled >= Math.max(bulletHellNeo.width, bulletHellNeo.height) * 1.2) {
                     icon.subState = "rest";
                     icon.subTimer = act.restTicks ?? 32;
                     icon._dvx = 0;
@@ -7657,12 +7615,12 @@ BHB.aniciffoBombDash = {
         }
 
         // Bomb processing
-        for (let i = info.bullets.length - 1; i >= 0; i--) {
-            let b = info.bullets[i];
+        for (let i = bulletHellNeo.bullets.length - 1; i >= 0; i--) {
+            let b = bulletHellNeo.bullets[i];
             if (b.name !== "aniciffoBomb") continue;
 
-            b.x += b.vx * (info.dt ?? 1);
-            b.y += b.vy * (info.dt ?? 1);
+            b.x += b.vx * (bulletHellNeo.delta ?? 1);
+            b.y += b.vy * (bulletHellNeo.delta ?? 1);
             b.vx *= 0.92;
             b.vy *= 0.92;
             b.pinRot = (b.pinRot || 0) + 0.25;
@@ -7675,26 +7633,26 @@ BHB.aniciffoBombDash = {
 
                     for (let j = 0; j < miniBombCount; j++) {
                         let ang = (2 * Math.PI * j) / miniBombCount;
-                        BHB_AniciffoProjectiles.spawnMiniBomb(info, b.x, b.y, Math.cos(ang) * miniBombSpeed, Math.sin(ang) * miniBombSpeed);
+                        BHB_AniciffoProjectiles.spawnMiniBomb(b.x, b.y, Math.cos(ang) * miniBombSpeed, Math.sin(ang) * miniBombSpeed);
                     }
                 }
             } else if (b.detonating > 0) {
                 b.detonating--;
 
                 if (!b.hitPlayer) {
-                    let px = info.px, py = info.py;
-                    if (info.subArena && info.moveWithSub) { px += info.subx; py += info.suby; }
+                    let px = bulletHellNeo.px, py = bulletHellNeo.py;
+                    if (bulletHellNeo.subArena && options.bhKeyboard) { px += bulletHellNeo.subx; py += bulletHellNeo.suby; }
 
-                    let relX = (info.boxLeft + px) - b.x;
-                    let relY = (info.boxTop  + py) - b.y;
+                    let relX = (bulletHellNeo.boxLeft + px) - b.x;
+                    let relY = (bulletHellNeo.boxTop  + py) - b.y;
                     let distToBomb = Math.hypot(relX, relY);
-                    let maxReach = Math.max(info.width, info.height) * 1.5;
+                    let maxReach = Math.max(bulletHellNeo.width, bulletHellNeo.height) * 1.5;
 
                     if (distToBomb <= maxReach) {
                         let cosA = Math.cos(b.angle || 0), sinA = Math.sin(b.angle || 0);
                         let perpH = Math.abs(-relX * sinA + relY * cosA);
                         let perpV = Math.abs(relX * cosA + relY * sinA);
-                        let beamHalfWidth = 10 + info.pr;
+                        let beamHalfWidth = 10 + bulletHellNeo.pr;
 
                         if (perpH < beamHalfWidth || perpV < beamHalfWidth) {
                             b.hitPlayer = true;
@@ -7703,38 +7661,36 @@ BHB.aniciffoBombDash = {
                     }
                 }
 
-                if (b.detonating <= 0) info.bullets.splice(i, 1);
+                if (b.detonating <= 0) bulletHellNeo.bullets.splice(i, 1);
             }
         }
 
         // Contact damage checks
-        for (let i = info.bullets.length - 1; i >= 0; i--) {
-            let b = info.bullets[i];
-            let px = info.px, py = info.py;
-            if (info.subArena && info.moveWithSub) { px += info.subx; py += info.suby; }
+        for (let i = bulletHellNeo.bullets.length - 1; i >= 0; i--) {
+            let b = bulletHellNeo.bullets[i];
+            let px = bulletHellNeo.px, py = bulletHellNeo.py;
+            if (bulletHellNeo.subArena && options.bhKeyboard) { px += bulletHellNeo.subx; py += bulletHellNeo.suby; }
 
             if (b.name === "aniciffoMiniBomb") {
-                if (Math.hypot((info.boxLeft + px) - b.x, (info.boxTop + py) - b.y) < b.r + info.pr) {
+                if (Math.hypot((bulletHellNeo.boxLeft + px) - b.x, (bulletHellNeo.boxTop + py) - b.y) < b.r + bulletHellNeo.pr) {
                     if (typeof bhAttack === "function") bhAttack(4, 3, 0, "allPlayer");
-                    info.bullets.splice(i, 1);
+                    bulletHellNeo.bullets.splice(i, 1);
                 }
             } else if (b.name === "aniciffoOrb") {
-                if (!b.hitPlayer && Math.hypot((info.boxLeft + px) - b.x, (info.boxTop + py) - b.y) < b.r + info.pr) {
+                if (!b.hitPlayer && Math.hypot((bulletHellNeo.boxLeft + px) - b.x, (bulletHellNeo.boxTop + py) - b.y) < b.r + bulletHellNeo.pr) {
                     b.hitPlayer = true;
                     if (typeof bhAttack === "function") bhAttack(slashDamage * 0.6, 3, 0, "allPlayer");
-                    info.bullets.splice(i, 1);
+                    bulletHellNeo.bullets.splice(i, 1);
                 }
             }
         }
-
-        return info;
     }
 };
 
 BHB.aniciffoAirRaid = {
     // Shared projectiles + hovering Aniciffo bomb patrol
-    codeFunc(info, id) {
-        const act = info.actions[id];
+    codeFunc() {
+        const act = bulletHellNeo.actions["aniciffoAirRaid"];
         act.bombInterval  = act.bombInterval || 1400;
         act.arrowPerSec   = act.arrowPerSec || 3.5;
         act.slashPerSec   = act.slashPerSec || 1.8;
@@ -7749,13 +7705,13 @@ BHB.aniciffoAirRaid = {
         act._arrowAcc = 0;
         act._slashAcc = 0;
 
-        if (!BHB_AniciffoProjectiles.getBoss(info)) {
-            info.bullets.push({
+        if (!BHB_AniciffoProjectiles.getBoss()) {
+            bulletHellNeo.bullets.push({
                 name: "bossAniciffo",
                 isAniciffoBoss: true,
-                bossOwner: id,
+                bossOwner: "aniciffoAirRaid",
                 boxRender: true,
-                x: info.width / 2,
+                x: bulletHellNeo.width / 2,
                 y: 70,
                 vx: act.bossSpeed,
                 vy: 0,
@@ -7785,24 +7741,23 @@ BHB.aniciffoAirRaid = {
                 }
             });
         }
-        return info;
     },
 
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
-        const dt = info.dt || 1;
-        const dtMs = info.dtMs || 16.67;
+    moveFunc() {
+        const act = bulletHellNeo.actions["aniciffoAirRaid"];
+        const dt = bulletHellNeo.delta || 1;
+        const dtMs = bulletHellNeo.deltaMs || 16.67;
 
-        let b = BHB_AniciffoProjectiles.getBoss(info);
+        let b = BHB_AniciffoProjectiles.getBoss();
 
         // 1. Boss Patrol (only updated if this action owns Aniciffo)
-        if (b && b.bossOwner === id) {
+        if (b && b.bossOwner === "aniciffoAirRaid") {
             b.hoverAnim += 0.06 * dt;
             b.x += b.vx * dt;
 
             const margin = 70;
             if (b.x < margin) { b.x = margin; b.vx = Math.abs(b.vx); }
-            else if (b.x > info.width - margin) { b.x = info.width - margin; b.vx = -Math.abs(b.vx); }
+            else if (b.x > bulletHellNeo.width - margin) { b.x = bulletHellNeo.width - margin; b.vx = -Math.abs(b.vx); }
 
             if (b.throwAnim > 0) { b.throwAnim -= dtMs; b.swordAng = -1.2; }
             else { b.swordAng = -0.4; }
@@ -7811,7 +7766,7 @@ BHB.aniciffoAirRaid = {
             if (act._bombTimer >= act.bombInterval) {
                 act._bombTimer %= act.bombInterval;
                 b.throwAnim = 260;
-                BHB_AniciffoProjectiles.spawnBomb(info, b.x, b.y + 25, b.vx * 0.35 + (Math.random() - 0.5) * 1.5, 2.2, {
+                BHB_AniciffoProjectiles.spawnBomb(b.x, b.y + 25, b.vx * 0.35 + (Math.random() - 0.5) * 1.5, 2.2, {
                     radius: 16,
                     fuse: 80,
                     gravity: 0.14
@@ -7825,13 +7780,13 @@ BHB.aniciffoAirRaid = {
         if (arrowsToSpawn > 0) act._arrowAcc -= arrowsToSpawn;
 
         for (let i = 0; i < arrowsToSpawn; i++) {
-            const rx = 30 + Math.random() * (info.width - 60);
+            const rx = 30 + Math.random() * (bulletHellNeo.width - 60);
             const roll = Math.random();
             const colorType = roll < (act.yellowChance ?? 0.25) ? "yellow" : (roll < (act.yellowChance ?? 0.25) + (act.redChance ?? 0.25) ? "red" : "green");
             const vy = 5.6 + Math.random() * 2.0;
             const vx = (Math.random() - 0.5) * 1.6;
 
-            BHB_AniciffoProjectiles.spawnArrow(info, rx, -30, vx, vy, colorType, {
+            BHB_AniciffoProjectiles.spawnArrow(rx, -30, vx, vy, colorType, {
                 speed: vy,
                 orbitRadius: 110,
                 orbitSpeed: 0.065
@@ -7844,16 +7799,16 @@ BHB.aniciffoAirRaid = {
         if (slashesToSpawn > 0) act._slashAcc -= slashesToSpawn;
 
         for (let i = 0; i < slashesToSpawn; i++) {
-            const sx = 40 + Math.random() * (info.width - 80);
-            BHB_AniciffoProjectiles.spawnSlash(info, sx, -35, (Math.random() - 0.5) * 1.2, 4.5 + Math.random() * 1.5);
+            const sx = 40 + Math.random() * (bulletHellNeo.width - 80);
+            BHB_AniciffoProjectiles.spawnSlash(sx, -35, (Math.random() - 0.5) * 1.2, 4.5 + Math.random() * 1.5);
         }
 
         // 4. Shared Sky Lasers
         act._laserTimer = (act._laserTimer || 0) + dtMs;
         if (act._laserTimer >= act.laserInterval) {
             act._laserTimer %= act.laserInterval;
-            const lx = 50 + Math.random() * (info.width - 100);
-            BHB_AniciffoProjectiles.spawnLaser(info, lx, 0, Math.PI / 2, {
+            const lx = 50 + Math.random() * (bulletHellNeo.width - 100);
+            BHB_AniciffoProjectiles.spawnLaser(lx, 0, Math.PI / 2, {
                 beamWidth: 26,
                 fuseTicks: 45,
                 detonatingTicks: 24
@@ -7861,23 +7816,23 @@ BHB.aniciffoAirRaid = {
         }
 
         // 5. Update Bomb Gravity & Ground Detonation
-        for (let i = info.bullets.length - 1; i >= 0; i--) {
-            let bomb = info.bullets[i];
+        for (let i = bulletHellNeo.bullets.length - 1; i >= 0; i--) {
+            let bomb = bulletHellNeo.bullets[i];
             if (bomb.name === "aniciffoBomb" && bomb.gravity) {
                 bomb.vy += bomb.gravity * dt;
-                if (bomb.y >= info.height - 35 && bomb.detonating <= 0) {
+                if (bomb.y >= bulletHellNeo.height - 35 && bomb.detonating <= 0) {
                     bomb.detonating = bomb.maxDetonating;
                     bomb.vx = 0; bomb.vy = 0;
                     for (let k = 0; k < 4; k++) {
                         let orbAng = -Math.PI * 0.15 - (k * Math.PI * 0.7) / 3;
-                        BHB_AniciffoProjectiles.spawnMiniBomb(info, bomb.x, bomb.y - 10, Math.cos(orbAng) * 4.8, Math.sin(orbAng) * 4.8, 9);
+                        BHB_AniciffoProjectiles.spawnMiniBomb(bomb.x, bomb.y - 10, Math.cos(orbAng) * 4.8, Math.sin(orbAng) * 4.8, 9);
                     }
                 }
             }
         }
 
         // Delegate arrow mechanics to the shared arrow handler
-        return BHB.aniciffoArrowChaos.moveFunc(info, ticks, id);
+        BHB.aniciffoArrowChaos.moveFunc("aniciffoAirRaid");
     }
 };
 
@@ -7897,10 +7852,10 @@ BHB.aniciffoUltimate = {
     //   • Continuous (0s - 50s):   Tri-color radioactive arrows
     // ============================================================================
 
-    codeFunc(info, id) {
-        const act = info.actions[id];
+    codeFunc() {
+        const act = bulletHellNeo.actions["aniciffoUltimate"];
         act.startTime = Date.now();
-        info.greenMode = false;
+        bulletHellNeo.soul = "red";
 
         act._laserTimer = 0;
         act._bombRainAcc = 0;
@@ -7908,13 +7863,13 @@ BHB.aniciffoUltimate = {
         act._arrowAcc = 0;
         act._stage4Cleaned = false;
 
-        if (!BHB_AniciffoProjectiles.getBoss(info)) {
-            info.bullets.push({
+        if (!BHB_AniciffoProjectiles.getBoss()) {
+            bulletHellNeo.bullets.push({
                 name: "knife",
                 isAniciffoBoss: true,
-                bossOwner: id,
+                bossOwner: "aniciffoUltimate",
                 boxRender: true,
-                x: info.width / 2,
+                x: bulletHellNeo.width / 2,
                 y: 80,
                 vx: 0,
                 vy: 0,
@@ -8000,20 +7955,19 @@ BHB.aniciffoUltimate = {
                 }
             });
         }
-        return info;
     },
 
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
-        const dt = info.dt || 1;
-        const dtMs = info.dtMs || 16.67;
+    moveFunc() {
+        const act = bulletHellNeo.actions["aniciffoUltimate"];
+        const dt = bulletHellNeo.delta || 1;
+        const dtMs = bulletHellNeo.deltaMs || 16.67;
         const elapsed = Date.now() - act.startTime;
 
-        const boss = BHB_AniciffoProjectiles.getBoss(info);
-        const px = info.px + (info.subArena && info.moveWithSub ? info.subx : 0);
-        const py = info.py + (info.subArena && info.moveWithSub ? info.suby : 0);
+        const boss = BHB_AniciffoProjectiles.getBoss();
+        const px = bulletHellNeo.px + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx : 0);
+        const py = bulletHellNeo.py + (bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby : 0);
 
-        info.greenMode = false;
+        bulletHellNeo.soul = "red";
 
         // ====================================================================
         // CONTINUOUS HAZARD: ARROWS (0s - 50s)
@@ -8026,13 +7980,13 @@ BHB.aniciffoUltimate = {
             const roll = Math.random();
             const colorType = roll < 0.02 ? "red" : (roll < 0.3 ? "yellow" : "green");
             const spawnAngle = Math.random() * Math.PI * 2;
-            const spawnDist = Math.max(info.width, info.height) * 0.60 + 80;
-            const sx = info.width / 2 + Math.cos(spawnAngle) * spawnDist;
-            const sy = info.height / 2 + Math.sin(spawnAngle) * spawnDist;
+            const spawnDist = Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.60 + 80;
+            const sx = bulletHellNeo.width / 2 + Math.cos(spawnAngle) * spawnDist;
+            const sy = bulletHellNeo.height / 2 + Math.sin(spawnAngle) * spawnDist;
             const aim = Math.atan2(py - sy, px - sx);
             const spd = 7.2 + Math.random() * 1.8;
 
-            BHB_AniciffoProjectiles.spawnArrow(info, sx, sy, Math.cos(aim) * spd, Math.sin(aim) * spd, colorType, {
+            BHB_AniciffoProjectiles.spawnArrow(sx, sy, Math.cos(aim) * spd, Math.sin(aim) * spd, colorType, {
                 speed: spd,
                 orbitRadius: 115,
                 orbitSpeed: 0.08
@@ -8045,16 +7999,16 @@ BHB.aniciffoUltimate = {
 
         // ── STAGE 1 (0s - 12.5s): Circle Perimeter Orbit + Aimed Lasers ─────
         if (elapsed < 12500) {
-            if (boss && boss.bossOwner === id) {
+            if (boss && boss.bossOwner === "aniciffoUltimate") {
                 boss.dashPhase = "hover";
                 boss.hoverAnim += 0.06 * dt;
 
-                const orbitRx = Math.max(120, (info.width / 2) - 85);
-                const orbitRy = Math.max(90, (info.height / 2) - 75);
+                const orbitRx = Math.max(120, (bulletHellNeo.width / 2) - 85);
+                const orbitRy = Math.max(90, (bulletHellNeo.height / 2) - 75);
                 const orbitAngle = elapsed * 0.0018;
 
-                const nextX = (info.width / 2) + Math.cos(orbitAngle) * orbitRx;
-                const nextY = (info.height / 2) + Math.sin(orbitAngle) * orbitRy;
+                const nextX = (bulletHellNeo.width / 2) + Math.cos(orbitAngle) * orbitRx;
+                const nextY = (bulletHellNeo.height / 2) + Math.sin(orbitAngle) * orbitRy;
 
                 boss.vx = nextX - boss.x;
                 boss.vy = nextY - boss.y;
@@ -8068,7 +8022,7 @@ BHB.aniciffoUltimate = {
                     boss.swordAng = 1.35;
 
                     const aimAtPlayer = Math.atan2(py - boss.y, px - boss.x);
-                    BHB_AniciffoProjectiles.spawnLaser(info, boss.x, boss.y, aimAtPlayer, {
+                    BHB_AniciffoProjectiles.spawnLaser(boss.x, boss.y, aimAtPlayer, {
                         beamWidth: 20,
                         fuseTicks: 18,
                         detonatingTicks: 12
@@ -8082,11 +8036,11 @@ BHB.aniciffoUltimate = {
 
         // ── STAGE 2 (12.5s - 25s): High-Density Bomb Rain from Above ─────────
         else if (elapsed >= 12500 && elapsed < 25000) {
-            if (boss && boss.bossOwner === id) {
+            if (boss && boss.bossOwner === "aniciffoUltimate") {
                 boss.dashPhase = "hover";
                 boss.hoverAnim += 0.05 * dt;
 
-                boss.x += (info.width / 2 + Math.sin(elapsed * 0.0025) * (info.width * 0.38) - boss.x) * 0.08 * dt;
+                boss.x += (bulletHellNeo.width / 2 + Math.sin(elapsed * 0.0025) * (bulletHellNeo.width * 0.38) - boss.x) * 0.08 * dt;
                 boss.y += (70 - boss.y) * 0.08 * dt;
                 boss.swordAng = -1.2;
                 boss.vx = 0;
@@ -8100,13 +8054,13 @@ BHB.aniciffoUltimate = {
             for (let i = 0; i < bombsToRain; i++) {
                 const dropX = Math.random() < 0.65
                     ? px + (Math.random() - 0.5) * 220
-                    : 40 + Math.random() * (info.width - 80);
+                    : 40 + Math.random() * (bulletHellNeo.width - 80);
 
-                const boundedX = Math.max(30, Math.min(info.width - 30, dropX));
+                const boundedX = Math.max(30, Math.min(bulletHellNeo.width - 30, dropX));
                 const vy = 2.5 + Math.random() * 2.5;
                 const vx = (Math.random() - 0.5) * 1.5;
 
-                BHB_AniciffoProjectiles.spawnBomb(info, boundedX, 0, vx, vy, {
+                BHB_AniciffoProjectiles.spawnBomb(boundedX, 0, vx, vy, {
                     radius: 14,
                     fuse: 120,
                     gravity: 0.1,
@@ -8118,7 +8072,7 @@ BHB.aniciffoUltimate = {
 
         // ── STAGE 3 (25s - 37.5s): Rapid-Succession Dashes & Slashes ─────────
         else if (elapsed >= 25000 && elapsed < 37500) {
-            if (boss && boss.bossOwner === id) {
+            if (boss && boss.bossOwner === "aniciffoUltimate") {
                 if (boss.dashPhase === "hover") {
                     boss.dashPhase = "telegraph";
                     boss.dashTimer = 16;
@@ -8154,12 +8108,12 @@ BHB.aniciffoUltimate = {
                         }
                     }
 
-                    if (boss.x < -60 || boss.x > info.width + 60 || boss.y < -60 || boss.y > info.height + 60) {
+                    if (boss.x < -60 || boss.x > bulletHellNeo.width + 60 || boss.y < -60 || boss.y > bulletHellNeo.height + 60) {
                         const edge = Math.floor(Math.random() * 4);
-                        if (edge === 0)      { boss.x = Math.random() * info.width; boss.y = 50; }
-                        else if (edge === 1) { boss.x = info.width - 50; boss.y = Math.random() * info.height; }
-                        else if (edge === 2) { boss.x = Math.random() * info.width; boss.y = info.height - 50; }
-                        else                 { boss.x = 50; boss.y = Math.random() * info.height; }
+                        if (edge === 0)      { boss.x = Math.random() * bulletHellNeo.width; boss.y = 50; }
+                        else if (edge === 1) { boss.x = bulletHellNeo.width - 50; boss.y = Math.random() * bulletHellNeo.height; }
+                        else if (edge === 2) { boss.x = Math.random() * bulletHellNeo.width; boss.y = bulletHellNeo.height - 50; }
+                        else                 { boss.x = 50; boss.y = Math.random() * bulletHellNeo.height; }
 
                         boss._dvx = 0;
                         boss._dvy = 0;
@@ -8180,10 +8134,10 @@ BHB.aniciffoUltimate = {
             // Purge any remaining slash projectiles and clear lingering melee slash arcs
             if (!act._stage4Cleaned) {
                 act._stage4Cleaned = true;
-                info.bullets = info.bullets.filter(b => b.name !== "crescentSlash");
+                bulletHellNeo.bullets = bulletHellNeo.bullets.filter(b => b.name !== "crescentSlash");
             }
 
-            if (boss && boss.bossOwner === id) {
+            if (boss && boss.bossOwner === "aniciffoUltimate") {
                 boss.phase = 2; // Emerald transformation
                 boss.dashPhase = "hover";
                 boss._dvx = 0;
@@ -8192,7 +8146,7 @@ BHB.aniciffoUltimate = {
                 boss.slashHoldTimer = 0;
 
                 boss.hoverAnim += 0.08 * dt;
-                boss.x += (info.width / 2 + Math.sin(elapsed * 0.0035) * (info.width * 0.36) - boss.x) * 0.09 * dt;
+                boss.x += (bulletHellNeo.width / 2 + Math.sin(elapsed * 0.0035) * (bulletHellNeo.width * 0.36) - boss.x) * 0.09 * dt;
                 boss.y += (85 + Math.cos(elapsed * 0.003) * 20 - boss.y) * 0.08 * dt;
 
                 act._bombThrowTimer = (act._bombThrowTimer || 0) + dtMs;
@@ -8209,7 +8163,7 @@ BHB.aniciffoUltimate = {
                         const ang = baseAng + spread + (Math.random() - 0.5) * 0.15;
                         const spd = 8.0 + Math.random() * 4.5;
 
-                        BHB_AniciffoProjectiles.spawnBomb(info, boss.x, boss.y + 15, Math.cos(ang) * spd, Math.sin(ang) * spd, {
+                        BHB_AniciffoProjectiles.spawnBomb(boss.x, boss.y + 15, Math.cos(ang) * spd, Math.sin(ang) * spd, {
                             fuse: 52,
                             miniBombCount: 3,
                             miniBombSpeed: 6.5
@@ -8227,8 +8181,8 @@ BHB.aniciffoUltimate = {
         // ====================================================================
 
         // 1. Lasers
-        for (let i = info.bullets.length - 1; i >= 0; i--) {
-            let b = info.bullets[i];
+        for (let i = bulletHellNeo.bullets.length - 1; i >= 0; i--) {
+            let b = bulletHellNeo.bullets[i];
             if (!b.isAniciffoLaser) continue;
 
             if (b.fuse > 0) {
@@ -8243,28 +8197,28 @@ BHB.aniciffoUltimate = {
                 b.width = b.targetWidth;
                 if (b.detonating <= 0) {
                     b._dead = true;
-                    info.bullets.splice(i, 1);
+                    bulletHellNeo.bullets.splice(i, 1);
                 }
             }
         }
 
         // 2. Bombs
-        for (let i = info.bullets.length - 1; i >= 0; i--) {
-            let b = info.bullets[i];
+        for (let i = bulletHellNeo.bullets.length - 1; i >= 0; i--) {
+            let b = bulletHellNeo.bullets[i];
             if (b.name !== "aniciffoBomb") continue;
 
             if (b.gravity) {
                 b.vy += b.gravity * dt;
                 b.x += b.vx * dt;
                 b.y += b.vy * dt;
-                if (b.y >= info.height - 35 && b.detonating <= 0) {
+                if (b.y >= bulletHellNeo.height - 35 && b.detonating <= 0) {
                     b.fuse = 0;
                     b.detonating = b.maxDetonating;
                     b.vx = 0;
                     b.vy = 0;
                     for (let k = 0; k < b.miniBombCount; k++) {
                         const orbAng = (2 * Math.PI * k) / b.miniBombCount;
-                        BHB_AniciffoProjectiles.spawnMiniBomb(info, b.x, b.y, Math.cos(orbAng) * b.miniBombSpeed, Math.sin(orbAng) * b.miniBombSpeed, 7);
+                        BHB_AniciffoProjectiles.spawnMiniBomb(b.x, b.y, Math.cos(orbAng) * b.miniBombSpeed, Math.sin(orbAng) * b.miniBombSpeed, 7);
                     }
                 }
             } else {
@@ -8284,7 +8238,7 @@ BHB.aniciffoUltimate = {
                     b.hitPlayer = false;
                     for (let k = 0; k < b.miniBombCount; k++) {
                         const orbAng = (2 * Math.PI * k) / b.miniBombCount;
-                        BHB_AniciffoProjectiles.spawnMiniBomb(info, b.x, b.y, Math.cos(orbAng) * b.miniBombSpeed, Math.sin(orbAng) * b.miniBombSpeed, 7);
+                        BHB_AniciffoProjectiles.spawnMiniBomb(b.x, b.y, Math.cos(orbAng) * b.miniBombSpeed, Math.sin(orbAng) * b.miniBombSpeed, 7);
                     }
                 }
             } else if (b.detonating > 0) {
@@ -8296,22 +8250,22 @@ BHB.aniciffoUltimate = {
                     const sinA = Math.sin(b.angle || 0);
                     const perpH = Math.abs(-relX * sinA + relY * cosA);
                     const perpV = Math.abs(relX * cosA + relY * sinA);
-                    if (perpH < 12 + info.pr || perpV < 12 + info.pr) {
+                    if (perpH < 12 + bulletHellNeo.pr || perpV < 12 + bulletHellNeo.pr) {
                         b.hitPlayer = true;
                         if (typeof bhAttack === "function") bhAttack(54, 3, 0, "allPlayer");
                     }
                 }
                 if (b.detonating <= 0) {
                     b._dead = true;
-                    info.bullets.splice(i, 1);
+                    bulletHellNeo.bullets.splice(i, 1);
                 }
             }
         }
 
         // 3. Mini-bombs
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (b.name === "aniciffoMiniBomb" && !b.hitPlayer) {
-                if (Math.hypot(px - b.x, py - b.y) < b.r + info.pr) {
+                if (Math.hypot(px - b.x, py - b.y) < b.r + bulletHellNeo.pr) {
                     b.hitPlayer = true;
                     b._dead = true;
                     if (typeof bhAttack === "function") bhAttack(15, 3, 0, "allPlayer");
@@ -8320,11 +8274,11 @@ BHB.aniciffoUltimate = {
         }
 
         // 4. Arrows
-        for (let i = info.bullets.length - 1; i >= 0; i--) {
-            let b = info.bullets[i];
+        for (let i = bulletHellNeo.bullets.length - 1; i >= 0; i--) {
+            let b = bulletHellNeo.bullets[i];
             if (!b.isArrowBullet) continue;
 
-            if (b.x >= 0 && b.x <= info.width && b.y >= 0 && b.y <= info.height) b._entered = true;
+            if (b.x >= 0 && b.x <= bulletHellNeo.width && b.y >= 0 && b.y <= bulletHellNeo.height) b._entered = true;
 
             if (b.colorType === "yellow") {
                 const dist = Math.hypot(px - b.x, py - b.y);
@@ -8352,12 +8306,12 @@ BHB.aniciffoUltimate = {
             }
 
             const dist = Math.hypot(px - b.x, py - b.y);
-            const isHit = dist <= (info.pr + b.headSize * 0.85);
+            const isHit = dist <= (bulletHellNeo.pr + b.headSize * 0.85);
 
             if (b.colorType === "red") {
                 if (isHit) {
                     b._dead = true;
-                } else if (b._entered && (b.x < -40 || b.x > info.width + 40 || b.y < -40 || b.y > info.height + 40)) {
+                } else if (b._entered && (b.x < -40 || b.x > bulletHellNeo.width + 40 || b.y < -40 || b.y > bulletHellNeo.height + 40)) {
                     b._dead = true;
                     if (typeof bhAttack === "function") bhAttack(26, 3, 0, "allPlayer");
                 }
@@ -8366,8 +8320,6 @@ BHB.aniciffoUltimate = {
                 if (typeof bhAttack === "function") bhAttack(26, 3, 0, "allPlayer");
             }
         }
-
-        return info;
     }
 };
 
@@ -8375,7 +8327,7 @@ BHB.aniciffoUltimate = {
 window.bulletHellAniciffoUltimate = function(actionValues = {}, values = {}, exitAction = () => {}) {
     values = values || {};
     values.duration = 50;
-    values.greenMode = false;
+    values.soul = "red";
     return bulletHell({ "aniciffoUltimate": actionValues }, values, exitAction);
 };
 
@@ -8384,8 +8336,8 @@ window.bulletHellAniciffoUltimate = function(actionValues = {}, values = {}, exi
 // ============================================================================
 
 BHB.bloodwordCurse = {
-    codeFunc(info, id) {
-        const act = info.actions[id];
+    codeFunc() {
+        const act = bulletHellNeo.actions["bloodwordCurse"];
         act.targetText = (act.targetText || "PURGE SYSTEM").toUpperCase();
         act.dps = act.dps || 100;
         act.damageInterval = act.damageInterval || 250;
@@ -8397,20 +8349,18 @@ BHB.bloodwordCurse = {
         act._damageTimer = 0;
         act._errorFlash = 0;
 
-        info.timed = false;
-        info.duration = 999999;
-        info.endTime = Infinity;
+        bulletHellNeo.duration = 999999;
 
         if (act.lockMovement) {
-            info.px = info.width / 2;
-            info.py = info.height * 0.65;
-            info.vx = 0;
-            info.vy = 0;
+            bulletHellNeo.px = bulletHellNeo.width / 2;
+            bulletHellNeo.py = bulletHellNeo.height * 0.65;
+            bulletHellNeo.vx = 0;
+            bulletHellNeo.vy = 0;
         }
 
         // Shared character validation logic
         const processInputChar = (rawChar) => {
-            if (!info.active || act._completed) return;
+            if (!bulletHellNeo.active || act._completed) return;
 
             const expectedChar = act.targetText[act._typedIndex];
             const inputChar = act.caseSensitive ? rawChar : rawChar.toUpperCase();
@@ -8427,19 +8377,19 @@ BHB.bloodwordCurse = {
                     }
                     window.removeEventListener("keydown", act._keyHandler);
 
-                    if (info.floatingTexts) {
-                        info.floatingTexts.push({
+                    if (bulletHellNeo.floatingTexts) {
+                        bulletHellNeo.floatingTexts.push({
                             text: "Safe",
                             color: "#4ade80",
-                            x: info.width / 2,
-                            y: info.height * 0.35,
+                            x: bulletHellNeo.width / 2,
+                            y: bulletHellNeo.height * 0.35,
                             life: 70,
                             maxLife: 70
                         });
                     }
 
                     setTimeout(() => {
-                        info.endTime = 0;
+                        bulletHellNeo.duration = 0;
                     }, 500);
                 }
             } else {
@@ -8499,17 +8449,17 @@ BHB.bloodwordCurse = {
         }
 
         // UI Entity configured for multi-line text wrapping
-        info.bullets.push({
+        bulletHellNeo.bullets.push({
             name: "knife",
             boxRender: true,
-            x: info.width / 2,
-            y: info.height * 0.28,
+            x: bulletHellNeo.width / 2,
+            y: bulletHellNeo.height * 0.28,
             r: 8000,
             width: -1000,
             angle: 0,
             vx: 0,
             vy: 0,
-draw(b, ctx) {
+            draw(b, ctx) {
                 ctx.save();
                 ctx.translate(b.x, b.y);
 
@@ -8520,7 +8470,7 @@ draw(b, ctx) {
                 ctx.font = "bold 28px 'Courier New', monospace";
                 ctx.textBaseline = "middle";
 
-                const maxLineWidth = Math.max(220, info.width - 100);
+                const maxLineWidth = Math.max(220, bulletHellNeo.width - 100);
                 const lineHeight = 38;
 
                 // 1. Group characters into word tokens (preserving spaces)
@@ -8578,7 +8528,7 @@ draw(b, ctx) {
 
                 // 3. Dynamic Container Dimensions
                 const maxMeasuredWidth = Math.max(...lines.map(l => l.width));
-                const boxW = Math.min(info.width - 24, Math.max(maxMeasuredWidth + 50, 320));
+                const boxW = Math.min(bulletHellNeo.width - 24, Math.max(maxMeasuredWidth + 50, 320));
                 const boxH = Math.max(90, lines.length * lineHeight + 64);
 
                 // 4. Backdrop & Frame
@@ -8652,37 +8602,30 @@ draw(b, ctx) {
                 ctx.restore();
             }
         });
-
-        return info;
     },
 
-    moveFunc(info, ticks, id) {
-        const act = info.actions[id];
-        const dt = info.dt || 1;
-        const dtMs = info.dtMs || 16.67;
-
-        if (info.timer) {
-            clearTimeout(info.timer);
-            info.timer = null;
-        }
+    moveFunc() {
+        const act = bulletHellNeo.actions["bloodwordCurse"];
+        const dt = bulletHellNeo.delta || 1;
+        const dtMs = bulletHellNeo.deltaMs || 16.67;
 
         if (!act._completed) {
-            info.endTime = Infinity;
+            bulletHellNeo.duration = 999999;
         }
 
-        if (!info.active) {
+        if (!bulletHellNeo.active) {
             if (act._keyHandler) window.removeEventListener("keydown", act._keyHandler);
             if (act._mobileInput && act._mobileInput.parentNode) act._mobileInput.remove();
-            return info;
+            return
         }
 
         if (act._errorFlash > 0) act._errorFlash -= dt;
 
         if (act.lockMovement && !act._completed) {
-            info.px = info.width / 2;
-            info.py = info.height * 0.65;
-            info.vx = 0;
-            info.vy = 0;
+            bulletHellNeo.px = bulletHellNeo.width / 2;
+            bulletHellNeo.py = bulletHellNeo.height * 0.65;
+            bulletHellNeo.vx = 0;
+            bulletHellNeo.vy = 0;
         }
 
         if (!act._completed) {
@@ -8697,7 +8640,5 @@ draw(b, ctx) {
                 }
             }
         }
-
-        return info;
     }
 };

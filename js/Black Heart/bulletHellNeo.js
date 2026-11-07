@@ -637,7 +637,7 @@ class BulletHell {
         if (bulletHellNeo) {
             if (bulletHellNeo.soul == "green") {
                 bulletHellNeo._parryPressed = true; // Blue-spear parry: any click counts as a parry attempt in greenMode
-                const cr = bulletHellNeo.enemyCanvas.getBoundingClientRect();
+                const cr = bulletHellNeo.arenaCanvas.getBoundingClientRect();
                 const drawX = (bulletHellNeo.subArena && options.bhKeyboard) ? bulletHellNeo.subx + bulletHellNeo.px : bulletHellNeo.px;
                 const drawY = (bulletHellNeo.subArena && options.bhKeyboard) ? bulletHellNeo.suby + bulletHellNeo.py : bulletHellNeo.py;
                 const cx = e.clientX - cr.left - drawX;

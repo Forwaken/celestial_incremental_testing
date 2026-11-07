@@ -3667,83 +3667,79 @@ BHC.formaldehyde = {
             instant: true,
             type: "function",
             cooldown: new Decimal(20),
-            onTrigger(index, slot, target)
-            {
+            onTrigger(index, slot, target) {
                 let random = getRandomInt(6)
 
                 if (random == 0) {
-            bulletHellGreen({
-                "greenSpearChoreography": {
-        loop: true,
-        sequence: [
-            { delay: 400, dir: 6, speed: 4, loop: true, red: false },                                                                                                                                              
-            { delay: 550, dir: 5, speed: 4, loop: true, red: false },             
-            { delay: 800, dir: 4, speed: 4, loop: true, red: false },             
-            { delay: 950, dir: 3, speed: 4, loop: true, red: false },             
-            { delay: 1200, dir: 2, speed: 4, loop: true, red: false },                                                                                                                                              
-            { delay: 1350, dir: 1, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
-            { delay: 1600, dir: 0, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
-            { delay: 1750, dir: 7, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
-                ]
-                }
-                }, { width: 500, height: 500, duration: 18 }) 
-                } else if (random == 1)
-                {
+                    bulletHellGreen({
+                        "greenSpearChoreography": {
+                            loop: true,
+                            sequence: [
+                                { delay: 400, dir: 6, speed: 4, loop: true, red: false },                                                                                                                                              
+                                { delay: 550, dir: 5, speed: 4, loop: true, red: false },             
+                                { delay: 800, dir: 4, speed: 4, loop: true, red: false },             
+                                { delay: 950, dir: 3, speed: 4, loop: true, red: false },             
+                                { delay: 1200, dir: 2, speed: 4, loop: true, red: false },                                                                                                                                              
+                                { delay: 1350, dir: 1, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
+                                { delay: 1600, dir: 0, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
+                                { delay: 1750, dir: 7, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
+                            ]
+                        }
+                    }, { width: 500, height: 500, duration: 18 }) 
+                } else if (random == 1) {
                     bulletHellGreen({"greenSpearRain": {spearPerSec: 1.6, spearSpeed: 4, spearLength: 80, spearWidth: 12, yellowChance: 0.5, fourDir: false}}, {width:500, height:500, duration:16})
                 } else if (random == 2) {
-            bulletHellGreen({
-                "greenSpearChoreography": {
-        loop: true,
-        sequence: [
-            { delay: 200, dir: 6, speed: 4, loop: true, red: true },                                                                                                                                              
-            { delay: 300, dir: 5, speed: 4, loop: true, red: true },             
-            { delay: 500, dir: 4, speed: 4, loop: true, red: true },             
-            { delay: 600, dir: 3, speed: 4, loop: true, red: true },             
-            { delay: 800, dir: 2, speed: 4, loop: true, red: true },                                                                                                                                              
-            { delay: 900, dir: 1, speed: 4, loop: true, red: true },                                                                                                                                                                                                                                                                                     
-            { delay: 1100, dir: 0, speed: 4, loop: true, red: true },                                                                                                                                                                                                                                                                                     
-            { delay: 1200, dir: 7, speed: 4, loop: true, red: true },                                                                                                                                                                                                                                                                                     
-                ]
-                }
-                }, { width: 500, height: 500, duration: 18 }) 
+                    bulletHellGreen({
+                        "greenSpearChoreography": {
+                            loop: true,
+                            sequence: [
+                                { delay: 200, dir: 6, speed: 4, loop: true, red: true },                                                                                                                                              
+                                { delay: 300, dir: 5, speed: 4, loop: true, red: true },             
+                                { delay: 500, dir: 4, speed: 4, loop: true, red: true },             
+                                { delay: 600, dir: 3, speed: 4, loop: true, red: true },             
+                                { delay: 800, dir: 2, speed: 4, loop: true, red: true },                                                                                                                                              
+                                { delay: 900, dir: 1, speed: 4, loop: true, red: true },                                                                                                                                                                                                                                                                                     
+                                { delay: 1100, dir: 0, speed: 4, loop: true, red: true },                                                                                                                                                                                                                                                                                     
+                                { delay: 1200, dir: 7, speed: 4, loop: true, red: true },                                                                                                                                                                                                                                                                                     
+                            ]
+                        }
+                    }, { width: 500, height: 500, duration: 18 }) 
                 } else if (random == 3) {
                     bulletHellGreen({
-                    "greenSpearChoreography": {
-                    loop: true,
-                    sequence: [
-                    { delay: 250, dir: 0, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 500, dir: 2, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 750, dir: 4, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 1000, dir: 6, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    ]
-                    }
+                        "greenSpearChoreography": {
+                            loop: true,
+                            sequence: [
+                                { delay: 250, dir: 0, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                { delay: 500, dir: 2, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                { delay: 750, dir: 4, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                { delay: 1000, dir: 6, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                            ]
+                        }
                     }, { width: 500, height: 500, duration: 18 }) 
                 } else if (random == 4) {
                     bulletHellGreen({"greenSpearRain": {spearPerSec: 3, spearSpeed: 4, spearLength: 80, spearWidth: 12, yellowChance: 0.1, orbitSpeed: 0.3, fourDir: false}}, {width:500, height:500, duration:16})
                 } else if (random == 5) {
                     bulletHellGreen({"greenSpearRain": {spearPerSec: 4, spearSpeed: 4, spearLength: 80, spearWidth: 12, redChance: 0.5,fourDir: true}}, {width:500, height:500, duration:16})
                 } else if (random == 6){
-                                            bulletHellGreen({
-                "greenSpearChoreography": {
-        loop: true,
-        sequence: [
-            { delay: 400, dir: 6, speed: 4, loop: true, red: false },                                                                                                                                              
-            { delay: 550, dir: 5, speed: 4, loop: true, red: false },             
-            { delay: 800, dir: 4, speed: 4, loop: true, red: false },             
-            { delay: 950, dir: 3, speed: 4, loop: true, red: false },             
-            { delay: 1200, dir: 2, speed: 4, loop: true, red: false },                                                                                                                                              
-            { delay: 1350, dir: 1, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
-            { delay: 1600, dir: 0, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
-            { delay: 1750, dir: 7, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
-                ]
-                }
-                }, { width: 500, height: 500, duration: 18 }) 
+                    bulletHellGreen({
+                        "greenSpearChoreography": {
+                            loop: true,
+                            sequence: [
+                                { delay: 400, dir: 6, speed: 4, loop: true, red: false },                                                                                                                                              
+                                { delay: 550, dir: 5, speed: 4, loop: true, red: false },             
+                                { delay: 800, dir: 4, speed: 4, loop: true, red: false },             
+                                { delay: 950, dir: 3, speed: 4, loop: true, red: false },             
+                                { delay: 1200, dir: 2, speed: 4, loop: true, red: false },                                                                                                                                              
+                                { delay: 1350, dir: 1, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
+                                { delay: 1600, dir: 0, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
+                                { delay: 1750, dir: 7, speed: 4, loop: true, red: false },                                                                                                                                                                                                                                                                                     
+                            ]
+                        }
+                    }, { width: 500, height: 500, duration: 18 }) 
                 } 
                 
             }
         },
-                
-            
     },
 
     reward() {
@@ -3861,53 +3857,53 @@ BHC.strychnine = {
                 } else if (random == 3) {
                     bulletHellGreen({"greenSpearRain": {spearPerSec: 1.8, spearSpeed: 4, spearLength: 80, spearWidth: 12, yellowChance: 1, fourDir: true}}, {width:500, height:500, duration:16})
                 } else if (random == 4) {
-                       bulletHellGreen({
+                    bulletHellGreen({
                         "greenSpearChoreography": {
-                        loop: true,
-                        sequence: [
-                        { delay: 150, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 300, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                        { delay: 450, dir: 2, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 600, dir: 2, speed: 4, loop: true, blue: true },     
-                        { delay: 750, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 900, dir: 0, speed: 4, loop: true, blue: true },    
-                        { delay: 1050, dir: 2, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 1200, dir: 2, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                        ]
+                            loop: true,
+                            sequence: [
+                                { delay: 150, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                { delay: 300, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                { delay: 450, dir: 2, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                { delay: 600, dir: 2, speed: 4, loop: true, blue: true },     
+                                { delay: 750, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                { delay: 900, dir: 0, speed: 4, loop: true, blue: true },    
+                                { delay: 1050, dir: 2, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                { delay: 1200, dir: 2, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                            ]
                         }
-                        }, { width: 500, height: 500, duration: 18 }) 
+                    }, { width: 500, height: 500, duration: 18 }) 
                 } else if (random == 5) {
-                       bulletHellGreen({
+                    bulletHellGreen({
                         "greenSpearChoreography": {
-                        loop: true,
-                        sequence: [
-                        { delay: 200, dir: 4, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 400, dir: 0, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                        { delay: 600, dir: 4, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 800, dir: 0, speed: 4, loop: true, blue: false },     
-                        { delay: 1000, dir: 4, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 1200, dir: 0, speed: 4, loop: true, blue: false },    
-                        { delay: 1400, dir: 4, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 1600, dir: 0, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                        ]
+                            loop: true,
+                            sequence: [
+                                { delay: 200, dir: 4, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                { delay: 400, dir: 0, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                { delay: 600, dir: 4, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                { delay: 800, dir: 0, speed: 4, loop: true, blue: false },     
+                                { delay: 1000, dir: 4, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                { delay: 1200, dir: 0, speed: 4, loop: true, blue: false },    
+                                { delay: 1400, dir: 4, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                { delay: 1600, dir: 0, speed: 4, loop: true, blue: false },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                            ]
                         }
-                        }, { width: 500, height: 500, duration: 18 }) 
+                    }, { width: 500, height: 500, duration: 18 }) 
                 } else if (random == 6) {
-                bulletHellGreen({
-                "greenSpearChoreography": {
-        loop: true,
-        sequence: [
-            { delay: 500, dir: 6, speed: 4, loop: true, yellow: true },                                                                                                                                              
-            { delay: 1000, dir: 5, speed: 4, loop: true, yellow: true },             
-            { delay: 1500, dir: 4, speed: 4, loop: true, yellow: true },             
-            { delay: 2000, dir: 3, speed: 4, loop: true, yellow: true },             
-            { delay: 2500, dir: 2, speed: 4, loop: true, yellow: true },                                                                                                                                              
-            { delay: 3000, dir: 1, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
-            { delay: 3500, dir: 0, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
-            { delay: 4000, dir: 7, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
-                ]
-                }
-                }, { width: 500, height: 500, duration: 18 }) 
+                    bulletHellGreen({
+                        "greenSpearChoreography": {
+                            loop: true,
+                            sequence: [
+                                { delay: 500, dir: 6, speed: 4, loop: true, yellow: true },                                                                                                                                              
+                                { delay: 1000, dir: 5, speed: 4, loop: true, yellow: true },             
+                                { delay: 1500, dir: 4, speed: 4, loop: true, yellow: true },             
+                                { delay: 2000, dir: 3, speed: 4, loop: true, yellow: true },             
+                                { delay: 2500, dir: 2, speed: 4, loop: true, yellow: true },                                                                                                                                              
+                                { delay: 3000, dir: 1, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
+                                { delay: 3500, dir: 0, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
+                                { delay: 4000, dir: 7, speed: 4, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
+                            ]
+                        }
+                    }, { width: 500, height: 500, duration: 18 }) 
                 }
             },
             cooldown: new Decimal(20),
@@ -3991,10 +3987,8 @@ BHC.aniciffoBoss = {
             name: "Rhythmic Radiation",
             instant: true,
             type: "function",
-            onTrigger(index, slot, target)
-            {
-                if (player.bh.celestialite.health.gte(125000))
-                {
+            onTrigger(index, slot, target) {
+                if (player.bh.celestialite.health.gte(125000)) {
                     //(0=E 1=SE 2=S 3=SW 4=W 5=NW 6=N 7=NE)
                     let random = getRandomInt(7)
                     if (random == 0) {
@@ -4012,68 +4006,67 @@ BHC.aniciffoBoss = {
                     } else if (random == 6) {
                         bulletHellGreen({"greenSpearRain": {spearPerSec: 3, spearSpeed: 5, spearLength: 80, spearWidth: 12, fourDir: false, noRepeatDir: true}}, {width:600, height:600, duration:16})
                     } else if (random == 7) {
-                                        bulletHellGreen({
-                "greenSpearChoreography": {
-        loop: true,
-        sequence: [
-            { delay: 500, dir: 6, speed: 6, loop: true, yellow: true },                                                                                                                                              
-            { delay: 1000, dir: 5, speed: 6, loop: true, yellow: true },             
-            { delay: 1500, dir: 4, speed: 6, loop: true, yellow: true },             
-            { delay: 2000, dir: 3, speed: 6, loop: true, yellow: true },             
-            { delay: 2500, dir: 2, speed: 6, loop: true, yellow: true },                                                                                                                                              
-            { delay: 3000, dir: 1, speed: 6, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
-            { delay: 3500, dir: 0, speed: 6, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
-            { delay: 4000, dir: 7, speed: 6, loop: true, yellow: true },    
-            { delay: 4800, dir: 6, speed: 6, loop: true, red: false },                                                                                                                                              
-            { delay: 5000, dir: 5, speed: 6, loop: true, red: false },             
-            { delay: 5200, dir: 4, speed: 6, loop: true, red: false },             
-            { delay: 5400, dir: 3, speed: 6, loop: true, red: false },             
-            { delay: 5600, dir: 2, speed: 6, loop: true, red: false },                                                                                                                                              
-            { delay: 5800, dir: 1, speed: 6, loop: true, red: false },                                                                                                                                                                                                                                                                                     
-            { delay: 6000, dir: 0, speed: 6, loop: true, red: false },                                                                                                                                                                                                                                                                                     
-            { delay: 6200, dir: 7, speed: 6, loop: true, red: false },                                                                                                                                                                                                                                                                                           
-                ]
-                }
-                }, { width: 500, height: 500, duration: 18 }) 
+                        bulletHellGreen({
+                            "greenSpearChoreography": {
+                                loop: true,
+                                sequence: [
+                                    { delay: 500, dir: 6, speed: 6, loop: true, yellow: true },                                                                                                                                              
+                                    { delay: 1000, dir: 5, speed: 6, loop: true, yellow: true },             
+                                    { delay: 1500, dir: 4, speed: 6, loop: true, yellow: true },             
+                                    { delay: 2000, dir: 3, speed: 6, loop: true, yellow: true },             
+                                    { delay: 2500, dir: 2, speed: 6, loop: true, yellow: true },                                                                                                                                              
+                                    { delay: 3000, dir: 1, speed: 6, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
+                                    { delay: 3500, dir: 0, speed: 6, loop: true, yellow: true },                                                                                                                                                                                                                                                                                     
+                                    { delay: 4000, dir: 7, speed: 6, loop: true, yellow: true },    
+                                    { delay: 4800, dir: 6, speed: 6, loop: true, red: false },                                                                                                                                              
+                                    { delay: 5000, dir: 5, speed: 6, loop: true, red: false },             
+                                    { delay: 5200, dir: 4, speed: 6, loop: true, red: false },             
+                                    { delay: 5400, dir: 3, speed: 6, loop: true, red: false },             
+                                    { delay: 5600, dir: 2, speed: 6, loop: true, red: false },                                                                                                                                              
+                                    { delay: 5800, dir: 1, speed: 6, loop: true, red: false },                                                                                                                                                                                                                                                                                     
+                                    { delay: 6000, dir: 0, speed: 6, loop: true, red: false },                                                                                                                                                                                                                                                                                     
+                                    { delay: 6200, dir: 7, speed: 6, loop: true, red: false },                                                                                                                                                                                                                                                                                           
+                                ]
+                            }
+                        }, { width: 500, height: 500, duration: 18 }) 
                     } else if (random == 8) {
-                                            bulletHellGreen({
-                    "greenSpearChoreography": {
-                    loop: true,
-                    sequence: [
-                    { delay: 200, dir: 0, speed: 4, loop: true, orbitSpeed: 0.25, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 400, dir: 2, speed: 4, loop: true, orbitSpeed: 0.25, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 600, dir: 4, speed: 4, loop: true, orbitSpeed: 0.25, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 800, dir: 6, speed: 4, loop: true, orbitSpeed: 0.25, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    ]
-                    }
-                    }, { width: 500, height: 500, duration: 18 }) 
+                        bulletHellGreen({
+                            "greenSpearChoreography": {
+                                loop: true,
+                                sequence: [
+                                    { delay: 200, dir: 0, speed: 4, loop: true, orbitSpeed: 0.25, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 400, dir: 2, speed: 4, loop: true, orbitSpeed: 0.25, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 600, dir: 4, speed: 4, loop: true, orbitSpeed: 0.25, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 800, dir: 6, speed: 4, loop: true, orbitSpeed: 0.25, yellow: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                ]
+                            }
+                        }, { width: 500, height: 500, duration: 18 }) 
                     } else if (random == 9) {
                         bulletHellGreen({
-                        "greenSpearChoreography": {
-                        loop: true,
-                        sequence: [
-                        { delay: 150, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 300, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                        { delay: 450, dir: 1, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 600, dir: 1, speed: 4, loop: true, blue: true },     
-                        { delay: 750, dir: 2, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 900, dir: 2, speed: 4, loop: true, blue: true },    
-                        { delay: 1050, dir: 3, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 1200, dir: 3, speed: 4, loop: true, blue: true },                 
-                        { delay: 1350, dir: 4, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 1500, dir: 4, speed: 4, loop: true, blue: true },    
-                        { delay: 1650, dir: 5, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 1800, dir: 5, speed: 4, loop: true, blue: true },  
-                        { delay: 1950, dir: 6, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 2100, dir: 6, speed: 4, loop: true, blue: true },
-                        { delay: 2250, dir: 7, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-                        { delay: 2400, dir: 7, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-                        ]
-                        }
+                            "greenSpearChoreography": {
+                                loop: true,
+                                sequence: [
+                                    { delay: 150, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                    { delay: 300, dir: 0, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 450, dir: 1, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                    { delay: 600, dir: 1, speed: 4, loop: true, blue: true },     
+                                    { delay: 750, dir: 2, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                    { delay: 900, dir: 2, speed: 4, loop: true, blue: true },    
+                                    { delay: 1050, dir: 3, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                    { delay: 1200, dir: 3, speed: 4, loop: true, blue: true },                 
+                                    { delay: 1350, dir: 4, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                    { delay: 1500, dir: 4, speed: 4, loop: true, blue: true },    
+                                    { delay: 1650, dir: 5, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                    { delay: 1800, dir: 5, speed: 4, loop: true, blue: true },  
+                                    { delay: 1950, dir: 6, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                    { delay: 2100, dir: 6, speed: 4, loop: true, blue: true },
+                                    { delay: 2250, dir: 7, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                    { delay: 2400, dir: 7, speed: 4, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                                ]
+                            }
                         }, { width: 500, height: 500, duration: 18 }) 
                     }
-                } else
-                {
+                } else {
                     let random = getRandomInt(7)
                     if (random == 0) {
                         bulletHellGreen({"greenSpearRain": {spearPerSec: 2.2, spearSpeed: 4, spearLength: 80, spearWidth: 12, yellowChance: 1, orbitSpeed: 0.2, fourDir: false}}, {width:500, height:500, duration:16})
@@ -4086,33 +4079,33 @@ BHC.aniciffoBoss = {
                     } else if (random == 4) {
                         bulletHellGreen({"greenSpearRain": {spearPerSec: 3.5, spearSpeed: 7, spearLength: 80, spearWidth: 12, redChance: 0.5, blueChance: 0.5, noRepeatDir: false, fourDir: false}}, {width:500, height:500, duration:16})
                     } else if (random == 5) {
-                    bulletHellGreen({
-                    "greenSpearChoreography": {
-                    loop: true,
-                    sequence: [
-                    { delay: 150, dir: 0, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 300, dir: 0, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 450, dir: 2, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 600, dir: 2, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 750, dir: 4, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 900, dir: 4, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 1050, dir: 6, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 1200, dir: 6, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    ]
-                    }
-                    }, { width: 500, height: 500, duration: 18 }) 
+                        bulletHellGreen({
+                            "greenSpearChoreography": {
+                                loop: true,
+                                sequence: [
+                                    { delay: 150, dir: 0, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 300, dir: 0, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 450, dir: 2, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 600, dir: 2, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 750, dir: 4, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 900, dir: 4, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 1050, dir: 6, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 1200, dir: 6, speed: 7, loop: true, blue: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                ]
+                            }
+                        }, { width: 500, height: 500, duration: 18 }) 
                     } else if (random == 6) {
-                                            bulletHellGreen({
-                    "greenSpearChoreography": {
-                    loop: true,
-                    sequence: [
-                    { delay: 200, dir: 1, speed: 4, loop: true, green: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 400, dir: 3, speed: 4, loop: true, green: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 600, dir: 5, speed: 4, loop: true, green: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    { delay: 800, dir: 7, speed: 4, loop: true, green: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    ]
-                    }
-                    }, { width: 500, height: 500, duration: 18 }) 
+                        bulletHellGreen({
+                            "greenSpearChoreography": {
+                                loop: true,
+                                sequence: [
+                                    { delay: 200, dir: 1, speed: 4, loop: true, green: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 400, dir: 3, speed: 4, loop: true, green: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 600, dir: 5, speed: 4, loop: true, green: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                    { delay: 800, dir: 7, speed: 4, loop: true, green: true },                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                ]
+                            }
+                        }, { width: 500, height: 500, duration: 18 }) 
                     }
                 }
             },
@@ -4128,7 +4121,7 @@ BHC.aniciffoBoss = {
                 if (player.bh.celestialite.health.lt(240000) && player.bh.celestialite.attackID == 0) {
                     bulletHell(
                         { "aniciffoParallelLasers": { warningMs: 600, fireDurationMs: 300, waveInterval: 900, spacing: 190, columnCount: 3 } },
-                        { width: window.innerWidth, height: window.innerHeight, duration: 18, transparent: true, speed: 7 });
+                        { width: window.innerWidth, height: window.innerHeight, duration: 18, transparent: true, pSpeed: 7 });
                     player.bh.celestialite.attackID += 1
                 }
                 if (player.bh.celestialite.health.lt(230000) && player.bh.celestialite.attackID == 1) {
@@ -4140,14 +4133,14 @@ BHC.aniciffoBoss = {
                         miniBombCount: 5,    // bullets in the radial burst on detonation
                         miniBombSpeed: 4,    // speed of those mini-bullets
                         enemySpeed: 3,       // how fast Aniciffo moves
-                    }}, {width: window.innerWidth, height: window.innerHeight,transparent: true,duration: 20, speed: 7})
+                    }}, {width: window.innerWidth, height: window.innerHeight,transparent: true,duration: 20, pSpeed: 7})
                     player.bh.celestialite.attackID += 1
                 }
                 if (player.bh.celestialite.health.lt(220000) && player.bh.celestialite.attackID == 2)
                 {
                     bulletHellAniciffoArrows(
                     { arrowPerSec: 6.5, arrowSpeed: 5.5, redChance: 0, yellowChance: 0.4,},
-                    {width: 1000, height: 700, duration: 18, transparent: false, speed: 8.5}
+                    {width: 1000, height: 700, duration: 18, transparent: false, pSpeed: 8.5}
                     );
                     player.bh.celestialite.attackID += 1
                 }
@@ -4176,7 +4169,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 7.5,
+                        pSpeed: 7.5,
                     });
                     player.bh.celestialite.attackID += 1
                 }
@@ -4184,7 +4177,7 @@ BHC.aniciffoBoss = {
                 {
                     bulletHellAniciffoArrows(
                     { arrowPerSec: 3.5, arrowSpeed: 4.5, redChance: 0.3, yellowChance: 0.3,},
-                    {width: 1000, height: 700, duration: 18, transparent: false, speed: 8.5}
+                    {width: 1000, height: 700, duration: 18, transparent: false, pSpeed: 8.5}
                     );
                     player.bh.celestialite.attackID += 1
                 }
@@ -4197,7 +4190,7 @@ BHC.aniciffoBoss = {
                         slashDamage: 50,
                         projCount: 8,
                         projSpeed: 15,
-                    }}, {width: window.innerWidth, height: window.innerHeight,transparent: true,duration: 20, speed: 8.5})
+                    }}, {width: window.innerWidth, height: window.innerHeight,transparent: true,duration: 20, pSpeed: 8.5})
                     player.bh.celestialite.attackID += 1
                 }
                 if (player.bh.celestialite.health.lt(180000) && player.bh.celestialite.attackID == 6)
@@ -4232,7 +4225,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 8
+                        pSpeed: 8
                     });
                     player.bh.celestialite.attackID += 1
                 }
@@ -4256,7 +4249,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 9,
+                        pSpeed: 9,
                     });
                     player.bh.celestialite.attackID += 1
                 }
@@ -4288,14 +4281,14 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 8.5
+                        pSpeed: 8.5
                     });
                     player.bh.celestialite.attackID += 1
                 }
                 if (player.bh.celestialite.health.lt(150000) && player.bh.celestialite.attackID == 9) {
                     bulletHellAniciffoArrows(
                     { arrowPerSec: 6.5, arrowSpeed: 10.5, redChance: 0.1, yellowChance: 0,},
-                    {width: 1200, height: 800, duration: 18, transparent: false, speed: 8.5}
+                    {width: 1200, height: 800, duration: 18, transparent: false, pSpeed: 8.5}
                     );
                     player.bh.celestialite.attackID += 1
                 }
@@ -4331,7 +4324,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 8
+                        pSpeed: 8
                     });
                     player.bh.celestialite.attackID += 1
                 }
@@ -4364,7 +4357,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 8
+                        pSpeed: 8
                     });
                     player.bh.celestialite.attackID += 1
                     }
@@ -4384,7 +4377,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 8.5,
+                        pSpeed: 8.5,
                     });
                     player.bh.celestialite.attackID += 1
                 }  
@@ -4417,7 +4410,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 9
+                        pSpeed: 9
                     });
                     player.bh.celestialite.attackID += 1
                 }      
@@ -4435,11 +4428,11 @@ BHC.aniciffoBoss = {
                             orbitTriggerDist: 140
                         },
                     }
-                    , {width: window.innerWidth, height: window.innerHeight,transparent: true,duration: 20, speed: 12.5})
+                    , {width: window.innerWidth, height: window.innerHeight,transparent: true,duration: 20, pSpeed: 12.5})
                     player.bh.celestialite.attackID += 1
                 }      
                 if (player.bh.celestialite.health.lt(90000) && player.bh.celestialite.attackID == 15) {
-                    bulletHell({"aniciffoAirRaid": {bombInterval: 1400, arrowPerSec: 3.5, slashPerSec: 0, laserInterval: 1600, bossSpeed: 4, phase: 1, redChance: 0.05, yellowChance: 0.25}}, {width: window.innerWidth, height: window.innerHeight, transparent: true, speed: 9, duration: 18})
+                    bulletHell({"aniciffoAirRaid": {bombInterval: 1400, arrowPerSec: 3.5, slashPerSec: 0, laserInterval: 1600, bossSpeed: 4, phase: 1, redChance: 0.05, yellowChance: 0.25}}, {width: window.innerWidth, height: window.innerHeight, transparent: true, pSpeed: 9, duration: 18})
                     player.bh.celestialite.attackID += 1
                 }
                 if (player.bh.celestialite.health.lt(80000) && player.bh.celestialite.attackID == 16) {
@@ -4458,7 +4451,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 8.5,
+                        pSpeed: 8.5,
                     });
                     player.bh.celestialite.attackID += 1
                 }      
@@ -4488,7 +4481,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 12
+                        pSpeed: 12
                     });
                     player.bh.celestialite.attackID += 1
                 }     
@@ -4524,7 +4517,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 12
+                        pSpeed: 12
                     });
                     player.bh.celestialite.attackID += 1
                 }
@@ -4544,7 +4537,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 9.5,
+                        pSpeed: 9.5,
                     });
                     player.bh.celestialite.attackID += 1
                 }
@@ -4565,7 +4558,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 9.5,
+                        pSpeed: 9.5,
                     });
                     player.bh.celestialite.attackID += 1
                 }
@@ -4573,7 +4566,7 @@ BHC.aniciffoBoss = {
                     bulletHell(
                         {
                             "aniciffoAirRaid": {bombInterval: 120, arrowPerSec: -1, slashPerSec: -1, bossSpeed: 12, phase: 2,},
-                        }, {width: window.innerWidth, height: window.innerHeight, transparent: true, speed: 9, duration: 18})
+                        }, {width: window.innerWidth, height: window.innerHeight, transparent: true, pSpeed: 9, duration: 18})
                     player.bh.celestialite.attackID += 1
                 }
                 if (player.bh.celestialite.health.lt(20000) && player.bh.celestialite.attackID == 22) {
@@ -4608,7 +4601,7 @@ BHC.aniciffoBoss = {
                         height: window.innerHeight,
                         duration: 25,
                         transparent: true,
-                        speed: 12
+                        pSpeed: 12
                     });
                     player.bh.celestialite.attackID += 1
                 }
@@ -4620,7 +4613,7 @@ BHC.aniciffoBoss = {
                             height: window.innerHeight,
                             duration: 50,
                             transparent: true,
-                            speed: 10
+                            pSpeed: 10
                         }
                     );
                     player.bh.celestialite.attackID += 1
