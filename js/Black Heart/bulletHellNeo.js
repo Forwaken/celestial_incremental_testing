@@ -78,6 +78,7 @@ class BulletHell {
         this.timerTime = values.timerTime || 0
         this.duration = values.duration || -1000
         this.timeSpeed = values.timeSpeed || 1
+        this.floatingTexts = []
 
         // Sub-arena Variables
         this.subArena = values.subArena || false
@@ -1147,7 +1148,7 @@ class BulletHell {
                     break;
             }
         }
-        if (this.invTime > 0) Math.max(this.invTime -= this.delta, 0)
+        if (this.invTime > 0) Math.max(this.invTime -= (this.deltaMs / 1e3), 0)
 
         // Timer Stuff
         if (this.timer) {
@@ -1155,7 +1156,7 @@ class BulletHell {
                 if (this.timer == "endDamage") this.removeArena(true)
                 if (this.timer == "end") this.removeArena()
             }
-            if (this.timerTime > 0) Math.max(this.timerTime -= this.delta, 0)
+            if (this.timerTime > 0) Math.max(this.timerTime -= (this.deltaMs / 1e3), 0)
         }
 
         // Duration Stuff
@@ -1443,6 +1444,41 @@ class BulletHell {
         this.arenaCtx.fill()
         this.arenaCtx.stroke()
         this.arenaCtx.restore()
+        
+        // ── Render and update Black Heart floating combat text ───────────────
+        if (this.floatingTexts && this.floatingTexts.length > 0) {
+            for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+                const ft = this.floatingTexts[i];
+                ft.life -= (this.deltaMs / 1e3);
+                ft.y -= (3 * this.delta); // Upward drift
+
+                const progress = ft.life / ft.maxLife;
+                const alpha = Math.min(1, progress * 1.6);
+
+                this.arenaCtx.save();
+                this.arenaCtx.globalAlpha = alpha;
+                this.arenaCtx.font = "bold 13px monospace";
+                this.arenaCtx.textAlign = "center";
+                this.arenaCtx.textBaseline = "bottom";
+
+                // Dark stroke outline ensures legibility over bright lasers
+                this.arenaCtx.lineWidth = 3;
+                this.arenaCtx.strokeStyle = "rgba(0, 0, 0, 0.9)";
+                this.arenaCtx.strokeText(ft.text, ft.x, ft.y);
+
+                if (!options.performanceMode) {
+                    this.arenaCtx.shadowColor = ft.color;
+                    this.arenaCtx.shadowBlur = 6;
+                }
+                this.arenaCtx.fillStyle = ft.color;
+                this.arenaCtx.fillText(ft.text, ft.x, ft.y);
+                this.arenaCtx.restore();
+
+                if (ft.life <= 0) {
+                    this.floatingTexts.splice(i, 1);
+                }
+            }
+        }
 
         // Green-mode: draw shield arc and 8 direction buttons over the diamond
         if (this.soul == "green") {

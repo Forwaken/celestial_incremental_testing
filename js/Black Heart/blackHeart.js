@@ -901,8 +901,15 @@ addLayer("bh", {
         if (player.subtabs["bh"]["stuff"] == "bullet") {
             player.bh.bulletHell = true
             if (!bulletHellNeo) {
-                player.subtabs["bh"]["stuff"] = "stages"
+                player.subtabs["bh"]["stuff"] = "battle"
+                if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
+                player.universe = "U3"
+                options.fullscreen = false
                 player.bh.bulletHell = false
+                if (player.bh.currentStage != "none") {
+                    bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                    player.subtabs["bh"]["stuff"] = "battle"
+                } else player.subtabs["bh"]["stuff"] = "stages"
             }
         } else {
             player.bh.bulletHell = false
