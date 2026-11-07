@@ -34,6 +34,8 @@ addLayer("mdb", {
         player.mdb.inhalationGain = new Decimal(1)
         if (hasUpgrade("mdb", 11)) player.mdb.inhalationGain = player.mdb.inhalationGain.mul(2)
 
+        player.mdb.exhalationGain = new Decimal(1)
+
 
         // Breath calculation code
         let prev = player.mdb.breath

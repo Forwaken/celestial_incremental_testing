@@ -42,9 +42,10 @@ function bulletHellOld(actions, values = {}, exitAction = () => {}) {
         }
         if (!info.px) info.values.saveContent = false
     }
+    info.tab = values.tab || "bh"
 
     // Check if tabbed in, if not just deal a bunch of damage
-    if ((options && options.bulletHellOff) || (player && player.tab && player.tab != "bh")) {
+    if (info.tab == "bh" && ((options && options.bulletHellOff) || (player && player.tab && player.tab != "bh"))) {
         if (player.bh.celestialite.health.lte(0)) return
         let amt = 0
         for (let i = 0; i < 3; i++) {if (player.bh.characters[i].id != "none" && Decimal.gt(player.bh.characters[i].health, 0)) amt++}
@@ -4319,8 +4320,8 @@ BHB.zarUltimateAttack = {
 // straight toward the player center.
 // Usage: bulletHellGreen({"greenSpearRain": {spearPerSec: 2, spearSpeed: 5, spearLength: 80, spearWidth: 12}}, {width:500, height:500, duration:15})
 BHB.greenSpearRain = {
-    moveFunc(info, ticks, id) {
-        const act      = info.actions[id];
+    moveFunc() {
+        const act      = bulletHellNeo.actions["greenSpearRain"];
         const len      = act.spearLength ?? 80;
         const wid      = act.spearWidth  ?? 12;
         const speed    = act.spearSpeed  ?? 5;
@@ -4333,8 +4334,8 @@ BHB.greenSpearRain = {
         const fourDir = act.fourDir ?? false;
         const noRepeatDir = act.noRepeatDir ?? false; // if true, consecutive spears never share a direction
 
-        if (!act.lastTime) act.lastTime = ticks;
-        const toSpawn = Math.floor(((ticks - act.lastTime) / 1000) * perSec);
+        if (!act.lastTime) act.lastTime = Date.now();
+        const toSpawn = Math.floor(((Date.now() - act.lastTime) / 1000) * perSec);
 
         const DIR_ANGLES = [0, Math.PI/4, Math.PI/2, 3*Math.PI/4, Math.PI, 5*Math.PI/4, 3*Math.PI/2, 7*Math.PI/4];
 
@@ -4357,13 +4358,13 @@ BHB.greenSpearRain = {
             const vx = Math.cos(inboundAngle) * speed;
             const vy = Math.sin(inboundAngle) * speed;
             const margin = len + 16;
-            const cx = info.subArena && info.moveWithSub ? info.subx + info.px : info.px;
-            const cy = info.subArena && info.moveWithSub ? info.suby + info.py : info.py;
-            const bx = cx + Math.cos(DIR_ANGLES[dirIdx]) * (Math.max(info.width, info.height) * 0.75 + margin);
-            const by = cy + Math.sin(DIR_ANGLES[dirIdx]) * (Math.max(info.width, info.height) * 0.75 + margin);
+            const cx = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.subx + bulletHellNeo.px : bulletHellNeo.px;
+            const cy = bulletHellNeo.subArena && options.bhKeyboard ? bulletHellNeo.suby + bulletHellNeo.py : bulletHellNeo.py;
+            const bx = cx + Math.cos(DIR_ANGLES[dirIdx]) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
+            const by = cy + Math.sin(DIR_ANGLES[dirIdx]) * (Math.max(bulletHellNeo.width, bulletHellNeo.height) * 0.75 + margin);
             const angle = Math.atan2(vy, vx);
             const outAngle = DIR_ANGLES[dirIdx];
-            info.bullets.push({
+            bulletHellNeo.bullets.push({
                 name: "greenSpear",
                 boxRender: true,
                 x: bx, y: by,
@@ -4418,16 +4419,16 @@ BHB.greenSpearRain = {
                 }
             });
         }
-        if (toSpawn > 0) act.lastTime = ticks;
+        if (toSpawn > 0) act.lastTime = Date.now();
 
         //  Update yellow spear orbit state for spears spawned by this action 
         // _orbitTick guard prevents double-processing when multiple actions run the same loop.
-        for (let b of info.bullets) {
+        for (let b of bulletHellNeo.bullets) {
             if (!b.yellow || b._yellowDeflected || b._yellowState === "striking") continue;
-            if (b._orbitTick === ticks) continue;
-            b._orbitTick = ticks;
-            const px   = info.px;
-            const py   = info.py;
+            if (b._orbitTick === Date.now()) continue;
+            b._orbitTick = Date.now();
+            const px   = bulletHellNeo.px;
+            const py   = bulletHellNeo.py;
             const dx   = b.x - px;
             const dy   = b.y - py;
             const dist = Math.sqrt(dx * dx + dy * dy);
@@ -4443,7 +4444,7 @@ BHB.greenSpearRain = {
                 b.vx = 0;
                 b.vy = 0;
             } else if (b._yellowState === "orbiting") {
-                const orbitStep = orbitSpd * b._orbitDir * (info.dt ?? 1);
+                const orbitStep = orbitSpd * b._orbitDir * (bulletHellNeo.delta ?? 1);
                 b._orbitAngle += orbitStep;
                 b._orbitAngle  = ((b._orbitAngle + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
                 const orbitR   = b._orbitRadius ?? trigDist;
@@ -4455,7 +4456,7 @@ BHB.greenSpearRain = {
                 b.vy = 0;
                 let targetNorm = ((b._orbitTarget + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
                 let diff = Math.abs(((b._orbitAngle - targetNorm + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI);
-                if (diff < orbitSpd * 1.5 * (info.dt ?? 1)) {
+                if (diff < orbitSpd * 1.5 * (bulletHellNeo.delta ?? 1)) {
                     b._yellowState = "striking";
                     b._orbitAngle  = targetNorm;
                     b.x = px + Math.cos(targetNorm) * orbitR;
@@ -4468,8 +4469,6 @@ BHB.greenSpearRain = {
                 }
             }
         }
-
-        return info;
     },
 }
 

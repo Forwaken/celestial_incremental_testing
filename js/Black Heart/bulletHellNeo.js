@@ -2,7 +2,8 @@ let bulletHellNeo = null;
 
 function bulletHell(actions, values = {}, exitAction = () => {}) {
     if (Object.keys(actions).length === 0) actions = {"none": {}}
-    if ((options && options.bulletHellOff) || (player && player.tab && player.tab != "bh")) {
+    if (!values.tab) values.tab = "bh"
+    if (values.tab == "bh" && ((options && options.bulletHellOff) || (player && player.tab && player.tab != "bh"))) {
         if (player.bh.celestialite.health.lte(0)) return
         let amt = 0
         for (let i = 0; i < 3; i++) {if (player.bh.characters[i].id != "none" && Decimal.gt(player.bh.characters[i].health, 0)) amt++}
@@ -49,6 +50,7 @@ function bulletHellGreen(actions, values = {}, exitAction = () => {}) {
 class BulletHell {
     constructor(values = {}, actions = {}, exitAction = () => {}) {
         this.running = false
+        this.tab = values.tab || "bh"
         this.actions = actions
         for (let i in this.actions) {
             if (!this.actions[i].duration) this.actions[i].duration = -1000
@@ -686,7 +688,7 @@ class BulletHell {
         this.delta = this.delta * this.timeSpeed
 
         // Check and end arena early if celestialite or all characters are dead
-        if (player.tab == "bh") {
+        if (this.tab == "bh") {
             if (player.bh.celestialite.id == "none" || (player.bh.celestialite.health.lte(0) && !BHC[player.bh.celestialite.id].immortal)) {this.removeArena()}
             if (this.allCharactersDead()) this.removeArena(false, "dead")
         }
@@ -835,7 +837,9 @@ class BulletHell {
                 if (this.actions[i].duration <= 0) {
                     if (this.actions[i].endAction) this.actions[i].endAction()
                     delete this.actions[i]
-                } else if (this.actions[i].duration > 0) Math.max(this.actions[i].duration -= this.delta, 0)
+                } else if (this.actions[i].duration > 0) {
+                    Math.max(this.actions[i].duration -= (this.deltaMs / 1e3), 0)
+                }
             }
         }
         if (Object.keys(this.actions).length <= 0) this.removeArena()
@@ -1156,7 +1160,7 @@ class BulletHell {
         // Duration Stuff
         if (this.duration >= -999) {
             if (this.duration <= 0) this.removeArena()
-            if (this.duration > 0) Math.max(this.duration -= this.delta, 0)
+            if (this.duration > 0) Math.max(this.duration -= (this.deltaMs / 1e3), 0)
         }
 
         this.draw()
