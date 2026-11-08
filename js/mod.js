@@ -1357,6 +1357,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		Content:<br>
 			- Added Tera, and its subsequent content.<br>
 			- Completely rebalanced uni-alpha.<br>
+			- Revamped Tav's Domain to be faster.<br>
 			- Completely remade the backend of bullet hell, making it more stable.<br>
 			- Bullet hell now properly adjusts game speed based on fps.<br>
 			- Remade hex of sacrifice.<br>
@@ -1379,10 +1380,10 @@ let changelog = `<h1>Changelog:</h1><br>
 			- Remade Aleph's final attack.<br>
 			- Added the option to replace bullet hell attacks with a regular attack.<br>
 			- Added bulk cante/remembrance core gain.<br>
-			- Added -D1's song to the jukebox.<br>
 			- Added global black heart stats to character page.<br><br>
 		Balancing:<br>
 			- Black heart currency drops now roll the remainder instead of flooring.<br>
+			- Fixed attacks that hit all players being lower for each subsequent character hit.<br>
 			- Fixed combo scaling before dice space.<br>
 			- Halved the time skip cooldown in Stagnant Synestia.<br>
 			- Buffed Kres' first upgrade by +0.05 to account for a new addition.<br>
