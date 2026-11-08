@@ -46,7 +46,7 @@
 		<div class="uiHolder" v-if="!player.hideMenu" v-bind:style="!player.startedGame || player.tab == 'c' ?{'left':'-110%'}:{'left':'0px'}">
 			<div class="uniHolder themeTrack">
 				<template v-for="(value, key, index) in universes">
-					<button class="uniButton" v-if="uniShown(key)" :id="key" v-bind:style="universes[key].nodeStyle()" :disabled="uniPaused(key)" @click="player.universe=key">
+					<button class="uniButton" v-bind:class="{pause: uniPaused(key)}" v-if="uniShown(key)" :id="key" v-bind:style="universes[key].nodeStyle()" @click="if (uniPaused(key)) {if (confirm('Are you sure you want to unpause this universe?')) pauseUniverse(key, 'unpause')} else {player.universe=key}">
 						<span class="buttonText" v-html="universes[key].symbol"></span>
 						<div v-if="player.uni[key].paused" class="paused">⏸</div>
 					</button>

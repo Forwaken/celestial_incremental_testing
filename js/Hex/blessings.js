@@ -911,13 +911,13 @@ addLayer("hbl", {
         ["microtabs", "blessing", {borderWidth: "0px"}],
         ["blank", "25px"],
     ],
-    layerShown() { return hasChallenge("ip", 13) }, // Decides if this node is shown or not.
+    layerShown() { return hasChallenge("ip", 13) > 0 }, // Decides if this node is shown or not.
     hotkeys: [
         {
             key: "b", 
             description: "Bless",
             onPress() {
-                clickClickable(this.layer, 1)
+                clickClickable("hbl", 1)
             },
         },
     ],

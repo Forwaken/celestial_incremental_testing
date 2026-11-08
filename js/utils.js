@@ -359,29 +359,23 @@ document.onkeydown = function (e) {
 	if(e.target.tagName == "INPUT") return;
 	if(player.ir.inBattle) return; //no hotkeys in battle
 
-	if (!player.bh.bulletHell)
-	{
-	shiftDown = e.shiftKey
-	ctrlDown = e.ctrlKey
-	if (tmp.gameEnded && !player.keepGoing) return;
-	let key = e.key
-	if (ctrlDown) key = "ctrl+" + key
-	if (onFocused) return
-	if (ctrlDown && hotkeys[key]) e.preventDefault()
+	if (!player.bh.bulletHell) {
+		shiftDown = e.shiftKey
+		ctrlDown = e.ctrlKey
+		if (tmp.gameEnded && !player.keepGoing) return;
+		let key = e.key
+		if (ctrlDown) key = "ctrl+" + key
+		if (onFocused) return
+		if (ctrlDown && hotkeys[key]) e.preventDefault()
 		
-	let k = undefined
-	if(hotkeys[player.universe] && hotkeys[player.universe][key])
-		k = hotkeys[player.universe][key]
-	if(hotkeys.global[key])
-		k = hotkeys.global[key]
+		let k = undefined
+		if(hotkeys[player.universe] && hotkeys[player.universe][key]) k = hotkeys[player.universe][key]
+		if(hotkeys.global[key]) k = hotkeys.global[key]
 
-	if (k) {
-		if (
-			(readData(layers[k.layer].layerShown) == true || k.layer == "settings") // make hotkeys in settings always active
-			&& readData(k.unlocked) !== false && !tmp[k.layer].hotkeys[k.id].isAutomated
-		)
-			k.onPress()
-	}
+		if (k) {
+			if ( (readData(layers[k.layer].layerShown) == true || k.layer == "settings") && // make hotkeys in settings always active
+				readData(k.unlocked) !== false && !tmp[k.layer].hotkeys[k.id].isAutomated) k.onPress()
+		}
 	}
 }
 

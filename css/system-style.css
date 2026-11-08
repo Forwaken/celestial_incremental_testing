@@ -152,9 +152,8 @@
 .uniButton:hover {
 	filter: brightness(105%);
 }
-.uniButton:disabled {
+.uniButton.pause {
 	filter: brightness(50%);
-	cursor: default;
 }
 .paused {
 	position: absolute;
@@ -169,6 +168,10 @@
 	background: rgba(0,0,0,0.5);
 	color: white;
 }
+.paused:hover {
+	background: rgba(0,0,0,0.3);
+}
+
 .miscMenu {
 	position: absolute;
 	bottom: 1px;
