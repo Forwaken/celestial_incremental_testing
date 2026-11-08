@@ -34,7 +34,7 @@ addLayer("hsa", {
         let step = Decimal.div(1, player.h.stage.pow(2))
         player.hsa.holyPowerGain = new Decimal(0)
         if (inChallenge("hrm", 16)) {
-            if (player.hre.refinement) player.hsa.holyPowerGain = Decimal.pow(Decimal.div(10, player.h.stage.min(9)), player.hre.refinement.sub(120).pow(0.5))
+            if (player.hre.refinement) player.hsa.holyPowerGain = Decimal.pow(Decimal.div(10, player.h.stage.min(9)), player.hre.refinement.sub(120).max(0).pow(0.5))
         } else if (inChallenge("hrm", 14)) {
             if (player.hpr.rank[0].gt(0)) player.hsa.holyPowerGain = player.hpr.rank[0].pow(0.5).div(10)
             if (player.hpr.rank[1].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[1].pow(Decimal.add(0.5, step)).div(5).add(1))
@@ -55,7 +55,7 @@ addLayer("hsa", {
 
         if (hasUpgrade("hsa", 13)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.pow(upgradeEffect("hsa", 13))
 
-        if (tmp.hsa.layerShown) player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(delta))
+        if (tmp.hsa.layerShown && tmp.hsa.clickables[1].canClick) player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(delta))
 
         if (player.hsa.autoSac == true && ((inChallenge("hrm", 14) && player.hpr.rank[1].gte(1)) || player.hpr.rank[5].gte(1))) {
             player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
@@ -889,7 +889,7 @@ addLayer("hsa", {
             ["raw-html", () => {return "You have <h3>" + format(player.hsa.holyPower) + "</h3> holy power." }, {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace"}],
             ["raw-html", () => {return "(+" + format(player.hsa.holyPowerGain) + ")" }, () => {
                 let look = {color: "rgba(0,0,0,0.6)", fontSize: "24px", fontFamily: "monospace", marginLeft: "10px"}
-                player.hpr.rank[5].gt(0) || (player.h.stage.lte(6) && player.hpr.rank[1].gt(0)) ? look.color = "rgba(0,0,0,0.6)" : look.color = "rgba(100,100,100,0.6)"
+                tmp.hsa.clickables[1].canClick ? look.color = "rgba(0,0,0,0.6)" : look.color = "rgba(100,100,100,0.6)"
                 return look
             }],
         ]],
