@@ -9,7 +9,7 @@ function bulletHell(actions, values = {}, exitAction = () => {}) {
         for (let i = 0; i < 3; i++) {if (player.bh.characters[i].id != "none" && Decimal.gt(player.bh.characters[i].health, 0)) amt++}
         let duration = values.duration ?? 10
         if (BHS[player.bh.currentStage].skipPenalty) duration = duration * run(BHS[player.bh.currentStage].skipPenalty)
-        bhAttack(Decimal.mul(player.bh.celestialite.damage, duration/3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
+        bhAttack(Decimal.mul(player.bh.celestialite.damage, duration/amt), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")
         exitAction()
         return
     }
