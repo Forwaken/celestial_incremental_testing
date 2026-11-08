@@ -412,9 +412,14 @@
             currencyDisplayName: "Singularity Points",
             currencyInternalName: "singularityPoints",
             effect() {
-                return player.gh.steel.pow(0.8).add(1)
+                let eff = player.gh.steel.pow(0.8).add(1)
+                if (eff.gt("1e1000000")) eff = Decimal.pow(1e100, player.gh.steel.div("1e1250000").add(1).log(10).pow(0.5)).mul("1e1000000")
+                return eff
             },
-            effectDisplay() { return formatShort(upgradeEffect(this.layer, this.id))+'x' }, // Add formatting to the effect
+            effectDisplay() {
+                if (upgradeEffect(this.layer, this.id).gt("1e1000000")) return "x" + formatShort(upgradeEffect(this.layer, this.id)) + " <small style='color: red'>[SOFTCAPPED]</small>"
+                return "x" + formatShort(upgradeEffect(this.layer, this.id))
+            }, // Add formatting to the effect
             style: {width: "180px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
 
         },
