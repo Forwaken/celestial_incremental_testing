@@ -1275,11 +1275,12 @@ addLayer("tera", {
             effect(x) { return Decimal.pow(10, getBuyableAmount(this.layer, this.id)) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
-            canAfford() { return player.tera.hexEnergy.gte(this.cost())},
+            canAfford() { return getBuyableAmount(this.layer, this.id).gte(1) ? player.tera.hexEnergy.gte(this.cost()) && player.tera.trueHex.gte(getBuyableAmount(this.layer, this.id).mul(3)) : player.tera.hexEnergy.gte(this.cost())},
             display() {
                 return "<h3>Prestige Hex Energy Buyables (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/" + formatWhole(this.purchaseLimit()) + ")</h3>\n\
                     Reset hex energy buyables and increase their prices, but keep and improve hex energy buyable effects\n\ \n\
-                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Energy"
+                    Req: " + formatWhole(tmp[this.layer].buyables[this.id].cost) + " Hex Energy" +
+                    (getBuyableAmount(this.layer, this.id).gte(1) ? ", " + formatWhole(getBuyableAmount(this.layer, this.id).mul(3)) + " True Hex" : "")
             },
             buy() {
                 if (!hasAchievement("achievements", 1405)) completeAchievement("achievements", 1405)

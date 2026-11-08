@@ -209,8 +209,8 @@
             effectDescription() { return "Unlock an effect for replicanti points and generate 100% of apathy per second. Also unlock more enhance content." },
             done() { return player.hor.essence.amount.gte(1) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#685a21"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -219,8 +219,8 @@
             effectDescription() { return "Earn 10% of dark radiation and decay generator gain per second, and space/time radiation spawn time is halved." },
             done() { return player.hor.essence.amount.gte(2) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#685a21"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -229,8 +229,8 @@
             effectDescription() { return "Unlock a new emotion and autobuy space generators." },
             done() { return player.hor.essence.amount.gte(3) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#685a21"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -239,8 +239,8 @@
             effectDescription() { return "Earn 1% of space radiation per second, and automatically dark funify without resetting." },
             done() { return player.hor.essence.amount.gte(5) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#685a21"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -249,8 +249,8 @@
             effectDescription() { return "Earn 1% of heart radiation per second and unlock even more enhance content." },
             done() { return player.hor.essence.amount.gte(7) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#685a21"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -259,8 +259,8 @@
             effectDescription() { return "Unlock Aniciffo's labyrinth (also requires the rage milestone)." },
             done() { return player.hor.essence.amount.gte(10) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#685a21"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -269,8 +269,8 @@
             effectDescription() { return "Autobuy all funify buyables (Doesn't require Aniciffo)." },
             done() { return player.hor.essence.amount.gte(14) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#685a21"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ffde55", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("hor", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -282,7 +282,7 @@
     microtabs: {
         stuff: {
             "Main": {
-                buttonStyle() { return { border: "2px solid #74ff8f", borderRadius: "10px" } },
+                buttonStyle() { return { border: "2px solid #ffde55", borderRadius: "10px" } },
                 unlocked() { return true },
                 content: [
                     ["blank", "25px"],
@@ -298,7 +298,7 @@
                 ]
             },
             "Essence": {
-                buttonStyle() { return { border: "2px solid #74ff8f", borderRadius: "10px" } },
+                buttonStyle() { return { border: "2px solid #ffde55", borderRadius: "10px" } },
                 unlocked() { return true },
                 content: [
                     ["blank", "25px"],
@@ -311,44 +311,44 @@
                     ], {backgroundColor: "#685a21", border: "3px solid #ffde55", borderRadius: "13px 13px 0px 0px", width: "588px", height: "80px"}],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "1", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#685a21", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "1", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#53481a", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 11],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "2", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#685a21", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "2", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#53481a", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 12],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "3", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#685a21", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "3", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#53481a", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 13],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "5", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#685a21", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "5", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#53481a", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 14],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "7", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#685a21", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "7", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#53481a", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 15],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "10", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#685a21", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "10", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#53481a", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 16],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "14", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#685a21", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "14", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#53481a", border: "3px solid #ffde55", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 17],
                     ]],
                     ["style-row", [

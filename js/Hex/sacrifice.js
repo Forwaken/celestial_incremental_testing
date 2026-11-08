@@ -5,7 +5,7 @@ addLayer("hsa", {
     tooltip: "Sacrifice", // Decides the nodes tooltip
     color: "#fffdd0", // Decides the nodes color.
     nodeStyle: {background: "linear-gradient(180deg, #fffdd0, #fdfff6)", borderColor: "#7F7E68"}, // Decides the nodes style, in CSS format.
-    branches: ["hpr"], // Decides the nodes branches.
+    branches() {return inChallenge("hrm", 16) ? ["hre"] : ["hpr"]}, // Decides the nodes branches.
     startData() { return {
         autoSac: -1,
         holyPower: new Decimal(0),
@@ -33,7 +33,9 @@ addLayer("hsa", {
     update(delta) {
         let step = Decimal.div(1, player.h.stage.pow(2))
         player.hsa.holyPowerGain = new Decimal(0)
-        if (inChallenge("hrm", 14)) {
+        if (inChallenge("hrm", 16)) {
+            if (player.hre.refinement) player.hsa.holyPowerGain = Decimal.pow(Decimal.div(10, player.h.stage.min(9)), player.hre.refinement.sub(120).pow(0.5))
+        } else if (inChallenge("hrm", 14)) {
             if (player.hpr.rank[0].gt(0)) player.hsa.holyPowerGain = player.hpr.rank[0].pow(0.5).div(10)
             if (player.hpr.rank[1].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[1].pow(Decimal.add(0.5, step)).div(5).add(1))
             if (player.hpr.rank[2].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[2].pow(Decimal.add(0.5, step.mul(2))).div(2).add(1))
@@ -55,7 +57,7 @@ addLayer("hsa", {
 
         if (tmp.hsa.layerShown) player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain.mul(buyableEffect("hsa", 2).sub(1)).mul(delta))
 
-        if (player.hsa.autoSac == true && ((player.h.stage.lte(6) && player.hpr.rank[1].gte(1)) || player.hpr.rank[5].gte(1))) {
+        if (player.hsa.autoSac == true && ((inChallenge("hrm", 14) && player.hpr.rank[1].gte(1)) || player.hpr.rank[5].gte(1))) {
             player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
 
             // RESET CODE
@@ -140,20 +142,33 @@ addLayer("hsa", {
     clickables: {
         1: {
             title() {
-                if (player.h.stage.gt(6)) return "<h2>Sacrifice your provenances for holy power.</h2><br><h3>Req: 1 ζ-Provenance</h3>"
-                return "<h2>Sacrifice your provenances for holy power.</h2><br><h3>Req: 1 β-Provenance</h3>"
+                if (inChallenge("hrm", 16)) return "<h2>Sacrifice your refinements for holy power.</h2><br><h3>Req: 120 Refinements</h3>"
+                else if (inChallenge("hrm", 14)) return "<h2>Sacrifice your provenances for holy power.</h2><br><h3>Req: 1 β-Provenance</h3>"
+                else return "<h2>Sacrifice your provenances for holy power.</h2><br><h3>Req: 1 ζ-Provenance</h3>"
             },
-            canClick() { return (player.h.stage.lte(6) && player.hpr.rank[1].gte(1)) || player.hpr.rank[5].gte(1)},
+            canClick() {
+                if (inChallenge("hrm", 16)) return player.hre.refinement.gte(120)
+                else if (inChallenge("hrm", 14)) return player.hpr.rank[1].gte(1)
+                else return player.hpr.rank[5].gte(1)
+            },
             unlocked: true,
             onClick() {
                 player.hsa.holyPower = player.hsa.holyPower.add(player.hsa.holyPowerGain)
 
                 // RESET CODE
-                for (let i = 0; i < 12; i++) {
-                    player.hpr.rank[i] = new Decimal(0)
-                    player.hpr.rankGain[i] = new Decimal(0)
-                    if (i < 6) player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
-                    else player.hpr.rankEffect[i] = [new Decimal(0), new Decimal(0)]
+                if (inChallenge("hrm", 16)) {
+                    player.hre.refinement = new Decimal(0)
+                    player.hre.refinementGain = new Decimal(0)
+                    for (let i = 0; i < 12; i++) {
+                        player.hre.refinementEffect[i] = [new Decimal(1), new Decimal(1)]
+                    }
+                } else {
+                    for (let i = 0; i < 12; i++) {
+                        player.hpr.rank[i] = new Decimal(0)
+                        player.hpr.rankGain[i] = new Decimal(0)
+                        if (i < 6) player.hpr.rankEffect[i] = [new Decimal(1), new Decimal(1)]
+                        else player.hpr.rankEffect[i] = [new Decimal(0), new Decimal(0)]
+                    }
                 }
                 player.h.hexPointGain = new Decimal(0)
                 player.h.hexPoint = new Decimal(0)
@@ -328,12 +343,13 @@ addLayer("hsa", {
         21: {
             title: "Aware",
             unlocked: true,
-            description() {return "α Provenance boosts the 1st holy dimension."},
+            description() {return !inChallenge("hrm", 16) ? "α Provenance boosts the 1st holy dimension." : player.h.stageName[0] + " points boost the 1st holy dimension."},
             cost() {return player.h.stage.mul(player.h.stage.div(2))},
             currencyLocation() { return player.hsa },
             currencyDisplayName: "Holy Power",
             currencyInternalName: "holyPower",
             effect() {
+                if (inChallenge("hrm", 16)) return player.h.hexPoint.add(1).log(player.h.stage).pow(0.5).add(1)
                 return player.hpr.rank[0].pow(Decimal.div(1, player.h.stage)).max(1)
             },
             effectDisplay() {return "x" + formatSimple(upgradeEffect(this.layer, this.id))},

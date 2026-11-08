@@ -867,7 +867,7 @@ addLayer("co", {
         player.om.hexMasteryPoints = new Decimal(0)
         player.om.hexMasteryPointsToGet = new Decimal(0)
 
-        for (let i in player.om.buyables) {
+        for (let i = 11; i < 17; i++) {
             player.om.buyables[i] = new Decimal(0)
         }
 

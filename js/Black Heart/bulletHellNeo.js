@@ -233,6 +233,8 @@ class BulletHell {
         this.shieldDir = 6
         this.shieldRadius = 16 + 14
         this.shieldArc = Math.PI * 0.35
+        this.kiSize = 60
+        this.miasmata = []
 
         // Control Variables
         this.pos = {x: 0, y: 0}
@@ -1432,6 +1434,12 @@ class BulletHell {
                 break;
             case "green":
                 color = ["#2e2", "#17a617", "#1a4", "#0b762f"]
+                break;
+            case "ki":
+                color = ["#7FADAC", "#587978", "#3f5656", "#2c3c3c"]
+                break;
+            case "miasma":
+                color = ["#BB4949", "#823333", "#5D2424", "#411919"]
                 break;
             default:
         }

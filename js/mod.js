@@ -359,8 +359,8 @@ function updateStyles() {
 			break;
 		case "ani": case "tr": case "sr": case "mr": case "hr": case "hor": case "rar": case "anl":
 			if (player.sma.inStarmetalChallenge) layerBG = "url(resources/ad1bg.png)"
-			if (!player.sma.inStarmetalChallenge && player.tab == "hor") layerBG = "#454726"
-			if (!player.sma.inStarmetalChallenge && player.tab == "rar") layerBG = "#520c61"
+			if (!player.sma.inStarmetalChallenge && player.tab == "hor") layerBG = "#342d10"
+			if (!player.sma.inStarmetalChallenge && player.tab == "rar") layerBG = "#290630"
 			break;
 		case "dec":
 			layerBG = "url(resources/ad1bg2.png)"

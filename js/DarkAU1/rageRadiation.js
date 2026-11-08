@@ -194,7 +194,7 @@
             onHold() { clickClickable(this.layer, this.id) },
             style() {
                 let look = {width: "800px", minHeight: "125px", borderRadius: "15px", color: "white", border: "2px solid #ba4ad3", fontSize: "9px", margin: "1px"}
-                !this.canClick() ? look.backgroundColor =  "#520c61" : look.backgroundColor = "black"
+                !this.canClick() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
                 return look
             }
         },
@@ -210,8 +210,8 @@
             effectDescription() { return "Gain 1% of honeycombs/royal jelly per second, unlock an effect for bees and unlock more pollen/nectar content. Also keep all nectar upgrades on aleph resets." },
             done() { return player.rar.essence.amount.gte(1) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#520c61"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -220,8 +220,8 @@
             effectDescription() { return "Earn 10% of colored radiation per second, and mind/heart radiation particle requirements are reduced by /2.5." },
             done() { return player.rar.essence.amount.gte(2) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#520c61"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -230,8 +230,8 @@
             effectDescription() { return "Unlock violet radiation and autobuy time radiation buyables." },
             done() { return player.rar.essence.amount.gte(3) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#520c61"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -240,8 +240,8 @@
             effectDescription() { return "Gain 1% of time radiation per second, and autobuy dark grass buyables no matter what." },
             done() { return player.rar.essence.amount.gte(5) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#520c61"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -250,8 +250,8 @@
             effectDescription() { return "Gain 1% of mind radiation per second and unlock more nest upgrades." },
             done() { return player.rar.essence.amount.gte(7) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#520c61"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -260,8 +260,8 @@
             effectDescription() { return "Unlock Aniciffo's labyrinth (also requires the hope milestone)." },
             done() { return player.rar.essence.amount.gte(10) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#520c61"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -270,8 +270,8 @@
             effectDescription() { return "Autobuy all grassjumper buyables (Doesn't require Aniciffo)." },
             done() { return player.rar.essence.amount.gte(14) },
             style() {
-                let look = {width: "500px", minHeight: "75px", color: "black", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
-                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#77bf5f"} else {look.backgroundColor = "#520c61"}
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #ba4ad3", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("rar", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
                 return look
             },
         },
@@ -283,7 +283,7 @@
     microtabs: {
         stuff: {
             "Main": {
-                buttonStyle() { return { border: "2px solid #74ff8f", borderRadius: "10px" } },
+                buttonStyle() { return { border: "2px solid #ba4ad3", borderRadius: "10px" } },
                 unlocked() { return true },
                 content: [
                     ["blank", "25px"],
@@ -299,7 +299,7 @@
                 ]
             },
             "Essence": {
-                buttonStyle() { return { border: "2px solid #74ff8f", borderRadius: "10px" } },
+                buttonStyle() { return { border: "2px solid #ba4ad3", borderRadius: "10px" } },
                 unlocked() { return true },
                 content: [
                     ["blank", "25px"],
@@ -312,44 +312,44 @@
                     ], {backgroundColor: "#520c61", border: "3px solid #ba4ad3", borderRadius: "13px 13px 0px 0px", width: "588px", height: "80px"}],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "1", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#520c61", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "1", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#41094d", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 11],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "2", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#520c61", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "2", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#41094d", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 12],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "3", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#520c61", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "3", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#41094d", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 13],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "5", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#520c61", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "5", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#41094d", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 14],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "7", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#520c61", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "7", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#41094d", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 15],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "10", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#520c61", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "10", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#41094d", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 16],
                     ]],
                     ["style-row", [
                         ["style-column", [
-                            ["raw-html", "14", {color: "rgba(0,0,0,0.6)", fontSize: "32px", fontFamily: "monospace"}],
-                        ], {backgroundColor: "#520c61", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
+                            ["raw-html", "14", {color: "rgba(255,255,255,0.6)", fontSize: "32px", fontFamily: "monospace"}],
+                        ], {backgroundColor: "#41094d", border: "3px solid #ba4ad3", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}],
                         ["titleless-milestone", 17],
                     ]],
                     ["style-row", [
