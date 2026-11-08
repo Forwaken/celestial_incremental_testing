@@ -524,6 +524,7 @@ function bhAttack(damage, index, slot, target, str = "", method = "none", attr =
     if (typeof target == "number") arr = [target]
     for (let receive of arr) {
         if (receive == 3 && player.bh.celestialite.id == "none") continue
+        let newDmg = damage
         // =-- Target Attributes --=
         let attribute
         if (receive == 3) {
@@ -549,21 +550,21 @@ function bhAttack(damage, index, slot, target, str = "", method = "none", attr =
             else luck = player.bh.characters[receive].luck
             if (Math.random() < attribute["negative"].mul(Decimal.div(Decimal.add(100, luck), 100))) {
                 let attStr = "<span style='color:#55e'>[NEGATIVE] </span>"
-                bhHeal(damage, index, slot, target, attStr)
+                bhHeal(newDmg, index, slot, target, attStr)
             }
         }
 
         if (typeof attribute["rebound"] !== "undefined" && !attr && target != "self") {
             let attStr = "<span style='color:cyan'>[REBOUND] </span>"
-            bhAttack(damage.mul(attribute["rebound"]), receive, slot, index, attStr, "none", true)
+            bhAttack(newDmg.mul(attribute["rebound"]), receive, slot, index, attStr, "none", true)
         }
 
         let resist = false
 
-        if (typeof attribute["air"] !== "undefined" && !attr && method == "physical") {damage = damage.mul(attribute["air"]); resist = true}
-        if (typeof attribute["warded"] !== "undefined" && !attr && method == "magic") {damage = damage.mul(attribute["warded"]); resist = true}
-        if (typeof attribute["stealthy"] !== "undefined" && !attr && method == "ranged") {damage = damage.mul(attribute["stealthy"]); resist = true}
-        if (typeof attribute["anima"] !== "undefined" && !attr && method == "spirit") {damage = damage.mul(attribute["anima"]); resist = true}
+        if (typeof attribute["air"] !== "undefined" && !attr && method == "physical") {newDmg = newDmg.mul(attribute["air"]); resist = true}
+        if (typeof attribute["warded"] !== "undefined" && !attr && method == "magic") {newDmg = newDmg.mul(attribute["warded"]); resist = true}
+        if (typeof attribute["stealthy"] !== "undefined" && !attr && method == "ranged") {newDmg = newDmg.mul(attribute["stealthy"]); resist = true}
+        if (typeof attribute["anima"] !== "undefined" && !attr && method == "spirit") {newDmg = newDmg.mul(attribute["anima"]); resist = true}
 
         if (resist) str = str + "<span style='color:#aaa'>[RESISTED] </span>"
 
@@ -586,7 +587,7 @@ function bhAttack(damage, index, slot, target, str = "", method = "none", attr =
                 return
             }
             // Defense Calc
-            damage = Decimal.mul(damage, Decimal.div(100, Decimal.add(100, player.bh.characters[receive].defense)))
+            newDmg = Decimal.mul(newDmg, Decimal.div(100, Decimal.add(100, player.bh.characters[receive].defense)))
         } else {
             // Shield Calc
             if (player.bh.celestialite.shield.gt(0)) {
@@ -595,11 +596,11 @@ function bhAttack(damage, index, slot, target, str = "", method = "none", attr =
                 return
             }
             // Defense Calc
-            damage = Decimal.mul(damage, (Decimal.div(100, Decimal.add(100, player.bh.celestialite.defense))))
+            newDmg = Decimal.mul(newDmg, (Decimal.div(100, Decimal.add(100, player.bh.celestialite.defense))))
         }
         if (bulletHellNeo && bulletHellNeo.running && receive != 3) {
             bulletHellNeo.floatingTexts.push({
-                text: "-" + format(damage) + " (" + run(BHP[player.bh.characters[receive].id].name, BHP[player.bh.characters[receive].id]) + ")",
+                text: "-" + format(newDmg) + " (" + run(BHP[player.bh.characters[receive].id].name, BHP[player.bh.characters[receive].id]) + ")",
                 color: BHP[player.bh.characters[receive].id].color,
                 x: (bulletHellNeo.subArena && options.bhKeyboard) ? (bulletHellNeo.subx + bulletHellNeo.px) : bulletHellNeo.px,
                 y: (bulletHellNeo.subArena && options.bhKeyboard) ? (bulletHellNeo.suby + bulletHellNeo.py - bulletHellNeo.pr - 14) : (bulletHellNeo.py - bulletHellNeo.pr - 14),
@@ -608,22 +609,22 @@ function bhAttack(damage, index, slot, target, str = "", method = "none", attr =
         }
         if (index == 3) {
             if (receive == 3) {
-                player.bh.celestialite.health = player.bh.celestialite.health.sub(damage)
-                bhLog(str + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " attacks itself for " +format(damage) + " damage.")
+                player.bh.celestialite.health = player.bh.celestialite.health.sub(newDmg)
+                bhLog(str + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " attacks itself for " +format(newDmg) + " damage.")
             } else {
-                player.bh.characters[receive].health = player.bh.characters[receive].health.sub(damage)
-                bhLog(str + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " attacks " + run(BHP[player.bh.characters[receive].id].name, BHP[player.bh.characters[receive].id]) + " for " +format(damage) + " damage.")
+                player.bh.characters[receive].health = player.bh.characters[receive].health.sub(newDmg)
+                bhLog(str + "<span style='color: #8b0e7a'>" + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " attacks " + run(BHP[player.bh.characters[receive].id].name, BHP[player.bh.characters[receive].id]) + " for " +format(newDmg) + " damage.")
             }
         } else {
             if (index == receive) {
-                player.bh.characters[receive].health = player.bh.characters[receive].health.sub(damage)
-                bhLog(str + "<span style='color: " + BHP[player.bh.characters[index].id].color + "'>" + run(BHP[player.bh.characters[index].id].name, BHP[player.bh.characters[index].id]) + " attacks themself for " +format(damage) + " damage.")
+                player.bh.characters[receive].health = player.bh.characters[receive].health.sub(newDmg)
+                bhLog(str + "<span style='color: " + BHP[player.bh.characters[index].id].color + "'>" + run(BHP[player.bh.characters[index].id].name, BHP[player.bh.characters[index].id]) + " attacks themself for " +format(newDmg) + " damage.")
             } else if (receive != 3) {
-                player.bh.characters[receive].health = player.bh.characters[receive].health.sub(damage)
-                bhLog(str + "<span style='color: " + BHP[player.bh.characters[index].id].color + "'>" + run(BHP[player.bh.characters[index].id].name, BHP[player.bh.characters[index].id]) + " attacks " + run(BHP[player.bh.characters[receive].id].name, BHP[player.bh.characters[receive].id]) + " for " +format(damage) + " damage.")
+                player.bh.characters[receive].health = player.bh.characters[receive].health.sub(newDmg)
+                bhLog(str + "<span style='color: " + BHP[player.bh.characters[index].id].color + "'>" + run(BHP[player.bh.characters[index].id].name, BHP[player.bh.characters[index].id]) + " attacks " + run(BHP[player.bh.characters[receive].id].name, BHP[player.bh.characters[receive].id]) + " for " +format(newDmg) + " damage.")
             } else {
-                player.bh.celestialite.health = player.bh.celestialite.health.sub(damage)
-                bhLog(str + "<span style='color: " + BHP[player.bh.characters[index].id].color + "'>" + run(BHP[player.bh.characters[index].id].name, BHP[player.bh.characters[index].id]) + " attacks " + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " for " +format(damage) + " damage.")
+                player.bh.celestialite.health = player.bh.celestialite.health.sub(newDmg)
+                bhLog(str + "<span style='color: " + BHP[player.bh.characters[index].id].color + "'>" + run(BHP[player.bh.characters[index].id].name, BHP[player.bh.characters[index].id]) + " attacks " + run(BHC[player.bh.celestialite.id].name, BHC[player.bh.celestialite.id]) + " for " +format(newDmg) + " damage.")
             }
         }
         if (receive != 3 && player.bh.characters[receive].health.lte(0)) bhLog("<span style='color: " + BHP[player.bh.characters[receive].id].color + "'>" + run(BHP[player.bh.characters[receive].id].name, BHP[player.bh.characters[receive].id]) + " fainted!")
