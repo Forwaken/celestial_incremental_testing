@@ -56,7 +56,7 @@
             title() { return universes[this.universeId()].symbol},
             canClick() { return true },
             unlocked() { return true },
-            tooltip() { return universes[this.universeId()].name},
+            tooltip() { return universes[this.universeId()].name()},
             onClick() {},
             onHold() {},
             style() {
@@ -198,8 +198,23 @@
                 let look = {position: "relative", top: this.yPos + "px", left: this.xPos + "px", color: universes[this.universeId()].nodeStyle().color, background: universes[this.universeId()].nodeStyle().background, backgroundColor: universes[this.universeId()].nodeStyle().backgroundColor, border: "3px solid " + universes[this.universeId()].nodeStyle().borderColor, width: "100px", minHeight: "100px", fontSize: "32px", borderRadius: "50%"}
                 return look
             },
+            xPos: 200,
+            yPos: 350,
+        },
+        413: {
+            universeId() { return "DA"},
+            title() { return universes[this.universeId()].symbol},
+            canClick() { return true },
+            unlocked() { return true },
+            tooltip() { return universes[this.universeId()].name},
+            onClick() {},
+            onHold() {},
+            style() {
+                let look = {position: "relative", top: this.yPos + "px", left: this.xPos + "px", color: universes[this.universeId()].nodeStyle().color, background: universes[this.universeId()].nodeStyle().background, backgroundColor: universes[this.universeId()].nodeStyle().backgroundColor, border: "3px solid " + universes[this.universeId()].nodeStyle().borderColor, width: "100px", minHeight: "100px", fontSize: "32px", borderRadius: "50%"}
+                return look
+            },
             xPos: 250,
-            yPos: 300,
+            yPos: 150,
         },
     },
     bars: {},
@@ -232,6 +247,7 @@
                                 createMultiverseMapConnection(405, 410),
                                 createMultiverseMapConnection(401, 411),
                                 createMultiverseMapConnection(407, 412),
+                                createMultiverseMapConnection(407, 413),
                             ], {width: "0", height: "0"}],
                             ["style-column", [["clickable", 401]], {width: "0", height: "0"}],
                             ["style-column", [["clickable", 402]], {width: "0", height: "0"}],
@@ -245,6 +261,7 @@
                             ["style-column", [["clickable", 410]], {width: "0", height: "0"}],
                             ["style-column", [["clickable", 411]], {width: "0", height: "0"}],
                             ["style-column", [["clickable", 412]], {width: "0", height: "0"}],
+                            ["style-column", [["clickable", 413]], {width: "0", height: "0"}],
                             ["blank", "", {width: "100px", height: "0"}],
                         ], {backgroundImage: "url(resources/unknown/dimensionalRealmBg.png)", width: "4000px", height: "4000px"}],
                     ], {border: "3px solid #008000", width: "800px", height: "800px", flexFlow: "column"}],
