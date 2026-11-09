@@ -1356,11 +1356,12 @@ let changelog = `<h1>Changelog:</h1><br>
 	<h3>v1.16 - The Novasent Update Part IV: Tera [UNFINISHED]</h3><br>
 		Content:<br>
 			- Added Tera, and its subsequent content.<br>
-			- Completely rebalanced uni-alpha.<br>
-			- Revamped Tav's Domain to be faster.<br>
+			- Completely rebalanced uni-alpha. [partially to fix bad code]<br>
+			- Remade hex of sacrifice.<br>
+			- Revamped Tav's Domain to be faster and more interesting.<br>
 			- Completely remade the backend of bullet hell, making it more stable.<br>
 			- Bullet hell now properly adjusts game speed based on fps.<br>
-			- Remade hex of sacrifice.<br>
+			- Remade the pet shop.<br>
 			- Added new Zar Dungeon upgrades.<br>
 			- Added new Laboratory upgrades.<br>
 			- Added the star accumulator.<br><br>
