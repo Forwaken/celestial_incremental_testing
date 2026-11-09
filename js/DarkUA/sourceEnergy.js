@@ -75,23 +75,25 @@ addLayer("mse", {
 
         }
     },
-    resetCheck(forced = false) {
+    resetCheck(forced = false, external = false) {
         if (forced || (player.mse.miasma.add(player.mse.tempMiasma).gte(player.mse.miasmaCap))) {
             // Cap Miasma
             player.mse.miasma = player.mse.miasma.min(player.mse.miasmaCap)
 
-            // Re-Calc Source Energy Gain
-            player.mse.sourceEnergyGain = player.mse.miasma.div(5).pow(buyableEffect("mse", "se2"))
-            player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(buyableEffect("mse", "se1"))
-            //player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(player.mme.meridianEffect)
-            player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(Decimal.pow(1.5, player.mme.meridian[0].level))
+            if (player.mse.miasma.gte(5)) {
+                // Re-Calc Source Energy Gain
+                player.mse.sourceEnergyGain = player.mse.miasma.div(5).pow(buyableEffect("mse", "se2"))
+                player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(buyableEffect("mse", "se1"))
+                //player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(player.mme.meridianEffect)
+                player.mse.sourceEnergyGain = player.mse.sourceEnergyGain.mul(Decimal.pow(1.5, player.mme.meridian[0].level))
 
-            // Gain Special Resources
-            player.mse.sourceEnergy = player.mse.sourceEnergy.add(player.mse.sourceEnergyGain)
-            player.mse.totalSourceEnergy = player.mse.totalSourceEnergy.add(player.mse.sourceEnergyGain)
+                // Gain Special Resources
+                player.mse.sourceEnergy = player.mse.sourceEnergy.add(player.mse.sourceEnergyGain)
+                player.mse.totalSourceEnergy = player.mse.totalSourceEnergy.add(player.mse.sourceEnergyGain)
+            }
 
             // Reset
-            player.tab = "mcu"
+            if (!external) player.tab = "mcu"
             player.mse.sourceEnergyGain = new Decimal(0)
             player.mse.ki = new Decimal(0)
             player.mse.highestKi = new Decimal(0)

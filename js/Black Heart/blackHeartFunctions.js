@@ -580,7 +580,7 @@ function bhAttack(damage, index, slot, target, str = "", method = "none", attr =
                         color: "#60a5fa",
                         x: (bulletHellNeo.subArena && options.bhKeyboard) ? (bulletHellNeo.subx + bulletHellNeo.px) : bulletHellNeo.px,
                         y: (bulletHellNeo.subArena && options.bhKeyboard) ? (bulletHellNeo.suby + bulletHellNeo.py - bulletHellNeo.pr - 14) : (bulletHellNeo.py - bulletHellNeo.pr - 14),
-                        life: 0.9, maxLife: 0.9,
+                        life: 1, maxLife: 1,
                     });
                 }
                 bhLog("<span style='color: " + BHP[player.bh.characters[receive].id].color + "'>Shield blocked damage towards " + run(BHP[player.bh.characters[receive].id].name, BHP[player.bh.characters[receive].id]) + ".")
@@ -604,7 +604,7 @@ function bhAttack(damage, index, slot, target, str = "", method = "none", attr =
                 color: BHP[player.bh.characters[receive].id].color,
                 x: (bulletHellNeo.subArena && options.bhKeyboard) ? (bulletHellNeo.subx + bulletHellNeo.px) : bulletHellNeo.px,
                 y: (bulletHellNeo.subArena && options.bhKeyboard) ? (bulletHellNeo.suby + bulletHellNeo.py - bulletHellNeo.pr - 14) : (bulletHellNeo.py - bulletHellNeo.pr - 14),
-                life: 0.9, maxLife: 0.9,
+                life: 1, maxLife: 1,
             });
         }
         if (index == 3) {
@@ -664,7 +664,7 @@ function bhHeal(heal, index, slot, target, str = "") {
                 color: "#4ade80",
                 x: (bulletHellNeo.subArena && options.bhKeyboard) ? (bulletHellNeo.subx + bulletHellNeo.px) : bulletHellNeo.px,
                 y: (bulletHellNeo.subArena && options.bhKeyboard) ? (bulletHellNeo.suby + bulletHellNeo.py - bulletHellNeo.pr - 14) : (bulletHellNeo.py - bulletHellNeo.pr - 14),
-                life: 0.9, maxLife: 0.9,
+                life: 1, maxLife: 1,
             });
         }
         if (index == 3) {

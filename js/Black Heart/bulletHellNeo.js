@@ -234,7 +234,8 @@ class BulletHell {
         this.shieldDir = 6
         this.shieldRadius = 16 + 14
         this.shieldArc = Math.PI * 0.35
-        this.kiSize = 60
+        this.kiSize = 100
+        this.kiTime = 0
         this.miasmata = []
 
         // Control Variables
@@ -808,6 +809,37 @@ class BulletHell {
                 break;
         }
 
+        // Player Attack Code
+        if (this.soul == "ki") {
+            this.kiTime += this.deltaMs / 1e3
+            if (this.kiTime >= 1) {
+                for (let b of this.bullets) {
+                    let kiPosX = this.boxLeft + this.px + (this.subArena ? this.subx : 0) - (this.kiSize / 2)
+                    let kiPosY = this.boxTop + this.py + (this.subArena ? this.suby : 0) - (this.kiSize / 2)
+                    
+                    let distanceX = b.x - Math.max(kiPosX, Math.min(b.x, kiPosX + this.kiSize));
+                    let distanceY = b.y - Math.max(kiPosY, Math.min(b.y, kiPosY + this.kiSize));
+
+                    let distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+                    let radius = b.r || 0
+
+                    if (distanceSquared <= (radius * radius)) {
+                        if (b.health) {
+                            b.health -= 1
+                        } else b.health = 0
+                        this.floatingTexts.push({
+                            text: "1 DMG",
+                            color: "#bbb",
+                            x: b.x - this.boxLeft,
+                            y: b.y - this.boxTop,
+                            life: 0.5, maxLife: 0.5,
+                        });
+                    }
+                }
+                this.kiTime = 0
+            }
+        }
+
         // Check for reaching goal
         if (this.goalStart) {
             if (this.goalStart == "maze") {
@@ -873,7 +905,7 @@ class BulletHell {
             const b = bullets[i];
             let keep = true;
 
-            if (b._dead || b._hitPlayer) {
+            if (b._dead || b._hitPlayer || (typeof b.health === "number" && b.health <= 0)) {
                 keep = false;
             } else if (b.offScreen) {
                 let leeway = b.leeway ? b.leeway + b.r : b.r
@@ -1249,6 +1281,26 @@ class BulletHell {
         // =-- Start arena canvas draw --=
         this.arenaCtx.clearRect(0, 0, this.arenaCanvas.width, this.arenaCanvas.height)
 
+        // Draw player attacks
+        if (this.soul == "ki") {
+            let kiPosX = this.px + (this.subArena ? this.subx : 0) - (this.kiSize / 2)
+            let kiPosY = this.py + (this.subArena ? this.suby : 0) - (this.kiSize / 2)
+
+            // Draw the sub-arena (solid, glowing)
+            this.arenaCtx.save()
+            this.arenaCtx.globalAlpha = 0.2 + Math.max(0.2 - this.kiTime, 0)
+            this.arenaCtx.fillStyle = "#587978"
+            this.arenaCtx.strokeStyle = "#7FADAC"
+            this.arenaCtx.lineWidth = 4
+            if (!options.performanceMode) {
+                this.arenaCtx.shadowColor = "#7FADAC"
+                this.arenaCtx.shadowBlur = 8
+            }
+            this.arenaCtx.fillRect(kiPosX, kiPosY, this.kiSize, this.kiSize)
+            this.arenaCtx.strokeRect(kiPosX, kiPosY, this.kiSize, this.kiSize)
+            this.arenaCtx.restore()
+        }
+
         // Draw Sub Arena
         if (this.subArena) {
             // Draw the full arena border (Large arena, dashed and glowing)
@@ -1429,6 +1481,7 @@ class BulletHell {
         this.arenaCtx.closePath()
         // Decide player color
         let color = ["#e22", "#a61717", "#811", "#5f0b0b"]
+        let lineDiv = 9
         switch (this.soul) {
             case "blue":
                 color = ["#22a", "#171776", "#116", "#0b0b47"]
@@ -1437,7 +1490,8 @@ class BulletHell {
                 color = ["#2e2", "#17a617", "#1a4", "#0b762f"]
                 break;
             case "ki":
-                color = ["#7FADAC", "#587978", "#3f5656", "#2c3c3c"]
+                color = ["#658a89", "#7FADAC", "#2c3c3c", "#3f5656"]
+                lineDiv = 8
                 break;
             case "miasma":
                 color = ["#BB4949", "#823333", "#5D2424", "#411919"]
@@ -1447,7 +1501,7 @@ class BulletHell {
         // Finish player drawing
         this.arenaCtx.fillStyle = this.invTime > 0 ? color[2] : color[0]
         this.arenaCtx.strokeStyle = this.invTime > 0 ? color[3] : color[1]
-        this.arenaCtx.lineWidth = this.pr / 9
+        this.arenaCtx.lineWidth = this.pr / lineDiv
         if (!options.performanceMode) {
             this.arenaCtx.shadowColor = this.invTime > 0 ? color[2] : color[0];
             this.arenaCtx.shadowBlur = this.pr / 2;

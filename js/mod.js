@@ -1381,7 +1381,8 @@ let changelog = `<h1>Changelog:</h1><br>
 			- Remade Aleph's final attack.<br>
 			- Added the option to replace bullet hell attacks with a regular attack.<br>
 			- Added bulk cante/remembrance core gain.<br>
-			- Added global black heart stats to character page.<br><br>
+			- Added global black heart stats to character page.<br>
+			- Improved the visuals of hope and rage radiation.<br><br>
 		Balancing:<br>
 			- Black heart currency drops now roll the remainder instead of flooring.<br>
 			- Fixed attacks that hit all players being lower for each subsequent character hit.<br>

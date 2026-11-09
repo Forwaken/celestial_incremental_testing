@@ -793,6 +793,9 @@
             player.pu.legendarySelectionActive = false
         }
 
+        // DUA content
+        layers.mse.resetCheck(true, true)
+
         //decay
         player.dec.decay = new Decimal(0)
         player.dec.stability = new Decimal(0)
