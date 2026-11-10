@@ -811,7 +811,7 @@
                 return look
             }
         },
-        27: {
+        29: {
             title: "Aniciffo Upgrade XVI",
             unlocked() { return hasUpgrade("ani", 26) },
             description: "Decrease the cost of radioactive punchcards while in eclipse by -1.",
@@ -825,9 +825,9 @@
                 return look
             }
         },
-        28: {
+        27: {
             title: "Aniciffo Upgrade XVII",
-            unlocked() { return hasUpgrade("ani", 27) },
+            unlocked() { return hasUpgrade("ani", 29) },
             description: "Unlock the dysprosium-154 punchcard.",
             cost: new Decimal(1e40),
             currencyLocation() { return player.ani },
@@ -839,9 +839,9 @@
                 return look
             }
         },
-        29: {
+        30: {
             title: "Aniciffo Upgrade XVIII",
-            unlocked() { return hasUpgrade("ani", 28) },
+            unlocked() { return hasUpgrade("ani", 27) },
             description: "Boost space radiation based on blue radiation.",
             cost: new Decimal(1e50),
             currencyLocation() { return player.ani },
@@ -857,9 +857,9 @@
                 return look
             }
         },
-        30: {
+        28: {
             title: "Aniciffo Upgrade XIX",
-            unlocked() { return hasUpgrade("ani", 29) },
+            unlocked() { return hasUpgrade("ani", 30) },
             description: "Unlock hope and rage radiation.",
             cost: new Decimal(1e60),
             currencyLocation() { return player.ani },
@@ -1337,7 +1337,7 @@
                     ["blank", "25px"],
                     ["row", [["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15], ["upgrade", 16], ["upgrade", 17],]],
                     ["row", [["upgrade", 18], ["upgrade", 19], ["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 24],]],
-                    ["row", [["upgrade", 25], ["upgrade", 26], ["upgrade", 27], ["upgrade", 28], ["upgrade", 29], ["upgrade", 30]]],
+                    ["row", [["upgrade", 25], ["upgrade", 26], ["upgrade", 29], ["upgrade", 27], ["upgrade", 30], ["upgrade", 28]]],
                 ]
             },
             "Particle Toggle": {

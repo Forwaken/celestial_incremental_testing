@@ -209,7 +209,7 @@ addLayer("pu", {
             unlocked() {return hasMilestone("db", 100)},
             tooltip() {
                 let notLeg = (layers.pu.levelables.index < 400 || layers.pu.levelables.index > 500)
-                return notLeg ? "Does a full universe reset" : "Can not hold legendary cards"
+                return notLeg ? "Resets your dark universe run" : "Can not hold legendary cards"
             },
             onClick() {
                 player.pu.heldCards[player.pu.heldIndex] = layers.pu.levelables.index
@@ -219,7 +219,7 @@ addLayer("pu", {
                         player.sb.storedSpaceEnergy = player.sb.storedSpaceEnergy.add(player.ds.storedSpaceEnergyToGet)
                         player.sma.starmetalAlloy = player.sma.starmetalAlloy.add(player.le.starmetalAlloyToGetTrue.mul(10).floor().div(10))
 
-                        player.ani.stones.cosmic.amount = player.ani.stones.cosmic.amount.add(player.ani.stones.cosmic.toGet)
+                        if (hasUpgrade("ani", 22)) player.ani.stones.cosmic.amount = player.ani.stones.cosmic.amount.add(player.ani.stones.cosmic.toGet)
                         player.le.starmetalAlloyPauseAgain = new Decimal(10)
                         for (let prop in player.pu.levelables) {
                             if (getLevelableTier("pu", prop, true)) {
@@ -243,7 +243,7 @@ addLayer("pu", {
                         if (!hasAchievement("achievements", 1215) && player.dt.storedToGet.gte(7200)) completeAchievement("achievements", 1215);
 
                         player.sma.eclipseShards = player.sma.eclipseShards.add(player.le.eclipseShardsToGetTrue.mul(10).floor().div(10))
-                        player.ani.stones.temporal.amount = player.ani.stones.temporal.amount.add(player.ani.stones.temporal.toGet)
+                        if (hasUpgrade("ani", 22)) player.ani.stones.temporal.amount = player.ani.stones.temporal.amount.add(player.ani.stones.temporal.toGet)
 
                         player.le.starmetalAlloyPauseAgain = new Decimal(10)
                         for (let prop in player.pu.levelables) {
@@ -296,7 +296,7 @@ addLayer("pu", {
             tooltip() { return player.pu.selectionCost.gt(1) ? "Costs " + formatWhole(player.pu.selectionCost) + " punchcard selections." : "" },
             canClick() {
                 let selIndex = player.pu.selectionIndex > 99 ? player.pu.selectionIndex : player.pu.selectedPunchcards[player.pu.selectionIndex]
-                return player.pu.storedSelections.gte(player.pu.selectionCost) && selIndex != null && selIndex != 0
+                return player.pu.storedSelections.gte(player.pu.selectionCost) && !getLevelableTier("pu", selIndex, true) && selIndex != null && selIndex != 0
             },
             unlocked: true,
             onClick() {
@@ -3149,7 +3149,7 @@ addLayer("pu", {
                 eff[1] = player.dgj.grassJump.pow(1.4).div(5).add(1).pow(this.effectScale())
                 return eff
             },
-            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(2) : new Decimal(3)},
+            selCost() {return hasUpgrade("ani", 29) && player.pet.legPetTimers[0].active ? new Decimal(2) : new Decimal(3)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)},
@@ -3203,7 +3203,7 @@ addLayer("pu", {
                 eff[1] = player.sma.starmetalAlloy.pow(0.1).div(4).add(1).pow(this.effectScale())
                 return eff
             },
-            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(2) : new Decimal(3)},
+            selCost() {return hasUpgrade("ani", 29) && player.pet.legPetTimers[0].active ? new Decimal(2) : new Decimal(3)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)},
@@ -3260,7 +3260,7 @@ addLayer("pu", {
                 eff[2] = player.sma.eclipseShards.pow(0.2).div(4).add(1).pow(this.effectScale())
                 return eff
             },
-            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},
+            selCost() {return hasUpgrade("ani", 29) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true) && player.pet.legPetTimers[0].active},
@@ -3268,8 +3268,8 @@ addLayer("pu", {
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
             xpReq() {
-                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(15).mul(1e10).floor()
-                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(100, getLevelableAmount(this.layer, this.id).sub(9)).mul(4e25).floor()
+                if (getLevelableAmount(this.layer, this.id).lt(10)) return getLevelableAmount(this.layer, this.id).add(1).pow(8).mul(1e5).floor()
+                if (getLevelableAmount(this.layer, this.id).gte(10)) return Decimal.pow(10, getLevelableAmount(this.layer, this.id).sub(9)).mul(1e13).floor()
             },
             currency() { return getLevelableXP(this.layer, this.id) },
             // STYLE CODE
@@ -3315,10 +3315,10 @@ addLayer("pu", {
                 eff[1] = player.ra.radiation.pow(0.0625).div(1000).add(1).pow(this.effectScale())
                 return eff
             },
-            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(2) : new Decimal(3)},
+            selCost() {return hasUpgrade("ani", 29) && player.pet.legPetTimers[0].active ? new Decimal(2) : new Decimal(3)},
             // CLICK CODE
-            unlocked() {return (hasUpgrade("ani", 28) && getLevelableTier("pu", 403, true)) || this.canClick()},
-            canSelect() {return hasUpgrade("ani", 28) && getLevelableTier("pu", 403, true) && !player.pet.legPetTimers[0].active},
+            unlocked() {return (hasUpgrade("ani", 27) && getLevelableTier("pu", 403, true)) || this.canClick()},
+            canSelect() {return hasUpgrade("ani", 27) && getLevelableTier("pu", 403, true) && !player.pet.legPetTimers[0].active},
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
@@ -3369,7 +3369,7 @@ addLayer("pu", {
                 eff[1] = player.ra.radiation.pow(0.0725).div(2000).add(1).pow(this.effectScale())
                 return eff
             },
-            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},
+            selCost() {return hasUpgrade("ani", 29) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("mr", 18) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("mr", 18) && getLevelableTier("pu", 403, true) && (getLevelableTier("pu", 501, true) || getLevelableTier("pu", 502, true))},
@@ -3423,7 +3423,7 @@ addLayer("pu", {
                 eff[1] = player.ra.radiation.pow(0.07).div(3000).add(1).pow(this.effectScale())
                 return eff
             },
-            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},
+            selCost() {return hasUpgrade("ani", 29) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("hr", 18) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("hr", 18) && getLevelableTier("pu", 403, true) && (getLevelableTier("pu", 504, true))},
@@ -3556,7 +3556,7 @@ addLayer("pu", {
                                 ["raw-html", () => { return "Radioactive (30%)<h6>[Takes priority over other card rarities]<br>(Some radioactive punchcards require other radioactive punchcards)"}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
                             ], () => {
                                 let hasRad = false
-                                for (let i = 501; i < 507; i++) {if (getLevelableAmount("pu", i).gt(0)) hasRad = true}
+                                for (let i = 501; i < 507; i++) {if (getLevelableAmount("pu", i).gt(0) || getLevelableXP("pu", i).gt(0)) hasRad = true}
                                 return hasUpgrade("ani", 26) && (getLevelableTier("pu", 403, true) || hasRad) ? {width: "601px", height: "64px", backgroundColor: "#58c454", border: "2px solid #0000007f", userSelect: "none"} : {display: "none !important"}
                             }],
                             ["style-row", [

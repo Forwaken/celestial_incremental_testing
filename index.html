@@ -67,7 +67,7 @@
 				</span>
 			</div>
 			<div class="miscMenu">
-				<button class="miscButton" v-if="!player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge" :disabled="!layerShown('cb')||player.uni.CB.paused" onclick="player.universe='CB';showTab('cb')">
+				<button class="miscButton" v-bind:class="{pause: player.uni.CB.paused}" v-if="!player.cp.cantepocalypseActive && !player.sma.inStarmetalChallenge" :disabled="!layerShown('cb')" onclick="if (player.uni.CB.paused) {if (confirm('Are you sure you want to unpause check back?')) player.uni.CB.paused = false} else {player.universe='CB';showTab('cb')}">
 					<img class="miscImg" src="resources/ui/checkback.png" v-if="layerShown('cb')"></img>
 					<div class="miscText" v-if="!layerShown('cb')">?</div>
 					<div v-if="player.uni.CB.paused" class="cbpaused">⏸</div>

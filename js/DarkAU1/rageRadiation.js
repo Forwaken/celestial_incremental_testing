@@ -53,7 +53,7 @@
 
         player.rar.radiation.max = new Decimal(6)
 
-        if (player.musuniverse == "AD1" && hasUpgrade("ani", 30) && player.rar.radiation.toGet.gt(1) && player.pet.legPetTimers[0].active && player.rar.radiation.toggle) {
+        if (player.musuniverse == "AD1" && hasUpgrade("ani", 28) && player.rar.radiation.toGet.gt(1) && player.pet.legPetTimers[0].active && player.rar.radiation.toggle) {
             player.rar.radiation.current = player.rar.radiation.current.sub(delta)
         }
         if (player.rar.radiation.current.lt(0)) {
@@ -366,7 +366,7 @@
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],
-    layerShown() { return hasUpgrade("ani", 30)},
+    layerShown() { return hasUpgrade("ani", 28)},
     deactivated() { return false},
 })
 const rageRadiation = {

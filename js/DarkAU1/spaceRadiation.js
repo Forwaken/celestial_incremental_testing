@@ -56,7 +56,7 @@
         if (hasUpgrade("mr", 13)) player.sr.radiation.toGet = player.sr.radiation.toGet.mul(upgradeEffect("mr", 13))
         player.sr.radiation.toGet = player.sr.radiation.toGet.mul(buyableEffect("dec", 22))
         player.sr.radiation.toGet = player.sr.radiation.toGet.mul(buyableEffect("tr", 17))
-        if (hasUpgrade("ani", 29)) player.sr.radiation.toGet = player.sr.radiation.toGet.mul(upgradeEffect("ani", 29))
+        if (hasUpgrade("ani", 30)) player.sr.radiation.toGet = player.sr.radiation.toGet.mul(upgradeEffect("ani", 30))
         if (getLevelableAmount("pu", 506).gte(1)) player.sr.radiation.toGet = player.sr.radiation.toGet.mul(levelableEffect("pu", 506)[1])
         player.sr.radiation.toGet = player.sr.radiation.toGet.mul(player.hor.essence.effect)
         player.sr.radiation.toGet = player.sr.radiation.toGet.mul(buyableEffect("ra", 24))

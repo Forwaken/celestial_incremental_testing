@@ -64,6 +64,7 @@
         player.dv.cloudsPerSecond = player.dv.cloudsPerSecond.mul(levelableEffect("car", 409)[0])
         player.dv.cloudsPerSecond = player.dv.cloudsPerSecond.mul(levelableEffect("spet", 304)[0])
         player.dv.cloudsPerSecond = player.dv.cloudsPerSecond.mul(buyableEffect("dt", 11))
+        player.dv.cloudsPerSecond = player.dv.cloudsPerSecond.mul(player.dec.nitrogen14Effect)
 
         player.dv.clouds = player.dv.clouds.add(player.dv.cloudsPerSecond.mul(delta))
 

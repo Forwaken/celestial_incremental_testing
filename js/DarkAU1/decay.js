@@ -140,7 +140,7 @@
         //the particles
 
         //electron
-        if (player.dec.carbon14.gt(0) || player.dec.magnesium28.gt(0) || player.dec.aluminum28.gt(0)) 
+        if (getLevelableTier("pu", 505, true) && (player.dec.carbon14.gt(0) || player.dec.magnesium28.gt(0) || player.dec.aluminum28.gt(0))) 
         {
             player.dec.electronsPerSecond = new Decimal(1)
         } else
@@ -192,7 +192,7 @@
         player.dec.nitrogen14PerSecond = player.dec.nitrogen14PerSecond.mul(buyableEffect("dec", 42))
         player.dec.nitrogen14 = player.dec.nitrogen14.add(player.dec.nitrogen14PerSecond.mul(delta))
 
-        player.dec.nitrogen14Effect = player.dec.nitrogen14.pow(1.5).add(1)
+        player.dec.nitrogen14Effect = player.dec.nitrogen14.pow(0.7).add(1)
         player.dec.nitrogen14Effect2 = player.dec.nitrogen14.pow(0.5)
 
         //magnesium chain

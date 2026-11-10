@@ -223,6 +223,9 @@
 	background: rgba(0,0,0,0.5);
 	color: #888;
 }
+.paused:hover {
+	background: rgba(0,0,0,0.3);
+}
 .miscImg {
 	width: 6vh;
 	height: 6vh;

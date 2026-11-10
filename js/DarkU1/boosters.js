@@ -556,7 +556,17 @@
                             ]],
                             ["style-row", [
                                 ["style-column", [
-                                    ["raw-html", "30", {color: "white", fontSize: "32px", fontFamily: "monospace"}],
+                                    ["raw-html", "35", {color: "white", fontSize: "32px", fontFamily: "monospace"}],
+                                ], () => {
+                                    let look =  {backgroundColor: "#6e64c4", border: "3px solid #9f98d4", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}
+                                    look.display = tmp.db.milestones[100].unlocked ? "" : "none !important"
+                                    return look
+                                }],
+                                ["titleless-milestone", 100],
+                            ]],
+                            ["style-row", [
+                                ["style-column", [
+                                    ["raw-html", "50", {color: "white", fontSize: "32px", fontFamily: "monospace"}],
                                 ], () => {
                                     let look =  {backgroundColor: "#6e64c4", border: "3px solid #9f98d4", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}
                                     look.display = tmp.db.milestones[106].unlocked ? "" : "none !important"

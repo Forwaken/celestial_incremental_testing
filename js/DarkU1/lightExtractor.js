@@ -278,7 +278,7 @@
 
                 player.sma.starmetalAlloy = player.sma.starmetalAlloy.add(player.le.starmetalAlloyToGetTrue.mul(10).floor().div(10))
 
-                player.ani.stones.cosmic.amount = player.ani.stones.cosmic.amount.add(player.ani.stones.cosmic.toGet)
+                if (hasUpgrade("ani", 22)) player.ani.stones.cosmic.amount = player.ani.stones.cosmic.amount.add(player.ani.stones.cosmic.toGet)
                 player.le.starmetalAlloyPauseAgain = new Decimal(10)
                 for (let prop in player.pu.levelables) {
                     if (getLevelableTier("pu", prop, true)) {
@@ -346,7 +346,7 @@
                 if (!hasAchievement("achievements", 1215) && player.dt.storedToGet.gte(7200)) completeAchievement("achievements", 1215);
 
                 player.sma.eclipseShards = player.sma.eclipseShards.add(player.le.eclipseShardsToGetTrue.mul(10).floor().div(10))
-                player.ani.stones.temporal.amount = player.ani.stones.temporal.amount.add(player.ani.stones.temporal.toGet)
+                if (hasUpgrade("ani", 22)) player.ani.stones.temporal.amount = player.ani.stones.temporal.amount.add(player.ani.stones.temporal.toGet)
 
                 player.le.starmetalAlloyPauseAgain = new Decimal(10)
                 for (let prop in player.pu.levelables) {
@@ -588,7 +588,7 @@
 
         player.db.boosters = new Decimal(0)
         for (let i = 0; i < player.db.milestones.length; i++) {
-            if (+player.db.milestones[i] < 101) {
+            if (+player.db.milestones[i] < 100) {
                 player.db.milestones.splice(i, 1);
                 i--;
             }
@@ -683,7 +683,7 @@
         player.dn.buyables[15] = new Decimal(0)
         player.db.boosters = new Decimal(0)
         for (let i = 0; i < player.db.milestones.length; i++) {
-            if (+player.db.milestones[i] < 101) {
+            if (+player.db.milestones[i] < 100) {
                 player.db.milestones.splice(i, 1);
                 i--;
             }
