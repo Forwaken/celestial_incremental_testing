@@ -27,7 +27,7 @@
     }
     },
     automate() {
-        if (hasMilestone("s", 16) && (!inChallenge("fu", 11) && !hasUpgrade("en", 12)) && !inChallenge("fu", 12)) {
+        if ((hasMilestone("s", 16) || hasUpgrade("en", 16)) && !inChallenge("fu", 11) && !inChallenge("fu", 12)) {
             buyBuyable('gs', 11)
             buyBuyable('gs', 12)
             buyBuyable('gs', 13)

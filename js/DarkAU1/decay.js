@@ -153,10 +153,10 @@
         if (player.dec.aluminum28.gt(0)) player.dec.electronsPerSecond = player.dec.electronsPerSecond.mul(player.dec.aluminum28Effect2.cbrt())
 
         player.dec.electrons = player.dec.electrons.add(player.dec.electronsPerSecond.mul(delta))
-        player.dec.electronsEffect = Decimal.div(1, player.dec.electrons.plus(1).log10().div(5).add(1))
+        player.dec.electronsEffect = Decimal.div(1, player.dec.electrons.plus(1).log(10).pow(0.7).div(10).add(1))
 
         //alpha particles
-        if (player.dec.dysprosium154.gt(0) || player.dec.gadolinium150.gt(0) || player.dec.samarium146.gt(0)) 
+        if (getLevelableTier("pu", 506, true) && (player.dec.dysprosium154.gt(0) || player.dec.gadolinium150.gt(0) || player.dec.samarium146.gt(0))) 
         {
             player.dec.alphaParticlesPerSecond = new Decimal(1)
         } else
@@ -169,7 +169,7 @@
         if (player.dec.samarium146.gt(0)) player.dec.alphaParticlesPerSecond = player.dec.alphaParticlesPerSecond.mul(player.dec.samarium146Effect2.cbrt())
 
         player.dec.alphaParticles = player.dec.alphaParticles.add(player.dec.alphaParticlesPerSecond.mul(delta))
-        player.dec.alphaParticlesEffect = player.dec.alphaParticles.pow(25).add(1)
+        player.dec.alphaParticlesEffect = player.dec.alphaParticles.plus(1).log(10).pow(0.7).div(10).add(1)
 
 
         //carbon chain
@@ -177,7 +177,7 @@
         player.dec.carbon14ToGet = player.dec.carbon14ToGet.mul(buyableEffect("dec", 41))
         player.dec.carbon14DecayPerSecond = player.dec.carbon14.mul(player.dec.decayPower)
 
-        player.dec.carbon14Effect = player.dec.carbon14.pow(2.5).add(1)
+        player.dec.carbon14Effect = player.dec.carbon14.pow(2.5).add(1).pow(player.dec.alphaParticlesEffect)
         player.dec.carbon14Effect2 = player.dec.carbon14.pow(0.5)
 
         if (player.dec.carbon14.gt(0))
@@ -192,7 +192,7 @@
         player.dec.nitrogen14PerSecond = player.dec.nitrogen14PerSecond.mul(buyableEffect("dec", 42))
         player.dec.nitrogen14 = player.dec.nitrogen14.add(player.dec.nitrogen14PerSecond.mul(delta))
 
-        player.dec.nitrogen14Effect = player.dec.nitrogen14.pow(0.7).add(1)
+        player.dec.nitrogen14Effect = player.dec.nitrogen14.pow(0.7).add(1).pow(player.dec.alphaParticlesEffect)
         player.dec.nitrogen14Effect2 = player.dec.nitrogen14.pow(0.5)
 
         //magnesium chain
@@ -200,7 +200,7 @@
         player.dec.magnesium28ToGet = player.dec.magnesium28ToGet.mul(buyableEffect("dec", 43))
         player.dec.magnesium28DecayPerSecond = player.dec.magnesium28.mul(player.dec.decayPower)
 
-        player.dec.magnesium28Effect = player.dec.magnesium28.pow(3.5).add(1)
+        player.dec.magnesium28Effect = player.dec.magnesium28.pow(3.5).add(1).pow(player.dec.alphaParticlesEffect)
         player.dec.magnesium28Effect2 = player.dec.magnesium28.pow(0.35)
 
         if (player.dec.magnesium28.gt(0))
@@ -224,14 +224,14 @@
             player.dec.aluminum28 = new Decimal(0)
         }
 
-        player.dec.aluminum28Effect = player.dec.aluminum28.pow(4.5).add(1)
+        player.dec.aluminum28Effect = player.dec.aluminum28.pow(4.5).add(1).pow(player.dec.alphaParticlesEffect)
         player.dec.aluminum28Effect2 = player.dec.aluminum28.pow(0.35)
 
         player.dec.silicon28PerSecond = player.dec.aluminum28DecayPerSecond
         player.dec.silicon28PerSecond = player.dec.silicon28PerSecond.mul(buyableEffect("dec", 45))
         player.dec.silicon28 = player.dec.silicon28.add(player.dec.silicon28PerSecond.mul(delta))
 
-        player.dec.silicon28Effect = player.dec.silicon28.pow(5.5).add(1)
+        player.dec.silicon28Effect = player.dec.silicon28.pow(5.5).add(1).pow(player.dec.alphaParticlesEffect)
         player.dec.silicon28Effect2 = player.dec.silicon28.pow(0.65)
 
 
@@ -240,7 +240,7 @@
         player.dec.dysprosium154ToGet = player.dec.dysprosium154ToGet.mul(buyableEffect("dec", 51))
         player.dec.dysprosium154DecayPerSecond = player.dec.dysprosium154.mul(player.dec.decayPower)
 
-        player.dec.dysprosium154Effect = player.dec.dysprosium154.pow(5.5).add(1)
+        player.dec.dysprosium154Effect = player.dec.dysprosium154.pow(3).add(1).pow(player.dec.alphaParticlesEffect)
         player.dec.dysprosium154Effect2 = player.dec.dysprosium154.pow(0.25)
 
         if (player.dec.dysprosium154.gt(0))
@@ -256,7 +256,7 @@
         player.dec.gadolinium150 = player.dec.gadolinium150.add(player.dec.gadolinium150PerSecond.mul(delta))
         player.dec.gadolinium150DecayPerSecond = player.dec.gadolinium150.mul(player.dec.decayPower)
 
-        player.dec.gadolinium150Effect = player.dec.gadolinium150.pow(1.25).add(1)
+        player.dec.gadolinium150Effect = player.dec.gadolinium150.pow(1.25).add(1).pow(player.dec.alphaParticlesEffect)
         player.dec.gadolinium150Effect2 = player.dec.gadolinium150.pow(0.25)
 
         if (player.dec.gadolinium150.gt(0))
@@ -272,7 +272,7 @@
         player.dec.samarium146 = player.dec.samarium146.add(player.dec.samarium146PerSecond.mul(delta))
         player.dec.samarium146DecayPerSecond = player.dec.samarium146.mul(player.dec.decayPower)
 
-        player.dec.samarium146Effect = player.dec.samarium146.pow(2.25).add(1)
+        player.dec.samarium146Effect = player.dec.samarium146.pow(1.5).add(1).pow(player.dec.alphaParticlesEffect)
         player.dec.samarium146Effect2 = player.dec.samarium146.pow(0.25)
 
         if (player.dec.samarium146.gt(0))
@@ -287,7 +287,7 @@
         player.dec.neodymium142PerSecond = player.dec.neodymium142PerSecond.mul(buyableEffect("dec", 54))
         player.dec.neodymium142 = player.dec.neodymium142.add(player.dec.neodymium142PerSecond.mul(delta))
 
-        player.dec.neodymium142Effect = player.dec.neodymium142.pow(2).add(1)
+        player.dec.neodymium142Effect = player.dec.neodymium142.pow(1.2).add(1).pow(player.dec.alphaParticlesEffect)
         player.dec.neodymium142Effect2 = player.dec.neodymium142.pow(0.75)
 
         if (player.dec.silicon28.lt(0)) {
@@ -1472,7 +1472,7 @@
                     ["blank", "25px"],
                     ["raw-html", () => { return "You have <h3>" + format(player.dec.electrons) + "</h3> electrons." }, {color: "#ffffff", fontSize: "24px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "You are gaining <h3>" + format(player.dec.electronsPerSecond) + "</h3> electrons per second." }, {color: "#ffffff", fontSize: "20px", fontFamily: "monospace"}],
-                    ["raw-html", () => { return "Raises universe reset requirement by ^<h3>" + format(player.dec.electronsEffect) + "</h3>." }, {color: "#ffffff", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return "Raises universe reset requirement by ^<h3>" + format(player.dec.electronsEffect, 3) + "</h3>." }, {color: "#ffffff", fontSize: "20px", fontFamily: "monospace"}],
                     ["blank", "25px"],
                     ["row", [["dark-buyable", 41], ["dark-buyable", 42],]],
                     ["blank", "25px"],
@@ -1488,7 +1488,7 @@
                     ["blank", "25px"],
                     ["raw-html", () => { return "You have <h3>" + format(player.dec.alphaParticles) + "</h3> alpha particles." }, {color: "#ffffff", fontSize: "24px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "You are gaining <h3>" + format(player.dec.alphaParticlesPerSecond) + "</h3> alpha particles per second." }, {color: "#ffffff", fontSize: "20px", fontFamily: "monospace"}],
-                    ["raw-html", () => { return "Boosts dark celestial point gain by x<h3>" + format(player.dec.alphaParticlesEffect) + "</h3>." }, {color: "#ffffff", fontSize: "20px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return "Boosts 1st isotope effects by ^<h3>" + format(player.dec.alphaParticlesEffect, 3) + "</h3>." }, {color: "#ffffff", fontSize: "20px", fontFamily: "monospace"}],
                     ["blank", "25px"],
                     ["row", [["dark-buyable", 51], ["dark-buyable", 52], ["dark-buyable", 53], ["dark-buyable", 54],]],
                 ]   

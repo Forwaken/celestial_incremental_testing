@@ -3257,7 +3257,7 @@ addLayer("pu", {
                 let eff = [new Decimal(1), new Decimal(1)]
                 eff[0] = player.pet.legPetTimers[0].current.pow(0.065).div(10).add(1).pow(this.effectScale()).pow(player.bl.bloodEffect)
                 eff[1] = player.pet.legPetTimers[0].current.pow(0.055).div(10).add(1).pow(this.effectScale()).pow(player.bl.bloodEffect)
-                eff[2] = player.sma.eclipseShards.pow(0.2).div(4).add(1).pow(this.effectScale())
+                eff[2] = player.sma.eclipseShards.pow(0.1).div(4).add(1).pow(this.effectScale())
                 return eff
             },
             selCost() {return hasUpgrade("ani", 29) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},

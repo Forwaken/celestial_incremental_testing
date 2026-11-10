@@ -63,7 +63,6 @@
         if (getLevelableTier("pu", 403, true)) player.du.pointGain = player.du.pointGain.mul(player.mr.radiation.effect)
         if (getLevelableTier("pu", 403, true)) player.du.pointGain = player.du.pointGain.mul(player.hr.radiation.effect)
         if (getLevelableTier("pu", 403, true) && hasUpgrade("hr", 14)) player.du.pointGain = player.du.pointGain.mul(upgradeEffect("hr", 14))
-        if (getLevelableTier("pu", 403, true)) player.du.pointGain = player.du.pointGain.mul(player.dec.alphaParticlesEffect)
         if (getLevelableTier("pu", 403, true) && hasUpgrade("hr", 19)) player.du.pointGain = player.du.pointGain.mul(upgradeEffect("hr", 19))
 
         player.du.pointGain = player.du.pointGain.div(player.du.pointSoftcap)

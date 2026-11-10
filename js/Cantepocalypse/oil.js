@@ -137,11 +137,6 @@
         if (!player.oi.linkerBought) {
             if (getBuyableAmount("oi", 11).gt(0) && getBuyableAmount("oi", 12).gt(0) && getBuyableAmount("oi", 13).gt(0) && getBuyableAmount("oi", 14).gt(0) && getBuyableAmount("oi", 15).gt(0) && getBuyableAmount("oi", 16).gt(0)) player.oi.linkerBought = true
         }
-
-        if (hasUpgrade("en", 16))
-        {
-            player.oi.protoMemorySeconds = player.oi.protoMemorySeconds.add(player.oi.protoMemorySecondsToGet.mul(delta))
-        }
     },
     oilReset() {
         player.ar.rankPoints = new Decimal(0)
