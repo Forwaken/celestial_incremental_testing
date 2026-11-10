@@ -319,11 +319,21 @@
                 return look
             },
         },
+        100: {
+            requirementDescription: "35 Total Boosters",
+            effectDescription() {return "Unlock card holding."},
+            done() {return player.db.bestBoosters.gte(35)},
+            style() {
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #9f98d4", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("db", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
+                return look
+            },
+        },
         106: {
-            requirementDescription: "30 Total Boosters",
+            requirementDescription: "50 Total Boosters",
             effectDescription() { return "/2 to the eclipse timer tickspeed.<br>"},
             unlocked() { return player.lightRift.interspaceUnlocked },
-            done() { return player.db.bestBoosters.gte(30) && player.lightRift.interspaceUnlocked },
+            done() { return player.db.bestBoosters.gte(50) && player.lightRift.interspaceUnlocked },
             style() {
                 let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #9f98d4", borderTop: "0px", borderRadius: "0px"}
                 if (hasMilestone("db", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}

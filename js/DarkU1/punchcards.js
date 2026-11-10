@@ -8,8 +8,11 @@ addLayer("pu", {
         paused: false,
 
         selectedPunchcards: [0, 0, 0, 0, 0],
+        heldCards: {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0},
         storedSelections: new Decimal(1),
         selectionIndex: 0,
+        selTab: 0,
+        heldIndex: 0,
         commonRaise: new Decimal(0.5),
         rareRaise: new Decimal(1),
         epicRaise: new Decimal(1),
@@ -165,6 +168,7 @@ addLayer("pu", {
             onHold() { clickClickable(this.layer, this.id) },
             style() {
                 let look = {width: "495px", border: "3px solid #0000003f", minHeight: "40px", color: "black", fontSize: "12px", borderRadius: "0px"}
+                if (hasMilestone("db", 100)) look.width = "247px"
                 look.backgroundColor = this.canClick() ? "#8ca3ff" : "#465280"
                 return look
             }
@@ -198,6 +202,74 @@ addLayer("pu", {
                 look.backgroundColor = this.canClick() ? "#8ca3ff" : "#465280"
                 return look
             },
+        },
+        4: {
+            title: "Hold Card",
+            canClick() {return player.pu.heldCards[player.pu.heldIndex] != layers.pu.levelables.index && layers.pu.levelables.index != 0},
+            unlocked() {return hasMilestone("db", 100)},
+            tooltip: "Does a full universe reset",
+            onClick() {
+                player.pu.heldCards[player.pu.heldIndex] = layers.pu.levelables.index
+
+                if (player.sma.inStarmetalChallenge) {
+                    if (!player.pet.legPetTimers[0].active) {
+                        player.sb.storedSpaceEnergy = player.sb.storedSpaceEnergy.add(player.ds.storedSpaceEnergyToGet)
+                        player.sma.starmetalAlloy = player.sma.starmetalAlloy.add(player.le.starmetalAlloyToGetTrue.mul(10).floor().div(10))
+
+                        player.ani.stones.cosmic.amount = player.ani.stones.cosmic.amount.add(player.ani.stones.cosmic.toGet)
+                        player.le.starmetalAlloyPauseAgain = new Decimal(10)
+                        for (let prop in player.pu.levelables) {
+                            if (getLevelableTier("pu", prop, true)) {
+                                addLevelableXP("pu", prop, player.le.starmetalAlloyToGetTrue.mul(player.le.starmetalAlloyValue).floor())
+                            }
+                            setLevelableTier("pu", prop, new Decimal(0))
+                        }
+                        player.le.starmetalAlloyToGet = new Decimal(0)
+                        player.le.resetAmount = new Decimal(0)
+                        player.prj.storedTimeCapsules = player.prj.storedTimeCapsules.add(player.dt.storedToGet)
+
+                        player.pu.storedSelections = new Decimal(1)
+
+                        layers.pu.generateSelection();
+
+                        player.sma.starmetalExitTime = new Decimal(0)
+                    } else {
+                        player.prj.storedTimeCapsules = player.prj.storedTimeCapsules.add(player.dt.storedToGet)
+                        if (!hasAchievement("achievements", 1204) && player.dt.storedToGet.gte(1)) completeAchievement("achievements", 1204);
+                        if (!hasAchievement("achievements", 1206) && player.dt.storedToGet.gte(7)) completeAchievement("achievements", 1206);
+                        if (!hasAchievement("achievements", 1215) && player.dt.storedToGet.gte(7200)) completeAchievement("achievements", 1215);
+
+                        player.sma.eclipseShards = player.sma.eclipseShards.add(player.le.eclipseShardsToGetTrue.mul(10).floor().div(10))
+                        player.ani.stones.temporal.amount = player.ani.stones.temporal.amount.add(player.ani.stones.temporal.toGet)
+
+                        player.le.starmetalAlloyPauseAgain = new Decimal(10)
+                        for (let prop in player.pu.levelables) {
+                            if (getLevelableTier("pu", prop, true)) {
+                                addLevelableXP("pu", prop, player.le.eclipseShardsToGetTrue.mul(player.le.eclipseShardsValue).floor())
+                            }
+                            setLevelableTier("pu", prop, new Decimal(0))
+                        }
+                        player.le.starmetalAlloyToGet = new Decimal(0)
+                        player.le.eclipseShardsToGet = new Decimal(0)
+                        player.le.resetAmount = new Decimal(0)
+
+                        player.pu.storedSelections = new Decimal(1)
+
+                        player.pet.legPetTimers[0].active = false
+                        player.pet.legPetTimers[0].current = new Decimal(0)
+                        layers.pu.generateSelection();
+
+                        player.pet.legendaryPetAbilityCooldowns[0] = player.pet.legendaryPetAbilityCooldownsMax[0]
+
+                        player.sma.eclipseExitTime = new Decimal(0)
+                    }
+                }
+            },
+            style() {
+                let look = {width: "246px", border: "3px solid #0000003f", minHeight: "40px", color: "black", fontSize: "12px", borderRadius: "0px"}
+                look.backgroundColor = this.canClick() ? "#8ca3ff" : "#465280"
+                return look
+            }
         },
 
         9: {
@@ -254,12 +326,10 @@ addLayer("pu", {
                 }  else {
                     str = str.concat("lockedPunchcard")
                 }
-                return str.concat(".png'style='width:69px;height:119px'></img>")
+                return str.concat(".png'style='width:70px;height:119px'></img>")
             },
             canClick() { return player.pu.storedSelections.gte(1) && player.pu.selectedPunchcards[0] != 0 },
-            unlocked() {
-                return true
-            },
+            unlocked() { return player.pu.selTab == 0},
             onClick() {
                 player.pu.selectionIndex = 0
             },
@@ -285,12 +355,10 @@ addLayer("pu", {
                 }  else {
                     str = str.concat("lockedPunchcard")
                 }
-                return str.concat(".png'style='width:69px;height:119px'></img>")
+                return str.concat(".png'style='width:70px;height:119px'></img>")
             },
             canClick() { return player.pu.storedSelections.gte(1) && player.pu.selectedPunchcards[1] != 0 },
-            unlocked() {
-                return true
-            },
+            unlocked() { return player.pu.selTab == 0},
             onClick() {
                 player.pu.selectionIndex = 1
             },
@@ -316,12 +384,10 @@ addLayer("pu", {
                 }  else {
                     str = str.concat("lockedPunchcard")
                 }
-                return str.concat(".png'style='width:69px;height:119px'></img>")
+                return str.concat(".png'style='width:70px;height:119px'></img>")
             },
             canClick() { return player.pu.storedSelections.gte(1) && player.pu.selectedPunchcards[2] != 0 },
-            unlocked() {
-                return true
-            },
+            unlocked() { return player.pu.selTab == 0},
             onClick() {
                 player.pu.selectionIndex = 2
             },
@@ -347,18 +413,54 @@ addLayer("pu", {
                 }  else {
                     str = str.concat("lockedPunchcard")
                 }
-                return str.concat(".png'style='width:69px;height:119px'></img>")
+                return str.concat(".png'style='width:70px;height:119px'></img>")
             },
             canClick() { return player.pu.storedSelections.gte(1) && player.pu.selectedPunchcards[3] != 0 },
-            unlocked() {
-                return hasMilestone("prj", 103)
-            },
+            unlocked() { return player.pu.selTab == 0 && hasMilestone("prj", 103)},
             onClick() {
                 player.pu.selectionIndex = 3
             },
             style() {
                 let look = {width: "75px", height: "125px", border: "3px solid", padding: "0px", borderRadius: "0px", margin: "5px"}
                 if (player.pu.selectionIndex == 3 && player.pu.storedSelections.gte(1)) {look.borderColor = "white"} else {look.borderColor = "#465280"}
+                return look
+            },
+        },
+        21: {
+            title() {
+                let val = player.pu.heldCards[0]
+                if (val == null) val = 0
+                let str = "<img src='resources/Punchcards/"
+                if (val >= 100 && val < 200) {
+                    str = str.concat("commonPunchcard" + (val - 100))
+                } else if (val >= 200 && val < 300) {
+                    str = str.concat("rarePunchcard" + (val - 200))
+                } else if (val >= 300 && val < 400) {
+                    str = str.concat("epicPunchcard" + (val - 300))
+                } else if (val >= 400 && val < 500) {
+                    str = str.concat("legendaryPunchcard" + (val - 400))
+                } else if (val >= 500 && val < 600) {
+                    str = str.concat("radioactivePunchcard" + (val - 500))
+                }  else {
+                    str = str.concat("lockedPunchcard")
+                }
+                return str.concat(".png'style='width:70px;height:119px'></img>")
+            },
+            canClick() {
+                let val = player.pu.heldCards[0]
+                if (val == null) val = 0
+                return run(layers.pu.levelables[val].canSelect) && !getLevelableTier("pu", val, true) && player.pu.storedSelections.gte(1) && player.pu.heldCards[0] != 0
+            },
+            unlocked() { return player.pu.selTab == 1},
+            onClick() {
+                player.pu.selectionIndex = player.pu.heldCards[0]
+            },
+            style() {
+                let look = {width: "75px", height: "125px", border: "3px solid", padding: "0px", borderRadius: "0px", margin: "5px"}
+                if (player.pu.heldCards[0] != 0 && getLevelableTier("pu", player.pu.heldCards[0], true)) {look.borderColor = "#8c8"}
+                else if (!this.canClick()) {look.borderColor = "#c88"}
+                else if (player.pu.heldCards[0] != 0 && player.pu.selectionIndex == player.pu.heldCards[0] && player.pu.storedSelections.gte(1)) {look.borderColor = "white"} 
+                else {look.borderColor = "#444"}
                 return look
             },
         },
@@ -372,7 +474,7 @@ addLayer("pu", {
                 } else {
                     str = str.concat("lockedPunchcard")
                 }
-                return str.concat(".png'style='width:69px;height:119px'></img>")
+                return str.concat(".png'style='width:70px;height:119px'></img>")
             },
             canClick() { return player.pu.storedSelections.gte(1) && player.pu.selectedPunchcards[4] != 0 },
             unlocked() {
@@ -411,6 +513,32 @@ addLayer("pu", {
                 }
             },
             style: {width: "400px", minHeight: "50px", color: "white", border: "2px solid #384166", borderRadius: "10px"},
+        },
+        201: {
+            title: "◀",
+            canClick() {return player.pu.selTab > 0},
+            unlocked() {return hasMilestone("db", 100)},
+            onClick() {
+                player.pu.selTab -= 1
+            },
+            style() {
+                let look = {width: "40px", minHeight: "150px", color: "white", border: "2px solid #384166", borderRadius: "0 40px 40px 0"}
+                look.backgroundColor = this.canClick() ? "black" : "#361e1e"
+                return look
+            },
+        },
+        202: {
+            title: "▶",
+            canClick() {return player.pu.selTab < 1},
+            unlocked() {return hasMilestone("db", 100)},
+            onClick() {
+                player.pu.selTab += 1
+            },
+            style() {
+                let look = {width: "40px", minHeight: "150px", color: "white", border: "2px solid #384166", borderRadius: "40px 0 0 40px"}
+                look.backgroundColor = this.canClick() ? "black" : "#361e1e"
+                return look
+            },
         },
     },
     levelables: {
@@ -3350,9 +3478,19 @@ addLayer("pu", {
                             ]],
                             ["blank", "10px"],
                         ], {width: "620px", height: "200px"}],
-                        ["style-column", [
-                            ["row", [["clickable", 11], ["clickable", 12], ["clickable", 13], ["clickable", 14],]],
-                        ], {width: "620px", height: "150px", borderTop: "3px solid #11141f", borderBottom: "3px solid #11141f", background: "repeating-linear-gradient(-45deg, #11141f 0 15px, #191e2e 0 30px)"}],
+                        ["style-row", [
+                            ["clickable", 201],
+                            ["style-row", [
+                                ["clickable", 11], ["clickable", 12], ["clickable", 13], ["clickable", 14],
+                                ["clickable", 21],
+                            ], {width: "540px"}],
+                            ["clickable", 202],
+                        ], () => {
+                            let look = {width: "620px", height: "150px", borderTop: "3px solid #11141f", borderBottom: "3px solid #11141f"}
+                            if (player.pu.selTab == 0) look.background = "repeating-linear-gradient(-45deg, #11141f 0 15px, #191e2e 0 30px)"
+                            else look.background = "repeating-linear-gradient(-45deg, #111 0 15px, #222 0 30px)"
+                            return look
+                        }],
                         ["top-column", [
                             ["blank", "15px"],
                             ["raw-html", () => {return "Punchcard Selections: " + formatWhole(player.pu.storedSelections)}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
@@ -3385,6 +3523,8 @@ addLayer("pu", {
                         ["style-column", [
                             ["levelable-display", [
                                 ["clickable", 1],
+                                ["style-row", [], () => {return hasMilestone("db", 100) ? {width: "2px", height: "40px", background: "white"} : {display: "none !important"}}],
+                                ["clickable", 4],
                             ], {width: "620px", background: "#232940"}],
                         ], {width: "620px", height: "175px", borderBottom: "3px solid #8ca3ff"}],
                         ["always-scroll-column", [

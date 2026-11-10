@@ -345,6 +345,7 @@
                 if (!hasAchievement("achievements", 1206) && player.dt.storedToGet.gte(7)) completeAchievement("achievements", 1206);
                 if (!hasAchievement("achievements", 1215) && player.dt.storedToGet.gte(7200)) completeAchievement("achievements", 1215);
 
+                player.sma.eclipseShards = player.sma.eclipseShards.add(player.le.eclipseShardsToGetTrue.mul(10).floor().div(10))
                 player.ani.stones.temporal.amount = player.ani.stones.temporal.amount.add(player.ani.stones.temporal.toGet)
 
                 player.le.starmetalAlloyPauseAgain = new Decimal(10)

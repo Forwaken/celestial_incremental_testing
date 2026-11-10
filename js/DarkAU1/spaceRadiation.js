@@ -93,7 +93,6 @@
             player.sr.particleClickTime = new Decimal(9)
         }
 
-        player.sr.spaceDecayEffect = player.sr.spaceDecay.pow(12).add(1)
         if (player.pet.legPetTimers[0].active) {
             if (player.sr.spaceDecay.lt(1e30)) player.sr.spaceDecayEffect = player.sr.spaceDecay.pow(8).add(1)
             else player.sr.spaceDecayEffect = Decimal.pow(8, player.sr.spaceDecay.div(1e30).log(2).pow(0.8)).mul(1e240)
