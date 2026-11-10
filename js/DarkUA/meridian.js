@@ -105,7 +105,7 @@ const MERIDIANS = {
         scale: [new Decimal(1.45), new Decimal(1.5)],
         resource() {return [player.mme.meridian[2].level, player.mme.meridian[5].level]},
         resourceName: ["He:P Levels", "Pe:P Levels"],
-        effect() {return player.mme.meridian[6].level.pow(1.75).div(1.5).add(1)},
+        effect() {return player.mme.meridian[6].level.pow(0.75).div(1.5).add(1)},
         effectDisplay() {return "x" + formatSimple(this.effect(), 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[6].level.add(player.mme.meridian[6].gain).pow(0.75).div(1.5).add(1), 2) + "]"},
         mBase: new Decimal(2),
         mScale: new Decimal(2), // mult increase per magnitude
@@ -622,7 +622,7 @@ addLayer("mme", {
             },
         },
         101: {
-            title() {return "<div style='height:5px'></div>Lu:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[1].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[1].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>Lu:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[1].level) + "/<wbr>" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[1].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(1)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[1].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked: true,
@@ -641,7 +641,7 @@ addLayer("mme", {
             },
         },
         102: {
-            title() {return "<div style='height:5px'></div>He:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[2].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[2].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>He:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[2].level) + "/<wbr>" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[2].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(2)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[2].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked: true,
@@ -660,7 +660,7 @@ addLayer("mme", {
             },
         },
         103: {
-            title() {return "<div style='height:5px'></div>YaL:V<br><small style='font-size:10px'>" + formatShortWhole(player.mme.meridian[3].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[3].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>YaL:V<br><small style='font-size:10px'>" + formatShortWhole(player.mme.meridian[3].level) + "/<wbr>" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[3].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(3)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[3].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked() {return hasUpgrade("mcu", 20)},
@@ -679,7 +679,7 @@ addLayer("mme", {
             },
         },
         104: {
-            title() {return "<div style='height:5px'></div>YaH:V<br><small style='font-size:10px'>" + formatShortWhole(player.mme.meridian[4].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[4].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>YaH:V<br><small style='font-size:10px'>" + formatShortWhole(player.mme.meridian[4].level) + "/<wbr>" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[4].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(4)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[4].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked() {return hasUpgrade("mcu", 20)},
@@ -698,7 +698,7 @@ addLayer("mme", {
             },
         },
         105: {
-            title() {return "<div style='height:5px'></div>Pe:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[5].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[5].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>Pe:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[5].level) + "/<wbr>" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[5].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(5)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[5].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked: true,
@@ -717,7 +717,7 @@ addLayer("mme", {
             },
         },
         106: {
-            title() {return "<div style='height:5px'></div>TB:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[6].level) + "/" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[6].cap).floor()) + "</small>"},
+            title() {return "<div style='height:5px'></div>TB:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[6].level) + "/<wbr>" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[6].cap).floor()) + "</small>"},
             tooltip() {return layers.mme.tooltipDisplay(6)},
             canClick() {return player.mme.clickables[4] ? player.mme.meridian[6].gain.gt(0) && player.mse.ki.gt(0) : true},
             unlocked: true,

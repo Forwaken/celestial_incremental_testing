@@ -54,7 +54,7 @@
 
         player.hor.radiation.max = new Decimal(6)
 
-        if (player.musuniverse == "AD1" && hasUpgrade("ani", 28) && player.hor.radiation.toGet.gt(1) && !player.pet.legPetTimers[0].active && player.hor.radiation.toggle) {
+        if (player.musuniverse == "AD1" && hasUpgrade("ani", 30) && player.hor.radiation.toGet.gt(1) && !player.pet.legPetTimers[0].active && player.hor.radiation.toggle) {
             player.hor.radiation.current = player.hor.radiation.current.sub(delta)
         }
         if (player.hor.radiation.current.lt(0)) {
@@ -365,7 +365,7 @@
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],
-    layerShown() { return hasUpgrade("ani", 28)},
+    layerShown() { return hasUpgrade("ani", 30)},
     deactivated() { return false},
 })
 const hopeRadiation = {

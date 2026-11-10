@@ -814,8 +814,8 @@
         27: {
             title: "Aniciffo Upgrade XVI",
             unlocked() { return hasUpgrade("ani", 26) },
-            description: "Unlock the dysprosium-154 punchcard.",
-            cost: new Decimal(1e40),
+            description: "Decrease the cost of radioactive punchcards while in eclipse by -1.",
+            cost: new Decimal(1e30),
             currencyLocation() { return player.ani },
             currencyDisplayName: "Dark Radiation",
             currencyInternalName: "darkRadiation",
@@ -828,6 +828,38 @@
         28: {
             title: "Aniciffo Upgrade XVII",
             unlocked() { return hasUpgrade("ani", 27) },
+            description: "Unlock the dysprosium-154 punchcard.",
+            cost: new Decimal(1e40),
+            currencyLocation() { return player.ani },
+            currencyDisplayName: "Dark Radiation",
+            currencyInternalName: "darkRadiation",
+            style() {
+                let look = {borderRadius: "15px", color: "black", border: "2px solid #1d901a", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#74ff8f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#048500" : look.backgroundColor = "#adffaa"
+                return look
+            }
+        },
+        29: {
+            title: "Aniciffo Upgrade XVIII",
+            unlocked() { return hasUpgrade("ani", 28) },
+            description: "Boost space radiation based on blue radiation.",
+            cost: new Decimal(1e50),
+            currencyLocation() { return player.ani },
+            currencyDisplayName: "Dark Radiation",
+            currencyInternalName: "darkRadiation",
+            effect() {
+                return player.ani.radiation.blue.amount.pow(0.5).add(1)
+            },
+            effectDisplay() { return "x" + format(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
+            style() {
+                let look = {borderRadius: "15px", color: "black", border: "2px solid #1d901a", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#74ff8f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#048500" : look.backgroundColor = "#adffaa"
+                return look
+            }
+        },
+        30: {
+            title: "Aniciffo Upgrade XIX",
+            unlocked() { return hasUpgrade("ani", 29) },
             description: "Unlock hope and rage radiation.",
             cost: new Decimal(1e60),
             currencyLocation() { return player.ani },
@@ -1305,7 +1337,7 @@
                     ["blank", "25px"],
                     ["row", [["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15], ["upgrade", 16], ["upgrade", 17],]],
                     ["row", [["upgrade", 18], ["upgrade", 19], ["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 24],]],
-                    ["row", [["upgrade", 25], ["upgrade", 26], ["upgrade", 27], ["upgrade", 28],]],
+                    ["row", [["upgrade", 25], ["upgrade", 26], ["upgrade", 27], ["upgrade", 28], ["upgrade", 29], ["upgrade", 30]]],
                 ]
             },
             "Particle Toggle": {

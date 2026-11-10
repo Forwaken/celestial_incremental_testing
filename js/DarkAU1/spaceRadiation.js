@@ -56,6 +56,7 @@
         if (hasUpgrade("mr", 13)) player.sr.radiation.toGet = player.sr.radiation.toGet.mul(upgradeEffect("mr", 13))
         player.sr.radiation.toGet = player.sr.radiation.toGet.mul(buyableEffect("dec", 22))
         player.sr.radiation.toGet = player.sr.radiation.toGet.mul(buyableEffect("tr", 17))
+        if (hasUpgrade("ani", 29)) player.sr.radiation.toGet = player.sr.radiation.toGet.mul(upgradeEffect("ani", 29))
         if (getLevelableAmount("pu", 506).gte(1)) player.sr.radiation.toGet = player.sr.radiation.toGet.mul(levelableEffect("pu", 506)[1])
         player.sr.radiation.toGet = player.sr.radiation.toGet.mul(player.hor.essence.effect)
         player.sr.radiation.toGet = player.sr.radiation.toGet.mul(buyableEffect("ra", 24))
@@ -93,6 +94,13 @@
         }
 
         player.sr.spaceDecayEffect = player.sr.spaceDecay.pow(12).add(1)
+        if (player.pet.legPetTimers[0].active) {
+            if (player.sr.spaceDecay.lt(1e30)) player.sr.spaceDecayEffect = player.sr.spaceDecay.pow(8).add(1)
+            else player.sr.spaceDecayEffect = Decimal.pow(8, player.sr.spaceDecay.div(1e30).log(2).pow(0.8)).mul(1e240)
+        } else {
+            if (player.sr.spaceDecay.lt(1e30)) player.sr.spaceDecayEffect = player.sr.spaceDecay.pow(12).add(1)
+            else player.sr.spaceDecayEffect = Decimal.pow(12, player.sr.spaceDecay.div(1e30).log(2).pow(0.9)).mul(1e360)
+        }
         if (!hasUpgrade("mr", 16)) player.sr.spaceDecayEffect2 = player.sr.spaceDecay.pow(0.25).div(9).add(1)
         if (hasUpgrade("mr", 16)) player.sr.spaceDecayEffect2 = player.sr.spaceDecay.pow(0.25).div(9).add(1).pow(2)
 
@@ -345,7 +353,7 @@
                     ["raw-html", () => { return "Space decay and generators only update when you click dark radiation."}, {color: "#ffffff", fontSize: "16px", fontFamily: "monospace"}],
                     ["blank", "25px"],
                     ["raw-html", () => { return "You have <h3>" + format(player.sr.spaceDecay) + "</h3> space decay. (+" + format(player.sr.spaceDecayPerClick) + "/click)"}, {color: "#000000", textShadow: "1px 1px 0 #ffffff, -1px 1px 0 #ffffff, 1px -1px 0 #ffffff, -1px -1px 0 #ffffff", fontSize: "24px", fontFamily: "monospace"}],
-                    ["raw-html", () => { return "Divides universe reset requirement by /<h3>" + format(player.sr.spaceDecayEffect) + "</h3>." }, {color: "#ffffff", fontSize: "16px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return player.sr.spaceDecay.lt(1e30) ? "Divides universe reset requirement by /<h3>" + format(player.sr.spaceDecayEffect) + "</h3>." : "Divides universe reset requirement by /<h3>" + format(player.sr.spaceDecayEffect) + "</h3>. <small style='color:red'>[SOFTCAPPED]</small>" }, {color: "#ffffff", fontSize: "16px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "Boosts time radiation gain by x<h3>" + format(player.sr.spaceDecayEffect2) + "</h3>." }, {color: "#ffffff", fontSize: "16px", fontFamily: "monospace"}],
                     ["blank", "25px"],
                     ["row", [["dark-buyable", 1], ["dark-buyable", 2], ["dark-buyable", 3], ["dark-buyable", 4],]],

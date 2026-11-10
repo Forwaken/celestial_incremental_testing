@@ -35,28 +35,9 @@ addLayer("pu", {
     tooltip: "Punchcards",
     color: "black",
     update(delta) {
-        if (player.pu.selectedPunchcards[player.pu.selectionIndex] > 400) {
-            if (player.bl.noxDefeated && player.pu.selectedPunchcards[player.pu.selectionIndex] == 401) {
-                player.pu.selectionCost = new Decimal(3)
-            } else if (player.pu.selectedPunchcards[player.pu.selectionIndex] == 401) {
-                player.pu.selectionCost = new Decimal(5)
-            }
-            if (player.pu.selectedPunchcards[player.pu.selectionIndex] == 402) {
-                player.pu.selectionCost = new Decimal(2)
-            }
-            if (player.pu.selectedPunchcards[player.pu.selectionIndex] == 403) {
-                player.pu.selectionCost = new Decimal(9)
-                if (hasUpgrade("mr", 15)) player.pu.selectionCost = player.pu.selectionCost.sub(1)
-            }
-        }
-        if (player.pu.selectedPunchcards[player.pu.selectionIndex] >= 500) {
-            player.pu.selectionCost = new Decimal(3)
-            if (player.pu.selectedPunchcards[player.pu.selectionIndex] == 503) player.pu.selectionCost = new Decimal(2)
-            if (player.pu.selectedPunchcards[player.pu.selectionIndex] == 505) player.pu.selectionCost = new Decimal(2)
-            if (player.pu.selectedPunchcards[player.pu.selectionIndex] == 506) player.pu.selectionCost = new Decimal(2)
-        } else if (player.pu.selectedPunchcards[player.pu.selectionIndex] < 400) {
-            player.pu.selectionCost = new Decimal(1)
-        }
+        if (layers.pu.levelables[player.pu.selectedPunchcards[player.pu.selectionIndex]].selCost) {
+            player.pu.selectionCost = run(layers.pu.levelables[player.pu.selectedPunchcards[player.pu.selectionIndex]].selCost)
+        } else player.pu.selectionCost = new Decimal(1)
 
         player.pu.legendaryPunchcardsUnlocked = new Decimal(0)
         if (run(layers.pu.levelables[401].canSelect, layers.pu.levelables[401]) && !getLevelableTier("pu", 401, true)) player.pu.legendaryPunchcardsUnlocked = player.pu.legendaryPunchcardsUnlocked.add(1)
@@ -131,24 +112,26 @@ addLayer("pu", {
 
             // CHOOSE CHOICE FROM PICKED RARITY, AND REMOVE FROM RARITY SELECT
             let choice = Math.floor(Math.random() * raritySelect[rarity].length)
-            player.pu.selectedPunchcards[i] = raritySelect[rarity][choice]
-            raritySelect[rarity].splice(choice, 1)
+            if (raritySelect[rarity][choice] != null) {
+                player.pu.selectedPunchcards[i] = raritySelect[rarity][choice]
+                raritySelect[rarity].splice(choice, 1)
+            } else {
+                player.pu.selectedPunchcards[i] = null
+                raritySelect[rarity].splice(choice, 1)
+            }
         }
 
         //radioactive
-        if (hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true) && 
-    (
-        ((run(layers.pu.levelables[501].canSelect, layers.pu.levelables[501])) && !getLevelableTier("pu", 501, true)) || 
-        ((run(layers.pu.levelables[502].canSelect, layers.pu.levelables[502])) && !getLevelableTier("pu", 502, true)) || 
-        ((run(layers.pu.levelables[503].canSelect, layers.pu.levelables[503])) && !getLevelableTier("pu", 503, true)) ||
-        ((run(layers.pu.levelables[504].canSelect, layers.pu.levelables[504])) && !getLevelableTier("pu", 504, true)) ||
-        ((run(layers.pu.levelables[505].canSelect, layers.pu.levelables[505])) && !getLevelableTier("pu", 505, true)) ||
-        ((run(layers.pu.levelables[506].canSelect, layers.pu.levelables[506])) && !getLevelableTier("pu", 506, true)) 
-        ) ) //be sure to keep updating
-        {
+        if (hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true) && (
+            ((run(layers.pu.levelables[501].canSelect, layers.pu.levelables[501])) && !getLevelableTier("pu", 501, true)) || 
+            ((run(layers.pu.levelables[502].canSelect, layers.pu.levelables[502])) && !getLevelableTier("pu", 502, true)) || 
+            ((run(layers.pu.levelables[503].canSelect, layers.pu.levelables[503])) && !getLevelableTier("pu", 503, true)) ||
+            ((run(layers.pu.levelables[504].canSelect, layers.pu.levelables[504])) && !getLevelableTier("pu", 504, true)) ||
+            ((run(layers.pu.levelables[505].canSelect, layers.pu.levelables[505])) && !getLevelableTier("pu", 505, true)) ||
+            ((run(layers.pu.levelables[506].canSelect, layers.pu.levelables[506])) && !getLevelableTier("pu", 506, true)) 
+        )) { //be sure to keep updating
             let rng2 = Math.random()
-            if (rng2 < 0.3)
-            {
+            if (rng2 < 0.3 && raritySelect[4].length > 0) {
                 let slot = getRandomInt(player.pu.selectedPunchcards.length-1)
                 let choice = Math.floor(Math.random() * raritySelect[4].length)
                 player.pu.selectedPunchcards[slot] = raritySelect[4][choice]
@@ -159,7 +142,7 @@ addLayer("pu", {
         //legendary
         if (!keepLeg) {
             let random = Math.random()
-            if (random < player.pu.legendaryPunchcardChance) {
+            if (random < player.pu.legendaryPunchcardChance && raritySelect[3].length > 0) {
                 if (hasUpgrade("le", 201)) player.pu.legendarySelectionActive = true
             } else {
                 player.pu.legendarySelectionActive = false
@@ -2866,6 +2849,7 @@ addLayer("pu", {
                 eff[1] = getLevelableAmount(this.layer, this.id).mul(0.1).add(1)
                 return eff
             },
+            selCost() {return player.bl.noxDefeated ? new Decimal(3) : new Decimal(5)},
             // CLICK CODE
             unlocked() {return (player.ir.iriditeDefeated && hasUpgrade("le", 201)) || this.canClick()},
             canSelect() {return player.ir.iriditeDefeated && hasUpgrade("le", 201) && !getLevelableTier("pu", 403, true)},
@@ -2919,6 +2903,7 @@ addLayer("pu", {
                 eff[1] = getLevelableAmount(this.layer, this.id).mul(0.1).add(1)
                 return eff
             },
+            selCost: new Decimal(2),
             // CLICK CODE
             unlocked() {return (player.zarDungeon.zarDefeated && hasUpgrade("le", 201)) || this.canClick()},
             canSelect() {return player.zarDungeon.zarDefeated && hasUpgrade("le", 201)},
@@ -2973,6 +2958,7 @@ addLayer("pu", {
                 eff[1] = getLevelableAmount(this.layer, this.id).pow(1.5).add(1)
                 return eff
             },
+            selCost() {return hasUpgrade("mr", 15) ? new Decimal(8) : new Decimal(9)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("le", 201) && player.pet.legPetTimers[0].active && player.du.aniciffoSummon) || this.canClick()},
             canSelect() {return hasUpgrade("le", 201) && player.pet.legPetTimers[0].active && player.du.aniciffoSummon},
@@ -3028,6 +3014,7 @@ addLayer("pu", {
                 eff[1] = player.dgj.grassJump.pow(1.4).div(5).add(1).pow(this.effectScale())
                 return eff
             },
+            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(2) : new Decimal(3)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)},
@@ -3081,6 +3068,7 @@ addLayer("pu", {
                 eff[1] = player.sma.starmetalAlloy.pow(0.1).div(4).add(1).pow(this.effectScale())
                 return eff
             },
+            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(2) : new Decimal(3)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)},
@@ -3137,6 +3125,7 @@ addLayer("pu", {
                 eff[2] = player.sma.eclipseShards.pow(0.2).div(4).add(1).pow(this.effectScale())
                 return eff
             },
+            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true) && player.pet.legPetTimers[0].active},
@@ -3191,9 +3180,10 @@ addLayer("pu", {
                 eff[1] = player.ra.radiation.pow(0.0625).div(1000).add(1).pow(this.effectScale())
                 return eff
             },
+            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(2) : new Decimal(3)},
             // CLICK CODE
-            unlocked() {return (hasUpgrade("ani", 27) && getLevelableTier("pu", 403, true)) || this.canClick()},
-            canSelect() {return hasUpgrade("ani", 27) && getLevelableTier("pu", 403, true) && !player.pet.legPetTimers[0].active},
+            unlocked() {return (hasUpgrade("ani", 28) && getLevelableTier("pu", 403, true)) || this.canClick()},
+            canSelect() {return hasUpgrade("ani", 28) && getLevelableTier("pu", 403, true) && !player.pet.legPetTimers[0].active},
             canClick() {return getLevelableXP(this.layer, this.id).gt(0) || getLevelableAmount(this.layer, this.id).gt(0) || getLevelableTier(this.layer, this.id, true)},
             onClick() {return layers[this.layer].levelables.index = this.id},
             // LEVEL CODE
@@ -3244,6 +3234,7 @@ addLayer("pu", {
                 eff[1] = player.ra.radiation.pow(0.0725).div(2000).add(1).pow(this.effectScale())
                 return eff
             },
+            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("mr", 18) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("mr", 18) && getLevelableTier("pu", 403, true) && (getLevelableTier("pu", 501, true) || getLevelableTier("pu", 502, true))},
@@ -3297,6 +3288,7 @@ addLayer("pu", {
                 eff[1] = player.ra.radiation.pow(0.07).div(3000).add(1).pow(this.effectScale())
                 return eff
             },
+            selCost() {return hasUpgrade("ani", 27) && player.pet.legPetTimers[0].active ? new Decimal(1) : new Decimal(2)},
             // CLICK CODE
             unlocked() {return (hasUpgrade("hr", 18) && getLevelableTier("pu", 403, true)) || this.canClick()},
             canSelect() {return hasUpgrade("hr", 18) && getLevelableTier("pu", 403, true) && (getLevelableTier("pu", 504, true))},

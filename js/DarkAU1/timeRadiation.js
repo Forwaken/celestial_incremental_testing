@@ -46,11 +46,11 @@
     color: "black",
     update(delta) {
         if (player.pet.legPetTimers[0].active) {
-            if (player.tr.radiation.amount.lt(1e15)) player.tr.radiation.effect = player.tr.radiation.amount.pow(10).add(1)
-            else player.tr.radiation.effect = Decimal.pow(10, player.tr.radiation.amount.div(1e15).log(2).pow(0.8)).mul(1e150)
+            if (player.tr.radiation.amount.lt(1e30)) player.tr.radiation.effect = player.tr.radiation.amount.pow(10).add(1)
+            else player.tr.radiation.effect = Decimal.pow(10, player.tr.radiation.amount.div(1e30).log(2).pow(0.8)).mul(1e300)
         } else {
-            if (player.tr.radiation.amount.lt(1e15)) player.tr.radiation.effect = player.tr.radiation.amount.pow(15).add(1)
-            else player.tr.radiation.effect = Decimal.pow(15, player.tr.radiation.amount.div(1e15).log(2).pow(0.9)).mul(1e225)
+            if (player.tr.radiation.amount.lt(1e30)) player.tr.radiation.effect = player.tr.radiation.amount.pow(15).add(1)
+            else player.tr.radiation.effect = Decimal.pow(15, player.tr.radiation.amount.div(1e30).log(2).pow(0.9)).mul(1e450)
         }
         player.tr.radiation.effect2 = player.tr.radiation.amount.pow(0.325).div(3).add(1) //dark radiation
 
@@ -470,7 +470,7 @@
                     ["blank", "25px"],
                     ["raw-html", () => { return "You have <h3>" + format(player.tr.radiation.amount) + "</h3> time radiation. (+" + format(player.tr.radiation.toGet) + "/" + formatTime(player.tr.radiation.max) + ")"}, {color: "#b70d0e", textShadow: "1px 1px 0 #ffffff, -1px 1px 0 #ffffff, 1px -1px 0 #ffffff, -1px -1px 0 #ffffff", fontSize: "24px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "(Based on eclipse time)" }, {color: "#ffffff", fontSize: "16px", fontFamily: "monospace"}],
-                    ["raw-html", () => { return player.tr.radiation.amount.lt(1e15) ? "Divides universe reset requirement by /<h3>" + format(player.tr.radiation.effect) + "</h3>." : "Divides universe reset requirement by /<h3>" + format(player.tr.radiation.effect) + "</h3>. <small style='color:red'>[SOFTCAPPED]</small>" }, {color: "#ffffff", fontSize: "16px", fontFamily: "monospace"}],
+                    ["raw-html", () => { return player.tr.radiation.amount.lt(1e30) ? "Divides universe reset requirement by /<h3>" + format(player.tr.radiation.effect) + "</h3>." : "Divides universe reset requirement by /<h3>" + format(player.tr.radiation.effect) + "</h3>. <small style='color:red'>[SOFTCAPPED]</small>" }, {color: "#ffffff", fontSize: "16px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "Boosts dark radiation gain by x<h3>" + format(player.tr.radiation.effect2) + "</h3>." }, {color: "#ffffff", fontSize: "16px", fontFamily: "monospace"}],
                     ["raw-html", () => { return "Resets colored radiation, buyables and eclipse timer." }, {color: "#ffffff", fontSize: "16px", fontFamily: "monospace"}],
                     ["blank", "25px"],
