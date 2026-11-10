@@ -50,7 +50,7 @@
             else player.tr.radiation.effect = Decimal.pow(10, player.tr.radiation.amount.div(1e30).log(2).pow(0.8)).mul(1e300)
         } else {
             if (player.tr.radiation.amount.lt(1e30)) player.tr.radiation.effect = player.tr.radiation.amount.pow(15).add(1)
-            else player.tr.radiation.effect = Decimal.pow(15, player.tr.radiation.amount.div(1e30).log(2).pow(0.9)).mul(1e450)
+            else player.tr.radiation.effect = Decimal.pow(15, player.tr.radiation.amount.div(1e30).log(2).pow(0.9)).mul("1e450")
         }
         player.tr.radiation.effect2 = player.tr.radiation.amount.pow(0.325).div(3).add(1) //dark radiation
 

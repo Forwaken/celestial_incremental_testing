@@ -99,7 +99,7 @@
             else player.sr.spaceDecayEffect = Decimal.pow(8, player.sr.spaceDecay.div(1e30).log(2).pow(0.8)).mul(1e240)
         } else {
             if (player.sr.spaceDecay.lt(1e30)) player.sr.spaceDecayEffect = player.sr.spaceDecay.pow(12).add(1)
-            else player.sr.spaceDecayEffect = Decimal.pow(12, player.sr.spaceDecay.div(1e30).log(2).pow(0.9)).mul(1e360)
+            else player.sr.spaceDecayEffect = Decimal.pow(12, player.sr.spaceDecay.div(1e30).log(2).pow(0.9)).mul("1e360")
         }
         if (!hasUpgrade("mr", 16)) player.sr.spaceDecayEffect2 = player.sr.spaceDecay.pow(0.25).div(9).add(1)
         if (hasUpgrade("mr", 16)) player.sr.spaceDecayEffect2 = player.sr.spaceDecay.pow(0.25).div(9).add(1).pow(2)

@@ -35,8 +35,9 @@ addLayer("pu", {
     tooltip: "Punchcards",
     color: "black",
     update(delta) {
-        if (layers.pu.levelables[player.pu.selectedPunchcards[player.pu.selectionIndex]].selCost) {
-            player.pu.selectionCost = run(layers.pu.levelables[player.pu.selectedPunchcards[player.pu.selectionIndex]].selCost)
+        let selIndex = player.pu.selectionIndex > 99 ? player.pu.selectionIndex : player.pu.selectedPunchcards[player.pu.selectionIndex]
+        if (selIndex != null && layers.pu.levelables[selIndex].selCost) {
+            player.pu.selectionCost = run(layers.pu.levelables[selIndex].selCost)
         } else player.pu.selectionCost = new Decimal(1)
 
         player.pu.legendaryPunchcardsUnlocked = new Decimal(0)
@@ -66,8 +67,7 @@ addLayer("pu", {
         player.pu.legendaryRaise = player.pu.legendaryRaise.mul(buyableEffect("rp", 16))
         player.pu.legendaryRaise = player.pu.legendaryRaise.mul(player.bl.bloodEffect)
 
-        if (player.du.aniciffoSummon)
-        {
+        if (player.du.aniciffoSummon) {
             player.pu.legendarySelectionActive = true
             player.pu.selectedPunchcards[4] = 403
         }
@@ -116,7 +116,7 @@ addLayer("pu", {
                 player.pu.selectedPunchcards[i] = raritySelect[rarity][choice]
                 raritySelect[rarity].splice(choice, 1)
             } else {
-                player.pu.selectedPunchcards[i] = null
+                player.pu.selectedPunchcards[i] = 0
                 raritySelect[rarity].splice(choice, 1)
             }
         }
@@ -219,10 +219,14 @@ addLayer("pu", {
         10: {
             title() { return "Activate this card" },
             tooltip() { return player.pu.selectionCost.gt(1) ? "Costs " + formatWhole(player.pu.selectionCost) + " punchcard selections." : "" },
-            canClick() { return player.pu.storedSelections.gte(player.pu.selectionCost) && player.pu.selectedPunchcards[player.pu.selectionIndex] != 0},
+            canClick() {
+                let selIndex = player.pu.selectionIndex > 99 ? player.pu.selectionIndex : player.pu.selectedPunchcards[player.pu.selectionIndex]
+                return player.pu.storedSelections.gte(player.pu.selectionCost) && selIndex != null && selIndex != 0
+            },
             unlocked: true,
             onClick() {
-                setLevelableTier("pu", player.pu.selectedPunchcards[player.pu.selectionIndex], new Decimal(1))
+                let selIndex = player.pu.selectionIndex > 99 ? player.pu.selectionIndex : player.pu.selectedPunchcards[player.pu.selectionIndex]
+                setLevelableTier("pu", selIndex, new Decimal(1))
                 player.pu.storedSelections = player.pu.storedSelections.sub(player.pu.selectionCost)
                 player.du.noPunchcards = false
                 player.du.aniciffoSummon = false
@@ -237,7 +241,7 @@ addLayer("pu", {
         11: {
             title() {
                 let val = player.pu.selectedPunchcards[0]
-                if (player.pu.storedSelections.lt(1)) val = 0
+                if (val == null || player.pu.storedSelections.lt(1)) val = 0
                 let str = "<img src='resources/Punchcards/"
                 if (val >= 100 && val < 200) {
                     str = str.concat("commonPunchcard" + (val - 100))
@@ -268,7 +272,7 @@ addLayer("pu", {
         12: {
             title() {
                 let val = player.pu.selectedPunchcards[1]
-                if (player.pu.storedSelections.lt(1)) val = 0
+                if (val == null || player.pu.storedSelections.lt(1)) val = 0
                 let str = "<img src='resources/Punchcards/"
                 if (val >= 100 && val < 200) {
                     str = str.concat("commonPunchcard" + (val - 100))
@@ -299,7 +303,7 @@ addLayer("pu", {
         13: {
             title() {
                 let val = player.pu.selectedPunchcards[2]
-                if (player.pu.storedSelections.lt(1)) val = 0
+                if (val == null || player.pu.storedSelections.lt(1)) val = 0
                 let str = "<img src='resources/Punchcards/"
                 if (val >= 100 && val < 200) {
                     str = str.concat("commonPunchcard" + (val - 100))
@@ -330,7 +334,7 @@ addLayer("pu", {
         14: {
             title() {
                 let val = player.pu.selectedPunchcards[3]
-                if (player.pu.storedSelections.lt(1)) val = 0
+                if (val == null || player.pu.storedSelections.lt(1)) val = 0
                 let str = "<img src='resources/Punchcards/"
                 if (val >= 100 && val < 200) {
                     str = str.concat("commonPunchcard" + (val - 100))
@@ -361,7 +365,7 @@ addLayer("pu", {
         50: {
             title() {
                 let val = player.pu.selectedPunchcards[4]
-                if (player.pu.storedSelections.lt(1)) val = 0
+                if (val == null || player.pu.storedSelections.lt(1)) val = 0
                 let str = "<img src='resources/Punchcards/"
                 if (val >= 400 && val < 500) {
                     str = str.concat("legendaryPunchcard" + (val - 400))
@@ -3321,8 +3325,9 @@ addLayer("pu", {
                             ["blank", "10px"],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    if (player.pu.storedSelections.lte(0)) return "No Punchcard Selected."
-                                    let str = run(layers.pu.levelables[player.pu.selectedPunchcards[player.pu.selectionIndex]].title, layers.pu.levelables[player.pu.selectedPunchcards[player.pu.selectionIndex]])
+                                    let selIndex = player.pu.selectionIndex > 99 ? player.pu.selectionIndex : player.pu.selectedPunchcards[player.pu.selectionIndex]
+                                    if (selIndex == null || player.pu.storedSelections.lte(0)) return "No Punchcard Selected."
+                                    let str = run(layers.pu.levelables[selIndex].title, layers.pu.levelables[selIndex])
                                     return str.substring(0, str.indexOf("<small style='color:gray'>"))
                                 }, {color: "white", fontSize: "24px !important", fontFamily: "monospace"}],
                                 ["blank", "10px"],
@@ -3330,8 +3335,9 @@ addLayer("pu", {
                             ["blank", "10px"],
                             ["style-column", [
                                 ["raw-html", () => {
-                                    if (player.pu.storedSelections.lte(0)) return ""
-                                    let str = run(layers.pu.levelables[player.pu.selectedPunchcards[player.pu.selectionIndex]].description, layers.pu.levelables[player.pu.selectedPunchcards[player.pu.selectionIndex]])
+                                    let selIndex = player.pu.selectionIndex > 99 ? player.pu.selectionIndex : player.pu.selectedPunchcards[player.pu.selectionIndex]
+                                    if (selIndex == null || player.pu.storedSelections.lte(0)) return ""
+                                    let str = run(layers.pu.levelables[selIndex].description, layers.pu.levelables[selIndex])
                                     str = str.substring(str.indexOf("<u>Active</u><br>")+17)
                                     return str.substring(0, str.indexOf("</span>"))
                                 }, {color: "white", fontSize: "18px", fontFamily: "monospace"}],
