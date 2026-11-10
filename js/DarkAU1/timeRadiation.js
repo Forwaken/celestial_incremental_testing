@@ -47,10 +47,10 @@
     update(delta) {
         if (player.pet.legPetTimers[0].active) {
             if (player.tr.radiation.amount.lt(1e15)) player.tr.radiation.effect = player.tr.radiation.amount.pow(10).add(1)
-            else player.tr.radiation.effect = Decimal.pow(10, player.tr.radiation.amount.div(1e15).log(2).pow(0.5)).mul(1e150)
+            else player.tr.radiation.effect = Decimal.pow(10, player.tr.radiation.amount.div(1e15).log(2).pow(0.8)).mul(1e150)
         } else {
-            if (player.tr.radiation.amount.lt(1e15)) player.tr.radiation.effect = player.tr.radiation.amount.pow(15).add(1) //divide eclipse req
-            else player.tr.radiation.effect = Decimal.pow(15, player.tr.radiation.amount.div(1e15).log(2).pow(0.7)).mul(1e225)
+            if (player.tr.radiation.amount.lt(1e15)) player.tr.radiation.effect = player.tr.radiation.amount.pow(15).add(1)
+            else player.tr.radiation.effect = Decimal.pow(15, player.tr.radiation.amount.div(1e15).log(2).pow(0.9)).mul(1e225)
         }
         player.tr.radiation.effect2 = player.tr.radiation.amount.pow(0.325).div(3).add(1) //dark radiation
 
