@@ -90,23 +90,22 @@
 
         player.db.permaMilestone4Effect = player.db.bestBoosters.add(1).pow(0.35).div(10).add(1)
 
-        if (hasUpgrade("ani", 25) && player.du.points.gte(player.db.boosterReq) && player.pet.legPetTimers[0].active) {
+        if (hasUpgrade("ani", 25) && player.du.points.gte(player.db.boosterReq) && (player.pet.legPetTimers[0].active || player.dotf.penumbral)) {
             player.db.boosters = player.db.boosters.add(1)
         }
         player.db.permaMilestone4Effect = player.db.bestBoosters.sub(12).pow(0.35).div(10).add(1)
-
-        if (tmp.db.layerShown && player.db.clickables[12] && player.du.points.gte(player.db.boosterReq)) player.db.boosters = player.db.boosters.add(1)
     },
     bars: {},
     clickables: {
         1: {
             title() { return "<h3>Reset on Universe Reset</h3>" },
-            canClick() { return player.db.milestoneTab == 1 },
+            canClick() { return player.db.milestoneTab != 0 },
             unlocked() { return true },
             onClick() { player.db.milestoneTab = 0 },
             onHold() {},
             style() {
                 let look = {width: "294px", minHeight: "50px", borderRadius: "10px 0px 0px 0px", border: "3px solid #0000003f", color: "white"}
+                if (player.tera.virtueUnlocks2[0]) {look.width = "196px"}
                 if (this.canClick()) {
                     look.backgroundColor = "#6e64c4"
                 } else {
@@ -116,13 +115,30 @@
             }
         },
         2: {
-            title() { return "<h3>Permanent</h3>" },
-            canClick() { return player.db.milestoneTab == 0 },
+            title() { return player.tera.virtueUnlocks2[0] ? "<h3>Permanent [ES]" : "<h3>Permanent</h3>" },
+            canClick() { return player.db.milestoneTab != 1 },
             unlocked() { return true },
             onClick() { player.db.milestoneTab = 1 },
             onHold() {},
             style() {
                 let look = {width: "294px", minHeight: "50px", borderRadius: "0px 10px 0px 0px", border: "3px solid #0000003f", color: "white"}
+                if (player.tera.virtueUnlocks2[0]) {look.width = "196px";look.borderRadius = "0"}
+                if (this.canClick()) {
+                    look.backgroundColor = "#6e64c4"
+                } else {
+                    look.backgroundColor =  "#363161"
+                }
+                return look
+            }
+        },
+        3: {
+            title() { return "<h3>Permanent [SMA]" },
+            canClick() { return player.db.milestoneTab != 2 },
+            unlocked() { return player.tera.virtueUnlocks2[0] },
+            onClick() { player.db.milestoneTab = 2 },
+            onHold() {},
+            style() {
+                let look = {width: "196px", minHeight: "50px", borderRadius: "0px 10px 0px 0px", border: "3px solid #0000003f", color: "white"}
                 if (this.canClick()) {
                     look.backgroundColor = "#6e64c4"
                 } else {
@@ -149,16 +165,6 @@
                 !this.canClick() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
                 return look
             }
-        },
-        12: {
-            title() {return player.db.clickables[12] ? "<h2>Auto-Booster Button<br>[ON]</h3><br>[Added for testing purposes]" : "<h2>Auto-Booster Button<br>[OFF]</h2><br>[Added for testing purposes]"},
-            canClick: true,
-            unlocked: true,
-            onClick() {
-                if (player.db.clickables[12]) player.db.clickables[12] = false
-                else player.db.clickables[12] = true
-            },
-            style: {width: "300px", minHeight: "100px", borderRadius: "15px", background: "black", color: "white", border: "2px solid #6e64c4", margin: "1px"},
         },
     },
     upgrades: {},
@@ -346,6 +352,17 @@
                 return look
             },
         },
+        
+        201: {
+            requirementDescription: "100 Total Boosters",
+            effectDescription: "[COMING SOON]",
+            done() { return player.db.bestBoosters2.gte(100) },
+            style() {
+                let look = {width: "500px", minHeight: "75px", color: "white", border: "3px solid #9f98d4", borderTop: "0px", borderRadius: "0px"}
+                if (hasMilestone("db", this.id)) {look.backgroundColor = "#1a3b0f"} else {look.backgroundColor = "#361e1e"}
+                return look
+            },
+        },
     },
     challenges: {},
     infoboxes: {},
@@ -361,15 +378,13 @@
                     ]],
                     ["raw-html", () => {
                         if (!player.tera.virtueUnlocks2[0]) return "(Best boosters: " + formatWhole(player.db.bestBoosters) + ")"
-                        else if (player.pet.legPetTimers[0].active) return "(Best boosters [EC]: " + formatWhole(player.db.bestBoosters) + ")"
+                        else if (player.pet.legPetTimers[0].active) return "(Best boosters [ES]: " + formatWhole(player.db.bestBoosters) + ")"
                         else return "(Best boosters [SMA]: " + formatWhole(player.db.bestBoosters2) + ")"
                     }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
                     ["raw-html", () => {return player.pet.legPetTimers[0].active ? "Boosts point gain by x" + format(player.db.boosterEffect) : "Extends unavoidable point softcap<sup>2</sup> by x" + format(player.db.boosterEffect)}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
                     ['blank', '25px'],
                     ["row", [["clickable", 11]]],
                     ['blank', '25px'],
-                    ["clickable", 12],
-                    ["blank", "25px"],
                 ]
             },
             "Milestones": {
@@ -380,7 +395,7 @@
                     ["row", [
                         ["style-column", [
                             ["style-row", [
-                                ["clickable", 1], ["clickable", 2],
+                                ["clickable", 1], ["clickable", 2], ["clickable", 3],
                             ], {backgroundColor: "#6e64c4", border: "3px solid #9f98d4", borderRadius: "13px 13px 0px 0px", width: "588px", height: "50px"}],
                             
                             // RESET ON UNIVERSE RESET
@@ -477,7 +492,7 @@
                             ]],
                             ], () => {return player.db.milestoneTab == 0 ? {} : {display: "none !important"}}],
 
-                            // PERMANENT
+                            // PERMANENT [ES]
                             ["style-column", [
                             ["style-row", [
                                 ["style-column", [
@@ -560,6 +575,22 @@
                                 ["titleless-milestone", 108],
                             ]],
                             ], () => {return player.db.milestoneTab == 1 ? {} : {display: "none !important"}}],
+
+                            // PERMANENT [SMA]
+                            ["style-column", [
+                                ["style-row", [
+                                    ["style-column", [
+                                        ["raw-html", "100", {color: "white", fontSize: "32px", fontFamily: "monospace"}],
+                                    ], () => {
+                                        let look =  {backgroundColor: "#6e64c4", border: "3px solid #9f98d4", borderRight: "0px", borderTop: "0px", borderRadius: "0px", width: "75px", height: "75px"}
+                                        look.display = tmp.db.milestones[201].unlocked ? "" : "none !important"
+                                        return look
+                                    }],
+                                    ["titleless-milestone", 201],
+                                ]],
+
+                            ], () => {return player.db.milestoneTab == 2 ? {} : {display: "none !important"}}],
+
                             ["style-row", [
                             ], {backgroundColor: "#6e64c4", border: "3px solid #9f98d4", borderTop: "0px", borderRadius: "0px 0px 13px 13px", width: "588px", height: "15px"}],
                         ]],

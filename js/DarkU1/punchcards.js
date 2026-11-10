@@ -3412,12 +3412,20 @@ addLayer("pu", {
                             ], () => {return hasUpgrade("sma", 17) ? {width: "600px", background: "repeating-linear-gradient(-45deg, #705b1c 0 15px, #8c7223 0 30px)", padding: "2px"} : hasUpgrade("sma", 14) ? {width: "600px", background: "repeating-linear-gradient(-45deg, #666666 0 15px, #808080 0 30px)", padding: "2px", borderBottom: "3px solid #7f5f00"} : {display: "none !important"}}],
             
                             ["style-column", [
-                                ["raw-html", () => { return "Radioactive (30%)<h6>[Takes priority over other card rarities]<br>(Some radioactive punchcards require other radioactive punchcards)"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
-                            ], () => {return hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true) ? {width: "601px", height: "64px", backgroundColor: "#58c454", border: "2px solid #0000007f", userSelect: "none"} : {display: "none !important"}}],
+                                ["raw-html", () => { return "Radioactive (30%)<h6>[Takes priority over other card rarities]<br>(Some radioactive punchcards require other radioactive punchcards)"}, {color: "black", fontSize: "20px", fontFamily: "monospace"}],
+                            ], () => {
+                                let hasRad = false
+                                for (let i = 501; i < 507; i++) {if (getLevelableAmount("pu", i).gt(0)) hasRad = true}
+                                return hasUpgrade("ani", 26) && (getLevelableTier("pu", 403, true) || hasRad) ? {width: "601px", height: "64px", backgroundColor: "#58c454", border: "2px solid #0000007f", userSelect: "none"} : {display: "none !important"}
+                            }],
                             ["style-row", [
                                 ["levelable", 501], ["levelable", 502], ["levelable", 503], ["levelable", 504],
                                 ["levelable", 505], ["levelable", 506],
-                            ], () => {return hasUpgrade("ani", 26) && getLevelableTier("pu", 403, true) ? {width: "600px", background: "repeating-linear-gradient(-45deg, #146111 0 15px, #1d8e19 0 30px)", padding: "2px"} : {display: "none !important"}}],
+                            ], () => {
+                                let hasRad = false
+                                for (let i = 501; i < 507; i++) {if (getLevelableAmount("pu", i).gt(0)) hasRad = true}
+                                return hasUpgrade("ani", 26) && (getLevelableTier("pu", 403, true) || hasRad) ? {width: "600px", background: "repeating-linear-gradient(-45deg, #146111 0 15px, #1d8e19 0 30px)", padding: "2px"} : {display: "none !important"}
+                            }],
 
                             ["style-column", [
                                 ["raw-html", "Epic (10%)", {color: "black", fontSize: "20px", fontFamily: "monospace"}],

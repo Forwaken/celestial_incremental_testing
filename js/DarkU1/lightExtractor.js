@@ -80,7 +80,9 @@
         let uniDiv = new Decimal(1)
         uniDiv = uniDiv.mul(player.db.milestone1Effect)
         if (getLevelableTier("pu", 201, true)) uniDiv = uniDiv.mul(levelableEffect("pu", 201)[1])
-        if (hasMilestone("prj", 107)) uniDiv = uniDiv.mul(player.prj.milestone107Effect)
+        if (getLevelableTier("pu", 403, true)) uniDiv = uniDiv.mul(player.tr.radiation.effect)
+        if (getLevelableTier("pu", 403, true)) uniDiv = uniDiv.mul(player.sr.spaceDecayEffect)
+        if (getLevelableTier("pu", 403, true) && hasUpgrade("mr", 14)) uniDiv = uniDiv.mul(upgradeEffect("mr", 14))
 
         // Starmetal Alloy
         player.le.starmetalAlloyReq = Decimal.pow(1e1, player.le.resetAmount.add(1).pow(1.5).floor()).mul(1e2)
@@ -91,9 +93,6 @@
         player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(buyableEffect("funify", 12))
         if (getLevelableTier("pu", 100, true)) player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(levelableEffect("pu", 100)[0])
         player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(uniDiv)
-        if (getLevelableTier("pu", 403, true)) player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(player.tr.radiation.effect)
-        if (getLevelableTier("pu", 403, true)) player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(player.sr.spaceDecayEffect)
-        if (getLevelableTier("pu", 403, true) && hasUpgrade("mr", 14)) player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.div(upgradeEffect("mr", 14))
 
         if (getLevelableTier("pu", 401, true)) player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.pow(buyableEffect("bl", 21))
         if (getLevelableTier("pu", 403, true)) player.le.starmetalAlloyReq = player.le.starmetalAlloyReq.pow(player.dec.electronsEffect)
@@ -145,9 +144,6 @@
         if (hasUpgrade("sma", 210)) player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(upgradeEffect("sma", 210))
         if (getLevelableTier("pu", 200, true)) player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(levelableEffect("pu", 200)[1])
         player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(uniDiv)
-        if (getLevelableTier("pu", 403, true)) player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(player.tr.radiation.effect)
-        if (getLevelableTier("pu", 403, true)) player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(player.sr.spaceDecayEffect)
-        if (getLevelableTier("pu", 403, true) && hasUpgrade("mr", 14)) player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(upgradeEffect("mr", 14))
             
         if (getLevelableTier("pu", 403, true)) player.le.eclipseShardsReq = player.le.eclipseShardsReq.pow(player.dec.electronsEffect)
         if (hasMilestone("prj", 107)) player.le.eclipseShardsReq = player.le.eclipseShardsReq.div(player.prj.milestone107Effect)
