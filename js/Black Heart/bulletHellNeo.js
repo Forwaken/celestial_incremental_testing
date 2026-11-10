@@ -332,7 +332,10 @@ class BulletHell {
         // Pause Universes to prevent problems
         if (this.running == false && (player.bh.celestialite.health.gt(0) || BHC[player.bh.celestialite.id].immortal)) {
             player.subtabs["bh"]["stuff"] = "bullet";
-            if (!player.tempPaused) pauseUniverseAll(["BH"], "pause", true)
+            if (!player.tempPaused) {
+                if (player.sma.inStarmetalChallenge) pauseUniverseAll(["D1", "AD1", "DA", "A2", "SB", "BH"], "pause", true)
+                else pauseUniverseAll(["BH"], "pause", true)
+            }
             options.fullscreen = true
         }
 
@@ -360,7 +363,10 @@ class BulletHell {
             this.overlay = null
         }
         if (next) player.subtabs["bh"]["stuff"] = next
-        if (player.tempPaused) pauseUniverseAll(["BH"], "unpause", true)
+        if (player.tempPaused) {
+            if (player.sma.inStarmetalChallenge) pauseUniverseAll(["D1", "AD1", "DA", "A2", "SB", "BH"], "unpause", true)
+            else pauseUniverseAll(["BH"], "unpause", true)
+        }
         player.universe = "U3"
         options.fullscreen = this.prevScreenState
         if (damage) bhAttack(Decimal.mul(player.bh.celestialite.damage, 3), 3, 0, "allPlayer", "<span style='color:#aa2798'>[BH] </span>")

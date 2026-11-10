@@ -2385,7 +2385,7 @@ BHS.roomA = {
     music: "music/aniciffoLabyrinth.mp3",
     comboStart: 0,
     comboLimit: 14,
-    skipPenalty: 5,
+    skipPenalty: 3,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2404,7 +2404,7 @@ BHS.roomB = {
     music: "music/aniciffoLabyrinth.mp3",
     comboStart: 0,
     comboLimit: 14,
-    skipPenalty: 5,
+    skipPenalty: 3,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2423,7 +2423,7 @@ BHS.roomC = {
     music: "music/aniciffoLabyrinth.mp3",
     comboStart: 0,
     comboLimit: 14,
-    skipPenalty: 5,
+    skipPenalty: 3,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2442,7 +2442,7 @@ BHS.roomTemple = {
     music: "music/templeMiniboss.mp3",
     comboStart: 0,
     comboLimit: 1,
-    skipPenalty: 10,
+    skipPenalty: 5,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2457,7 +2457,7 @@ BHS.roomD = {
     music: "music/aniciffoLabyrinth2.mp3", //new song please
     comboStart: 0,
     comboLimit: 14,
-    skipPenalty: 5,
+    skipPenalty: 3,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2476,7 +2476,7 @@ BHS.roomE = {
     music: "music/aniciffoLabyrinth2.mp3", //make a new song bruh
     comboStart: 0,
     comboLimit: 14,
-    skipPenalty: 5,
+    skipPenalty: 3,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2495,7 +2495,7 @@ BHS.roomF = {
     music: "music/aniciffoLabyrinth2.mp3", //just make the new song already
     comboStart: 0,
     comboLimit: 14,
-    skipPenalty: 5,
+    skipPenalty: 3,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2514,7 +2514,7 @@ BHS.roomG = {
     music: "music/aniciffoLabyrinth2.mp3", //just make the new song already
     comboStart: 0,
     comboLimit: 14,
-    skipPenalty: 5,
+    skipPenalty: 3,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2533,7 +2533,7 @@ BHS.roomH = {
     music: "music/aniciffoLabyrinth2.mp3", //just make the new song already
     comboStart: 0,
     comboLimit: 8,
-    skipPenalty: 5,
+    skipPenalty: 3,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2566,7 +2566,7 @@ BHS.roomBoss = {
     music: "music/aniciffoFighting.mp3", //just make the new song already
     comboStart: 0,
     comboLimit: 1,
-    skipPenalty: 10,
+    skipPenalty: 5,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
