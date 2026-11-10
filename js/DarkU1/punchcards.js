@@ -205,9 +205,12 @@ addLayer("pu", {
         },
         4: {
             title: "Hold Card",
-            canClick() {return player.pu.heldCards[player.pu.heldIndex] != layers.pu.levelables.index && layers.pu.levelables.index != 0},
+            canClick() {return player.pu.heldCards[player.pu.heldIndex] != layers.pu.levelables.index && (layers.pu.levelables.index < 400 || layers.pu.levelables.index > 500) && layers.pu.levelables.index != 0},
             unlocked() {return hasMilestone("db", 100)},
-            tooltip: "Does a full universe reset",
+            tooltip() {
+                let notLeg = (layers.pu.levelables.index < 400 || layers.pu.levelables.index > 500)
+                return notLeg ? "Does a full universe reset" : "Can not hold legendary cards"
+            },
             onClick() {
                 player.pu.heldCards[player.pu.heldIndex] = layers.pu.levelables.index
 
