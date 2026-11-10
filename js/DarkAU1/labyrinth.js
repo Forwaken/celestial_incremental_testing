@@ -2386,6 +2386,7 @@ BHS.roomA = {
     comboStart: 0,
     comboLimit: 14,
     skipPenalty: 3,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2405,6 +2406,7 @@ BHS.roomB = {
     comboStart: 0,
     comboLimit: 14,
     skipPenalty: 3,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2424,6 +2426,7 @@ BHS.roomC = {
     comboStart: 0,
     comboLimit: 14,
     skipPenalty: 3,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2443,6 +2446,7 @@ BHS.roomTemple = {
     comboStart: 0,
     comboLimit: 1,
     skipPenalty: 5,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2458,6 +2462,7 @@ BHS.roomD = {
     comboStart: 0,
     comboLimit: 14,
     skipPenalty: 3,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2477,6 +2482,7 @@ BHS.roomE = {
     comboStart: 0,
     comboLimit: 14,
     skipPenalty: 3,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2496,6 +2502,7 @@ BHS.roomF = {
     comboStart: 0,
     comboLimit: 14,
     skipPenalty: 3,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2515,6 +2522,7 @@ BHS.roomG = {
     comboStart: 0,
     comboLimit: 14,
     skipPenalty: 3,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2534,6 +2542,7 @@ BHS.roomH = {
     comboStart: 0,
     comboLimit: 8,
     skipPenalty: 3,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {
@@ -2567,6 +2576,7 @@ BHS.roomBoss = {
     comboStart: 0,
     comboLimit: 1,
     skipPenalty: 5,
+    darkExclusive: true,
     generateCelestialite(combo) {
         if (typeof combo == "object") combo = combo.toNumber()
         switch (combo) {

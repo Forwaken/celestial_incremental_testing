@@ -915,6 +915,10 @@ addLayer("bh", {
             player.bh.bulletHell = false
         }
 
+        if (BHS[player.bh.currentStage].darkExclusive) {
+            bhAttack(new Decimal(1000), 3, 0, "allPlayer", "", "magic")
+        }
+
         if (player.bh.currentStage == "none" && (player.subtabs["bh"]["stuff"] == "battle" || player.subtabs["bh"]["stuff"] == "bullet")) {
             if (player.bh.currentStage == "zarDungeon") {
                 if (player.zd.buyables[14].gte(1)) player.tab = "zard"
