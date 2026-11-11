@@ -724,6 +724,9 @@ BHS.depth2 = {
                 if (combo < 0) cel = ["minorEnas", "minorPente", "minorDeka", "minorHekaton", "minorKhilioi", "minorMyrioi", "minorDva", "minorTri"]
                 if (combo <= -25) cel.push("minorTessera")
                 if (combo <= -50) cel.push("minorExi")
+                if (combo <= -100) cel.push("minorEpta")
+                if (combo <= -150) cel.push("minorOkto")
+                if (combo <= -200) cel.push("minorEnnea")
                 return cel[Math.floor(Math.random()*cel.length)]
         }
     },
@@ -1701,9 +1704,19 @@ BHC.minorExi = {
             type: "damage",
             target: "randomPlayer",
             method: "ranged",
-            properties: {"crit": [0.5, 2], "stun": [new Decimal(1), "soft", new Decimal(1)]},
+            properties: {"crit": [0.5, 2], "stun": [new Decimal(1), "soft", new Decimal(2)]},
             value: new Decimal(2),
             cooldown: new Decimal(6),
+        },
+        2: {
+            name: "Mountain Slam",
+            instant: true,
+            type: "damage",
+            target: "randomPlayer",
+            method: "ranged",
+            properties: {"crit": [1, 2], "stun": [new Decimal(1), "soft", new Decimal(5)]},
+            value: new Decimal(5),
+            cooldown: new Decimal(25),
         },
     },
     reward() {
@@ -1712,6 +1725,61 @@ BHC.minorExi = {
         gain.clearUmbrite = new Decimal(200)
         if (Math.random() < 0.45) gain.hazyUmbrite = new Decimal(2)
         if (Math.random() < 0.45) gain.darkEther = new Decimal(1)
+        return gain
+    },
+}
+
+BHC.minorEpta = {
+    name: "Celestialite Minor Epta",
+    symbol: "⬇ε",
+    style: {
+        background: "linear-gradient(90deg, #8F0E6E, #A30D40)",
+        color: "black",
+        borderColor: "#4A0014",
+    },
+    health: new Decimal(2000),
+    damage: new Decimal(40),
+    attributes: {
+        "anima": new Decimal(0.2), // Resistance DMG Mult
+    },
+    actions: {
+        0: {
+            name: "Blind Shot",
+            instant: true,
+            type: "damage",
+            target: "randomPlayer",
+            method: "ranged",
+            properties: {"miss": new Decimal(0.2)},
+            value: new Decimal(1),
+            cooldown: new Decimal(5),
+        },
+        1: {
+            name: "Ramp-up",
+            instant: true,
+            type: "effect",
+            target: "celestialite",
+            properties: {
+                "agilityAdd": new Decimal(1), // Additive Effect
+            },
+            cooldown: new Decimal(2),
+        },
+        1: {
+            name: "Ramper-up",
+            instant: true,
+            type: "effect",
+            target: "celestialite",
+            properties: {
+                "agilityMult": new Decimal(1.1), // Multiplicative Effect
+            },
+            cooldown: new Decimal(10),
+        },
+    },
+    reward() {
+        let gain = {}
+        gain.faintUmbrite = new Decimal(550)
+        gain.clearUmbrite = new Decimal(225)
+        if (Math.random() < 0.5) gain.hazyUmbrite = new Decimal(2)
+        if (Math.random() < 0.5) gain.darkEther = new Decimal(1)
         return gain
     },
 }

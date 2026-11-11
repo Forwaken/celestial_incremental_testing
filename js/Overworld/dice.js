@@ -1137,7 +1137,7 @@
         },
         16: {
             costBase() { return new Decimal("1e50000") },
-            costGrowth() { return new Decimal("1e1000") },
+            costGrowth() { return new Decimal("1e2500") },
             purchaseLimit() { return new Decimal(250) },
             currency() { return player.d.dicePoints},
             pay(amt) { player.d.dicePoints = this.currency().sub(amt) },
@@ -1171,7 +1171,7 @@
         },
         17: {
             costBase() { return new Decimal("1e65000") },
-            costGrowth() { return new Decimal("1e1500") },
+            costGrowth() { return new Decimal("1e3500") },
             purchaseLimit() { return new Decimal(250) },
             currency() { return player.d.dicePoints},
             pay(amt) { player.d.dicePoints = this.currency().sub(amt) },
@@ -1205,7 +1205,7 @@
         },
         18: {
             costBase() { return new Decimal("1e80000") },
-            costGrowth() { return new Decimal("1e2000") },
+            costGrowth() { return new Decimal("1e5000") },
             purchaseLimit() { return new Decimal(250) },
             currency() { return player.d.dicePoints},
             pay(amt) { player.d.dicePoints = this.currency().sub(amt) },
@@ -1239,7 +1239,7 @@
         },
         19: {
             costBase() { return new Decimal("1e100000") },
-            costGrowth() { return new Decimal("1e2500") },
+            costGrowth() { return new Decimal("1e6000") },
             purchaseLimit() { return new Decimal(250) },
             currency() { return player.d.dicePoints},
             pay(amt) { player.d.dicePoints = this.currency().sub(amt) },
