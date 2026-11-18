@@ -36,6 +36,7 @@ addLayer("mdb", {
         player.mdb.inhalationGain = player.mdb.inhalationGain.mul(buyableEffect("mdb", 22))
         if (getBuyableAmount("mse", "gen5")) player.mdb.inhalationGain = player.mdb.inhalationGain.mul(1.5)
         if (player.mcu.mantraSelected[3] == 1) player.mdb.inhalationGain = player.mdb.inhalationGain.mul(player.mcu.mantraEffects[41])
+        player.mdb.inhalationGain = player.mdb.inhalationGain.mul(buyableEffect("mse", "db1"))
             
         player.mdb.inhalationGain = player.mdb.inhalationGain.pow(buyableEffect("mdb", 13))
 
@@ -44,6 +45,7 @@ addLayer("mdb", {
         player.mdb.exhalationGain = player.mdb.exhalationGain.mul(buyableEffect("mdb", 21))
         if (getBuyableAmount("mse", "gen5")) player.mdb.exhalationGain = player.mdb.exhalationGain.mul(1.5)
         if (player.mcu.mantraSelected[3] == 2) player.mdb.exhalationGain = player.mdb.exhalationGain.mul(player.mcu.mantraEffects[42])
+        player.mdb.exhalationGain = player.mdb.exhalationGain.mul(buyableEffect("mse", "db2"))
             
         player.mdb.exhalationGain = player.mdb.exhalationGain.pow(buyableEffect("mdb", 13))
 
@@ -312,11 +314,11 @@ addLayer("mdb", {
         },
         15: {
             costBase() { return new Decimal(20) },
-            costGrowth() { return new Decimal(4) },
+            costGrowth() { return new Decimal(2.5) },
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.mdb.inhalation},
             pay(amt) { player.mdb.inhalation = this.currency().sub(amt) },
-            effect(x) {return getBuyableAmount(this.layer, this.id).div(15).add(1).mul(Decimal.pow(1.04, getBuyableAmount(this.layer, this.id)))},
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(10).add(1).mul(Decimal.pow(1.05, getBuyableAmount(this.layer, this.id)))},
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -349,7 +351,7 @@ addLayer("mdb", {
         },
         16: {
             costBase() { return new Decimal(500) },
-            costGrowth() { return new Decimal(50) },
+            costGrowth() { return new Decimal(10) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.mdb.inhalation},
             pay(amt) { player.mdb.inhalation = this.currency().sub(amt) },
@@ -534,11 +536,11 @@ addLayer("mdb", {
         },
         25: {
             costBase() { return new Decimal(20) },
-            costGrowth() { return new Decimal(4) },
+            costGrowth() { return new Decimal(2.5) },
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.mdb.exhalation},
             pay(amt) { player.mdb.exhalation = this.currency().sub(amt) },
-            effect(x) {return getBuyableAmount(this.layer, this.id).div(15).add(1).mul(Decimal.pow(1.04, getBuyableAmount(this.layer, this.id)))},
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(10).add(1).mul(Decimal.pow(1.05, getBuyableAmount(this.layer, this.id)))},
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -571,11 +573,11 @@ addLayer("mdb", {
         },
         26: {
             costBase() { return new Decimal(400) },
-            costGrowth() { return new Decimal(40) },
+            costGrowth() { return new Decimal(8) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.mdb.exhalation},
             pay(amt) { player.mdb.exhalation = this.currency().sub(amt) },
-            effect(x) {return getBuyableAmount(this.layer, this.id).div(12.5).add(1).mul(Decimal.pow(1.05, getBuyableAmount(this.layer, this.id)))},
+            effect(x) {return getBuyableAmount(this.layer, this.id).div(10).add(1).mul(Decimal.pow(1.05, getBuyableAmount(this.layer, this.id)))},
             unlocked() { return true },
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost()) },
@@ -583,7 +585,7 @@ addLayer("mdb", {
                 return "Exhalation 2:3"
             },
             display() {
-                return "Boosts flow gain by x" + formatWhole(tmp[this.layer].buyables[this.id].effect) + ".\n\
+                return "Boosts flow gain by x" + format(tmp[this.layer].buyables[this.id].effect) + ".\n\
                     Cost: " + format(tmp[this.layer].buyables[this.id].cost) + " Exhalation\n\
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).add(1)) + " Temp Miasma"
             },

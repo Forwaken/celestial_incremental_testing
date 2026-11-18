@@ -34,6 +34,8 @@
         replicantiSoftcap5Start: new Decimal("1e2000000"),
 
         replicantiPointEffect: new Decimal(1),
+
+        turbo: false,
     }},
     automate() {
         if (hasMilestone("s", 17) && !inChallenge("fu", 11) && (!inChallenge("fu", 12) || hasUpgrade("en", 18))) {
@@ -66,135 +68,140 @@
 
         if (hasUpgrade("cp", 18) && player.cp.cantepocalypseActive) player.cp.cantepocalypseActive = false
 
-        multAdd = new Decimal(0.01)
-        multAdd = multAdd.add(player.ar.rankPointsEffect)
-        multAdd = multAdd.mul(buyableEffect("pr", 11))
-        if (hasUpgrade("an", 11)) multAdd = multAdd.mul(1.5)
-        if (hasUpgrade("an", 12)) multAdd = multAdd.mul(upgradeEffect("an", 12))
-        multAdd = multAdd.mul(buyableEffect("rt", 15))
-        multAdd = multAdd.mul(player.rg.repliGrassEffect)
-        multAdd = multAdd.mul(buyableEffect("rg", 15))
-        multAdd = multAdd.mul(player.gs.grassSkipEffect)
-        if (hasUpgrade("an", 23)) multAdd = multAdd.mul(upgradeEffect("an", 23))
-        if (hasMilestone("gs", 12)) multAdd = multAdd.mul(player.gs.milestone2Effect)
-        multAdd = multAdd.mul(player.oi.linkingPowerEffect[0])
-        if (hasUpgrade("fu", 101)) multAdd = multAdd.mul(3)
-        if (!inChallenge("fu", 12)) {
-            multAdd = multAdd.mul(levelableEffect("pet", 402)[0])
-            multAdd = multAdd.mul(player.co.cores.point.effect[2])
+        let repeat = (player.musuniverse == "A1" && player.cp.turbo) ? 10 : 1
+        delta = Decimal.div(delta, repeat)
+
+        for (let i = 0; i < repeat; i++) {
+            multAdd = new Decimal(0.01)
+            multAdd = multAdd.add(player.ar.rankPointsEffect)
+            multAdd = multAdd.mul(buyableEffect("pr", 11))
+            if (hasUpgrade("an", 11)) multAdd = multAdd.mul(1.5)
+            if (hasUpgrade("an", 12)) multAdd = multAdd.mul(upgradeEffect("an", 12))
+            multAdd = multAdd.mul(buyableEffect("rt", 15))
+            multAdd = multAdd.mul(player.rg.repliGrassEffect)
+            multAdd = multAdd.mul(buyableEffect("rg", 15))
+            multAdd = multAdd.mul(player.gs.grassSkipEffect)
+            if (hasUpgrade("an", 23)) multAdd = multAdd.mul(upgradeEffect("an", 23))
+            if (hasMilestone("gs", 12)) multAdd = multAdd.mul(player.gs.milestone2Effect)
+            multAdd = multAdd.mul(player.oi.linkingPowerEffect[0])
+            if (hasUpgrade("fu", 101)) multAdd = multAdd.mul(3)
+            if (!inChallenge("fu", 12)) {
+                multAdd = multAdd.mul(levelableEffect("pet", 402)[0])
+                multAdd = multAdd.mul(player.co.cores.point.effect[2])
+            }
+
+            // POWERS
+            if (inChallenge("fu", 11)) multAdd = multAdd.pow(Decimal.mul(0.2, buyableEffect("fu", 88)))
+
+            player.cp.replicantiPointsTimerReq = new Decimal(3)
+            player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(buyableEffect("pr", 12))
+            if (hasUpgrade("fu", 103)) player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(upgradeEffect("fu", 103))
+            if (hasUpgrade("fu", 111)) player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(2)
+            player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(player.en.enhancePointsEffect)
+            player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(buyableEffect("fu", 105))
+
+            player.cp.replicantiSoftcapStart = new Decimal(1000)
+            player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(buyableEffect("pr", 15))
+            if (hasUpgrade("an", 14)) player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(1000)
+            if (hasUpgrade("an", 19)) player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(upgradeEffect("an", 19))
+            player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(buyableEffect("rg", 18))
+            player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(buyableEffect("fu", 22))
+            player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(buyableEffect("fu", 65))
+
+            if (!inChallenge("fu", 12)) player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.pow(buyableEffect("cof", 13))
+
+            // CHALLENGE
+            if (inChallenge("fu", 12)) player.cp.replicantiSoftcapStart = new Decimal(1)
+
+            player.cp.replicantiSoftcapEffect = player.cp.replicantiPoints.sub(player.cp.replicantiSoftcapStart).pow(0.375).max(1)
+            if (inChallenge("fu", 12) && hasUpgrade("fu", 106)) player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.pow(upgradeEffect("fu", 106))
+            if (!inChallenge("fu", 12)) {
+                player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.div(buyableEffect("pr", 16))
+                player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.div(buyableEffect("fu", 22))
+                player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.div(buyableEffect("fu", 66))
+                if (inChallenge("fu", 11)) player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.pow(2)
+                if (hasUpgrade("en", 13)) player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.pow(0.01)
+            } else {
+                player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.max(1)
+            }
+            if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcapStart)) {
+                multAdd = multAdd.div(player.cp.replicantiSoftcapEffect)
+            }
+
+            player.cp.replicantiSoftcap2Start = new Decimal(1e9)
+            if (hasUpgrade("an", 14)) player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(1000)
+            player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(buyableEffect("rt", 17))
+            if (hasUpgrade("an", 19)) player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(upgradeEffect("an", 19))
+            player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(buyableEffect("rg", 18))
+            player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(buyableEffect("fu", 22))
+            player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(buyableEffect("fu", 67))
+
+            // CHALLENGE
+            if (inChallenge("fu", 12)) player.cp.replicantiSoftcap2Start = new Decimal(1)
+
+            player.cp.replicantiSoftcap2Effect = player.cp.replicantiPoints.sub(player.cp.replicantiSoftcap2Start).pow(0.25).div(4).max(1)
+            if (inChallenge("fu", 12) && hasUpgrade("fu", 106)) player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.pow(upgradeEffect("fu", 106))
+            if (!inChallenge("fu", 12)) {
+                player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.div(buyableEffect("pr", 16))
+                if (hasUpgrade("an", 22)) player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.div(upgradeEffect("an", 22))
+                player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.div(buyableEffect("fu", 22))
+                player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.div(buyableEffect("fu", 68))
+                if (inChallenge("fu", 11)) player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.pow(2)
+            } else {
+                player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.max(1)
+            }
+            if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap2Start)) {
+                multAdd = multAdd.div(player.cp.replicantiSoftcap2Effect)
+            }
+
+            player.cp.replicantiSoftcap3Start = new Decimal(1e308)
+            if (inChallenge("fu", 12)) player.cp.replicantiSoftcap3Start = new Decimal(1)
+            if (!player.ir.iriditeDefeated) {
+                player.cp.replicantiSoftcap3Effect = player.cp.replicantiPoints.plus(1).log(10).div(30).add(1)
+            } else {
+                player.cp.replicantiSoftcap3Effect = player.cp.replicantiPoints.plus(1).log(10).div(100).add(1)
+            }
+            if (inChallenge("fu", 12) && hasUpgrade("fu", 106)) player.cp.replicantiSoftcap3Effect = player.cp.replicantiSoftcap3Effect.pow(upgradeEffect("fu", 106))
+            if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap3Start)) {
+                player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.mul(player.cp.replicantiSoftcap3Effect)
+            }
+
+            player.cp.replicantiSoftcap4Start = new Decimal(1e308)
+            player.cp.replicantiSoftcap4Effect = Decimal.div(1, player.cp.replicantiPoints.plus(1).log(10).pow(0.7).pow(player.hor.essence.effect2)).min(1)
+            if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap4Start) && multAdd.gte(1)) {
+                multAdd = multAdd.pow(player.cp.replicantiSoftcap4Effect)
+            }
+
+            player.cp.replicantiSoftcap5Start = new Decimal("1e2000000")
+            player.cp.replicantiSoftcap5Effect = player.cp.replicantiPoints.plus(1).log(10).pow(0.4)
+            if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap5Start) && multAdd.gte(1)) {
+                player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.mul(player.cp.replicantiSoftcap5Effect)
+            }
+
+            multAdd = multAdd.mul(buyableEffect("fu", 36))
+            multAdd = multAdd.mul(player.fu.fearEffect2)
+
+            if (inChallenge("fu", 12) && multAdd.gte(1)) multAdd = multAdd.pow(Decimal.mul(0.2, buyableEffect("fu", 88)))
+
+            multAdd = multAdd.mul(player.en.enhancersEffect[0])
+
+            player.cp.replicantiPointsMult = multAdd.add(1)
+
+            if (player.ca.cantepocalypseUnlock) player.cp.replicantiPointsTimer = player.cp.replicantiPointsTimer.add(onepersec.mul(delta))
+
+            if (player.cp.replicantiPointsTimer.gte(player.cp.replicantiPointsTimerReq)) {
+                layers.cp.replicantiPointMultiply();
+            }
+
+            //cap
+            player.cp.replicantiPointCap = new Decimal(1.79e308)
+            if (!inChallenge("fu", 12)) player.cp.replicantiPointCap = player.cp.replicantiPointCap.pow(buyableEffect("cof", 11))
+            player.cp.replicantiPointCap = player.cp.replicantiPointCap.pow(player.en.enhancersEffect[1])
+            player.cp.replicantiPointCap = player.cp.replicantiPointCap.pow(levelableEffect("car", 308)[0])
+
+            //effect
+            player.cp.replicantiPointEffect = player.cp.replicantiPoints.plus(1).log10().pow(0.25).div(100).add(1)
         }
-
-        // POWERS
-        if (inChallenge("fu", 11)) multAdd = multAdd.pow(Decimal.mul(0.2, buyableEffect("fu", 88)))
-
-        player.cp.replicantiPointsTimerReq = new Decimal(3)
-        player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(buyableEffect("pr", 12))
-        if (hasUpgrade("fu", 103)) player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(upgradeEffect("fu", 103))
-        if (hasUpgrade("fu", 111)) player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(2)
-        player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(player.en.enhancePointsEffect)
-        player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.div(buyableEffect("fu", 105))
-
-        player.cp.replicantiSoftcapStart = new Decimal(1000)
-        player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(buyableEffect("pr", 15))
-        if (hasUpgrade("an", 14)) player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(1000)
-        if (hasUpgrade("an", 19)) player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(upgradeEffect("an", 19))
-        player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(buyableEffect("rg", 18))
-        player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(buyableEffect("fu", 22))
-        player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.mul(buyableEffect("fu", 65))
-
-        if (!inChallenge("fu", 12)) player.cp.replicantiSoftcapStart = player.cp.replicantiSoftcapStart.pow(buyableEffect("cof", 13))
-
-        // CHALLENGE
-        if (inChallenge("fu", 12)) player.cp.replicantiSoftcapStart = new Decimal(1)
-
-        player.cp.replicantiSoftcapEffect = player.cp.replicantiPoints.sub(player.cp.replicantiSoftcapStart).pow(0.375).max(1)
-        if (inChallenge("fu", 12) && hasUpgrade("fu", 106)) player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.pow(upgradeEffect("fu", 106))
-        if (!inChallenge("fu", 12)) {
-            player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.div(buyableEffect("pr", 16))
-            player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.div(buyableEffect("fu", 22))
-            player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.div(buyableEffect("fu", 66))
-            if (inChallenge("fu", 11)) player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.pow(2)
-            if (hasUpgrade("en", 13)) player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.pow(0.01)
-        } else {
-            player.cp.replicantiSoftcapEffect = player.cp.replicantiSoftcapEffect.max(1)
-        }
-        if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcapStart)) {
-            multAdd = multAdd.div(player.cp.replicantiSoftcapEffect)
-        }
-
-        player.cp.replicantiSoftcap2Start = new Decimal(1e9)
-        if (hasUpgrade("an", 14)) player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(1000)
-        player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(buyableEffect("rt", 17))
-        if (hasUpgrade("an", 19)) player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(upgradeEffect("an", 19))
-        player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(buyableEffect("rg", 18))
-        player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(buyableEffect("fu", 22))
-        player.cp.replicantiSoftcap2Start = player.cp.replicantiSoftcap2Start.mul(buyableEffect("fu", 67))
-
-        // CHALLENGE
-        if (inChallenge("fu", 12)) player.cp.replicantiSoftcap2Start = new Decimal(1)
-
-        player.cp.replicantiSoftcap2Effect = player.cp.replicantiPoints.sub(player.cp.replicantiSoftcap2Start).pow(0.25).div(4).max(1)
-        if (inChallenge("fu", 12) && hasUpgrade("fu", 106)) player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.pow(upgradeEffect("fu", 106))
-        if (!inChallenge("fu", 12)) {
-            player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.div(buyableEffect("pr", 16))
-            if (hasUpgrade("an", 22)) player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.div(upgradeEffect("an", 22))
-            player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.div(buyableEffect("fu", 22))
-            player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.div(buyableEffect("fu", 68))
-            if (inChallenge("fu", 11)) player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.pow(2)
-        } else {
-            player.cp.replicantiSoftcap2Effect = player.cp.replicantiSoftcap2Effect.max(1)
-        }
-        if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap2Start)) {
-            multAdd = multAdd.div(player.cp.replicantiSoftcap2Effect)
-        }
-
-        player.cp.replicantiSoftcap3Start = new Decimal(1e308)
-        if (inChallenge("fu", 12)) player.cp.replicantiSoftcap3Start = new Decimal(1)
-        if (!player.ir.iriditeDefeated) {
-            player.cp.replicantiSoftcap3Effect = player.cp.replicantiPoints.plus(1).log(10).div(30).add(1)
-        } else {
-            player.cp.replicantiSoftcap3Effect = player.cp.replicantiPoints.plus(1).log(10).div(100).add(1)
-        }
-        if (inChallenge("fu", 12) && hasUpgrade("fu", 106)) player.cp.replicantiSoftcap3Effect = player.cp.replicantiSoftcap3Effect.pow(upgradeEffect("fu", 106))
-        if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap3Start)) {
-            player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.mul(player.cp.replicantiSoftcap3Effect)
-        }
-
-        player.cp.replicantiSoftcap4Start = new Decimal(1e308)
-        player.cp.replicantiSoftcap4Effect = Decimal.div(1, player.cp.replicantiPoints.plus(1).log(10).pow(0.7).pow(player.hor.essence.effect2)).min(1)
-        if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap4Start) && multAdd.gte(1)) {
-            multAdd = multAdd.pow(player.cp.replicantiSoftcap4Effect)
-        }
-
-        player.cp.replicantiSoftcap5Start = new Decimal("1e2000000")
-        player.cp.replicantiSoftcap5Effect = player.cp.replicantiPoints.plus(1).log(10).pow(0.4)
-        if (player.cp.replicantiPoints.gte(player.cp.replicantiSoftcap5Start) && multAdd.gte(1)) {
-            player.cp.replicantiPointsTimerReq = player.cp.replicantiPointsTimerReq.mul(player.cp.replicantiSoftcap5Effect)
-        }
-
-        multAdd = multAdd.mul(buyableEffect("fu", 36))
-        multAdd = multAdd.mul(player.fu.fearEffect2)
-
-        if (inChallenge("fu", 12) && multAdd.gte(1)) multAdd = multAdd.pow(Decimal.mul(0.2, buyableEffect("fu", 88)))
-
-        multAdd = multAdd.mul(player.en.enhancersEffect[0])
-
-        player.cp.replicantiPointsMult = multAdd.add(1)
-
-        if (player.ca.cantepocalypseUnlock) player.cp.replicantiPointsTimer = player.cp.replicantiPointsTimer.add(onepersec.mul(delta))
-
-        if (player.cp.replicantiPointsTimer.gte(player.cp.replicantiPointsTimerReq)) {
-            layers.cp.replicantiPointMultiply();
-        }
-
-        //cap
-        player.cp.replicantiPointCap = new Decimal(1.79e308)
-        if (!inChallenge("fu", 12)) player.cp.replicantiPointCap = player.cp.replicantiPointCap.pow(buyableEffect("cof", 11))
-        player.cp.replicantiPointCap = player.cp.replicantiPointCap.pow(player.en.enhancersEffect[1])
-        player.cp.replicantiPointCap = player.cp.replicantiPointCap.pow(levelableEffect("car", 308)[0])
-
-        //effect
-        player.cp.replicantiPointEffect = player.cp.replicantiPoints.plus(1).log10().pow(0.25).div(100).add(1)
     },
     replicantiPointMultiply() {
         if (player.cp.replicantiPoints.gte(player.cp.replicantiPointCap)) {
@@ -209,7 +216,25 @@
             player.cp.replicantiPointsTimer = new Decimal(0)
         }
     },
-    clickables: {},
+    clickables: {
+        1: {
+            title() {return player.cp.turbo ? "Activate replicanti point turbo<br>(Splits RP ticks into 10 updates)<small>[ON]</small>" : "Activate replicanti point turbo<br>(Splits RP ticks into 10 updates)<small>[OFF]</small>"},
+            canClick: true,
+            unlocked: true,
+            onClick() {
+                if (player.cp.turbo) {
+                    player.cp.turbo = false
+                } else {
+                    player.cp.turbo = true
+                }
+            },
+            style() {
+                let look = {width: "300px", minHeight: "40px", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "20px"}
+                player.cp.turbo ? look.background = "#398" : look.background = "#266"
+                return look
+            },
+        },
+    },
     bars: {
         replicantiBar: {
             unlocked() { return true },
@@ -342,6 +367,8 @@
                     ["blank", "25px"],
                     ["style-row", [["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15], ["upgrade", 16],
                         ["upgrade", 17], ["upgrade", 18], ["upgrade", 19]], {maxWidth: "800px"}],
+                    ["blank", "25px"],
+                    ["clickable", 1],
                 ]
             },
             "Softcap": {

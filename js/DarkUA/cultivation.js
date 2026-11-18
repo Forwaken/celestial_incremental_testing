@@ -468,16 +468,17 @@ addLayer("mcu", {
                 return look
             }
         },
-        28: {
+        // Upgrade that unlocks new deep breathing buyables
+        31: {
             fullDisplay() {
                 return "<h3>Plentiful Points</h3><br>" +
                     "Unlock three new meridian points<br><br>" +
                     "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
-                    "Penalty: +8 Miasma"
+                    "Penalty: +10 Miasma"
             },
             unlocked() { return true },
-            cost: new Decimal(1e24),
-            onPurchase() {player.mse.miasma = player.mse.miasma.add(8);layers.mse.resetCheck()},
+            cost: new Decimal(1e35),
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(10);layers.mse.resetCheck()},
             currencyLocation() { return player.mse },
             currencyInternalName: "ki",
             style() {
@@ -504,6 +505,7 @@ addLayer("mcu", {
                             ["upgrade", 16], ["upgrade", 17], ["upgrade", 18], ["upgrade", 19], ["upgrade", 20],
                             ["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 24], ["upgrade", 25],
                             ["upgrade", 26], ["upgrade", 27], ["upgrade", 28], ["upgrade", 29], ["upgrade", 30],
+                            ["upgrade", 31],
                         ], {maxWidth: "680px"}],
                         ["blank", "5px"],
                     ], {width: "680px", background: "#b8860b22", border: "3px solid #735307"}],
