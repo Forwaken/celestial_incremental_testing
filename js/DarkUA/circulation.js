@@ -58,11 +58,12 @@ addLayer("mci", {
         if (getBuyableAmount("mse", "gen3").gt(0)) player.mci.flowGain = player.mci.flowGain.mul(1.3)
         player.mci.flowGain = player.mci.flowGain.mul(buyableEffect("mse", "ci3"))
         player.mci.flowGain = player.mci.flowGain.mul(buyableEffect("mse", "ci6"))
+        player.mci.flowGain = player.mci.flowGain.mul(buyableEffect("mdb", 26))
 
         // Concentrating
         player.mci.concentrateCap = new Decimal(50)
 
-        let concentrateChange = player.mci.concentrateBuff.div(100).max(0.1).mul("-1").div(buyableEffect("mse", "ci5"))
+        let concentrateChange = player.mci.concentrateBuff.div(100).max(0.1).mul("-1")
         concentrateChange = concentrateChange.add(buyableEffect("mse", "ci4").sub(1))
 
         if (player.mci.concentrateBuff.gt(0)) player.mci.concentrateBuff = player.mci.concentrateBuff.add(concentrateChange.mul(delta)).max(0).min(player.mci.concentrateCap)
@@ -73,14 +74,19 @@ addLayer("mci", {
         if (player.mcu.mantraSelected[1] == 1) player.mci.circSpeed = player.mci.circSpeed.mul(player.mcu.mantraEffects[21])
         if (getBuyableAmount("mse", "gen3").gt(0)) player.mci.circSpeed = player.mci.circSpeed.mul(1.3)
         player.mci.circSpeed = player.mci.circSpeed.mul(buyableEffect("mse", "ci1"))
+        player.mci.circSpeed = player.mci.circSpeed.mul(buyableEffect("mdb", 25))
 
         if (hasUpgrade("mcu", 11)) player.mci.circCurrent = player.mci.circCurrent.add(Decimal.mul(player.mci.circSpeed, delta))
 
         // Circulation Trigger
-        player.mci.circMax = new Decimal(5).add(player.mci.circAmt.div(10))
+        let circDiv = new Decimal(1)
+        circDiv = circDiv.mul(buyableEffect("mse", "ci5"))
+        circDiv = circDiv.mul(buyableEffect("mdb", 15))
+
+        player.mci.circMax = new Decimal(5).add(player.mci.circAmt.div(10)).div(circDiv)
         if (player.mci.circCurrent.gte(player.mci.circMax)) {
-            let mult = Decimal.affordArithmeticSeries(player.mci.circCurrent, 5, 0.1, player.mci.circAmt).floor().max(1)
-            player.mci.circCurrent = player.mci.circCurrent.sub(Decimal.sumArithmeticSeries(mult, 5, 0.1, player.mci.circAmt)).max(0)
+            let mult = Decimal.affordArithmeticSeries(player.mci.circCurrent, Decimal.div(5, circDiv), Decimal.div(0.1, circDiv), player.mci.circAmt).floor().max(1)
+            player.mci.circCurrent = player.mci.circCurrent.sub(Decimal.sumArithmeticSeries(mult, Decimal.div(5, circDiv), Decimal.div(0.1, circDiv), player.mci.circAmt)).max(0)
             player.mci.circAmt = player.mci.circAmt.add(mult)
             player.mci.flow = player.mci.flow.add(player.mci.flowGain.mul(mult))
 
@@ -103,10 +109,10 @@ addLayer("mci", {
         player.mci.flowEffects[3] = effFlow.add(1).log(5).div(50).add(1) // Mantra power based on flow
         player.mci.flowEffects2[3] = effFlow.add(1).log(2).div(5).add(1) // Prestige effect based on flow
 
-        player.mci.flowEffects[4] = player.mci.flow.add(1).log(5).pow(0.7).mul(10).floor().div(10).add(1) // Miasma cap based on flow
+        player.mci.flowEffects[4] = player.mci.flow.add(1).log(5).pow(0.7).mul(10).floor().div(10).add(1).pow(buyableEffect("mse", "mia5")) // Miasma cap based on flow
         
         player.mci.flowEffects[5] = effFlow.add(1).log(5).div(50).add(1) // Meridian req based on flow
-        player.mci.flowEffects2[5] = Decimal.div(1, effFlow.add(1).log(5).div(50).add(1)) // Dark point softcap based on flow
+        player.mci.flowEffects2[5] = Decimal.div(1, effFlow.add(1).log(10).pow(0.7).div(100).add(1)) // Universe reset req based on flow
     },
     clickables: {
         1: {
@@ -223,8 +229,9 @@ addLayer("mci", {
                 }}],
                 ["style-column", [
                     ["style-column", [
-                        ["raw-html", () => {return formatSimple(player.mci.circCurrent.div(player.mci.circMax).min(1).max(0).mul(100), 0) + "%"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                    ], {height: "53px"}],
+                        ["raw-html", () => {return formatSimple(player.mci.circCurrent.div(player.mci.circMax).min(1).max(0).mul(100), 0) + "%"}, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "[" + formatTime(player.mci.circCurrent) + "/" + formatTime(player.mci.circMax) + "]"}, {color: "#ccc", fontSize: "14px", fontFamily: "monospace"}]
+                    ], {lineHeight: "1", height: "53px"}],
                     ["clip-hoverless-clickable", 1],
                 ], {position: "absolute", left: "0", top: "0", width: "700px", height: "150px"}],
             ], () => {
@@ -311,7 +318,7 @@ addLayer("mci", {
                         ["raw-html", "3,125", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
                     ], {backgroundColor: "#253626", borderLeft: "3px solid #446346", borderRight: "3px solid #446346", borderRadius: "0px", width: "124px", height: "50px"}],
                     ["style-column", [
-                        ["raw-html", () => {return "Reduce dark point softcap based on flow<br>Currently: ^" + format(player.mci.flowEffects2[5]) + "."}, {color: "white", fontSize: "13px"}],
+                        ["raw-html", () => {return "Reduce universe reset requirement based on flow<br>Currently: ^" + format(player.mci.flowEffects2[5], 3) + "."}, {color: "white", fontSize: "13px"}],
                     ], () => {
                         let look = {width: "275px", height: "50px", padding: "0 5px", lineHeight: "0.8"}
                         hasMilestone("mci", 16) ? look.background = "#1a3b0f" : look.background = "#361e1e"

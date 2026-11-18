@@ -15,6 +15,8 @@ addLayer("mcu", {
             22: new Decimal(1),
             31: new Decimal(1),
             32: new Decimal(1),
+            41: new Decimal(1),
+            42: new Decimal(1),
         },
     }},
     automate() {},
@@ -39,8 +41,10 @@ addLayer("mcu", {
         player.mcu.mantraEffects[12] = player.mse.miasma.add(player.mse.tempMiasma).add(1).log(2).add(1).pow(mantraPower)
         player.mcu.mantraEffects[21] = player.mci.flow.add(1).log(10).div(2).add(1).pow(mantraPower)
         player.mcu.mantraEffects[22] = player.mci.circAmt.add(1).log(2).div(5).add(1).pow(mantraPower)
-        player.mcu.mantraEffects[31] = player.mme.meridianTotal.add(1).log(2).div(30).add(1).pow(mantraPower)
-        player.mcu.mantraEffects[32] = player.mme.meridianTotal.add(1).log(3).div(30).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[31] = player.mme.meridianTotal.pow(0.7).div(20).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[32] = player.mme.meridianTotal.pow(0.7).div(15).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[41] = player.mdb.exhalation.add(1).log(2).div(10).add(1).pow(mantraPower)
+        player.mcu.mantraEffects[42] = player.mdb.inhalation.add(1).log(2).div(10).add(1).pow(mantraPower)
     },
     clickables: {
         11: {
@@ -96,7 +100,7 @@ addLayer("mcu", {
             },
         },
         31: {
-            title() { return "<h3>Mantra 3:1</h3><hr style='width:200px;border:1px solid white'><small>Reduce meridian requirements based on total meridian levels</small><br>Currently: /" + formatSimple(player.mcu.mantraEffects[31], 2) },
+            title() { return "<h3>Mantra 3:1</h3><hr style='width:200px;border:1px solid white'><small>Reduce meridian requirements based on total meridian level magnitudes</small><br>Currently: /" + formatSimple(player.mcu.mantraEffects[31], 2) },
             canClick() { return player.mcu.mantraSelected[2] != 1},
             unlocked() { return hasUpgrade("mcu", 18) },
             onClick() {
@@ -109,12 +113,38 @@ addLayer("mcu", {
             },
         },
         32: {
-            title() { return "<h3>Mantra 3:2</h3><hr style='width:200px;border:1px solid white'><small>Reduce miasma cap penalty based on total meridian levels</small><br>Currently: /" + formatSimple(player.mcu.mantraEffects[32], 2) },
+            title() { return "<h3>Mantra 3:2</h3><hr style='width:200px;border:1px solid white'><small>Reduce miasma cap penalty based on total meridian level magnitudes</small><br>Currently: /" + formatSimple(player.mcu.mantraEffects[32], 2) },
             tooltip: "Miasma rounds to the nearest tenth",
             canClick() { return player.mcu.mantraSelected[2] != 2},
             unlocked() { return hasUpgrade("mcu", 18) },
             onClick() {
                 player.mcu.mantraSelected[2] = 2
+            },
+            style() {
+                let look = {width: "225px", minHeight: "100px", borderRadius: "15px", color: "white", border: "3px solid #735307", margin: "5px"}
+                !this.canClick() ? look.backgroundColor =  "#433004" : look.backgroundColor = "black"
+                return look
+            },
+        },
+        41: {
+            title() { return "<h3>Mantra 3:1</h3><hr style='width:200px;border:1px solid white'><small>Boost inhalation gain based on exhalation</small><br>Currently: x" + formatSimple(player.mcu.mantraEffects[41], 2) },
+            canClick() { return player.mcu.mantraSelected[3] != 1},
+            unlocked() { return hasUpgrade("mcu", 23) },
+            onClick() {
+                player.mcu.mantraSelected[3] = 1
+            },
+            style() {
+                let look = {width: "225px", minHeight: "100px", borderRadius: "15px", color: "white", border: "3px solid #735307", margin: "5px"}
+                !this.canClick() ? look.backgroundColor =  "#433004" : look.backgroundColor = "black"
+                return look
+            },
+        },
+        42: {
+            title() { return "<h3>Mantra 3:1</h3><hr style='width:200px;border:1px solid white'><small>Boost exhalation gain based on inhalation</small><br>Currently: x" + formatSimple(player.mcu.mantraEffects[42], 2) },
+            canClick() { return player.mcu.mantraSelected[3] != 2},
+            unlocked() { return hasUpgrade("mcu", 23) },
+            onClick() {
+                player.mcu.mantraSelected[3] = 2
             },
             style() {
                 let look = {width: "225px", minHeight: "100px", borderRadius: "15px", color: "white", border: "3px solid #735307", margin: "5px"}
@@ -155,7 +185,7 @@ addLayer("mcu", {
             onPurchase() {player.mse.miasma = player.mse.miasma.add(0.5);layers.mse.resetCheck()},
             currencyLocation() { return player.mse },
             currencyInternalName: "ki",
-            effect() {return player.mci.concentrateBuff.div(50).add(1)},
+            effect() {return player.mci.concentrateBuff.div(50).mul(buyableEffect("mse", "ci7")).add(1)},
             style() {
                 let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
@@ -239,7 +269,7 @@ addLayer("mcu", {
         17: {
             fullDisplay() {
                 return "<h3>Flowing Pathways</h3><br>" +
-                    "Increase flow gain based on total meridian levels<br>" +
+                    "Increase flow gain based on total meridian level magnitudes<br>" +
                     "Currently: x" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>" +
                     "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
                     "Penalty: +3 Miasma"
@@ -249,7 +279,7 @@ addLayer("mcu", {
             onPurchase() {player.mse.miasma = player.mse.miasma.add(3);layers.mse.resetCheck()},
             currencyLocation() { return player.mse },
             currencyInternalName: "ki",
-            effect() {return player.mme.meridianTotal.add(1).log(10).div(2).add(1)},
+            effect() {return player.mme.meridianTotal.div(4).mul(buyableEffect("mse", "ci8")).add(1)},
             style() {
                 let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
                 hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
@@ -328,7 +358,60 @@ addLayer("mcu", {
                 return look
             }
         },
-        // Upgrade that unlocks deep breathing
+        22: {
+            fullDisplay() {
+                return "<h3>Expanded Entryways</h3><br>" +
+                    "Reduce meridian ki level requirements by /5<br><br>" +
+                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
+                    "Penalty: +5 Miasma"
+            },
+            unlocked() { return true },
+            cost: new Decimal(1e10),
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(5);layers.mse.resetCheck()},
+            currencyLocation() { return player.mse },
+            currencyInternalName: "ki",
+            style() {
+                let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
+                return look
+            }
+        },
+        23: {
+            fullDisplay() {
+                return "<h3>Breathing Mantras</h3><br>" +
+                    "Unlock deep breathing mantras<br><br>" +
+                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
+                    "Penalty: +6 Miasma"
+            },
+            unlocked() { return true },
+            cost: new Decimal(1e12),
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(6);layers.mse.resetCheck()},
+            currencyLocation() { return player.mse },
+            currencyInternalName: "ki",
+            style() {
+                let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
+                return look
+            }
+        },
+        24: {
+            fullDisplay() {
+                return "<h3>Deeper Breathing</h3><br>" +
+                    "Reduce deep breathing decay by -10%<br><br>" +
+                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
+                    "Penalty: +6 Miasma"
+            },
+            unlocked() { return true },
+            cost: new Decimal(1e14),
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(6);layers.mse.resetCheck()},
+            currencyLocation() { return player.mse },
+            currencyInternalName: "ki",
+            style() {
+                let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
+                return look
+            }
+        },
         // Upgrade that raises ki by ^1.01 per hara level
         // Upgrade that unlocks more meridian nodes
         // Upgrade that unlocks a new mantra for each type
@@ -348,7 +431,8 @@ addLayer("mcu", {
                         ["style-row", [
                             ["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14], ["upgrade", 15],
                             ["upgrade", 16], ["upgrade", 17], ["upgrade", 18], ["upgrade", 19], ["upgrade", 20],
-                            ["upgrade", 21],
+                            ["upgrade", 21], ["upgrade", 22], ["upgrade", 23], ["upgrade", 24], ["upgrade", 25],
+                            ["upgrade", 26], ["upgrade", 27], ["upgrade", 28], ["upgrade", 29], ["upgrade", 30],
                         ], {maxWidth: "680px"}],
                         ["blank", "5px"],
                     ], {width: "680px", background: "#b8860b22", border: "3px solid #735307"}],
@@ -368,6 +452,7 @@ addLayer("mcu", {
                         ["style-row", [["clickable", 11], ["clickable", 12]], {width: "755px"}],
                         ["style-row", [["clickable", 21], ["clickable", 22]], {borderTop: "3px solid #503a04"}],
                         ["style-row", [["clickable", 31], ["clickable", 32]], () => {return hasUpgrade("mcu", 18) ? {borderTop: "3px solid #503a04"} : {display: "none !important"}}],
+                        ["style-row", [["clickable", 41], ["clickable", 42]], () => {return hasUpgrade("mcu", 23) ? {borderTop: "3px solid #503a04"} : {display: "none !important"}}],
                         ["blank", "5px"],
                     ], {width: "755px", background: "#b8860b11", border: "3px solid #735307"}],
                     ["style-column", [

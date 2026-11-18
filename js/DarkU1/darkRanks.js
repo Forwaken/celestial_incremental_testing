@@ -66,14 +66,17 @@
         player.dr.rankDiv = new Decimal(1)
         player.dr.rankDiv = player.dr.rankDiv.mul(buyableEffect("dp", 11))
         player.dr.rankDiv = player.dr.rankDiv.mul(levelableEffect("spet", 202)[0])
+        player.dr.rankDiv = player.dr.rankDiv.mul(player.mme.meridian[2].effect[1])
 
         player.dr.tierDiv = new Decimal(1)
         player.dr.tierDiv = player.dr.tierDiv.mul(buyableEffect("dp", 12))
         player.dr.tierDiv = player.dr.tierDiv.mul(levelableEffect("spet", 203)[0])
+        player.dr.tierDiv = player.dr.tierDiv.mul(player.mme.meridian[2].effect[1])
 
         player.dr.tetrDiv = new Decimal(1)
         player.dr.tetrDiv = player.dr.tetrDiv.mul(buyableEffect("dp", 13))
         player.dr.tetrDiv = player.dr.tetrDiv.mul(levelableEffect("spet", 204)[0])
+        player.dr.tetrDiv = player.dr.tetrDiv.mul(player.mme.meridian[2].effect[1])
 
         player.dr.pentDiv = new Decimal(1)
 
@@ -197,6 +200,7 @@
         if (player.pet.legPetTimers[0].active) player.dr.rankPointsPerSecond = player.dr.rankPointsPerSecond.pow(0.6)
         if (hasMilestone("db", 13)) player.dr.rankPointsPerSecond = player.dr.rankPointsPerSecond.mul(1000)
         if (getLevelableTier("pu", 403, true)) player.dr.rankPointsPerSecond = player.dr.rankPointsPerSecond.mul(player.dec.silicon28Effect)
+        player.dr.rankPointsPerSecond = player.dr.rankPointsPerSecond.mul(player.mme.meridian[5].effect[1])
 
         player.dr.tierPoints = player.dr.tierPoints.add(player.dr.tierPointsPerSecond.mul(delta))   
         player.dr.tierPointsEffect = player.dr.tierPoints.pow(0.3).div(10).add(1)
@@ -214,6 +218,7 @@
         if (player.pet.legPetTimers[0].active) player.dr.tierPointsPerSecond = player.dr.tierPointsPerSecond.pow(0.6)
         if (hasMilestone("db", 13)) player.dr.tierPointsPerSecond = player.dr.tierPointsPerSecond.mul(100)
         if (getLevelableTier("pu", 403, true)) player.dr.tierPointsPerSecond = player.dr.tierPointsPerSecond.mul(player.dec.silicon28Effect)
+        player.dr.tierPointsPerSecond = player.dr.tierPointsPerSecond.mul(player.mme.meridian[5].effect[1])
 
 
         player.dr.tetrPoints = player.dr.tetrPoints.add(player.dr.tetrPointsPerSecond.mul(delta))
@@ -232,6 +237,7 @@
         if (player.pet.legPetTimers[0].active) player.dr.tetrPointsPerSecond = player.dr.tetrPointsPerSecond.pow(0.6)
         if (hasMilestone("db", 13)) player.dr.tetrPointsPerSecond = player.dr.tetrPointsPerSecond.mul(10)
         if (getLevelableTier("pu", 403, true)) player.dr.tetrPointsPerSecond = player.dr.tetrPointsPerSecond.mul(player.dec.silicon28Effect)
+        player.dr.tetrPointsPerSecond = player.dr.tetrPointsPerSecond.mul(player.mme.meridian[5].effect[1])
 
 
         player.dr.pentPoints = player.dr.pentPoints.add(player.dr.pentPointsPerSecond.mul(delta))
@@ -490,7 +496,7 @@
         ["raw-html", () => { return "You have <h3>" + format(player.du.points) + "</h3> dark celestial points." }, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
         ["raw-html", () => { return "You are gaining <h3>" + format(player.du.pointGain) + "</h3> dark celestial points per second." }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => { return "UNAVOIDABLE SOFTCAP: /" + format(player.du.pointSoftcap) + " to gain." }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
-        ["raw-html", () => { return player.du.pointGain.gte(player.du.secondSoftcapStart) ? "UNAVOIDABLE SOFTCAP<sup>2</sup>: Gain past " + format(player.du.secondSoftcapStart) + " is raised by ^" + format(player.du.pointSoftcap2) + "." : "" }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => { return player.du.pointGain.gte(player.du.secondSoftcapStart) ? "UNAVOIDABLE SOFTCAP<sup>2</sup>: Gain past " + format(player.du.secondSoftcapStart) + " is raised by ^" + format(player.du.pointSoftcap2, 3) + "." : "" }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => { return player.pet.legPetTimers[0].current.gt(0) ? "ECLIPSE IS ACTIVE: " + formatTime(player.pet.legPetTimers[0].current) + "." : ""}, {color: "#FEEF5F", fontSize: "20px", fontFamily: "monospace"}],
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],

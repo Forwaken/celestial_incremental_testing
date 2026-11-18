@@ -64,6 +64,7 @@
         if (getLevelableTier("pu", 403, true)) player.du.pointGain = player.du.pointGain.mul(player.hr.radiation.effect)
         if (getLevelableTier("pu", 403, true) && hasUpgrade("hr", 14)) player.du.pointGain = player.du.pointGain.mul(upgradeEffect("hr", 14))
         if (getLevelableTier("pu", 403, true) && hasUpgrade("hr", 19)) player.du.pointGain = player.du.pointGain.mul(upgradeEffect("hr", 19))
+        player.du.pointGain = player.du.pointGain.mul(player.mme.meridian[1].effect[1])
 
         player.du.pointGain = player.du.pointGain.div(player.du.pointSoftcap)
 
@@ -81,7 +82,7 @@
         player.du.pointSoftcap = player.du.pointSoftcap.pow(levelableEffect("spet", 201)[0])
         player.du.pointSoftcap = player.du.pointSoftcap.pow(player.dv.cloudEffect)
         player.du.pointSoftcap = player.du.pointSoftcap.pow(buyableEffect("rp", 12))
-        if (hasMilestone("mci", 16)) player.du.pointSoftcap = player.du.pointSoftcap.mul(player.mci.flowEffects2[5])
+        player.du.pointSoftcap = player.du.pointSoftcap.pow(player.mme.meridian[3].effect[1])
 
         // SOFTCAP 2
         player.du.pointSoftcap2 = new Decimal(0.1)
@@ -91,6 +92,7 @@
 
         if (getLevelableTier("pu", 306, true)) player.du.pointSoftcap2 = player.du.pointSoftcap2.pow(levelableEffect("pu", 306)[0])
         player.du.pointSoftcap2 = player.du.pointSoftcap2.pow(buyableEffect("rp", 15))
+        player.du.pointSoftcap2 = player.du.pointSoftcap2.pow(player.mme.meridian[4].effect[1])
 
         // SOFTCAP 2 STARTING VARIABLE
         player.du.secondSoftcapStart = new Decimal(1.79e308)
@@ -152,8 +154,8 @@
         ["raw-html", () => { return "You have <h3>" + format(player.du.points) + "</h3> dark celestial points." }, {color: "white", fontSize: "24px", fontFamily: "monospace" }],
         ["raw-html", () => { return "You are gaining <h3>" + format(player.du.pointGain) + "</h3> dark celestial points per second." }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => { return "UNAVOIDABLE SOFTCAP: /" + format(player.du.pointSoftcap) + " to gain." }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
-        ["raw-html", () => { return player.du.pointGain.gte(player.du.secondSoftcapStart) ? "UNAVOIDABLE SOFTCAP<sup>2</sup>: Gain past " + format(player.du.secondSoftcapStart) + " is raised by ^" + format(player.du.pointSoftcap2) + "." : "" }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
-        ["raw-html", () => { return player.pet.legPetTimers[0].current.gt(0) ? "ECLIPSE IS ACTIVE: " + formatTime(player.pet.legPetTimers[0].current) + "." : ""}, {color: "#FEEF5F", fontSize: "20px", fontFamily: "monospace"}],
+        ["raw-html", () => { return player.du.pointGain.gte(player.du.secondSoftcapStart) ? "UNAVOIDABLE SOFTCAP<sup>2</sup>: Gain past " + format(player.du.secondSoftcapStart) + " is raised by ^" + format(player.du.pointSoftcap2, 3) + "." : "" }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => { return player.pet.legPetTimers[0].current.gt(0) ? "ECLIPSE IS ACTIVE: " + formatTime(player.pet.legPetTimers[0].current) + "." : ""}, {color: "#040301", fontSize: "20px", fontFamily: "monospace"}],
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],

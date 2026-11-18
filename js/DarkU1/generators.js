@@ -78,7 +78,7 @@
         player.dg.generatorPowerEffect = player.dg.generatorPowerEffect.pow(buyableEffect("dn", 15))
 
         player.dg.generators = player.dg.generators.add(player.dg.generatorsToGet.mul(buyableEffect("dn", 13)).mul(delta))
-        if (hasUpgrade("sma", 205) && !player.pet.legPetTimers[0].active) player.dg.generators = player.dg.generators.add(player.dg.generatorsToGet.mul(0.01).mul(delta));
+        if (hasUpgrade("sma", 205) && (!player.pet.legPetTimers[0].active || player.dotf.penumbral)) player.dg.generators = player.dg.generators.add(player.dg.generatorsToGet.mul(0.01).mul(delta));
         player.dg.generatorResetSafety = false
     },
     bars: {},
@@ -383,13 +383,13 @@
         ["raw-html", () => { return "You have <h3>" + format(player.du.points) + "</h3> dark celestial points." }, {color: "white", fontSize: "24px", fontFamily: "monospace" }],
         ["raw-html", () => { return "You are gaining <h3>" + format(player.du.pointGain) + "</h3> dark celestial points per second." }, {color: "white", fontSize: "16px", fontFamily: "monospace" }],
         ["raw-html", () => { return "UNAVOIDABLE SOFTCAP: /" + format(player.du.pointSoftcap) + " to gain." }, {color: "red", fontSize: "16px", fontFamily: "monospace" }],
-        ["raw-html", () => { return player.du.pointGain.gte(player.du.secondSoftcapStart) ? "UNAVOIDABLE SOFTCAP<sup>2</sup>: Gain past " + format(player.du.secondSoftcapStart) + " is raised by ^" + format(player.du.pointSoftcap2) + "." : "" }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
+        ["raw-html", () => { return player.du.pointGain.gte(player.du.secondSoftcapStart) ? "UNAVOIDABLE SOFTCAP<sup>2</sup>: Gain past " + format(player.du.secondSoftcapStart) + " is raised by ^" + format(player.du.pointSoftcap2, 3) + "." : "" }, {color: "red", fontSize: "16px", fontFamily: "monospace"}],
         ["raw-html", () => { return player.pet.legPetTimers[0].current.gt(0) ? "ECLIPSE IS ACTIVE: " + formatTime(player.pet.legPetTimers[0].current) + "." : ""}, {color: "#FEEF5F", fontSize: "20px", fontFamily: "monospace" }],
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],
     layerShown() {
-        if(hasUpgrade("le", 17)) return true
+        if (hasUpgrade("le", 17) || player.dotf.penumbral) return true
         else return "ghost"
      },
     deactivated() { return !player.sma.inStarmetalChallenge},

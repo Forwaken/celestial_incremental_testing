@@ -46,9 +46,9 @@ addLayer("dotf", {
         },
         12: {
             display() {
-                return player.dotf.miasmata ? "ON" : ("OFF<br><h6>Cost: " + formatWhole(new Decimal(5).pow(player.dotf.featureScaling).floor()) + " Punchcard Selections</h6>");
+                return player.pet.legPetTimers[0].active ? "LOCKED" : player.dotf.miasmata ? "ON" : ("OFF<br><h6>Cost: " + formatWhole(new Decimal(5).pow(player.dotf.featureScaling).floor()) + " Punchcard Selections</h6>");
             },
-            canClick() { return player.pu.storedSelections.gte(new Decimal(5).pow(player.dotf.featureScaling).floor()) },
+            canClick() { return !player.pet.legPetTimers[0].active && player.pu.storedSelections.gte(new Decimal(5).pow(player.dotf.featureScaling).floor()) },
             unlocked() {return true},
             onClick() {
                 player.dotf.miasmata = true
