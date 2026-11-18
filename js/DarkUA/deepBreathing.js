@@ -37,6 +37,7 @@ addLayer("mdb", {
         if (getBuyableAmount("mse", "gen5")) player.mdb.inhalationGain = player.mdb.inhalationGain.mul(1.5)
         if (player.mcu.mantraSelected[3] == 1) player.mdb.inhalationGain = player.mdb.inhalationGain.mul(player.mcu.mantraEffects[41])
         player.mdb.inhalationGain = player.mdb.inhalationGain.mul(buyableEffect("mse", "db1"))
+        player.mdb.inhalationGain = player.mdb.inhalationGain.mul(buyableEffect("mse", "db5"))
             
         player.mdb.inhalationGain = player.mdb.inhalationGain.pow(buyableEffect("mdb", 13))
 
@@ -46,14 +47,17 @@ addLayer("mdb", {
         if (getBuyableAmount("mse", "gen5")) player.mdb.exhalationGain = player.mdb.exhalationGain.mul(1.5)
         if (player.mcu.mantraSelected[3] == 2) player.mdb.exhalationGain = player.mdb.exhalationGain.mul(player.mcu.mantraEffects[42])
         player.mdb.exhalationGain = player.mdb.exhalationGain.mul(buyableEffect("mse", "db2"))
+        player.mdb.exhalationGain = player.mdb.exhalationGain.mul(buyableEffect("mse", "db5"))
             
         player.mdb.exhalationGain = player.mdb.exhalationGain.pow(buyableEffect("mdb", 13))
 
         player.mdb.decayRate = new Decimal(0.9)
         player.mdb.decayRate = player.mdb.decayRate.mul(buyableEffect("mdb", 23))
         if (hasUpgrade("mcu", 24)) player.mdb.decayRate = player.mdb.decayRate.div(1.1)
+        player.mdb.decayRate = player.mdb.decayRate.mul(buyableEffect("mse", "db4"))
 
         player.mdb.breathCap = new Decimal(10)
+        player.mdb.breathCap = player.mdb.breathCap.div(buyableEffect("mse", "db3"))
 
         // Breath calculation code
         if (hasUpgrade("mcu", 21)) {
