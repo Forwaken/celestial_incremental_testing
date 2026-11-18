@@ -974,6 +974,74 @@ addLayer("mse", {
                 return look
             }
         },
+        "auto1": {
+            costBase() { return new Decimal(10) },
+            costGrowth() { return new Decimal(1.3) },
+            purchaseLimit() { return new Decimal(15) },
+            currency() { return player.mse.sourceEnergy},
+            pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
+            effect(x) {return getBuyableAmount(this.layer, this.id).add(11)},
+            unlocked() { return true },
+            cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
+            canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["ki2"], 0) && Decimal.gt(player.mse.buyables["mia2"], 0)},
+            branches: ["ki2", "mia2"],
+            display() {
+                return "<div class='innerContainer' style='width:106px;height:50px;border-bottom:1px solid white'>\
+                    Automate a cultivation upgrade\
+                    <div style='width:1px;height:calc(100% - 3px);background:white;margin-top:3px'></div><h3 style='padding:2px;margin:2px'>" + formatShortWhole(getBuyableAmount(this.layer, this.id)) + "<hr style='width:20px'>" + formatShortWhole(this.purchaseLimit()) + "</h3></div><div class='innerContainer' style='width:106px;height:30px;border-bottom:1px solid white'><span>\
+                    Currently: +" + formatSimple(tmp[this.layer].buyables[this.id].effect.sub(11)) + "<br>" +
+                    "Next: +" + formatSimple(getBuyableAmount(this.layer, this.id).add(1)) + "\n\
+                    </span></div><div class='innerContainer' style='width:106px;height:30px'>\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
+                    </div>"
+            },
+            buy(mult) {
+                if (mult != true) {
+                    let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
+                    this.pay(buyonecost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                } else {
+                    let max = Decimal.affordGeometricSeries(this.currency(), this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    if (max.gt(this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)))) { max = this.purchaseLimit().sub(getBuyableAmount(this.layer, this.id)) }
+                    let cost = Decimal.sumGeometricSeries(max, this.costBase(), this.costGrowth(), getBuyableAmount(this.layer, this.id))
+                    this.pay(cost)
+
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+                }
+            },
+            style() {
+                let look = {position: "absolute", left: "2860px", top: "1740px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #888", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#333"
+                return look
+            }
+        },
+        "auto2": {
+            purchaseLimit: new Decimal(1),
+            currency() { return player.mse.sourceEnergy},
+            pay(amt) { player.mse.sourceEnergy = this.currency().sub(amt) },
+            effect(x) {return getBuyableAmount(this.layer, this.id)},
+            unlocked: true,
+            cost(x) { return new Decimal(300) },
+            canAfford() { return this.currency().gte(this.cost()) && Decimal.gt(player.mse.buyables["ki4"], 0) && Decimal.gt(player.mse.buyables["mia4"], 0)},
+            branches: ["ki4", "mia4"],
+            display() {
+                return "<div class='innerContainer' style='width:100px;height:74px;border-bottom:1px solid white;padding:3px'>\
+                    Auto-equip the first mantra of a set\
+                    </div><div class='innerContainer' style='width:106px;height:30px'>\
+                    Cost: " + formatSimple(tmp[this.layer].buyables[this.id].cost) + "<br>Source Energy\
+                    </div>"
+            },
+            buy(mult) {
+                    this.pay(this.cost())
+                    setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style() {
+                let look = {position: "absolute", left: "2860px", top: "1460px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #888", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(1) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#333"
+                return look
+            }
+        },
         "ci1": {
             costBase() { return new Decimal(2) },
             costGrowth() { return new Decimal(1.3) },
@@ -1137,8 +1205,8 @@ addLayer("mse", {
                 }
             },
             style() {
-                let look = {position: "absolute", left: "3420px", top: "2020px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #446346", outline: "3px solid #5ab28c", borderRadius: "20px"}
-                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#0d130e"
+                let look = {position: "absolute", left: "3420px", top: "2020px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #888", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#333"
                 return look
             }
         },
@@ -1599,8 +1667,8 @@ addLayer("mse", {
                 }
             },
             style() {
-                let look = {position: "absolute", left: "3280px", top: "2720px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #4c2c5e", outline: "3px solid #5ab28c", borderRadius: "20px"}
-                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#171e24"
+                let look = {position: "absolute", left: "3280px", top: "2720px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #888", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#333"
                 return look
             }
         },
@@ -1683,8 +1751,8 @@ addLayer("mse", {
                 }
             },
             style() {
-                let look = {position: "absolute", left: "3280px", top: "2860px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #4c2c5e", outline: "3px solid #5ab28c", borderRadius: "20px"}
-                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#171e24"
+                let look = {position: "absolute", left: "3280px", top: "2860px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #888", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#333"
                 return look
             }
         },
@@ -1767,8 +1835,8 @@ addLayer("mse", {
                 }
             },
             style() {
-                let look = {position: "absolute", left: "3280px", top: "3000px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #4c2c5e", outline: "3px solid #5ab28c", borderRadius: "20px"}
-                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#171e24"
+                let look = {position: "absolute", left: "3280px", top: "3000px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #888", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#333"
                 return look
             }
         },
@@ -1851,8 +1919,8 @@ addLayer("mse", {
                 }
             },
             style() {
-                let look = {position: "absolute", left: "3280px", top: "3140px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #4c2c5e", outline: "3px solid #5ab28c", borderRadius: "20px"}
-                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#171e24"
+                let look = {position: "absolute", left: "3280px", top: "3140px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #888", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#333"
                 return look
             }
         },
@@ -1935,8 +2003,8 @@ addLayer("mse", {
                 }
             },
             style() {
-                let look = {position: "absolute", left: "3700px", top: "2720px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #4c2c5e", outline: "3px solid #5ab28c", borderRadius: "20px"}
-                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#171e24"
+                let look = {position: "absolute", left: "3700px", top: "2720px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #888", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#333"
                 return look
             }
         },
@@ -2019,8 +2087,8 @@ addLayer("mse", {
                 }
             },
             style() {
-                let look = {position: "absolute", left: "3700px", top: "2860px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #4c2c5e", outline: "3px solid #5ab28c", borderRadius: "20px"}
-                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#171e24"
+                let look = {position: "absolute", left: "3700px", top: "2860px", width: '120px', height: '120px', lineHeight: "0.9", color: "white", padding: "0", border: "4px solid #888", outline: "3px solid #5ab28c", borderRadius: "20px"}
+                getBuyableAmount(this.layer, this.id).gte(this.purchaseLimit()) ? look.backgroundColor = "#1a3b0f" : !this.canAfford() ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "#333"
                 return look
             }
         },
@@ -2380,6 +2448,7 @@ addLayer("mse", {
                 ["buyable", "gen5"], ["buyable", "gen6"], ["buyable", "gen7"],
                 ["buyable", "ki1"], ["buyable", "ki2"], ["buyable", "ki3"], ["buyable", "ki4"], ["buyable", "ki5"], ["buyable", "ki6"],
                 ["buyable", "mia1"], ["buyable", "mia2"], ["buyable", "mia3"], ["buyable", "mia4"], ["buyable", "mia5"], ["buyable", "mia6"],
+                ["buyable", "auto1"], ["buyable", "auto2"],
                 ["buyable", "ci1"], ["buyable", "ci2"], ["buyable", "ci3"], ["buyable", "ci4"], ["buyable", "ci5"], ["buyable", "ci6"], ["buyable", "ci7"], ["buyable", "ci8"],
                 ["buyable", "me1"], ["buyable", "me2"], ["buyable", "me3"], ["buyable", "me4"], ["buyable", "me5"],
                 ["buyable", "mea1"], ["buyable", "mea2"], ["buyable", "meb1"], ["buyable", "meb2"],

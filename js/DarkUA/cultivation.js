@@ -19,7 +19,11 @@ addLayer("mcu", {
             42: new Decimal(1),
         },
     }},
-    automate() {},
+    automate() {
+        for (let i = 11; i < buyableEffect("mse", "auto1").toNumber(); i++) {
+            buyUpgrade("mcu", i)
+        }
+    },
     nodeStyle() {
         return {
             background: "radial-gradient(#eead0e, #cd950c, #b8860b)",
@@ -201,7 +205,14 @@ addLayer("mcu", {
             },
             unlocked() { return true },
             cost: new Decimal(50),
-            onPurchase() {player.mse.miasma = player.mse.miasma.add(1);layers.mse.resetCheck()},
+            onPurchase() {
+                player.mse.miasma = player.mse.miasma.add(1)
+                layers.mse.resetCheck()
+                if (getBuyableAmount("mse", "auto2").gt(0)) {
+                    player.mcu.mantraSelected[0] = 1
+                    player.mcu.mantraSelected[1] = 1
+                }
+            },
             currencyLocation() { return player.mse },
             currencyInternalName: "ki",
             style() {
@@ -295,7 +306,7 @@ addLayer("mcu", {
             },
             unlocked() { return true },
             cost: new Decimal(100000),
-            onPurchase() {player.mse.miasma = player.mse.miasma.add(3);layers.mse.resetCheck()},
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(3);layers.mse.resetCheck();if (getBuyableAmount("mse", "auto2").gt(0)) player.mcu.mantraSelected[2] = 1},
             currencyLocation() { return player.mse },
             currencyInternalName: "ki",
             style() {
@@ -385,7 +396,7 @@ addLayer("mcu", {
             },
             unlocked() { return true },
             cost: new Decimal(1e12),
-            onPurchase() {player.mse.miasma = player.mse.miasma.add(6);layers.mse.resetCheck()},
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(6);layers.mse.resetCheck();if (getBuyableAmount("mse", "auto2").gt(0)) player.mcu.mantraSelected[3] = 1},
             currencyLocation() { return player.mse },
             currencyInternalName: "ki",
             style() {
