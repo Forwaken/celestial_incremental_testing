@@ -37,7 +37,8 @@ addLayer("mdb", {
         if (getBuyableAmount("mse", "gen5")) player.mdb.inhalationGain = player.mdb.inhalationGain.mul(1.5)
         if (player.mcu.mantraSelected[3] == 1) player.mdb.inhalationGain = player.mdb.inhalationGain.mul(player.mcu.mantraEffects[41])
         player.mdb.inhalationGain = player.mdb.inhalationGain.mul(buyableEffect("mse", "db1"))
-        player.mdb.inhalationGain = player.mdb.inhalationGain.mul(buyableEffect("mse", "db5"))
+        player.mdb.inhalationGain = player.mdb.inhalationGain.mul(buyableEffect("mse", "db3"))
+        player.mdb.inhalationGain = player.mdb.inhalationGain.mul(buyableEffect("mse", "db7"))
             
         player.mdb.inhalationGain = player.mdb.inhalationGain.pow(buyableEffect("mdb", 13))
 
@@ -47,7 +48,8 @@ addLayer("mdb", {
         if (getBuyableAmount("mse", "gen5")) player.mdb.exhalationGain = player.mdb.exhalationGain.mul(1.5)
         if (player.mcu.mantraSelected[3] == 2) player.mdb.exhalationGain = player.mdb.exhalationGain.mul(player.mcu.mantraEffects[42])
         player.mdb.exhalationGain = player.mdb.exhalationGain.mul(buyableEffect("mse", "db2"))
-        player.mdb.exhalationGain = player.mdb.exhalationGain.mul(buyableEffect("mse", "db5"))
+        player.mdb.exhalationGain = player.mdb.exhalationGain.mul(buyableEffect("mse", "db4"))
+        player.mdb.exhalationGain = player.mdb.exhalationGain.mul(buyableEffect("mse", "db7"))
             
         player.mdb.exhalationGain = player.mdb.exhalationGain.pow(buyableEffect("mdb", 13))
 
