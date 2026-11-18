@@ -1,4 +1,4 @@
-﻿const HEX_STAGES = [
+const HEX_STAGES = [
     ["Null", "null"],
     ["Base", "base"],
     ["Rank", "rank"],

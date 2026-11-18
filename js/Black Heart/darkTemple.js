@@ -1942,7 +1942,7 @@ BHS.darkTemple = {
     nameCap: "Dark Temple",
     nameLow: "Dark Temple",
     music: "music/confrontation.mp3",
-    comboLimit: 2,
+    comboLimit: 666,
     comboScaling: 6,
     comboScalingStart: 66,
     generateCelestialite(combo) {

@@ -1,4 +1,4 @@
-﻿const DOMAIN_TREE = [["tac", "tam"], ["tco", "tsi"], ["tma", "tal"], ["tex"], ["top", "tst"]]
+const DOMAIN_TREE = [["tac", "tam"], ["tco", "tsi"], ["tma", "tal"], ["tex"], ["top", "tst"]]
 const OPTIMIZATION_REQS = [new Decimal(1), new Decimal(10), new Decimal(100), new Decimal(1e4), new Decimal(1e6),
     new Decimal(1e8), new Decimal(1e10), new Decimal(1e12), new Decimal(1e15), new Decimal(1e18),
     new Decimal(1e20), new Decimal(1e30), new Decimal(1e40), new Decimal(1e50), new Decimal(1e60)]

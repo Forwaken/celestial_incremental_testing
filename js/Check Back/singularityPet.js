@@ -679,7 +679,7 @@ addLayer("sp", {
             cost(x) { return player.sp.eclipsePointsMax},
             canAfford() { return this.currency().gte(this.cost()) },
             title() {
-                return "Capacity Increaser (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/999)"
+                return "Capacity Increaser (" + formatWhole(getBuyableAmount(this.layer, this.id)) + "/990)"
             },
             display() {
                 return 'which are boosting eclipse point capacity by +' + formatWhole(tmp[this.layer].buyables[this.id].effect) + '.\n\

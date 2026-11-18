@@ -380,6 +380,333 @@
 		transform: rotate(-90deg);
 	}
 }
+.themeTrack::-webkit-scrollbar-track {
+    background: var(--scrollBackground) !important;
+	border: 2px solid var(--regBorder) !important;
+}
+.themeTrack::-webkit-scrollbar-thumb {
+    background: linear-gradient(0deg, var(--scroll1) 0%, var(--scroll2) 50%, var(--scroll3) 100%) !important;
+	border: 2px solid var(--regBorder) !important;
+	height: 50px;
+}
+.themeTrack::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(0deg, var(--scroll2) 0%, var(--scroll3) 50%, var(--scroll4) 100%) !important;
+	border: 2px solid var(--regBorder) !important;
+	height: 50px;
+}
+.themeTrack::-webkit-scrollbar-button:single-button {
+    background-color: var(--scroll2) !important;
+	border: 2px solid var(--regBorder) !important;
+
+    display: block;
+    background-size: 9px;
+    background-repeat: no-repeat;
+}
+.themeTrack::-webkit-scrollbar-button:single-button:hover {
+    background-color: var(--scroll3) !important;
+	border: 2px solid var(--regBorder) !important;
+
+    display: block;
+    background-size: 9px;
+    background-repeat: no-repeat;
+}
+.themeTrack::-webkit-scrollbar-button:single-button:vertical:decrement {
+    height: 16px;
+    width: 16px;
+    background-position: center 4px;
+    background-image: var(--scrollDecrement) !important;
+}
+.themeTrack::-webkit-scrollbar-button:single-button:vertical:increment {
+    height: 16px;
+    width: 16px;
+    background-position: center 4px;
+    background-image: var(--scrollIncrement) !important;
+}
+.themeTrack::-webkit-scrollbar-corner {
+	background-color: var(--regBorder) !important;
+}
+
+.uiHolder {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+.titleHolder {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 50px;
+	color: var(--textColor);
+	font-size: 20px;
+	line-height: 1;
+	background: var(--titleGradient);
+	border-bottom: 3px solid var(--regBorder);
+	padding: 0px;
+	user-select: none;
+	z-index: 1500;
+}
+.layerHolder {
+	position: absolute;
+	top: calc(7% + 5px);
+	left: 0px;
+	display: block;
+	flex-direction: column;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	justify-content: center;
+	align-items: start;
+	width: 400px;
+	height: calc(86% - 63px);
+	border-left: 3px solid var(--regBorder);
+	border-right: 3px solid var(--regBorder);
+	border-bottom: 3px solid var(--regBorder);
+	padding-left: 0px;
+	padding-top: 53px;
+	user-select: none;
+	z-index: 2000 !important;
+}
+.layerBG {
+	z-index: -2000;
+	width: 400px;
+	height: calc(86% - 10px);
+	position: absolute;
+	top: calc(7% + 5px);
+	left: 0px;
+	background: var(--menuBackground)
+}
+.uniHolder {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 400px;
+	height: 7%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	overflow-y: hidden;
+	overflow-x: auto;
+	scroll-behavior: smooth;
+  	-webkit-overflow-scrolling: touch;
+	white-space: nowrap;
+	background: var(--menuBackground);
+	border: 3px solid var(--regBorder);
+	z-index: 1000;
+}
+.uniButton {
+	display: inline-block;
+  	flex: 0 0 auto;
+	margin: 0;
+	min-width: 70px;
+	width: 19%;
+	height: 100%;
+	color: rgba(0, 0, 0, 0.9);
+	font-size: 3vh;
+	cursor: pointer;
+	pointer-events: auto;
+	background: var(--regBorder);
+	border: var(--hqProperty1);
+	border-width: 0.3vh;
+	border-color: rgba(0, 0, 0, 0.125);
+	transition: all 0s;
+}
+.uniButton:hover {
+	filter: brightness(105%);
+}
+.uniButton:disabled {
+	filter: brightness(30%);
+	cursor: default;
+}
+.miscMenu {
+	position: absolute;
+	bottom: 1px;
+	left: 0px;
+	width: 400px;
+	height: 7%;
+	display: flex;
+	flex-direction: row;
+	justify-content: auto;
+	background: var(--menuBackground);
+	border-left: 3px solid var(--regBorder);
+	border-right: 3px solid var(--regBorder);
+	border-bottom: 3px solid var(--regBorder);
+	z-index: 1000;
+}
+.miscButton {
+	width: 60px;
+	height: 100%;
+	display: flex;
+	flex-grow: 1;
+	background-color: var(--miscButton);
+	border-top: 0px;
+	border-bottom: 0px;
+	border-left: 1.5px solid var(--regBorder);
+	border-right: 1.5px solid var(--regBorder);
+	cursor: pointer;
+	pointer-events: auto;
+	transition: all 0.5s;
+}
+.miscButton:hover {
+	background-color: var(--miscButtonHover);
+}
+.miscButton:disabled {
+	background-color: var(--miscButtonDisable);
+	cursor: default;
+}
+.miscImg {
+	width: 6vh;
+	height: 6vh;
+}
+.miscText {
+	color: var(--textColor);
+	font-size: 6vh;
+}
+.treeRow {
+	margin: 0px 0px 10px 0px;
+}
+.trees {
+	margin-top: 25px;
+}
+/* For when width is less then or equal to 1200px */
+@media (max-width: 1250px) {
+	.uniHolder {
+		width: calc(100% - 6px);
+	}
+	.uniButton {
+		width: 12.5%;
+	}
+	.titleHolder {
+		width: 295px;
+		top: 120px;
+		left: -122px;
+		transform: rotate(-90deg);
+	}
+	.arrowHolder {
+		width: 6%;
+	}
+	.layerHolder {
+		width: calc(100% - 59px);
+		height: 300px;
+		flex-direction: row;
+		overflow-y: hidden;
+		overflow-x: scroll;
+		justify-content: start;
+		align-items: center;
+		text-align: left;
+		padding-top: 0px;
+		padding-left: 53px;
+	}
+	.layerBG {
+		width: 100%;
+		height: 300px;
+	}
+	.miscMenu {
+		width: calc(100% - 6px);
+		border-top: 3px solid var(--regBorder);
+	}
+	.trees {
+		display: inline-flex;
+		width: auto;
+		height: 290px;
+		flex-direction: row;
+		margin-top: 0px;
+		margin-left: 25px;
+	}
+	.treeNode {
+		margin: 5px 0px 5px 0px !important;
+	}
+	.treeRow {
+		max-height: 290px;
+		display: flex !important;
+		flex-flow: column wrap !important;
+		margin: 0 10px 0px 10px !important;
+	}
+	.tabHolder {
+		display: inline-flex;
+		width: auto;
+		height: 290px;
+		flex-direction: row;
+	}
+	.tabRow {
+		width: auto;
+		height: 100%;
+		flex-direction: column !important;
+		border-bottom: 0px;
+		border-right: 3px solid var(--regBorder);
+	}
+	.tabRowHolder {
+		width: auto !important;
+		flex-direction: row !important;
+		padding: 0 4px 0 4px !important;
+	}
+	.tabNode {
+		width: 50px !important;
+		height: 190px !important;
+		padding: 12% 0 12% 0 !important;
+		margin: 0 4px 0 4px !important;
+	}
+	.tabLabel {
+		writing-mode: vertical-rl;
+	}
+	.tabTitleHolder {
+		min-width: 0px !important;
+		text-wrap: wrap !important;
+		width: 100%;
+		height: 80px;
+	}
+	.tabTitle {
+		border-bottom: 3px solid var(--regBorder);
+		border-right: 0px !important;
+	}
+	.gridTrees {
+		display: inline-flex;
+		width: auto;
+		height: 290px;
+		flex-direction: row;
+	}
+	.gridNode {
+		margin: 2px 0px 2px 0px !important;
+	}
+	.gridRowHolder {
+		border-bottom: 0px !important;
+		border-right: 3px solid var(--regBorder);
+	}
+	.gridRow {
+		max-height: 290px;
+		display: flex !important;
+		flex-flow: column wrap !important;
+		margin: 0px 4px 0px 7px !important;
+	}
+	.gridCol {
+		display: inline-flex;
+		width: auto;
+		height: 290px;
+		flex-direction: row;
+	}
+	.gridTitleHolder {
+		min-height: 0px !important;
+		text-wrap: wrap !important;
+		width: 35px !important;
+		height: 290px !important;
+	}
+	.gridTitle {
+		width: 35px !important;
+		border-bottom: 0px !important;
+		border-right: 3px solid var(--regBorder);
+	}
+	.gridTitleText {
+		position: relative;
+		left: -8px;
+		text-wrap: nowrap;
+		transform: rotate(-90deg);
+	}
+}
 
 *:focus {
 	outline: none;
