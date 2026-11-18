@@ -62,6 +62,7 @@ addLayer("mci", {
 
         // Concentrating
         player.mci.concentrateCap = new Decimal(50)
+        player.mci.concentrateCap = player.mci.concentrateCap.add(buyableEffect("mdb", 16).sub(1))
 
         let concentrateChange = player.mci.concentrateBuff.div(100).max(0.1).mul("-1")
         concentrateChange = concentrateChange.add(buyableEffect("mse", "ci4").sub(1))

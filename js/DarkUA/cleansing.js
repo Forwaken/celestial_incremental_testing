@@ -35,6 +35,6 @@ addLayer("mcl", {
         ]]],
         ["blank", "25px"],
     ],
-    layerShown() { return /*getBuyableAmount("mse", 4).gt(0)*/false ? true : 'ghost' },
+    layerShown() { return hasUpgrade("mcu", 26) ? true : 'ghost' },
     deactivated() { return !player.sma.inStarmetalChallenge},
 });

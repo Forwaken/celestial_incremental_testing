@@ -69,10 +69,11 @@ const MERIDIANS = {
     3: {
         name: "Yang Linking Vessel",
         exponential: true,
-        base: () => [new Decimal(4)],
+        base: () => [new Decimal(4).div(buyableEffect("mse", "mez1"))],
         scale: [new Decimal(2)],
         resource() {return [player.mme.meridian[2].level]},
         resourceName: ["He:P Levels"],
+        auto() {return buyableEffect("mse", "mez2").sub(1)},
         effect() {return [player.mme.meridian[3].level.div(50).add(1), Decimal.div(1, player.mme.meridian[3].level.add(1).log(3).div(50).add(1))]},
         effectDisplay() {
             let eff = this.effect()
@@ -90,10 +91,11 @@ const MERIDIANS = {
     4: {
         name: "Yang Heel Vessel",
         exponential: true,
-        base: () => [new Decimal(3)],
+        base: () => [new Decimal(3).div(buyableEffect("mse", "mey1"))],
         scale: [new Decimal(3)],
         resource() {return [player.mme.meridian[3].level]},
         resourceName: ["YaL:V Levels"],
+        auto() {return buyableEffect("mse", "mey2").sub(1)},
         effect() {return [player.mme.meridian[4].level.div(20).add(1), Decimal.div(1, player.mme.meridian[4].level.add(1).log(2).div(100).add(1))]},
         effectDisplay() {
             let eff = this.effect()
@@ -188,14 +190,14 @@ const MERIDIANS = {
     },
     9: {
         name: "Small Intestine Point",
-        base: [new Decimal(9)],
-        scale: [new Decimal(1.4)],
+        base: [new Decimal(3)],
+        scale: [new Decimal(1.3)],
         resource() {return [player.mme.meridian[6].level]},
         resourceName: ["TB:P Levels"],
-        effect() {return [player.mme.meridian[9].level.pow(1.16).add(1), new Decimal(1)]},
-        effectDisplay() {return "x" + formatSimple(this.effect()[0], 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[9].level.add(player.mme.meridian[9].gain).pow(1.16).add(1), 2) + "]"},
-        mBase: new Decimal(0.4),
-        mScale: new Decimal(1.16), // mult increase per magnitude
+        effect() {return [player.mme.meridian[9].level.pow(0.78).add(1), new Decimal(1)]},
+        effectDisplay() {return "x" + formatSimple(this.effect()[0], 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[9].level.add(player.mme.meridian[9].gain).pow(0.78).add(1), 2) + "]"},
+        mBase: new Decimal(3),
+        mScale: new Decimal(2.5), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -207,14 +209,14 @@ const MERIDIANS = {
     },
     10: {
         name: "Large Intestine Point",
-        base: [new Decimal(12)],
-        scale: [new Decimal(1.37)],
+        base: [new Decimal(4)],
+        scale: [new Decimal(1.4)],
         resource() {return [player.mme.meridian[9].level]},
         resourceName: ["SI:P Levels"],
-        effect() {return [player.mme.meridian[10].level.pow(1.18).mul(1.3).add(1), new Decimal(1)]},
-        effectDisplay() {return "x" + formatSimple(this.effect()[0], 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[10].level.add(player.mme.meridian[10].gain).pow(1.18).mul(1.3).add(1), 2) + "]"},
-        mBase: new Decimal(0.45),
-        mScale: new Decimal(1.18), // mult increase per magnitude
+        effect() {return [player.mme.meridian[10].level.pow(0.8).mul(1.2).add(1), new Decimal(1)]},
+        effectDisplay() {return "x" + formatSimple(this.effect()[0], 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[10].level.add(player.mme.meridian[10].gain).pow(0.8).mul(1.2).add(1), 2) + "]"},
+        mBase: new Decimal(3.5),
+        mScale: new Decimal(3), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -226,14 +228,14 @@ const MERIDIANS = {
     },
     11: {
         name: "Spleen Point",
-        base: [new Decimal(15)],
-        scale: [new Decimal(1.38)],
+        base: [new Decimal(12)],
+        scale: [new Decimal(1.6)],
         resource() {return [player.mme.meridian[9].level]},
         resourceName: ["SI:P Levels"],
-        effect() {return [player.mme.meridian[11].level.pow(1.2).mul(1.6).add(1), new Decimal(1)]},
-        effectDisplay() {return "x" + formatSimple(this.effect()[0], 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[11].level.add(player.mme.meridian[11].gain).pow(1.2).mul(1.6).add(1), 2) + "]"},
-        mBase: new Decimal(0.5),
-        mScale: new Decimal(1.2), // mult increase per magnitude
+        effect() {return [player.mme.meridian[11].level.pow(0.8).mul(1.2).add(1), new Decimal(1)]},
+        effectDisplay() {return "x" + formatSimple(this.effect()[0], 2) + " Ki<small> [Next: x" + formatSimple(player.mme.meridian[11].level.add(player.mme.meridian[11].gain).pow(0.8).mul(1.2).add(1), 2) + "]"},
+        mBase: new Decimal(4),
+        mScale: new Decimal(4), // mult increase per magnitude
         reset() {
             player.mse.ki = new Decimal(0)
             player.mse.kiPerSec = new Decimal(0)
@@ -845,14 +847,13 @@ addLayer("mme", {
             },
         },
         109: {
-            title() {return "<div style='height:5px'></div>SI:P<br><small style='font-size:12px'>Lv" + formatShortWhole(player.mme.meridian[9].level) + "</small>"},
-            tooltip() {return true ? "" : layers.mme.tooltipDisplay(9)},
-            canClick() {
-                if (true) return false
-                else if (player.mme.clickables[4]) return player.mme.meridian[9].gain.gt(0) && player.mse.ki.gt(0)
-                else return true
+            title() {
+                let extCap = MERIDIANS[9].auto ? run(MERIDIANS[9].auto) : 0
+                return "<div style='height:5px'></div>SI:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[9].level) + "/<wbr>" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[9].cap.add(extCap)).floor()) + "</small>"
             },
-            unlocked: false,
+            tooltip() {return true ? "" : layers.mme.tooltipDisplay(9)},
+            canClick() {return player.mme.clickables[4] ? player.mme.meridian[9].gain.gt(0) && player.mse.ki.gt(0) : true},
+            unlocked() {return hasUpgrade("mcu", 28)},
             branches: [[106, "#4d1d1d"]],
             onClick() {
                 if (player.mme.clickables[4]) layers.mme.levelup(9)
@@ -862,21 +863,19 @@ addLayer("mme", {
                 let look = {position: "absolute", left: "180px", top: "360px", width: "80px", minHeight: "80px", color: "#ccc", lineHeight: "10px", fontSize: "15px", textShadow: "0px 1px 0px #000,0px 0px 1px #ccc",
                     background: "radial-gradient(#493741, #30242b)", boxShadow: "0 0 20px #222", border: "4px solid rgba(0,0,0,0.5)", borderRadius: "50%"}
                 if (player.mme.meridian[9].gain.gt(0) && player.mme.clickables[3]) {look.boxShadow = "0 0 15px #888"}
-                if (true) look.filter = "brightness(0.3)"
-                else if (!this.canClick()) look.filter = "brightness(0.7)"
+                if (!this.canClick()) look.filter = "brightness(0.7)"
                 if (!player.mme.clickables[4] && player.mme.meridianSelect == 9) look.outline = "2px solid white"
                 return look
             },
         },
         110: {
-            title() {return "<div style='height:5px'></div>LI:P<br><small style='font-size:12px'>Lv" + formatShortWhole(player.mme.meridian[10].level) + "</small>"},
-            tooltip() {return true ? "" : layers.mme.tooltipDisplay(10)},
-            canClick() {
-                if (true) return false
-                else if (player.mme.clickables[4]) return player.mme.meridian[10].gain.gt(0) && player.mse.ki.gt(0)
-                else return true
+            title() {
+                let extCap = MERIDIANS[10].auto ? run(MERIDIANS[10].auto) : 0
+                return "<div style='height:5px'></div>LI:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[10].level) + "/<wbr>" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[10].cap.add(extCap)).floor()) + "</small>"
             },
-            unlocked: false,
+            tooltip() {return true ? "" : layers.mme.tooltipDisplay(10)},
+            canClick() {return player.mme.clickables[4] ? player.mme.meridian[10].gain.gt(0) && player.mse.ki.gt(0) : true},
+            unlocked() {return hasUpgrade("mcu", 28)},
             branches: [[109, "#4d1d1d"]],
             onClick() {
                 if (player.mme.clickables[4]) layers.mme.levelup(10)
@@ -886,21 +885,19 @@ addLayer("mme", {
                 let look = {position: "absolute", left: "280px", top: "300px", width: "80px", minHeight: "80px", color: "#ccc", lineHeight: "10px", fontSize: "15px", textShadow: "0px 1px 0px #000,0px 0px 1px #ccc",
                     background: "radial-gradient(#484341, #363231)", boxShadow: "0 0 20px #222", border: "4px solid rgba(0,0,0,0.5)", borderRadius: "50%"}
                 if (player.mme.meridian[10].gain.gt(0) && player.mme.clickables[3]) {look.boxShadow = "0 0 15px #888"}
-                if (true) look.filter = "brightness(0.3)"
-                else if (!this.canClick()) look.filter = "brightness(0.7)"
+                if (!this.canClick()) look.filter = "brightness(0.7)"
                 if (!player.mme.clickables[4] && player.mme.meridianSelect == 10) look.outline = "2px solid white"
                 return look
             },
         },
         111: {
-            title() {return "<div style='height:5px'></div>Sp:P<br><small style='font-size:12px'>Lv" + formatShortWhole(player.mme.meridian[11].level) + "</small>"},
-            tooltip() {return true ? "" : layers.mme.tooltipDisplay(11)},
-            canClick() {
-                if (true) return false
-                else if (player.mme.clickables[4]) return player.mme.meridian[11].gain.gt(0) && player.mse.ki.gt(0)
-                else return true
+            title() {
+                let extCap = MERIDIANS[11].auto ? run(MERIDIANS[11].auto) : 0
+                return "<div style='height:5px'></div>Sp:P<br><small style='font-size:12px'>" + formatShortWhole(player.mme.meridian[11].level) + "/<wbr>" + formatShortWhole(Decimal.pow(player.mme.baseCap, player.mme.meridian[11].cap.add(extCap)).floor()) + "</small>"
             },
-            unlocked: false,
+            tooltip() {return true ? "" : layers.mme.tooltipDisplay(11)},
+            canClick() {return player.mme.clickables[4] ? player.mme.meridian[11].gain.gt(0) && player.mse.ki.gt(0) : true},
+            unlocked() {return hasUpgrade("mcu", 28)},
             branches: [[109, "#4d1d1d"]],
             onClick() {
                 if (player.mme.clickables[4]) layers.mme.levelup(11)
@@ -910,8 +907,7 @@ addLayer("mme", {
                 let look = {position: "absolute", left: "300px", top: "400px", width: "80px", minHeight: "80px", color: "#ccc", lineHeight: "10px", fontSize: "15px", textShadow: "0px 1px 0px #000,0px 0px 1px #ccc",
                     background: "radial-gradient(#4c332a, #39261f)", boxShadow: "0 0 20px #222", border: "4px solid rgba(0,0,0,0.5)", borderRadius: "50%"}
                 if (player.mme.meridian[11].gain.gt(0) && player.mme.clickables[3]) {look.boxShadow = "0 0 15px #888"}
-                if (true) look.filter = "brightness(0.3)"
-                else if (!this.canClick()) look.filter = "brightness(0.7)"
+                if (!this.canClick()) look.filter = "brightness(0.7)"
                 if (!player.mme.clickables[4] && player.mme.meridianSelect == 11) look.outline = "2px solid white"
                 return look
             },

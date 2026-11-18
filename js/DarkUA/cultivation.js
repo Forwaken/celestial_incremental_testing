@@ -412,9 +412,80 @@ addLayer("mcu", {
                 return look
             }
         },
-        // Upgrade that raises ki by ^1.01 per hara level
-        // Upgrade that unlocks more meridian nodes
-        // Upgrade that unlocks a new mantra for each type
+        25: {
+            fullDisplay() {
+                return "<h3>More Mantras</h3><br>" +
+                    "Unlock a 3rd mantra for each type<br>[COMING SOON]<br><br>" +
+                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
+                    "Penalty: +7 Miasma"
+            },
+            unlocked() { return true },
+            cost: new Decimal(1e16),
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(7);layers.mse.resetCheck()},
+            currencyLocation() { return player.mse },
+            currencyInternalName: "ki",
+            style() {
+                let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
+                return look
+            }
+        },
+        26: {
+            fullDisplay() {
+                return "<h3>Cleansing</h3><br>" +
+                    "Unlock Cleansing<br><br>" +
+                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
+                    "Penalty: +7 Miasma"
+            },
+            unlocked() { return true },
+            cost: new Decimal(1e18),
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(7);layers.mse.resetCheck()},
+            currencyLocation() { return player.mse },
+            currencyInternalName: "ki",
+            style() {
+                let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
+                return look
+            }
+        },
+        27: {
+            fullDisplay() {
+                return "<h3>Harder Hara</h3><br>" +
+                    "Boost Ki by ^1.01 per hara level<br>" +
+                    "Currently: ^" + formatSimple(upgradeEffect(this.layer, this.id), 3) + "<br><br>" +
+                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
+                    "Penalty: +8 Miasma"
+            },
+            unlocked() { return true },
+            cost: new Decimal(1e21),
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(8);layers.mse.resetCheck()},
+            currencyLocation() { return player.mse },
+            currencyInternalName: "ki",
+            effect() {return Decimal.pow(1.01, player.mme.meridian[0].level)},
+            style() {
+                let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
+                return look
+            }
+        },
+        28: {
+            fullDisplay() {
+                return "<h3>Plentiful Points</h3><br>" +
+                    "Unlock three new meridian points<br><br>" +
+                    "Cost: " + formatShortWhole(tmp[this.layer].upgrades[this.id].cost) + " Ki<br>" +
+                    "Penalty: +8 Miasma"
+            },
+            unlocked() { return true },
+            cost: new Decimal(1e24),
+            onPurchase() {player.mse.miasma = player.mse.miasma.add(8);layers.mse.resetCheck()},
+            currencyLocation() { return player.mse },
+            currencyInternalName: "ki",
+            style() {
+                let look = {width: "130px", borderRadius: "15px", color: "white", border: "2px solid #735307", margin: "2px"}
+                hasUpgrade(this.layer, this.id) ? look.backgroundColor = "#1a3b0f" : !canAffordUpgrade(this.layer, this.id) ? look.backgroundColor =  "#361e1e" : look.backgroundColor = "black"
+                return look
+            }
+        },
     },
     microtabs: {
         stuff: {
