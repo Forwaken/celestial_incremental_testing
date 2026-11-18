@@ -101,7 +101,7 @@ function setupTempData(layerData, tmpData, funcsData) {
 				tmpData[item] = decimalOne // The safest thing to put probably?
 			}
 		} else {
-			tmpData[item] = uniData[item]
+			tmpData[item] = layerData[item]
 		}
 	}	
 }

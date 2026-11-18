@@ -377,7 +377,6 @@ document.onkeydown = function (e) {
 				readData(k.unlocked) !== false && !tmp[k.layer].hotkeys[k.id].isAutomated) k.onPress()
 		}
 	}
-	}
 }
 
 document.onkeyup = function (e) {
