@@ -295,8 +295,11 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                if (hasUpgrade("hpw", 105)) return player.hpw.power.add(1).log(player.h.stage.div(2).max(1.5)).add(1).mul(player.hpw.sincePower.add(1).log(player.h.stage).div(10).add(2))
-                return player.hpw.power.add(1).log(player.h.stage.max(2)).add(1).mul(2)
+                let raise = new Decimal(1)
+                if (hasUpgrade("hpw", 2007)) raise = raise.mul(upgradeEffect("hpw", 2007))
+                if (raise.gte(2) && hasUpgrade("hpw", 2009)) raise = raise.mul(2)
+                if (hasUpgrade("hpw", 105)) return player.hpw.power.add(1).log(player.h.stage.div(2).max(1.5)).add(1).mul(player.hpw.sincePower.add(1).log(player.h.stage).div(10).add(2)).pow(raise)
+                return player.hpw.power.add(1).log(player.h.stage.max(2)).add(1).mul(2).pow(raise)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -315,8 +318,11 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                if (hasUpgrade("hpw", 32)) return player.hpw.power.add(1).pow(Decimal.div(12, player.h.stage).add(1)).log(1.6).add(1).mul(player.h.stage)
-                return player.hpw.power.add(1).log(2).add(1).mul(Decimal.div(12, player.h.stage).add(1))
+                let raise = new Decimal(1)
+                if (hasUpgrade("hpw", 2008)) raise = raise.mul(upgradeEffect("hpw", 2008))
+                if (raise.gte(2) && hasUpgrade("hpw", 2009)) raise = raise.mul(2)
+                if (hasUpgrade("hpw", 32)) return player.hpw.power.add(1).pow(Decimal.div(12, player.h.stage).add(1)).log(1.6).add(1).mul(player.h.stage).pow(raise)
+                return player.hpw.power.add(1).log(2).add(1).mul(Decimal.div(12, player.h.stage).add(1)).pow(raise)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -1853,39 +1859,31 @@ addLayer("hpw", {
         2001: {
             title: "Might S:1",
             unlocked() {return player.h.stage.eq(7)},
-            description() {return "Reduce envy's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            description() {return "Reduce envy's penalty by /1.5."},
             branches: [11],
             cost() {return new Decimal(35000)},
             canAfford() { return hasUpgrade("hpw", 11)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            effect() {
-                if (hasUpgrade("hpw", 2009)) return new Decimal(2)
-                return new Decimal(1.5)
-            },
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         2002: {
             title: "Might S:2",
             unlocked() {return player.h.stage.eq(7)},
-            description() {return "Reduce wrath's penalty by /" + formatSimple(Decimal.div(1.6, Decimal.div(0.6, upgradeEffect(this.layer, this.id)).add(1)), 2) + "."},
+            description() {return "Reduce wrath's penalty by /1.5."},
             branches: [11],
             cost() {return new Decimal(1.4e7)},
             canAfford() { return hasUpgrade("hpw", 11)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            effect() {
-                if (hasUpgrade("hpw", 2009)) return new Decimal(2)
-                return new Decimal(1.5)
-            },
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         2003: {
             title: "Might S:(",
             unlocked() {return player.h.stage.eq(7)},
-            description: "Improve envy and wrath's power effect formulas.<br>[NOT IMPLEMENTED]",
+            description: "Raise envy and wrath's first effect by ^1.2",
             branches: [2001, 2002],
             cost() {return Decimal.pow10(player.h.stage.mul(15))},
             canAfford() { return hasUpgrade("hpw", 2001) && hasUpgrade("hpw", 2002)},
@@ -1923,7 +1921,7 @@ addLayer("hpw", {
         2006: {
             title: "Might S:{",
             unlocked() {return player.h.stage.eq(7)},
-            description: "Improve lust and gluttony's power effect formulas.<br>[NOT IMPLEMENTED]",
+            description: "Raise lust and gluttony's first effect by ^1.2",
             branches: [2004, 2005],
             cost() {return Decimal.pow10(player.h.stage.mul(20))},
             canAfford() { return hasUpgrade("hpw", 2004) && hasUpgrade("hpw", 2005)},
@@ -1935,33 +1933,49 @@ addLayer("hpw", {
         2007: {
             title: "Might S:5",
             unlocked() {return player.h.stage.eq(7)},
-            description() {return "Reduce sloth's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            description: "Raise Might 1:1 based on sins equipped.",
+            tooltip() {return "((Sins^2)/" + formatWhole(player.h.stage.pow(2)) + ")+1"},
             branches: [131],
             cost() {return new Decimal(7e17)},
             canAfford() { return hasUpgrade("hpw", 131)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            effect() {return new Decimal(2)},
+            effect() {
+                let amt = new Decimal(0)
+                for (let i in player.sins.clickables) {
+                    if (player.sins.clickables[i]) amt = amt.add(1)
+                }
+                return amt.pow(2).div(player.h.stage.pow(2)).add(1)
+            },
+            effectDisplay() { return "^" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         2008: {
             title: "Might S:6",
             unlocked() {return player.h.stage.eq(7)},
-            description() {return "Reduce pride's penalty by /" + formatSimple(upgradeEffect(this.layer, this.id)) + "."},
+            description() {return "Raise Might 1:2 based on sins equipped"},
+            tooltip() {return "((Sins^2)/" + formatWhole(player.h.stage.pow(2)) + ")+1"},
             branches: [131],
             cost() {return new Decimal(1e24)},
             canAfford() { return hasUpgrade("hpw", 131)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            effect() {return new Decimal(1.5)},
+            effect() {
+                let amt = new Decimal(0)
+                for (let i in player.sins.clickables) {
+                    if (player.sins.clickables[i]) amt = amt.add(1)
+                }
+                return amt.pow(2).div(player.h.stage.pow(2)).add(1)
+            },
+            effectDisplay() { return "^" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         2009: {
             title: "Might S:[",
             unlocked() {return player.h.stage.eq(7)},
-            description: "Improve sloth's power effect formula and boost S:1 and S:2.<br>[NOT IMPLEMENTED]",
+            description: "Square Might 1:1 and 1:2's effects if using all sins",
             branches: [2007, 2008],
             cost() {return Decimal.pow10(player.h.stage.mul(25))},
             canAfford() { return hasUpgrade("hpw", 2007) && hasUpgrade("hpw", 2008)},

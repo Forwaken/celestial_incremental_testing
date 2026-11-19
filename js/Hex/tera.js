@@ -1719,7 +1719,7 @@ addLayer("tera", {
 
         "hept1": {
             fullDisplay() {return "<h3>Sinergy</h3><br>Boost external effects based on sins equipped<br>Currently: ^" + formatSimple(upgradeEffect(this.layer, this.id), 2) + "<br><br>Cost: 1e70 Blessings<br><small>[REQ BEING IN HEPT]</small>"},
-            tooltip: "(Sins Equipped/50)+1",
+            tooltip: "(Sins Equipped/100)+1",
             unlocked() {return player.tera.unsealed && player.tera.trueHept.gte(1)},
             canAfford() { return player.h.stage.eq(7) && player.hbl.blessings.gte("1e70")},
             pay() {player.hbl.blessings = player.hbl.blessings.sub("1e70")},
@@ -1728,7 +1728,7 @@ addLayer("tera", {
                 for (let i in player.sins.clickables) {
                     if (player.sins.clickables[i]) amt = amt.add(1)
                 }
-                return amt.div(50).add(1)
+                return amt.div(100).add(1)
             },
             style() {
                 let look = {width: "140px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"}
@@ -2142,8 +2142,8 @@ addLayer("tera", {
                             ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (player.tera.virtueEssence[0].lt(1e7)) {look.background = "#bf8f8f"};return look}],
                             ["style-row", [
                                 ["style-row", [["raw-html", "1e12", {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "100px", height: "27px", borderRight: "3px solid rgba(0,0,0,0.5)"}],
-                                ["style-row", [["raw-html", () => {return "Unlock a new DU1 upgrade"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
-                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[0] && player.tera.virtueEssence[0].lt(1e12)) {look.background = "#bf8f8f"};return look}],
+                                ["style-row", [["raw-html", () => {return "Unlock Dark OTFs<br><small>[Locked behind a DU1 upgrade]</small>"}, {color: "rgba(0,0,0,0.7)", fontSize: "14px", fontFamily: "monospace"}]], {width: "289px", height: "27px"}],
+                            ], () => {let look = {width: "392px", height: "27px", background: "#77bf5f", lineHeight: "0.75", border: "3px solid rgba(0,0,0,0.5)", marginTop: "-3px"};if (!player.tera.virtueUnlocks2[0] && player.tera.virtueEssence[0].lt(1e12)) {look.background = "#bf8f8f"};return look}],
                         ], {width: "398px", height: "194px", borderLeft: "3px solid #95A6DD", userSelect: "none"}],
                     ], {width: "576px", height: "194px", border: "3px solid #95A6DD", background: "#719671"}],
                     ["style-row", [

@@ -18,31 +18,30 @@ addLayer("sins", {
         sinUsed: [false, false, false, false, false, false, false],
     }},
     update (delta) {
-        if (hasUpgrade("hpw", 2003)) player.sins.envy[0] = Decimal.pow(Decimal.div(2.5, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
-        else player.sins.envy[0] = Decimal.pow(Decimal.div(2, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
+        player.sins.envy[0] = Decimal.pow(Decimal.div(2, player.h.stage).add(1), player.hpr.rank[0].add(1).log(player.h.stage))
+        if (hasUpgrade("hpw", 2003)) player.sins.envy[0] = player.sins.envy[0].pow(1.2)
         player.sins.envy[1] = player.hpr.rank[0].add(1).log(7).div(8).add(1)
         player.sins.envy[2] = player.hpr.rank[0].add(1).log(7).div(4).add(1)
-        if (hasUpgrade("hpw", 2003)) player.sins.wrath[0] = Decimal.pow(Decimal.div(2.1, player.h.stage).add(1), player.hbl.boons.add(1).log(666).pow(0.85)).mul(2)
-        else player.sins.wrath[0] = Decimal.pow(Decimal.div(2.1, player.h.stage).add(1), player.hbl.boons.add(1).log(666).pow(0.7)).mul(2)
+        player.sins.wrath[0] = Decimal.pow(Decimal.div(2.1, player.h.stage).add(1), player.hbl.boons.add(1).log(666).pow(0.7)).mul(2)
+        if (hasUpgrade("hpw", 2003)) player.sins.wrath[0] = player.sins.wrath[0].pow(1.2)
         player.sins.wrath[1] = player.hbl.boons.add(1).log(666).pow(0.7).div(10).add(1)
         player.sins.wrath[2] = player.hbl.boons.add(1).log(666).pow(0.7).div(5).add(1)
-        if (hasUpgrade("hpw", 2006)) player.sins.lust[0] = Decimal.pow(Decimal.div(4, player.h.stage).add(1), player.hpu.totalPurity.pow(0.85))
-        else player.sins.lust[0] = Decimal.pow(Decimal.div(4, player.h.stage).add(1), player.hpu.totalPurity.pow(0.7))
+        player.sins.lust[0] = Decimal.pow(Decimal.div(4, player.h.stage).add(1), player.hpu.totalPurity.pow(0.7))
+        if (hasUpgrade("hpw", 2006)) player.sins.lust[0] = player.sins.lust[0].pow(1.2)
         player.sins.lust[1] = player.hpu.totalPurity.div(10).add(1)
         player.sins.lust[2] = player.hpu.totalPurity.div(5).add(1)
         let refWeight = player.hre.refinement.gte(70) ? player.hre.refinement.sub(35) : player.hre.refinement.div(2)
-        if (hasUpgrade("hpw", 2006)) player.sins.gluttony[0] = Decimal.pow(Decimal.div(1, player.h.stage).add(1), refWeight.pow(0.9))
-        else player.sins.gluttony[0] = Decimal.pow(Decimal.div(1, player.h.stage).add(1), refWeight.pow(0.75))
+        player.sins.gluttony[0] = Decimal.pow(Decimal.div(1, player.h.stage).add(1), refWeight.pow(0.75))
+        if (hasUpgrade("hpw", 2006)) player.sins.gluttony[0] = player.sins.gluttony[0].pow(1.2)
         player.sins.gluttony[1] = refWeight.pow(1.3).div(100).add(1)
         player.sins.gluttony[2] = refWeight.pow(1.3).div(50).add(1)
-        if (hasUpgrade("hpw", 2009)) player.sins.sloth[0] = Decimal.pow(Decimal.div(4.5, player.h.stage).add(1), player.h.hexPoint.add(1).log(1e6).pow(0.7))
-        else player.sins.sloth[0] = Decimal.pow(Decimal.div(3.8, player.h.stage).add(1), player.h.hexPoint.add(1).log(1e6).pow(0.7))
+        player.sins.sloth[0] = Decimal.pow(Decimal.div(3.8, player.h.stage).add(1), player.h.hexPoint.add(1).log(1e6).pow(0.7))
         player.sins.sloth[1] = player.h.hexPoint.add(1).log(1e6).div(10).add(1)
         player.sins.sloth[2] = player.h.hexPoint.add(1).log(1e6).div(5).add(1)
-        player.sins.greed[0] = player.hbl.blessings.add(1).log(player.h.stage).pow(0.55).div(50).add(1)
+        player.sins.greed[0] = player.hbl.blessings.add(1).log(player.h.stage).pow(0.35).div(50).add(1.1)
         player.sins.greed[1] = player.hbl.blessings.add(1).log(7).div(20).add(1)
         player.sins.greed[2] = player.hbl.blessings.add(1).log(7).div(10).add(1)
-        player.sins.pride[0] = player.hcu.curses.add(1).log(666).pow(0.5).div(50).add(1)
+        player.sins.pride[0] = player.hcu.curses.add(1).log(666).pow(0.3).div(50).add(1.1)
         player.sins.pride[1] = player.hcu.curses.add(1).log(666).pow(0.7).div(10).add(1)
         player.sins.pride[2] = player.hcu.curses.add(1).log(666).pow(0.7).div(5).add(1)
     },
@@ -272,7 +271,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(6, hasUpgrade("hpw", 2001) ? upgradeEffect("hpw", 2001) : 1)) + " Provenance Effectiveness"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(6, hasUpgrade("hpw", 2001) ? 1.5 : 1)) + " Provenance Effectiveness"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#4e6f4e", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
@@ -300,7 +299,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(7, hasUpgrade("hpw", 2002) ? upgradeEffect("hpw", 2002) : 1)) + " Pre-Power Resource"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(7, hasUpgrade("hpw", 2002) ? 1.5 : 1)) + " Pre-Power Resource"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#784848", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
@@ -442,7 +441,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "/" + formatSimple(Decimal.div(3, hasUpgrade("hpw", 2008) ? upgradeEffect("hpw", 2008) : 1)) + " Jinx Cap"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/2.5 Jinx Cap"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#594f7a", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [

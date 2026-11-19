@@ -189,6 +189,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).div(10).add(0.1)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(10).add(0.1))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -202,8 +204,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(10).add(0.1))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#334', color: 'white'}
         },
@@ -226,6 +226,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).div(5).add(0.2)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(5).add(0.2))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -239,8 +241,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(5).add(0.2))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#334', color: 'white'}
         },
@@ -263,6 +263,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).add(1)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).add(1))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -276,8 +278,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).add(1))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#334', color: 'white'}
         },
@@ -300,6 +300,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).div(10).add(0.1)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(10).add(0.1))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -313,8 +315,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(10).add(0.1))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#334', color: 'white'}
         },
@@ -337,6 +337,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).div(5).add(0.2)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(5).add(0.2))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -350,8 +352,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(5).add(0.2))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#334', color: 'white'}
         },
@@ -374,6 +374,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).add(1)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).add(1))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -387,8 +389,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).add(1))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#334', color: 'white'}
         },
@@ -411,6 +411,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).div(10).add(0.1)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(10).add(0.1))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -424,8 +426,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(10).add(0.1))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#421', color: 'white'}
         },
@@ -448,6 +448,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).div(5).add(0.2)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(5).add(0.2))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -461,8 +463,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(5).add(0.2))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#421', color: 'white'}
         },
@@ -485,6 +485,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).add(1)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).add(1))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -498,8 +500,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).add(1))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#421', color: 'white'}
         },
@@ -522,6 +522,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).div(10).add(0.1)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(10).add(0.1))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -535,8 +537,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(10).add(0.1))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#421', color: 'white'}
         },
@@ -559,6 +559,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).div(5).add(0.2)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(5).add(0.2))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -572,8 +574,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).div(5).add(0.2))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#421', color: 'white'}
         },
@@ -596,6 +596,8 @@ addLayer("mdb", {
                     Penalty: " + formatSimple(getBuyableAmount(this.layer, this.id).add(1)) + " Temp Miasma"
             },
             buy(mult) {
+                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).add(1))
+                layers.mse.resetCheck()
                 if (mult != true) {
                     let buyonecost = new Decimal(this.costGrowth()).pow(getBuyableAmount(this.layer, this.id)).mul(this.costBase())
                     this.pay(buyonecost)
@@ -609,8 +611,6 @@ addLayer("mdb", {
 
                     setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
                 }
-                player.mse.tempMiasma = player.mse.tempMiasma.add(getBuyableAmount(this.layer, this.id).add(1))
-                layers.mse.resetCheck()
             },
             style: { width: '225px', height: '150px', backgroundColor: '#421', color: 'white'}
         },
