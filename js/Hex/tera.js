@@ -22,16 +22,16 @@ addNode("bewitchSpell", {
     name() {return "<h2>🔮</h2>"},
     symbol() {return "🔮"},
     tooltip() {
-        let str = "<h3>Bewitch</h3><br>Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " free Δ-jinxes<br>"
-        if (getBuyableAmount("tera", "bewitchEnhance").gte(1)) str = str.concat("Improve B-jinx by " + formatSimple(buyableEffect("tera", "bewitchBuff").mul(5)) + "%<br>")
-        if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) str = str.concat("Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " effective vexes<br>")
-        return str.concat("<br>" + formatSimple(Decimal.div(0.3, buyableEffect("tera", "bewitchCost")), 3) + " Hex-Energy per second")
+        let str = "<h3>Bewitch</h3><br>Gain " + formatSimple(player.tera.hexEnergyCap.add(1).log(10).mul(buyableEffect("tera", "bewitchBuff"))) + " free Δ-jinxes<br>"
+        if (getBuyableAmount("tera", "bewitchEnhance").gte(1)) str = str.concat("Improve B-jinx by " + formatSimple(player.tera.hexEnergyCap.add(1).log(5).mul(buyableEffect("tera", "bewitchBuff"))) + "%<br>")
+        if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) str = str.concat("Gain " + formatSimple(player.tera.hexEnergyCap.add(1).log(10).div(5).mul(buyableEffect("tera", "bewitchBuff"))) + " effective vexes<br>")
+        return str.concat("<br>" + formatSimple(player.tera.hexEnergyCap.div(5).div(buyableEffect("tera", "bewitchCost")), 2) + " Hex-Energy per second")
     },
     tooltipLocked() {
-        let str = "<h3>Bewitch</h3><br>Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " free Δ-jinxes<br>"
-        if (getBuyableAmount("tera", "bewitchEnhance").gte(1)) str = str.concat("Improve B-jinx by " + formatSimple(buyableEffect("tera", "bewitchBuff").mul(5)) + "%<br>")
-        if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) str = str.concat("Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " effective vexes<br>")
-        return str.concat("<br>" + formatSimple(Decimal.div(0.3, buyableEffect("tera", "bewitchCost")), 3) + " Hex-Energy per second")
+        let str = "<h3>Bewitch</h3><br>Gain " + formatSimple(player.tera.hexEnergyCap.add(1).log(10).mul(buyableEffect("tera", "bewitchBuff"))) + " free Δ-jinxes<br>"
+        if (getBuyableAmount("tera", "bewitchEnhance").gte(1)) str = str.concat("Improve B-jinx by " + formatSimple(player.tera.hexEnergyCap.add(1).log(5).mul(buyableEffect("tera", "bewitchBuff"))) + "%<br>")
+        if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) str = str.concat("Gain " + formatSimple(player.tera.hexEnergyCap.add(1).log(10).div(5).mul(buyableEffect("tera", "bewitchBuff"))) + " effective vexes<br>")
+        return str.concat("<br>" + formatSimple(player.tera.hexEnergyCap.div(5).div(buyableEffect("tera", "bewitchCost")), 2) + " Hex-Energy per second")
     },
     canClick() {return player.tera.hexEnergy.gt(0)},
     layerShown() {return player.tera.clickables["bewitchPin"]},
@@ -172,7 +172,7 @@ addLayer("tera", {
         }
         
         if (player.tera.hexEnergyGain.gte(60)) player.tera.hexEnergyGain = player.tera.hexEnergyGain.div(60).pow(0.6).mul(60)
-        if (player.tera.clickables["bewitchSpell"]) player.tera.hexEnergyGain = player.tera.hexEnergyGain.sub(Decimal.div(0.3, buyableEffect("tera", "bewitchCost")))
+        if (player.tera.clickables["bewitchSpell"]) player.tera.hexEnergyGain = player.tera.hexEnergyGain.sub(player.tera.hexEnergyCap.div(5).div(buyableEffect("tera", "bewitchCost")))
         if (player.tera.trueHex.gte(1)) player.tera.hexEnergy = player.tera.hexEnergy.add(player.tera.hexEnergyGain.mul(delta)).min(player.tera.hexEnergyCap).max(0)
 
         if (player.tera.clickables["bewitchSpell"] && player.tera.hexEnergy.lte(0)) player.tera.clickables["bewitchSpell"] = false
@@ -684,7 +684,7 @@ addLayer("tera", {
             },
         },
         106: {
-            title() {return !player.tera.virtueUnlocks[0] ? "<h2>CURRENTLY SEALED</h2><br>[Perhaps a virtuous power could break this seal?]" : player.h.stage.neq(6) ? (Decimal.gt(player.tera.clickables[106], 0) ? "<h2>Are you sure?</h2><br><h3>[Resets ALL previous Uni-α content]</h3>" : "<h2>Switch to Hex Universe</h2><br><h3>[Resets ALL previous Uni-α content]</h3>") : "<h2>Switch to Hex Universe</h2><br><h3>[ALREADY IN HEX UNIVERSE]</h3>"},
+            title() {return !player.tera.virtueUnlocks[0] ? "<h2>CURRENTLY SEALED</h2><br><small>[Perhaps a virtuous power could break this seal?]</small>" : player.h.stage.neq(6) ? (Decimal.gt(player.tera.clickables[106], 0) ? "<h2>Are you sure?</h2><br><h3>[Resets ALL previous Uni-α content]</h3>" : "<h2>Switch to Hex Universe</h2><br><h3>[Resets ALL previous Uni-α content]</h3>") : "<h2>Switch to Hex Universe</h2><br><h3>[ALREADY IN HEX UNIVERSE]</h3>"},
             canClick() {return player.h.stage.neq(6) && player.tera.virtueUnlocks[0]},
             unlocked: true,
             onClick() {
@@ -833,11 +833,12 @@ addLayer("tera", {
         },
         "bewitchSpell": {
             title() {
-                let str = "<h3>Bewitch</h3><br>Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " free Δ-jinxes<br>"
-                if (getBuyableAmount("tera", "bewitchEnhance").gte(1)) str = str.concat("Improve B-jinx by " + formatSimple(buyableEffect("tera", "bewitchBuff").mul(5)) + "%<br>")
-                if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) str = str.concat("Gain " + formatWhole(buyableEffect("tera", "bewitchBuff")) + " effective vexes<br>")
-                return str.concat("<br>" + formatSimple(Decimal.div(0.3, buyableEffect("tera", "bewitchCost")), 3) + " Hex-Energy per second")
+                let str = "<h3>Bewitch</h3><br>Gain " + formatSimple(player.tera.hexEnergyCap.add(1).log(10).mul(buyableEffect("tera", "bewitchBuff"))) + " free Δ-jinxes<br>"
+                if (getBuyableAmount("tera", "bewitchEnhance").gte(1)) str = str.concat("Improve B-jinx by " + formatSimple(player.tera.hexEnergyCap.add(1).log(5).mul(buyableEffect("tera", "bewitchBuff"))) + "%<br>")
+                if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) str = str.concat("Gain " + formatSimple(player.tera.hexEnergyCap.add(1).log(10).div(5).mul(buyableEffect("tera", "bewitchBuff"))) + " effective vexes<br>")
+                return str.concat("<br>" + formatSimple(player.tera.hexEnergyCap.div(5).div(buyableEffect("tera", "bewitchCost")), 2) + " Hex-Energy per second<br><small>[" + formatSimple(Decimal.div(5, buyableEffect("tera", "bewitchCost"))) + "% of hex energy cap]</small>")
             },
+            tooltip: "Effects based on hex energy cap",
             canClick() {return player.tera.hexEnergy.gt(0)},
             unlocked: true,
             onClick() {
@@ -1216,12 +1217,21 @@ addLayer("tera", {
             },
         },
         "hexEnergyBuff": {
-            costBase() { return new Decimal(2).mul(buyableEffect("tera", "hexEnergyPrestige")) },
+            costBase() {
+                if (getBuyableAmount("tera", "hexEnergyPrestige").gt(0)) return new Decimal(2).mul(buyableEffect("tera", "hexEnergyPrestige"))
+                return new Decimal(1).mul(buyableEffect("tera", "hexEnergyPrestige"))
+            },
             costGrowth() { return new Decimal(0.4).mul(buyableEffect("tera", "hexEnergyPrestige")) },
-            purchaseLimit() { return new Decimal(90) },
+            purchaseLimit() {
+                if (getBuyableAmount("tera", "hexEnergyPrestige").lte(0)) return new Decimal(45)
+                return new Decimal(90)
+            },
             currency() { return player.tera.hexEnergy},
             pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).div(10).add(1).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))) },
+            effect(x) {
+                if (getBuyableAmount("tera", "hexEnergyPrestige").gt(0)) return getBuyableAmount(this.layer, this.id).div(10).add(1).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige")))
+                return getBuyableAmount(this.layer, this.id).div(5).add(1)
+            },
             unlocked: true,
             cost(x) { return getBuyableAmount(this.layer, this.id).mul(this.costGrowth()).add(this.costBase()) },
             canAfford() { return this.currency().gte(this.cost())},
@@ -1241,14 +1251,20 @@ addLayer("tera", {
             },
         },
         "hexEnergyCap": {
-            costBase() { return new Decimal(5).mul(buyableEffect("tera", "hexEnergyPrestige")) },
+            costBase() {
+                if (getBuyableAmount("tera", "hexEnergyPrestige").gt(0)) return new Decimal(5).mul(buyableEffect("tera", "hexEnergyPrestige"))
+                return new Decimal(2.5).mul(buyableEffect("tera", "hexEnergyPrestige"))
+            },
             costGrowth() { return new Decimal(0.5).mul(buyableEffect("tera", "hexEnergyPrestige")) },
-            purchaseLimit() { return new Decimal(90) },
+            purchaseLimit() {
+                if (getBuyableAmount("tera", "hexEnergyPrestige").lte(0)) return new Decimal(45)
+                return new Decimal(90)
+            },
             currency() { return player.tera.hexEnergy},
             pay(amt) { player.tera.hexEnergy = this.currency().sub(amt) },
             effect(x) {
                 if (getBuyableAmount("tera", "hexEnergyPrestige").gt(0)) return getBuyableAmount(this.layer, this.id).add(10).mul(Decimal.pow(10, getBuyableAmount("tera", "hexEnergyPrestige"))).sub(9)
-                return getBuyableAmount(this.layer, this.id).add(1)
+                return getBuyableAmount(this.layer, this.id).mul(2).add(1)
             },
             unlocked: true,
             cost(x) { return getBuyableAmount(this.layer, this.id).mul(this.costGrowth()).add(this.costBase()) },
@@ -1347,8 +1363,8 @@ addLayer("tera", {
             },
         },
         "piosityAuto": {
-            costBase() { return new Decimal(216) },
-            costGrowth() { return new Decimal(36) },
+            costBase() { return new Decimal(1e60) },
+            costGrowth() { return new Decimal(1e6) },
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
@@ -1385,7 +1401,7 @@ addLayer("tera", {
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
-            effect(x) { return getBuyableAmount(this.layer, this.id).add(1) },
+            effect(x) { return getBuyableAmount(this.layer, this.id).mul(0.4).add(1) },
             unlocked: true,
             cost(x) {
                 let amt = x || getBuyableAmount(this.layer, this.id)
@@ -1436,8 +1452,8 @@ addLayer("tera", {
             },
         },
         "bewitchEnhance": {
-            costBase() { return new Decimal(59049) },
-            costGrowth() { return new Decimal(59049) },
+            costBase() { return new Decimal(1e90) },
+            costGrowth() { return new Decimal(1e90) },
             purchaseLimit() { return new Decimal(2) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
@@ -1525,8 +1541,8 @@ addLayer("tera", {
             },
         },
         "chronotachysisDuration": {
-            costBase() { return new Decimal(300) },
-            costGrowth() { return new Decimal(30) },
+            costBase() { return new Decimal(1e120) },
+            costGrowth() { return new Decimal(1e12) },
             purchaseLimit() { return new Decimal(30) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },

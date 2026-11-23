@@ -1011,7 +1011,7 @@ function loadVue() {
 				</div>
 				<div v-bind:class="{jinxCost: true}">
 					<span v-if="!tmp[layer].buyables[data].extraAmount || tmp[layer].buyables[data].extraAmount.eq(0)" v-html="formatWhole(player[layer].buyables[data]) + '/' + formatWhole(tmp[layer].buyables[data].purchaseLimit)"></span>
-					<span v-if="tmp[layer].buyables[data].extraAmount && tmp[layer].buyables[data].extraAmount.neq(0)" v-html="formatWhole(player[layer].buyables[data]) + '+' + formatWhole(tmp[layer].buyables[data].extraAmount) + '/' + formatWhole(tmp[layer].buyables[data].purchaseLimit)"></span>
+					<span v-if="tmp[layer].buyables[data].extraAmount && tmp[layer].buyables[data].extraAmount.neq(0)" v-html="formatWhole(player[layer].buyables[data]) + '+' + formatSimple(tmp[layer].buyables[data].extraAmount) + '/' + formatWhole(tmp[layer].buyables[data].purchaseLimit)"></span>
 					<br>
 					<span v-html="'Cost: ' + format(tmp[layer].buyables[data].cost)"></span>
 				</div>

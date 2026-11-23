@@ -1044,7 +1044,7 @@ function canBeHealed(entity) {
 function calcTarget(index, slot, target, action = "none") {
     let stored = false;
 
-    const playerTaunt = [0,1,2].find(x => player.bh.characters[x].attributes["taunt"]);
+    const playerTaunt = action == "damage" ? [0,1,2].find(x => player.bh.characters[x].attributes["taunt"]) : null;
     const celestialiteTaunt = !!player.bh.celestialite.attributes["taunt"];
 
     let result = []

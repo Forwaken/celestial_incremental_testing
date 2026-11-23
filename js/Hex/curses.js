@@ -243,7 +243,7 @@ addLayer("hcu", {
             },
             subEffect(x) {
                 let eff = new Decimal(0.1)
-                if (player.tera.clickables["bewitchSpell"] && getBuyableAmount("tera", "bewitchEnhance").gte(1)) eff = eff.mul(buyableEffect("tera", "bewitchBuff").div(20).add(1))
+                if (player.tera.clickables["bewitchSpell"] && getBuyableAmount("tera", "bewitchEnhance").gte(1)) eff = eff.mul(player.tera.hexEnergyCap.add(1).log(5).mul(buyableEffect("tera", "bewitchBuff")).div(100).add(1))
                 if (getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount).gte(100)) eff = eff.div(10)
                 return eff
             },
@@ -358,7 +358,7 @@ addLayer("hcu", {
             extraAmount() {
                 let amt = new Decimal(0)
                 if (hasUpgrade("hve", 53)) amt = amt.add(3)
-                if (player.tera.clickables["bewitchSpell"]) amt = amt.add(buyableEffect("tera", "bewitchBuff"))
+                if (player.tera.clickables["bewitchSpell"]) amt = amt.add(player.tera.hexEnergyCap.add(1).log(10).mul(buyableEffect("tera", "bewitchBuff")))
                 return amt
             },
             effect(x) { return Decimal.pow(Decimal.mul(2, buyableEffect("hcu", 113)), getBuyableAmount(this.layer, this.id).add(tmp[this.layer].buyables[this.id].extraAmount))},

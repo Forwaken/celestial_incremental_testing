@@ -2537,6 +2537,7 @@ addLayer("pu", {
                     "x" + format(this.effect()[1]) + " to eclipse's effect duration",
                     getLevelableAmount(this.layer, this.id).gte(10) ? "<br><div style='font-size:10px;color:red'>[EFFECTS SOFTCAPPED]</div>" : "",
                 ]
+                if (getLevelableTier("pu", 403, true)) str[2] = "x" + format(this.effect()[0]) + " to eclipse timer tickspeed<br><small>(Based on universe resets)</small><br>"
                 return str.join("")
             },
             effectScale() {

@@ -1103,7 +1103,7 @@ addLayer("pet", {
         if (getLevelableTier("pu", 303, true)) player.pet.legPetTimers[0].max = player.pet.legPetTimers[0].max.mul(levelableEffect("pu", 303)[0])
         
         player.pet.eclipseTimerTickspeedDivisor = new Decimal(1)
-        if (getLevelableTier("pu", 303, true)) player.pet.eclipseTimerTickspeedDivisor = player.pet.eclipseTimerTickspeedDivisor.mul(levelableEffect("pu", 303)[0])
+        if (!getLevelableTier("pu", 403, true) && getLevelableTier("pu", 303, true)) player.pet.eclipseTimerTickspeedDivisor = player.pet.eclipseTimerTickspeedDivisor.mul(levelableEffect("pu", 303)[0])
         if (hasMilestone("dgj", 16)) player.pet.eclipseTimerTickspeedDivisor = player.pet.eclipseTimerTickspeedDivisor.mul(player.dgj.milestone3Effect)
         if (hasUpgrade("sma", 206)) player.pet.eclipseTimerTickspeedDivisor = player.pet.eclipseTimerTickspeedDivisor.mul(1.2)
         player.pet.eclipseTimerTickspeedDivisor = player.pet.eclipseTimerTickspeedDivisor.mul(buyableEffect("dt", 13))
@@ -1115,6 +1115,7 @@ addLayer("pet", {
 
         player.pet.eclipseTimerTickspeedMultiplier = new Decimal(1)
         player.pet.eclipseTimerTickspeedMultiplier = player.pet.eclipseTimerTickspeedMultiplier.mul(player.dv.timeDrainRate)
+        if (getLevelableTier("pu", 403, true) && getLevelableTier("pu", 303, true)) player.pet.eclipseTimerTickspeedMultiplier = player.pet.eclipseTimerTickspeedMultiplier.mul(levelableEffect("pu", 303)[0])
         if (getLevelableTier("pu", 403, true)) player.pet.eclipseTimerTickspeedMultiplier = player.pet.eclipseTimerTickspeedMultiplier.mul(player.ani.darkRadiationEffect)
         if (getLevelableTier("pu", 403, true)) player.pet.eclipseTimerTickspeedMultiplier = player.pet.eclipseTimerTickspeedMultiplier.mul(buyableEffect("tr", 11))
         if (getLevelableTier("pu", 403, true)) player.pet.eclipseTimerTickspeedMultiplier = player.pet.eclipseTimerTickspeedMultiplier.mul(buyableEffect("tr", 12))

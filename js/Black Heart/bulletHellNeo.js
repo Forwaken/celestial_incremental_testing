@@ -1184,7 +1184,7 @@ class BulletHell {
                     bhAttack(player.bh.celestialite.damage.mul(0.333), 3, 0, "randomPlayer", "<span style='color:#aa2798'>[BH] </span>")
                     break;
                 case "green":
-                    bhAttack(player.bh.celestialite.damage.mul(2), 3, 0, "randomPlayer", "<span style='color:#aa2798'>[BH] </span>")
+                    bhAttack(player.bh.celestialite.damage, 3, 0, "randomPlayer", "<span style='color:#aa2798'>[BH] </span>")
                     break;
                 default:
                     bhAttack(player.bh.celestialite.damage.mul(0.666), 3, 0, "randomPlayer", "<span style='color:#aa2798'>[BH] </span>")

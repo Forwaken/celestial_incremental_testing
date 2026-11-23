@@ -49,6 +49,7 @@ addLayer("hve", {
         }
 
         let effVex = player.hve.vexTotal
+        if (getBuyableAmount("tera", "bewitchEnhance").gte(2)) effVex = effVex.add(player.tera.hexEnergyCap.add(1).log(10).div(5).mul(buyableEffect("tera", "bewitchBuff")))
         if (hasUpgrade("hpw", 153)) effVex = effVex.pow(1.2)
         player.hve.vexEffects = [new Decimal(0), new Decimal(1), new Decimal(1), new Decimal(1)]
         player.hve.vexEffects[0] = effVex.mul(2)

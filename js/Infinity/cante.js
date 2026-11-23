@@ -140,7 +140,8 @@
 
         if (getBuyableAmount("ca", 36).gt(0)) player.ca.canteEnergy = player.ca.canteEnergy.add(player.ca.canteEnergyMult.mul(buyableEffect("ca", 36).sub(1)).mul(delta).div(player.uni["U2"].tickspeed))
 
-        player.ca.canteCoreGain = Decimal.affordArithmeticSeries(player.ca.canteEnergy, 100, 10, player.ca.canteCores).floor().max(1)
+        if (player.ca.canteEnergy.gte(0)) player.ca.canteCoreGain = Decimal.affordArithmeticSeries(player.ca.canteEnergy, 100, 10, player.ca.canteCores).floor().max(1)
+        else player.ca.canteCoreGain = new Decimal(0)
         if (player.ca.canteEnergy.gte(player.ca.canteEnergyReq))
         {
             layers.ca.gainCanteCore()
@@ -877,7 +878,7 @@
             costGrowth() { return new Decimal(1.2) },
             purchaseLimit() { return new Decimal(100) },
             currency() { return player.ca.canteEnergy},
-            pay(amt) { player.ca.canteEnergy = this.currency().sub(amt) },
+            pay(amt) { player.ca.canteEnergy = this.currency().sub(amt).max(0) },
             effect(x) { return getBuyableAmount(this.layer, this.id).div(100).add(1) },
             unlocked: true,
             cost(x) { return this.costGrowth().pow(x || getBuyableAmount(this.layer, this.id)).mul(this.costBase()) },
