@@ -13,6 +13,7 @@ addLayer("hre", {
         refinementDiv: new Decimal(1),
         refinementEffect: [[new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)],
             [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)], [new Decimal(1), new Decimal(1)]],
+        highestRefinement: new Decimal(0),
     }},
     update (delta) {
         player.hre.refinementDiv = new Decimal(1)
@@ -47,6 +48,7 @@ addLayer("hre", {
         if (player.hre.refinementGain.lt(1)) player.hre.refinementGain = new Decimal(0)
 
         if (hasMilestone("hre", 6) && !inChallenge("hrm", 15)) player.hre.refinement = player.hre.refinement.add(player.hre.refinementGain)
+        if (player.hre.highestRefinement.lt(player.hre.refinement)) player.hre.highestRefinement = player.hre.refinement
 
         let effRefinement = player.hre.refinement
         if (hasUpgrade("tera", "hept12")) effRefinement = effRefinement.mul(Decimal.pow(1.07, player.h.externalRaise))
@@ -458,6 +460,7 @@ addLayer("hre", {
             }],
             ["raw-html", () => {return player.hre.refinement.gte(player.h.stage.mul(15)) ? "[SOFTCAPPED<sup>2</sup>]" : player.hre.refinement.gte(player.h.stage.mul(10)) ? "[SOFTCAPPED]" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace", marginLeft: "10px"}],
         ]],
+        ["raw-html", () => {return "(Highest refinements: " + formatWhole(player.hre.highestRefinement) + ")"}, {color: "#ccc", fontSize: "16px", fontFamily: "monospace"}],
         ["blank", "10px"],
         ["clickable", 1],
         ["blank", "5px"],

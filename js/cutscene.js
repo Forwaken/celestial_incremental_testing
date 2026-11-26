@@ -4148,7 +4148,7 @@
             ], 
         },
         //note: zar is an ascensionist as well
-                "DS-Zar-Card-Generator": {
+        "DS-Zar-Card-Generator": {
             type: "normal",
             portrait: "resources/secret.png",
             music: "music/lament.mp3",

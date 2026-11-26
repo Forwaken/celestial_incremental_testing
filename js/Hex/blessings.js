@@ -127,6 +127,7 @@ addLayer("hbl", {
         if (hasMilestone("hbl", 4) || inChallenge("hrm", 12)) player.hbl.boonsGain = player.hbl.boonsGain.mul(player.hpu.purifiers[1].effect)
         player.hbl.boonsGain = player.hbl.boonsGain.mul(player.h.prePowerMult)
         player.hbl.boonsGain = player.hbl.boonsGain.mul(player.tera.virtueEffects[2][2])
+        if (hasUpgrade("hpw", 2007)) player.hbl.boonsGain = player.hbl.boonsGain.mul(upgradeEffect("hpw", 2007))
 
         // POWER AND AUTOMATION
         player.hbl.boonsGain = player.hbl.boonsGain.pow(levelableEffect("pu", 217)[1].pow(player.h.externalRaise))

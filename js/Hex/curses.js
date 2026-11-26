@@ -45,6 +45,7 @@ addLayer("hcu", {
         if (hasUpgrade("hbl", 103)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("hbl", 103))
         player.hcu.cursesGain = player.hcu.cursesGain.mul(player.tera.virtueEffects[1][1])
         player.hcu.cursesGain = player.hcu.cursesGain.mul(player.hcu.jinxedJinxEffects[0])
+        if (hasUpgrade("hpw", 2008)) player.hcu.cursesGain = player.hcu.cursesGain.mul(upgradeEffect("hpw", 2008))
 
         let externalCur = new Decimal(1)
         externalCur = externalCur.mul(buyableEffect("ta", 49))

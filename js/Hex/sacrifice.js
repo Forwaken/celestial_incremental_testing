@@ -44,8 +44,8 @@ addLayer("hsa", {
             if (player.hpr.rank[5].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[5].pow(Decimal.add(0.5, step.mul(5))).mul(4).add(1))
             if (player.hpr.rank[6].gt(0)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(player.hpr.rank[6].pow(Decimal.sub(0.5, step)).div(10).add(1))
         } else {
-            if (player.hpr.rank[5].gt(0) && !hasUpgrade("hpw", 167)) player.hsa.holyPowerGain = player.hpr.rank[5].pow(0.5).div(10)
-            if (player.hpr.rank[5].gt(0) && hasUpgrade("hpw", 167)) player.hsa.holyPowerGain = player.hpr.rank[5].pow(0.7).div(3)
+            if (player.hpr.rank[5].gt(0) && !hasUpgrade("hpw", 167)) player.hsa.holyPowerGain = player.hpr.rank[5].pow(0.4)
+            if (player.hpr.rank[5].gt(0) && hasUpgrade("hpw", 167)) player.hsa.holyPowerGain = player.hpr.rank[5].pow(0.65)
         }
         if (hasUpgrade("hsa", 11)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(2)
         if (hasUpgrade("hsa", 16)) player.hsa.holyPowerGain = player.hsa.holyPowerGain.mul(upgradeEffect("hsa", 16))
@@ -899,13 +899,13 @@ addLayer("hsa", {
         ["microtabs", "stuff", { 'border-width': '0px' }],
         ["blank", "25px"],
     ],
-    layerShown() { return inChallenge("hrm", 14) || hasUpgrade("hpw", 75) || (player.h.stage.eq(6) && player.tera.virtueUnlocks[5])}, // Decides if this node is shown or not.
+    layerShown() { return inChallenge("hrm", 14) || hasUpgrade("hpw", 165) || (player.h.stage.eq(6) && player.tera.virtueUnlocks[5])}, // Decides if this node is shown or not.
     hotkeys: [
         {
             key: "s", 
             description: "Sacrifice",
             unlocked() {
-                return inChallenge("hrm", 14) || hasUpgrade("hpw", 75)
+                return inChallenge("hrm", 14) || hasUpgrade("hpw", 165) || (player.h.stage.eq(6) && player.tera.virtueUnlocks[5])
             },
             onPress() {
                 clickClickable(this.layer, 1)

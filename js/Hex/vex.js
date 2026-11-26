@@ -22,17 +22,17 @@ addLayer("hve", {
     }},
     update(delta) {
         player.hve.vexDiv = new Decimal(1)
-        if (hasUpgrade("hpw", 112)) player.hve.vexDiv = player.hve.vexDiv.mul(Decimal.pow10(player.h.stage))
+        if (hasUpgrade("hpw", 112)) player.hve.vexDiv = player.hve.vexDiv.mul(Decimal.pow10(player.h.stage).pow(player.h.vexScale))
         if (hasUpgrade("hpw", 44)) player.hve.vexDiv = player.hve.vexDiv.mul(upgradeEffect("hpw", 44))
         if (hasUpgrade("hbl", 102)) player.hve.vexDiv = player.hve.vexDiv.mul(upgradeEffect("hbl", 102))
         player.hve.vexDiv = player.hve.vexDiv.mul(levelableEffect("pu", 216)[1].pow(player.h.externalRaise))
 
-        let connect = Decimal.pow10(player.h.stage.mul(player.h.stage.sub(5).mul(2)))
+        let connect = Decimal.pow10(player.h.stage.pow(2).mul(2).mul(player.h.vexScale).sub(player.h.stage.mul(10)))
 
-        if (player.hve.vexTotal.lt(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage), player.hve.vexTotal).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv)
-        if (player.hve.vexTotal.gte(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage.mul(2)), player.hve.vexTotal).div(connect).div(player.hve.vexDiv)
-        if (player.hcu.curses.lt(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv))) player.hve.vexGain = player.hcu.curses.add(1).div(Decimal.pow10(player.h.stage.mul(10))).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage)).ln()).add(1).sub(player.hve.vexTotal).floor()
-        if (player.hcu.curses.gte(Decimal.pow(Decimal.pow10(player.h.stage), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv))) player.hve.vexGain = player.hcu.curses.add(1).mul(connect).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage.mul(2))).ln()).add(1).sub(player.hve.vexTotal).floor()
+        if (player.hve.vexTotal.lt(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage).pow(player.h.vexScale), player.hve.vexTotal).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv)
+        if (player.hve.vexTotal.gte(player.h.stage.mul(2))) player.hve.vexReq = Decimal.pow(Decimal.pow10(player.h.stage.mul(2)).pow(player.h.vexScale), player.hve.vexTotal).div(connect).div(player.hve.vexDiv)
+        if (player.hcu.curses.lt(Decimal.pow(Decimal.pow10(player.h.stage).pow(player.h.vexScale), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv))) player.hve.vexGain = player.hcu.curses.add(1).div(Decimal.pow10(player.h.stage.mul(10))).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage).pow(player.h.vexScale)).ln()).add(1).sub(player.hve.vexTotal).floor()
+        if (player.hcu.curses.gte(Decimal.pow(Decimal.pow10(player.h.stage).pow(player.h.vexScale), player.h.stage.mul(2)).mul(Decimal.pow10(player.h.stage.mul(10))).div(player.hve.vexDiv))) player.hve.vexGain = player.hcu.curses.add(1).mul(connect).mul(player.hve.vexDiv).ln().div(new Decimal(Decimal.pow10(player.h.stage.mul(2)).pow(player.h.vexScale)).ln()).add(1).sub(player.hve.vexTotal).floor()
         if (player.hve.vexGain.lt(1)) player.hve.vexGain = new Decimal(0)
 
         if (hasMilestone("hre", 16) && !inChallenge("hrm", 15) && player.hve.vexGain.gt(0)) {
@@ -652,11 +652,13 @@ addLayer("hve", {
                                 return look
                             }],
                         ]],
+                        ["raw-html", () => {return "(Highest vexes: " + formatWhole(player.hve.vexHighest) + ")"}, {color: "#ccc", fontSize: "12px", fontFamily: "monospace"}],
+                        ["blank", "2px"],
                         ["raw-html", () => {
                             if (player.h.stage.eq(7)) return player.hve.vexTotal.lt(21) ? "The next Vex will go in Row " + VEXROW2[player.hve.vexTotal.toNumber()] + "." : ""
                             return player.hve.vexTotal.lt(18) ? "The next Vex will go in Row " + VEXROW[player.hve.vexTotal.toNumber()] + "." : ""
-                        }, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
-                    ], {width: "325px", height: "70px"}],
+                        }, {color: "white", fontSize: "14px", fontFamily: "monospace"}],
+                    ], {width: "325px", height: "70px", lineHeight: "1"}],
                     ["clickable", 1],
                     ["blank", "10px"],
                     ["clickable", 3],

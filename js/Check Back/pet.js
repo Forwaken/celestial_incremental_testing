@@ -2978,6 +2978,10 @@ addLayer("pet", {
             title() { return "Dice" },
             lore() { return "One of Zar's creations. This pet will always output a random number between 1 and 6." }, 
             description() {
+                if (this.effect()[0].gt("1e2500")) {
+                    return "x" + format(this.effect()[0]) + " to dice points <small>(based on highest combo)</small>. <small style='color:red'>[SOFTCAPPED]</small><br>" +
+                        "x" + format(this.effect()[1]) + " to dice score <small>(based on dice points)</small>."
+                }
                 return "x" + format(this.effect()[0]) + " to dice points <small>(based on highest combo)</small>.<br>" +
                     "x" + format(this.effect()[1]) + " to dice score <small>(based on dice points)</small>."
             },
@@ -2985,8 +2989,10 @@ addLayer("pet", {
             effect() {
                 let amt = getLevelableAmount(this.layer, this.id).add(getLevelableTier(this.layer, this.id).mul(5).min(40)).add(levelableEffect("pet", 1302)[0])
                 if ((player.points.lt(1e100) && !hasMilestone("ip", 24)) || inChallenge("ip", 13)) amt = amt.sub(1)
+                let effect1 = amt.add(1).pow(player.pet.highestDicePetCombo.add(1)).pow(Decimal.pow(4, getLevelableTier(this.layer, this.id)))
+                if (effect1.gt("1e2500")) effect1 = Decimal.pow(10, effect1.div("1e2500").add(1).log(10).pow(0.7)).mul("1e2500")
                 return [
-                    amt.add(1).pow(player.pet.highestDicePetCombo.add(1)).pow(Decimal.pow(4, getLevelableTier(this.layer, this.id))), // Dice Points (Based on Highest Combo)
+                    effect1, // Dice Points (Based on Highest Combo)
                     amt.mul(player.d.dicePoints.add(10).log(10).log(10).div(10)).mul(Decimal.pow(2, getLevelableTier(this.layer, this.id))).add(1), // Dice Score (Based on Dice Points)
                 ]
             },

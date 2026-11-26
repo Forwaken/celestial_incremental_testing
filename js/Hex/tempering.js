@@ -603,7 +603,8 @@ addLayer("hte", {
         ["style-row", [
             ["style-column", [
                 ["raw-html", () => {return player.h.stageName[0] + " Points"}, {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                ["raw-html", "<i>Based on Celestial Points</i>", {color: "#ccc", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", () => {return "(+" + formatSimple(player.h.hexPointGain) + "/s)"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", "<i>Based on<br>Celestial Points</i>", {color: "#ccc", fontSize: "14px", fontFamily: "monospace"}],
             ], {width: "200px", height: "120px"}],
             ["style-column", [
                 ["style-row", [
@@ -633,7 +634,8 @@ addLayer("hte", {
         ["style-row", [
             ["style-column", [
                 ["raw-html", "Temperers", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                ["raw-html", "<i>Based on Refinements</i>", {color: "#ccc", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", () => {return "(+" + formatSimple(player.hte.tempererPerSec) + "/s)"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", "<i>Based on Refinements</i>", {color: "#ccc", fontSize: "14px", fontFamily: "monospace"}],
             ], {width: "200px", height: "120px"}],
             ["style-column", [
                 ["style-row", [
@@ -663,7 +665,8 @@ addLayer("hte", {
         ["style-row", [
             ["style-column", [
                 ["raw-html", "Blessings", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                ["raw-html", "<i>Based on Refinements</i>", {color: "#ccc", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", () => {return "(+" + formatSimple(player.hbl.blessingsGain) + ")"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", "<i>Based on Refinements</i>", {color: "#ccc", fontSize: "14px", fontFamily: "monospace"}],
             ], {width: "200px", height: "120px"}],
             ["style-column", [
                 ["style-row", [
@@ -697,7 +700,8 @@ addLayer("hte", {
         ["style-row", [
             ["style-column", [
                 ["raw-html", "Boons", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                ["raw-html", "<i>Based on Blessings</i>", {color: "#ccc", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", () => {return "(+" + formatSimple(player.hbl.boonsGain) + "/s)"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", "<i>Based on Blessings</i>", {color: "#ccc", fontSize: "14px", fontFamily: "monospace"}],
             ], {width: "200px", height: "120px"}],
             ["style-column", [
                 ["style-row", [
@@ -731,7 +735,8 @@ addLayer("hte", {
         ["style-row", [
             ["style-column", [
                 ["raw-html", "Curses", {color: "white", fontSize: "24px", fontFamily: "monospace"}],
-                ["raw-html", "<i>Based on Blessings</i>", {color: "#ccc", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", () => {return "(+" + formatSimple(player.hcu.cursesGain) + "/s)"}, {color: "white", fontSize: "16px", fontFamily: "monospace"}],
+                ["raw-html", "<i>Based on Blessings</i>", {color: "#ccc", fontSize: "14px", fontFamily: "monospace"}],
             ], {width: "200px", height: "120px"}],
             ["style-column", [
                 ["style-row", [

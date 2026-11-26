@@ -33,6 +33,7 @@ addLayer("hpr", {
         player.hpr.divider = player.hre.refinementEffect[1][0]
         if (hasUpgrade("hpw", 132)) player.hpr.divider = player.hpr.divider.mul(1.5)
         if (hasUpgrade("hpw", 161)) player.hpr.divider = player.hpr.divider.mul(upgradeEffect("hpw", 161))
+        if (hasUpgrade("hpw", 75)) player.hpr.divider = player.hpr.divider.mul(upgradeEffect("hpw", 75))
         let ext = new Decimal(1)
         if (hasUpgrade("tera", "hex7")) ext = ext.mul(upgradeEffect("tera", "hex7"))
         ext = ext.pow(player.h.externalRaise)
@@ -66,11 +67,10 @@ addLayer("hpr", {
         player.hpr.rankGain[5] = layers.h.hexGain(player.hpr.rank[4], player.h.stage.pow(5), Decimal.div(player.h.stage, 5.5), player.hpr.divider).sub(player.hpr.rank[5])
 
         let t2provenanceScaleDiv = new Decimal(1)
-        if (hasUpgrade("hpw", 74)) t2provenanceScaleDiv = t2provenanceScaleDiv.mul(1.25)
-        if (hasUpgrade("tera", "hept5")) t2provenanceScaleDiv = t2provenanceScaleDiv.mul(Decimal.pow(1.14, player.h.externalRaise))
+        if (hasUpgrade("tera", "hept5")) t2provenanceScaleDiv = t2provenanceScaleDiv.pow(Decimal.pow(0.95, player.h.externalRaise))
 
-        player.hpr.rankReq[6] = layers.h.hexReq(player.hpr.rank[6], player.h.stage.pow(player.h.stage).div(t2provenanceScaleDiv), player.h.stage, player.hpr.divider)
-        player.hpr.rankGain[6] = layers.h.hexGain(player.hpr.rank[0], player.h.stage.pow(player.h.stage).div(t2provenanceScaleDiv), player.h.stage, player.hpr.divider).sub(player.hpr.rank[6])
+        player.hpr.rankReq[6] = layers.h.hexReq(player.hpr.rank[6], player.h.stage.pow(player.h.stage).pow(t2provenanceScaleDiv), player.h.stage, player.hpr.divider)
+        player.hpr.rankGain[6] = layers.h.hexGain(player.hpr.rank[0], player.h.stage.pow(player.h.stage).pow(t2provenanceScaleDiv), player.h.stage, player.hpr.divider).sub(player.hpr.rank[6])
 
         for (let i = 0; i < 12; i++) {
             if (player.hpr.rankGain[i].lt(0)) player.hpr.rankGain[i] = new Decimal(0)

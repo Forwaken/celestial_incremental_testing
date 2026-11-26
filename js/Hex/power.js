@@ -296,8 +296,7 @@ addLayer("hpw", {
             currencyInternalName: "power",
             effect() {
                 let raise = new Decimal(1)
-                if (hasUpgrade("hpw", 2007)) raise = raise.mul(upgradeEffect("hpw", 2007))
-                if (raise.gte(2) && hasUpgrade("hpw", 2009)) raise = raise.mul(2)
+                if (hasUpgrade("hpw", 2009)) raise = raise.mul(upgradeEffect("hpw", 2009))
                 if (hasUpgrade("hpw", 105)) return player.hpw.power.add(1).log(player.h.stage.div(2).max(1.5)).add(1).mul(player.hpw.sincePower.add(1).log(player.h.stage).div(10).add(2)).pow(raise)
                 return player.hpw.power.add(1).log(player.h.stage.max(2)).add(1).mul(2).pow(raise)
             },
@@ -319,7 +318,6 @@ addLayer("hpw", {
             currencyInternalName: "power",
             effect() {
                 let raise = new Decimal(1)
-                if (hasUpgrade("hpw", 2008)) raise = raise.mul(upgradeEffect("hpw", 2008))
                 if (raise.gte(2) && hasUpgrade("hpw", 2009)) raise = raise.mul(2)
                 if (hasUpgrade("hpw", 32)) return player.hpw.power.add(1).pow(Decimal.div(12, player.h.stage).add(1)).log(1.6).add(1).mul(player.h.stage).pow(raise)
                 return player.hpw.power.add(1).log(2).add(1).mul(Decimal.div(12, player.h.stage).add(1)).pow(raise)
@@ -804,7 +802,7 @@ addLayer("hpw", {
         74: {
             title: "Might δ:2",
             unlocked() {return player.h.stage.neq(6)},
-            description() {return "Reduce the cost scaling of provenances past ζ by 25%."}, // MAKE IT CHANGE TO JUST REDUCING PROVENANCE SCALING WHEN BELOW HEX
+            description() {return "Raise " + player.h.stageName[1] + " points by ^1.05."},
             branches: [73],
             cost() {return player.h.stage.pow(30).floor()},
             canAfford() { return hasUpgrade("hpw", 73)},
@@ -816,14 +814,19 @@ addLayer("hpw", {
         75: {
             title: "Might δ:3",
             unlocked() {return player.h.stage.neq(6)},
-            description() {return "Unlock " + player.h.stageName[1] + " of sacrifice."},
+            description() {return "Divide provenance req's based on Ι-Jinx's."},
+            tooltip() {return "(Ι-Jinx's/" + formatSimple(player.h.stage.mul(20)) + ")+1"},
             branches: [74],
             cost() {return player.h.stage.pow(60).floor()},
             canAfford() { return hasUpgrade("hpw", 74)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
-            style: {width: "100px", minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px", borderRadius: "15px"},
+            effect() {
+                return getBuyableAmount("hcu", 109).div(player.h.stage.mul(20)).add(1)
+            },
+            effectDisplay() { return "/" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            style: {minHeight: "100px", color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "20px 0", borderRadius: "15px"},
         },
         76: {
             title: "Might δ:4",
@@ -1299,9 +1302,9 @@ addLayer("hpw", {
         165: {
             title: "Might η:1",
             unlocked() {return player.h.stage.neq(6)},
-            description() {return "Raise " + player.h.stageName[1] + " points by ^1.05."},
+            description() {return "Unlock " + player.h.stageName[1] + " of sacrifice"}, 
             branches: [161],
-            cost() {return player.h.stage.pow(30).floor()},
+            cost() {return player.h.stage.pow(75).floor()},
             canAfford() { return hasUpgrade("hpw", 161)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1313,7 +1316,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description() {return "Re-unlock sacred energies first effect."},
             branches: [165],
-            cost() {return player.h.stage.pow(90).floor()},
+            cost() {return player.h.stage.pow(100).floor()},
             canAfford() { return hasUpgrade("hpw", 165)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1323,9 +1326,9 @@ addLayer("hpw", {
         167: {
             title: "Might η:3",
             unlocked() {return player.h.stage.neq(6)},
-            description() {return "Improve base holy power formula."},
+            description() {return "Improve holy power gain formula."},
             branches: [166],
-            cost() {return player.h.stage.pow(180).floor()},
+            cost() {return player.h.stage.pow(130).floor()},
             canAfford() { return hasUpgrade("hpw", 166)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1338,7 +1341,7 @@ addLayer("hpw", {
             description() {return "Boost holy power gain based on purity."},
             tooltip() {return "((Purities^" + formatSimple(Decimal.div(3.5, player.h.stage)) + ")/2)+1"},
             branches: [167],
-            cost() {return player.h.stage.pow(300).floor()},
+            cost() {return player.h.stage.pow(160).floor()},
             canAfford() { return hasUpgrade("hpw", 167)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
@@ -1933,55 +1936,56 @@ addLayer("hpw", {
         2007: {
             title: "Might S:5",
             unlocked() {return player.h.stage.eq(7)},
-            description: "Raise Might 1:1 based on sins equipped.",
-            tooltip() {return "((Sins^2)/" + formatWhole(player.h.stage.pow(2)) + ")+1"},
+            description: "Boost boons based on highest refinements over 100.",
+            tooltip() {return "1.2^(Refinements-100)"},
             branches: [131],
-            cost() {return new Decimal(7e17)},
+            cost() {return new Decimal(1e42)},
             canAfford() { return hasUpgrade("hpw", 131)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                let amt = new Decimal(0)
-                for (let i in player.sins.clickables) {
-                    if (player.sins.clickables[i]) amt = amt.add(1)
-                }
-                return amt.pow(2).div(player.h.stage.pow(2)).add(1)
+                return Decimal.pow(1.2, player.hre.highestRefinement.sub(100))
             },
-            effectDisplay() { return "^" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         2008: {
             title: "Might S:6",
             unlocked() {return player.h.stage.eq(7)},
-            description() {return "Raise Might 1:2 based on sins equipped"},
-            tooltip() {return "((Sins^2)/" + formatWhole(player.h.stage.pow(2)) + ")+1"},
+            description() {return "Boost curses based on highest vexes over 20"},
+            tooltip() {return "3^(Vexes-20)"},
             branches: [131],
-            cost() {return new Decimal(1e24)},
+            cost() {return new Decimal(1e60)},
             canAfford() { return hasUpgrade("hpw", 131)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                let amt = new Decimal(0)
-                for (let i in player.sins.clickables) {
-                    if (player.sins.clickables[i]) amt = amt.add(1)
-                }
-                return amt.pow(2).div(player.h.stage.pow(2)).add(1)
+                return Decimal.pow(3, player.hve.vexHighest.sub(20))
             },
-            effectDisplay() { return "^" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
+            effectDisplay() { return "x" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
         2009: {
             title: "Might S:[",
             unlocked() {return player.h.stage.eq(7)},
-            description: "Square Might 1:1 and 1:2's effects if using all sins",
+            description: "Raise Might 1:1 and 1:2's effects based on sins",
+            tooltip() {return "((Sins^2)/" + formatWhole(player.h.stage.pow(2)) + ")+1"},
             branches: [2007, 2008],
             cost() {return Decimal.pow10(player.h.stage.mul(25))},
             canAfford() { return hasUpgrade("hpw", 2007) && hasUpgrade("hpw", 2008)},
             currencyLocation() { return player.hpw },
             currencyDisplayName: "Power",
             currencyInternalName: "power",
+            effect() {
+                let amt = new Decimal(0)
+                for (let i in player.sins.clickables) {
+                    if (player.sins.clickables[i]) amt = amt.add(1)
+                }
+                return amt.pow(2).div(player.h.stage.pow(2)).add(1)
+            },
+            effectDisplay() { return "^" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
         },
     },
@@ -2415,7 +2419,7 @@ addLayer("hpw", {
                         ["style-row", [["upgrade", 2004]], {width: "140px", height: "140px"}],
                     ]],
                     ["row", [
-                        ["style-row", [["upgrade", 1042], ["upgrade", 75]], {width: "140px", height: "140px"}],
+                        ["style-row", [["upgrade", 1042], ["bt-upgrade", 75]], {width: "140px", height: "140px"}],
                         ["style-row", [["upgrade", 1004], ["upgrade", 73]], {width: "140px", height: "140px"}],
                         ["bt-upgrade", 71],
                         ["upgrade", 72],
@@ -2457,7 +2461,7 @@ addLayer("hpw", {
                         ["blank", ["70px", "140px"]],
                     ]],
                     ["row", [
-                        ["style-row", [["upgrade", 2007]], {width: "140px", height: "140px", marginRight: "70px"}],
+                        ["style-row", [["bt-upgrade", 2007]], {width: "140px", height: "140px", marginRight: "70px"}],
                         ["upgrade", 121],
                         ["blank", ["70px", "140px"]],
                         ["style-row", [["upgrade", 1061], ["upgrade", 136]], {width: "140px", height: "140px"}],
