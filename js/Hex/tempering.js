@@ -594,7 +594,8 @@ addLayer("hte", {
                 ["raw-html", () => {
                     let str = "<div class='bottomTooltip'>Base Formula<hr><small>(" + formatSimple(Decimal.mul(1.2, buyableEffect("hte", 22)), 2) + "^(Refinements-" + formatWhole(player.h.stage.mul(10).sub(1).sub(buyableEffect("hte", 21).sub(1))) + ")-1)"
                     if (buyableEffect("hte", 23).gte(1)) str = str.concat("x" + formatSimple(buyableEffect("hte", 23)))
-                    if (player.hte.tempererPerSec.gte(1e10)) str = str.concat("<br>[SOFTCAP: /1e10 ^" + formatSimple(Decimal.div(3.5, player.h.stage.max(4))) + " *1e10]")
+                    let basePerSec = Decimal.pow(Decimal.mul(1.2, buyableEffect("hte", 22)), player.hre.refinement.sub(player.h.stage.mul(10).sub(buyableEffect("hte", 21).sub(1))).add(1).max(0)).sub(1).mul(buyableEffect("hte", 23))
+                    if (basePerSec.gte(1e10)) str = str.concat("<br>[SOFTCAP: /1e10 ^" + formatSimple(Decimal.div(3.5, player.h.stage.max(4))) + " *1e10]")
                     return str + "</small></div>"
                 }],
             ]],

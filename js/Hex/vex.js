@@ -471,7 +471,7 @@ addLayer("hve", {
             currencyDisplayName: "Vex",
             currencyInternalName: "vex",
             effect() {
-                let eff = player.h.hexPoint.add(1).log(Decimal.pow10(player.h.stage)).pow(Decimal.div(2.1, player.h.stage)).div(player.h.stage).add(1)
+                let eff = player.h.hexPoint.add(1).log(Decimal.pow10(player.h.stage)).pow(Decimal.div(3.5, player.h.stage)).div(player.h.stage).add(1)
                 return eff
             },
             style: {width: "110px", minHeight: "110px", margin: "5px", borderRadius: "50%"},

@@ -129,14 +129,14 @@ addLayer("hsa", {
             player.hsa.prayerTime = player.hsa.prayerTime.add(Decimal.mul(delta, player.hsa.prayerSpeed.mul(player.h.tickspeed)))
         }
         if (player.hsa.prayerTime.gt(0)) {
-            player.hsa.prayerTime = player.hsa.prayerTime.sub(player.hsa.prayerDecay.mul(delta)).max(0)
+            player.hsa.prayerTime = player.hsa.prayerTime.sub(player.hsa.prayerDecay.mul(player.h.tickspeed).mul(delta)).max(0)
         }
 
         let prayDist = player.h.stage
         if (hasUpgrade("hsa", 14)) prayDist = prayDist.sub(1).div(upgradeEffect("hsa", 14)).add(1)
 
         player.hsa.prayerMult = Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0).div(3).add(1)
-        player.hsa.prayerDecay = Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0).pow(0.7).div(20).add(0.05).mul(player.h.tickspeed)
+        player.hsa.prayerDecay = Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0).pow(0.7).div(20).add(0.05)
         player.hsa.prayPercent = player.hsa.prayerTime.sub(Decimal.sumArithmeticSeries(Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0), prayDist, prayDist, 0)).div(Decimal.sumArithmeticSeries(1, prayDist, prayDist, Decimal.affordArithmeticSeries(player.hsa.prayerTime, prayDist, prayDist, 0)))
     },
     clickables: {
@@ -232,8 +232,8 @@ addLayer("hsa", {
         100: {
             title() {
                 let curTime = buyableEffect("hsa", 1).sub(1).mul(player.hsa.prayerSpeed).mul(player.h.tickspeed)
-                if (player.hsa.praying) curTime = curTime.add(Decimal.mul(1, player.hsa.prayerSpeed.mul(player.h.tickspeed)))
-                if (!player.hsa.praying && player.hsa.prayerTime.gt(0)) curTime = curTime.sub(player.hsa.prayerDecay)
+                if (player.hsa.praying) curTime = curTime.add(Decimal.mul(1, player.hsa.prayerSpeed).mul(player.h.tickspeed))
+                if (player.hsa.prayerTime.gt(0)) curTime = curTime.sub(player.hsa.prayerDecay.mul(player.h.tickspeed))
                 let str = "<h3>Pray to speed up holy dimensions</h3><br>x" + formatSimple(player.hsa.prayerMult) + " holy dimension tickspeed<br>Prayer Time: " + formatTime(player.hsa.prayerTime)
                 if (curTime.gt(0.01)) str = str.concat("<small style='color:rgba(0,100,0,0.6)'> (+" + formatTime(curTime) + ")</small>")
                 if (curTime.lt(-0.01)) str = str.concat("<small style='color:rgba(100,0,0,0.6)'> (-" + formatTime(curTime.mul(-1)) + ")</small>")

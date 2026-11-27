@@ -30,6 +30,8 @@ addLayer("hpw", {
         if (player.sins.clickables["lust"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.lust[0])
         if (player.sins.clickables["gluttony"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.gluttony[0])
         if (player.sins.clickables["sloth"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.sloth[0])
+        if (player.sins.clickables["greed"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.greed[0])
+        if (player.sins.clickables["pride"]) player.hpw.powerGain = player.hpw.powerGain.mul(player.sins.pride[0])
         if (hasUpgrade("hve", 72)) player.hpw.powerGain = player.hpw.powerGain.mul(upgradeEffect("hve", 72))
         player.hpw.powerGain = player.hpw.powerGain.mul(buyableEffect("hve", 14))
         player.hpw.powerGain = player.hpw.powerGain.mul(player.tera.virtueEffects[6][1])
@@ -51,8 +53,6 @@ addLayer("hpw", {
         player.hpw.powerGain = player.hpw.powerGain.div(player.hpw.softcap)
         
         // POWER MODIFIERS
-        if (player.sins.clickables["greed"]) player.hpw.powerGain = player.hpw.powerGain.pow(player.sins.greed[0])
-        if (player.sins.clickables["pride"]) player.hpw.powerGain = player.hpw.powerGain.pow(player.sins.pride[0])
         let externalPow = new Decimal(1)
         externalPow = externalPow.mul(levelableEffect("pu", 210)[1])
         externalPow = externalPow.mul(player.n.pylonPassiveEffect)
@@ -624,7 +624,7 @@ addLayer("hpw", {
             unlocked() {return player.h.stage.neq(6)},
             description: "Reduce Vex requirement based on jinx score.",
             tooltip() {
-                return "Jinx Score+1"
+                return "(Jinx Score+1)^" + formatSimple(Decimal.div(15, player.h.stage))
             },
             branches: [43],
             cost() {return player.h.stage.pow(20).floor()},
@@ -633,7 +633,7 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hcu.jinxTotal.add(1)
+                return player.hcu.jinxTotal.add(1).pow(Decimal.div(15, player.h.stage))
             },
             effectDisplay() { return "/" + formatSimple(upgradeEffect(this.layer, this.id), 2) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},
@@ -1163,7 +1163,7 @@ addLayer("hpw", {
             title: "Might 16:2",
             unlocked() {return player.h.stage.gte(7) || player.tera.virtueUnlocks[6]},
             description: "Gain free purities based on blessings.",
-            tooltip() {return "Floor(log" + formatSimple(Decimal.pow10(player.h.stage.div(2))) + "(Blessings+1)^0.5)"},
+            tooltip() {return "Floor(log" + formatSimple(Decimal.pow10(player.h.stage.div(2))) + "(Blessings+1)^0.6)"},
             branches: [141],
             cost() {
                 if (player.h.stage.lt(7) && player.tera.virtueUnlocks[6]) return new Decimal(player.h.stage.div(2).pow(150)).pow(player.hpw.upgScale[15]).floor()
@@ -1178,7 +1178,7 @@ addLayer("hpw", {
             currencyDisplayName: "Power",
             currencyInternalName: "power",
             effect() {
-                return player.hbl.blessings.add(1).log(Decimal.pow10(player.h.stage.div(2))).pow(0.5).floor()
+                return player.hbl.blessings.add(1).log(Decimal.pow10(player.h.stage.div(2))).pow(0.6).floor()
             },
             effectDisplay() { return "+" + formatWhole(upgradeEffect(this.layer, this.id)) }, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", margin: "10px", borderRadius: "15px"},

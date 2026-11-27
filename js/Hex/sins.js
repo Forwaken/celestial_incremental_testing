@@ -26,7 +26,7 @@ addLayer("sins", {
         if (hasUpgrade("hpw", 2003)) player.sins.wrath[0] = player.sins.wrath[0].pow(1.2)
         player.sins.wrath[1] = player.hbl.boons.add(1).log(666).pow(0.7).div(10).add(1)
         player.sins.wrath[2] = player.hbl.boons.add(1).log(666).pow(0.7).div(5).add(1)
-        player.sins.lust[0] = Decimal.pow(Decimal.div(4, player.h.stage).add(1), player.hpu.totalPurity.pow(0.7))
+        player.sins.lust[0] = Decimal.pow(Decimal.div(5, player.h.stage).add(1), player.hpu.totalPurity.pow(0.7))
         if (hasUpgrade("hpw", 2006)) player.sins.lust[0] = player.sins.lust[0].pow(1.2)
         player.sins.lust[1] = player.hpu.totalPurity.div(10).add(1)
         player.sins.lust[2] = player.hpu.totalPurity.div(5).add(1)
@@ -38,10 +38,10 @@ addLayer("sins", {
         player.sins.sloth[0] = Decimal.pow(Decimal.div(3.8, player.h.stage).add(1), player.h.hexPoint.add(1).log(1e6).pow(0.7))
         player.sins.sloth[1] = player.h.hexPoint.add(1).log(1e6).div(10).add(1)
         player.sins.sloth[2] = player.h.hexPoint.add(1).log(1e6).div(5).add(1)
-        player.sins.greed[0] = player.hbl.blessings.add(1).log(player.h.stage).pow(0.35).div(50).add(1.1)
+        player.sins.greed[0] = Decimal.pow(Decimal.div(3, player.h.stage).add(1), player.hbl.blessings.add(1).log(player.h.stage).pow(0.7))
         player.sins.greed[1] = player.hbl.blessings.add(1).log(7).div(20).add(1)
         player.sins.greed[2] = player.hbl.blessings.add(1).log(7).div(10).add(1)
-        player.sins.pride[0] = player.hcu.curses.add(1).log(666).pow(0.3).div(50).add(1.1)
+        player.sins.pride[0] = Decimal.pow(Decimal.div(2.1, player.h.stage).add(1), player.hcu.curses.add(1).log(666).pow(0.7))
         player.sins.pride[1] = player.hcu.curses.add(1).log(666).pow(0.7).div(10).add(1)
         player.sins.pride[2] = player.hcu.curses.add(1).log(666).pow(0.7).div(5).add(1)
     },
@@ -384,7 +384,7 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "/77 Uni-Alpha Tickspeed"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/7 Uni-Alpha Tickspeed"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#4e6f6f", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
@@ -413,12 +413,12 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "^0.9 Blessings"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "/77 Blessings"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#988f5b", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "^" + formatSimple(player.sins.greed[0], 3) + " Power Gain"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.greed[0]) + " Power Gain"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "x" + formatSimple(player.sins.greed[1]) + " Technological Fragment Score"}, {color: "rgba(0,0,0,0.6)", fontSize: "12px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "<s>x" + formatSimple(player.sins.greed[2]) + " Technological Pylon Energy</s>"}, {color: "rgba(0,0,0,0.6)", fontSize: "12px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on Blessings)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
@@ -441,12 +441,12 @@ addLayer("sins", {
                 ["style-column", [
                     ["style-column", [
                         ["raw-html", "Debuff", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "^1.5 Vex Scaling"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "^1.35 Vex Scaling"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                     ], {width: "225px", height: "45px", background: "#594f7a", borderRadius: "10px"}],
                     ["blank", "5px"],
                     ["style-column", [
                         ["raw-html", "Buffs", {color: "rgba(0,0,0,0.6)", fontSize: "20px", fontFamily: "monospace"}],
-                        ["raw-html", () => {return "^" + formatSimple(player.sins.pride[0], 3) + " Power Gain"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
+                        ["raw-html", () => {return "x" + formatSimple(player.sins.pride[0]) + " Power Gain"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "x" + formatSimple(player.sins.pride[1]) + " Ancient Fragment Score"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "x" + formatSimple(player.sins.pride[2]) + " Ancient Pylon Energy"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],
                         ["raw-html", () => {return "(Based on Curses)"}, {color: "rgba(0,0,0,0.6)", fontSize: "14px", fontFamily: "monospace"}],

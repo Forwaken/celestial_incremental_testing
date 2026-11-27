@@ -94,6 +94,7 @@ addLayer("hbl", {
         if (hasUpgrade("hpw", 172)) player.hbl.blessingsGain = player.hbl.blessingsGain.mul(upgradeEffect("hpw", 172))
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(buyableEffect("hpw", 11))
         player.hbl.blessingsGain = player.hbl.blessingsGain.mul(player.tera.virtueEffects[5][1])
+        if (player.sins.clickables["greed"]) player.hbl.blessingsGain = player.hbl.blessingsGain.div(77)
 
         // POWER AND AUTOMATION
         if (hasUpgrade("hve", 62)) player.hbl.blessingsGain = player.hbl.blessingsGain.pow(1.03)
@@ -670,7 +671,7 @@ addLayer("hbl", {
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
-                return player.bh.darkEssence.add(1).log(player.h.stage).pow(2).add(1)
+                return player.bh.darkEssence.pow(0.7).add(1)
             },
             effectDisplay() {return "x" + format(upgradeEffect(this.layer, this.id))}, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},
@@ -686,7 +687,7 @@ addLayer("hbl", {
             currencyDisplayName: "Blessings",
             currencyInternalName: "blessings",
             effect() {
-                return player.au2.stars.add(1).log(player.h.stage).pow(0.7).div(player.h.stage).add(1)
+                return player.au2.stars.add(1).log(player.h.stage).pow(0.9).div(player.h.stage).add(1)
             },
             effectDisplay() {return "x" + format(upgradeEffect(this.layer, this.id))}, // Add formatting to the effect
             style: {color: "rgba(0,0,0,0.8)", border: "3px solid rgba(0,0,0,0.5)", borderRadius: "15px", margin: "2px"},

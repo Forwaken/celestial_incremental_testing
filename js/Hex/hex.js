@@ -63,7 +63,7 @@ addLayer("h", {
 
         // GLOBAL NERFS
         player.h.tickspeed = new Decimal(1)
-        if (player.sins.clickables["sloth"]) player.h.tickspeed = player.h.tickspeed.div(77)
+        if (player.sins.clickables["sloth"]) player.h.tickspeed = player.h.tickspeed.div(7)
         if (player.tera.chronotachysisSpell[0].gt(0)) player.h.tickspeed = player.h.tickspeed.mul(buyableEffect("tera", "chronotachysisBuff")).mul(Decimal.pow(3, player.tera.chronotachysisSpell[1]))
         player.h.tickspeed = player.h.tickspeed.mul(player.tera.trueHexEffect)
         if (hasUpgrade("hpw", 103)) player.h.tickspeed = player.h.tickspeed.mul(upgradeEffect("hpw", 103))
@@ -105,10 +105,9 @@ addLayer("h", {
         if (hasUpgrade("hbl", 106)) player.h.refinementScale = player.h.refinementScale.div(upgradeEffect("hbl", 106))
 
         player.h.vexScale = new Decimal(1)
-        if (player.sins.clickables["pride"]) player.h.vexScale = player.h.vexScale.mul(1.5)
+        if (player.sins.clickables["pride"]) player.h.vexScale = player.h.vexScale.mul(1.35)
 
         player.h.blessingRaise = new Decimal(1)
-        if (player.sins.clickables["greed"]) player.h.blessingRaise = player.h.blessingRaise.mul(0.9)
 
         // START OF HEX POINT GAIN
         player.h.hexPointGain = new Decimal(0)
