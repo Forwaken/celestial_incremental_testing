@@ -147,7 +147,7 @@ addLayer("tera", {
         player.tera.trueHexGain = player.hpw.power.add(1).div(1e60).ln().div(Decimal.ln(1e6)).add(1).sub(player.tera.trueHex).floor().max(0)
         player.tera.trueHexEffect = player.tera.trueHex.gte(10) ? Decimal.pow(7/6, player.tera.trueHex.sub(5)) : new Decimal(1)
 
-        player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).add(1).pow(buyableEffect("tera", "hexOpacity")).sub(1) : new Decimal(0)
+        player.tera.hexEssencePerSecond = player.tera.trueHex.gt(0) ? Decimal.pow(Decimal.mul(6, buyableEffect("tera", "hexRed")), player.tera.trueHex.div(3).add(1).mul(buyableEffect("tera", "hexGreen")).sub(1)).mul(buyableEffect("tera", "hexBlue")).div(60).add(1).pow(buyableEffect("tera", "hexOpacity")).sub(1) : new Decimal(0)
         if (hasAchievement("achievements", 1405)) player.tera.hexEssencePerSecond = player.tera.hexEssencePerSecond.mul(2)
 
         let softcapStart = new Decimal(1e6)
@@ -1338,8 +1338,8 @@ addLayer("tera", {
             },
         },
         "piosityCost": {
-            costBase() { return new Decimal(10) },
-            costGrowth() { return new Decimal(10) },
+            costBase() { return new Decimal(243) },
+            costGrowth() { return new Decimal(6) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
@@ -1427,8 +1427,8 @@ addLayer("tera", {
             },
         },
         "bewitchCost": {
-            costBase() { return new Decimal(27) },
-            costGrowth() { return new Decimal(27) },
+            costBase() { return new Decimal(1296) },
+            costGrowth() { return new Decimal(12) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
@@ -1516,8 +1516,8 @@ addLayer("tera", {
             },
         },
         "chronotachysisCost": {
-            costBase() { return new Decimal(48) },
-            costGrowth() { return new Decimal(48) },
+            costBase() { return new Decimal(7776) },
+            costGrowth() { return new Decimal(18) },
             purchaseLimit() { return new Decimal(50) },
             currency() { return player.tera.hexEssence},
             pay(amt) { player.tera.hexEssence = this.currency().sub(amt) },
@@ -2593,7 +2593,7 @@ addLayer("tera", {
                             player.tera.hexEssencePerSecond.gt(0) ? look.color = "white" : look.color = "gray"
                             return look
                         }],
-                        ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>((((6*Red)<sup>(True Hex*Green)-1</sup>)*Blue/60)+1)<sup>Opacity</sup>-1</small></div>"}],
+                        ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>((((6*Red)<sup>(((True Hex/3)+1)*Green)-1</sup>)*Blue/60)+1)<sup>Opacity</sup>-1</small></div>"}],
                     ]],
                     ["raw-html", () => {
                         let softcapStart = hasUpgrade("tera", "hex12") ? Decimal.mul(1e6, upgradeEffect("tera", "hex12")) : new Decimal(1e6)
@@ -2643,7 +2643,7 @@ addLayer("tera", {
                                 player.tera.heptEssencePerSecond.gt(0) ? look.color = "white" : look.color = "gray"
                                 return look
                             }],
-                            ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>(7<sup>(True Hept)</sup>)/70</small></div>"}],
+                            ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>(7<sup>(True Hept-1)</sup>)/7</small></div>"}],
                         ]],
                         ["blank", "10px"],
                         ["microtabs", "hept", {borderWidth: "0px"}]
@@ -2652,7 +2652,7 @@ addLayer("tera", {
             },
             // Upgrade grid of 5x5 for pent perhaps? (in the vein of tree game rewritten)
             // Keep Project Claustrophoia's double compacted boxes in mind
-            // Absolute button simulator for hept+ maybe?
+            // Absolute button simulator for oct+ maybe?
             // Circular 9 grid of buyables should be used
             // Keep kaizo incremental in mind as a simple minigame here
         },
@@ -2670,7 +2670,7 @@ addLayer("tera", {
             ["clickable", 1], ["clickable", 2], ["clickable", 3], ["clickable", 4],
             ["clickable", 5], ["clickable", 6], ["clickable", 7], ["clickable", 8],
             ["clickable", 9], ["clickable", 10], ["clickable", 11], ["clickable", 12],
-        ], {maxWidth: "100%", background: "#1a222e", border: "3px solid #85ADE6", borderRadius: "50px 50px 50px 50px / 20px 20px 20px 20px", maskImage: "linear-gradient(to right, transparent, transparent 5%, black 20%, black 80%, transparent 95%, transparent)"}],
+        ], {minWidth: "800px", maxWidth: "100%", background: "#1a222e", border: "3px solid #85ADE6", borderRadius: "50px 50px 50px 50px / 20px 20px 20px 20px", maskImage: "linear-gradient(to right, transparent, transparent 5%, black 20%, black 80%, transparent 95%, transparent)"}],
         ["blank", "10px"],
         ["style-column", [
             ["buttonless-microtabs", "stuff", {borderWidth: "0"}],
