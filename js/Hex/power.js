@@ -10,6 +10,7 @@ addLayer("hpw", {
         power: new Decimal(0),
         totalPower: new Decimal(0),
         powerGain: new Decimal(0),
+        powerPerSec: new Decimal(0),
         upgScale: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         upgTotal: new Decimal(0),
         vigor: 0,
@@ -66,7 +67,12 @@ addLayer("hpw", {
         let amt = player.hpw.powerGain.gt(player.hpw.power) && player.hpw.powerGain.gte(Decimal.pow10(player.h.stage.mul(10)).mul(2)) ? player.hpw.powerGain : player.hpw.power
         player.hpw.softcap = amt.gte(Decimal.pow10(player.h.stage.mul(10))) ? amt.div(Decimal.pow10(player.h.stage.mul(10))).pow(0.15).div(player.h.stage).add(1) : new Decimal(1)
 
-        if (hasUpgrade("hpw", 106)) player.hpw.power = player.hpw.power.add(player.hpw.powerGain.div(100).mul(player.h.tickspeed).mul(delta))
+        // POWER PER SECOND
+        player.hpw.powerPerSec = new Decimal(0)
+        if (hasUpgrade("hpw", 106)) player.hpw.powerPerSec = player.hpw.powerGain.div(Decimal.pow10(player.h.stage))
+        player.hpw.powerPerSec = player.hpw.powerPerSec.mul(player.h.tickspeed)
+        player.hpw.power = player.hpw.power.add(player.hpw.powerPerSec.mul(delta))
+
         player.hpw.powerGain = player.hpw.powerGain.floor().max(1) // To keep power to whole numbers
 
         player.hpw.upgTotal = new Decimal(0).add(player.hpw.upgrades.length)
@@ -987,7 +993,7 @@ addLayer("hpw", {
         106: {
             title: "Might ε:4",
             unlocked() {return player.h.stage.neq(6)},
-            description() {return "Gain 1% of power gain per second."},
+            description() {return "Gain " + format(Decimal.div(1, Decimal.pow10(player.h.stage)).mul(100), 0, true) + "% of power gain per second."},
             branches: [105],
             cost() {return player.h.stage.pow(150).floor()},
             canAfford() { return hasUpgrade("hpw", 105)},
@@ -2568,6 +2574,7 @@ addLayer("hpw", {
                 player.hbl.blessings.gte(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) ? look.color = "white" : look.color = "gray"
                 return look
             }],
+            ["raw-html", () => {return player.hpw.powerPerSec.eq(0) ? "" : player.hpw.powerPerSec.gt(0) ? "<span style='margin-left:10px'>(+" + format(player.hpw.powerPerSec) + "/s)</span>" : "<span style='color:red;margin-left:10px'>(" + format(player.hpw.powerPerSec) + "/s)</span>" }, {color: "white", fontSize: "20px", fontFamily: "monospace"}],
             ["raw-html", () => {
                 let str = "<div class='bottomTooltip'>Base Formula<hr><small>2^(log" + formatWhole(player.h.stage) + "(Blessings/" + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + "))/" + formatSimple(Decimal.pow(2, player.h.stage.sub(6).abs())) + "</small>"
                 if (player.h.stage.eq(6)) str = "<div class='bottomTooltip'>Base Formula<hr><small>2^(log" + formatWhole(player.h.stage) + "(Blessings/" + formatWhole(Decimal.pow10(player.h.stage.sub(1)).mul(player.h.stage)) + "))</small>"

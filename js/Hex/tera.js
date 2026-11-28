@@ -166,7 +166,7 @@ addLayer("tera", {
 
         if (getBuyableAmount("tera", "piosityAuto").gt(0)) player.tera.piosityAuto = player.tera.piosityAuto.sub(delta)
 
-        if (player.tera.piosityAuto.lte(0)) {
+        if (player.tera.piosityAuto.lte(0) && player.tera.hexEnergyCap.gte(Decimal.div(5, buyableEffect("tera", "piosityCost")).mul(Decimal.pow10(player.tera.spellEnhancement)))) {
             player.tera.piosityAuto = buyableEffect("tera", "piosityAuto")
             player.tera.piositySpell = Decimal.sub(player.tera.piositySpell, 1).div(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement)).max(0.001)).pow(1/0.9).add(1).pow(0.9).mul(buyableEffect("tera", "piosityBuff").sub(1).mul(Decimal.pow(12, player.tera.spellEnhancement)).max(0.001)).add(1)
         }
@@ -184,11 +184,13 @@ addLayer("tera", {
         player.tera.trueHeptReq = Decimal.pow(1e7, player.tera.trueHept).mul(1e70)
         player.tera.trueHeptGain = player.hpw.power.add(1).div(1e70).ln().div(Decimal.ln(1e7)).add(1).sub(player.tera.trueHept).floor().max(0)
 
-        player.tera.heptEssencePerSecond = player.tera.trueHept.gt(0) ? Decimal.pow(7, player.tera.trueHept.sub(1)).div(7) : new Decimal(0)
+        player.tera.heptEssencePerSecond = player.tera.trueHept.gt(0) ? Decimal.pow(3.5, player.tera.trueHept.sub(1)).div(2) : new Decimal(0)
         for (let i = 0; i < 7; i++) {
             player.tera.heptEssencePerSecond = player.tera.heptEssencePerSecond.mul(player.tera.virtueEffects[i][0])
         }
         if (hasUpgrade("tera", "hept8")) player.tera.heptEssencePerSecond = player.tera.heptEssencePerSecond.mul(upgradeEffect("tera", "hept8"))
+
+        if (player.tera.heptEssencePerSecond.gt(1e49)) player.tera.heptEssencePerSecond = player.tera.heptEssencePerSecond.div(1e49).pow(0.7).mul(1e49)
 
         player.tera.heptEssence = player.tera.heptEssence.add(player.tera.heptEssencePerSecond.mul(delta))
 
@@ -277,6 +279,7 @@ addLayer("tera", {
         player.hpw.totalPower = new Decimal(0)
         player.hpw.power = new Decimal(0)
         player.hpw.powerGain = new Decimal(0)
+        player.hpw.powerPerSec = new Decimal(0)
         for (let i = 0; i < player.hpw.upgScale.length; i++) {
             player.hpw.upgScale[i] = 1
         }
@@ -2643,7 +2646,8 @@ addLayer("tera", {
                                 player.tera.heptEssencePerSecond.gt(0) ? look.color = "white" : look.color = "gray"
                                 return look
                             }],
-                            ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>(7<sup>(True Hept-1)</sup>)/7</small></div>"}],
+                            ["raw-html", () => {return player.tera.heptEssencePerSecond.gte(1e49) ? "<small style='margin-left:10px'>[SOFTCAPPED]</small>" : "" }, {color: "red", fontSize: "20px", fontFamily: "monospace"}],
+                            ["raw-html", () => {return "<div class='bottomTooltip'>Formula<hr><small>(3.5<sup>(True Hept-1)</sup>)/2</small></div>"}],
                         ]],
                         ["blank", "10px"],
                         ["microtabs", "hept", {borderWidth: "0px"}]
